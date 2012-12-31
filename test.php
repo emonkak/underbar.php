@@ -4,7 +4,7 @@ require(__DIR__ . DIRECTORY_SEPARATOR . 'underscore.php');
 
 use Underscore\_;
 
-$xs = _::chain(range(0, 100000))
+$xs = _::chain(_::range(0))
   ->filter(function($x) { return $x % 2 === 0; })
   ->map(function($x) { return $x * 2; })
   ->take(10)

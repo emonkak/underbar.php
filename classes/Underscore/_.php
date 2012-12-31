@@ -486,6 +486,13 @@ abstract class _
     return static::first($array, $n);
   }
 
+  public static function range($start, $stop = PHP_INT_MAX, $step = 1)
+  {
+    return class_exists('Generator')
+         ? RangeGenerator::range($start, $stop, $step)
+         : RangeIterator::range($start, $stop, $step);
+  }
+
   public static function chain($collection)
   {
     return new Chain($collection, get_called_class());
