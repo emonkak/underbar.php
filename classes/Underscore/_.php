@@ -8,8 +8,8 @@ abstract class _
    * Iterates over a list of elements, yielding each in turn to an iterator
    * function.
    *
-   * @param   array     $list
-   * @param   callable  $iterator
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
    * @return  void
    */
   public static function each($list, $iterator)
@@ -24,9 +24,9 @@ abstract class _
    *
    * Alias: collect
    *
-   * @param   array     $list
-   * @param   callable  $iterator
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
+   * @return  Iterator
    */
   public static function map($list, $iterator)
   {
@@ -46,9 +46,9 @@ abstract class _
    *
    * Alias: inject, foldl
    *
-   * @param   array     $list
-   * @param   callable  $iterator
-   * @param   mixed     $memo
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
+   * @param   mixed           $memo
    * @return  mixed
    */
   public static function reduce($list, $iterator, $memo)
@@ -74,9 +74,9 @@ abstract class _
    *
    * Alias: foldr
    *
-   * @param   array     $list
-   * @param   callable  $iterator
-   * @param   mixed     $memo
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
+   * @param   mixed           $memo
    * @return  mixed
    */
   public static function reduceRight($list, $iterator, $memo)
@@ -98,8 +98,8 @@ abstract class _
    *
    * Alias: detect
    *
-   * @param   array     $list
-   * @param   callable  $iterator
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
    * @return  mixed
    */
   public static function find($list, $iterator)
@@ -121,9 +121,9 @@ abstract class _
    *
    * Alias: select
    *
-   * @param   array     $list
-   * @param   callable  $iterator
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
+   * @return  Iterator
    */
   public static function filter($list, $iterator)
   {
@@ -141,9 +141,9 @@ abstract class _
    * Looks through each value in the list, returning an array of all the values
    * that contain all of the key-value pairs listed in properties.
    *
-   * @param   array  $list
-   * @param   array  $properties
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   array           $properties
+   * @return  boolean
    */
   public static function where($list, array $properties)
   {
@@ -161,9 +161,9 @@ abstract class _
    * Returns the values in list without the elements that the truth test
    * (iterator) passes. The opposite of filter.
    *
-   * @param   array     $list
-   * @param   callable  $iterator
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
+   * @return  Iterator
    */
   public static function reject($list, $iterator)
   {
@@ -177,8 +177,8 @@ abstract class _
    *
    * Alias: all
    *
-   * @param   array     $list
-   * @param   callable  $iterator
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
    * @return  boolean
    */
   public static function every($list, $iterator = null)
@@ -205,8 +205,8 @@ abstract class _
    *
    * Alias: any
    *
-   * @param   array     $list
-   * @param   callable  $iterator
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
    * @return  boolean
    */
   public static function some($list, $iterator = null)
@@ -233,8 +233,8 @@ abstract class _
    *
    * Alias: include
    *
-   * @param   array    $list
-   * @param   mixed    $target
+   * @param   array|Iterator  $list
+   * @param   mixed           $target
    * @return  boolean
    */
   public static function contains($list, $target)
@@ -250,9 +250,9 @@ abstract class _
   /**
    * Calls the method named by methodName on each value in the list.
    *
-   * @param   array   $list
-   * @param   string  $methodName
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   string          $methodName
+   * @return  Iterator
    */
   public static function invoke($list, $methodName)
   {
@@ -267,9 +267,9 @@ abstract class _
    * A convenient version of what is perhaps the most common use-case for map:
    * extracting a list of property values.
    *
-   * @param   array   $list
-   * @param   string  $propertyName
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   string          $propertyName
+   * @return  Iterator
    */
   public static function pluck($list, $propertyName)
   {
@@ -287,8 +287,8 @@ abstract class _
    * Returns the maximum value in list. If iterator is passed, it will be used
    * on each value to generate the criterion by which the value is ranked.
    *
-   * @param   array     $list
-   * @param   callable  $iterator
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
    * @return  mixed
    */
   public static function max($list, $iterator = null)
@@ -312,8 +312,8 @@ abstract class _
    * Returns the minimum value in list. If iterator is passed, it will be used
    * on each value to generate the criterion by which the value is ranked.
    *
-   * @param   array     $list
-   * @param   callable  $iterator
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
    * @return  mixed
    */
   public static function min($list, $iterator = null)
@@ -344,9 +344,9 @@ abstract class _
    * Returns a sorted copy of list, ranked in ascending order by the results of
    * running each value through iterator.
    *
-   * @param   array            $list
+   * @param   array|Iterator   $list
    * @param   callable|string  $value
-   * @return  array
+   * @return  Iterator
    */
   public static function sortBy($list, $value)
   {
@@ -377,7 +377,7 @@ abstract class _
    * Returns a sorted copy of list, ranked in ascending order by the results of
    * running each value through iterator.
    *
-   * @param   array            $list
+   * @param   array|Iterator   $list
    * @param   callable|string  $value
    * @return  array
    */
@@ -399,9 +399,9 @@ abstract class _
    * each group. Similar to groupBy, but instead of returning a list of values,
    * returns a count for the number of values in that group.
    *
-   * @param   array            $list
+   * @param   array|Iterator   $list
    * @param   callable|string  $value
-   * @return  array
+   * @return  Iterator
    */
   public static function countBy($list, $value)
   {
@@ -420,7 +420,7 @@ abstract class _
   /**
    * Returns a shuffled copy of the list.
    *
-   * @param   array  $list
+   * @param   array|Iterator  $list
    * @return  array
    */
   public static function shuffle($list)
@@ -433,7 +433,7 @@ abstract class _
   /**
    * Converts the list (anything that can be iterated over), into a real Array.
    *
-   * @param   array     $list
+   * @param   array|Iterator  $list
    * @return  array
    */
   public static function toArray($list)
@@ -444,8 +444,8 @@ abstract class _
   /**
    * Return the number of values in the list.
    *
-   * @param   array     $list
-   * @return  array
+   * @param   array|Countable|Iterator  $list
+   * @return  int
    */
   public static function size($list)
   {
@@ -460,9 +460,9 @@ abstract class _
    *
    * Alias: head, take
    *
-   * @param   array  $array
-   * @param   int    $n
-   * @return  array|mixed
+   * @param   array|Iterator  $array
+   * @param   int             $n
+   * @return  mixed|Iterator
    */
   public static function first($array, $n = null)
   {
@@ -489,8 +489,8 @@ abstract class _
   /**
    * Returns everything but the last entry of the array.
    *
-   * @param   array  $array
-   * @param   int    $n
+   * @param   array|Iterator  $array
+   * @param   int             $n
    * @return  array
    */
   public static function initial($array, $n = 1)
@@ -502,8 +502,8 @@ abstract class _
   /**
    * Returns the last element of an array.
    *
-   * @param   array  $array
-   * @param   int    $n
+   * @param   array|Iterator  $array
+   * @param   int             $n
    * @return  array|mixed
    */
   public static function last($array, $n = null)
@@ -517,9 +517,9 @@ abstract class _
    *
    * Alias: tail, drop
    *
-   * @param   array  $array
-   * @param   int    $n
-   * @return  array
+   * @param   array|Iterator  $array
+   * @param   int             $index
+   * @return  Iterator
    */
   public static function rest($array, $index = 1)
   {
@@ -541,8 +541,8 @@ abstract class _
   /**
    * Returns a copy of the array with all falsy values removed.
    *
-   * @param   array  $array
-   * @return  array
+   * @param   array|Iterator  $array
+   * @return  Iterator
    */
   public static function compact($array)
   {
@@ -554,8 +554,8 @@ abstract class _
   /**
    * Flattens a nested array (the nesting can be to any depth).
    *
-   * @param   array    $array
-   * @param   boolean  $shallow
+   * @param   array|Iterator  $array
+   * @param   boolean         $shallow
    * @return  array
    */
   public static function flatten($array, $shallow = false)
@@ -581,9 +581,9 @@ abstract class _
   /**
    * Returns a copy of the array with all instances of the values removed.
    *
-   * @param   array  $array
-   * @param   mixed  *$values
-   * @return  array
+   * @param   array|Iterator  $array
+   * @param   mixed           *$values
+   * @return  Iterator
    */
   public static function without($array)
   {
@@ -594,8 +594,8 @@ abstract class _
    * Computes the union of the passed-in arrays: the list of unique items,
    * in order, that are present in one or more of the arrays.
    *
-   * @param   array  *$arrays
-   * @return  array
+   * @param   array|Iterator  *$arrays
+   * @return  Iterator
    */
   public static function union()
   {
@@ -607,14 +607,13 @@ abstract class _
   /**
    * Computes the list of values that are the intersection of all the arrays.
    *
-   * @param   array  $array
-   * @param   array  *$rest
+   * @param   array|Iterator  $array
+   * @param   array|Iterator  *$rest
    * @return  array
    */
-  public static function intersection()
+  public static function intersection($array)
   {
-    $args = array_map(get_called_class().'::toArray',
-                      array_slice(func_get_args(), 1));
+    $args = array_map(get_called_class().'::toArray', func_get_args());
     return call_user_func_array('array_intersect', $args);
   }
 
@@ -622,9 +621,9 @@ abstract class _
    * Similar to without, but returns the values from array that are not present
    * in the other arrays.
    *
-   * @param   array  $array
-   * @param   array  $others
-   * @return  array
+   * @param   array|Iterator  $array
+   * @param   array           $others
+   * @return  Iterator
    */
   public static function difference($array, array $others)
   {
@@ -638,7 +637,7 @@ abstract class _
    *
    * Alias: unique
    *
-   * @param   array  $array
+   * @param   array|Iterator  $array
    * @return  array
    */
   public static function uniq($array)
@@ -655,10 +654,10 @@ abstract class _
    * A function to create flexibly-numbered lists of integers,
    * handy for each and map loops.
    *
-   * @param   int    $start
-   * @param   int    $stop
-   * @param   int    $step
-   * @return  array
+   * @param   int       $start
+   * @param   int       $stop
+   * @param   int       $step
+   * @return  Iterator
    */
   public static function range($start, $stop = PHP_INT_MAX, $step = 1)
   {
@@ -682,8 +681,8 @@ abstract class _
   /**
    * Removes the last element from an array and returns that element.
    *
-   * @param   array  $array
-   * @return  mixed
+   * @param   array|Iterator  $array
+   * @return  Iterator
    */
   public static function pop($array)
   {
@@ -694,8 +693,9 @@ abstract class _
    * Adds one or more elements to the end of an array and returns the new length
    * of the array.
    *
-   * @param   array  $array
-   * @return  mixed
+   * @param   array|Iterator  $array
+   * @param   mixed           *$values
+   * @return  array
    */
   public static function push($array)
   {
@@ -707,8 +707,8 @@ abstract class _
    * Reverses the order of the elements of an array -- the first becomes the
    * last, and the last becomes the first.
    *
-   * @param   array   $array
-   * @return  string
+   * @param   array|Iterator  $array
+   * @return  array
    */
   public static function reverse($array)
   {
@@ -718,8 +718,8 @@ abstract class _
   /**
    * Removes the first element from an array and returns that element.
    *
-   * @param   array  $array
-   * @return  mixed
+   * @param   array|Iterator  $array
+   * @return  array
    */
   public static function shift($array)
   {
@@ -729,8 +729,8 @@ abstract class _
   /**
    * Removes the last element from an array and returns that element.
    *
-   * @param   array  $array
-   * @return  mixed
+   * @param   array|Iterator  $array
+   * @return  array
    */
   public static function sort($array)
   {
@@ -742,8 +742,10 @@ abstract class _
   /**
    * Removes the first element from an array and returns that element.
    *
-   * @param   array  $array
-   * @return  mixed
+   * @param   array|Iterator  $array
+   * @param   int             $index
+   * @param   int             $n
+   * @return  array
    */
   public static function splice($array, $index, $n)
   {
@@ -755,8 +757,9 @@ abstract class _
    * Adds one or more elements to the front of an array and returns the new
    * length of the array.
    *
-   * @param   array  $array
-   * @return  mixed
+   * @param   array|Iterator  $array
+   * @param   mixed           *$values
+   * @return  array
    */
   public static function unshift($array)
   {
@@ -768,8 +771,8 @@ abstract class _
    * Returns a new array comprised of this array joined with other array(s)
    * and/or value(s).
    *
-   * @param   array  *$arrays
-   * @return  array
+   * @param   array|Iterator  *$arrays
+   * @return  Iterator
    */
   public static function concat()
   {
@@ -779,8 +782,8 @@ abstract class _
   /**
    * Joins all elements of an array into a string.
    *
-   * @param   array   $array
-   * @param   string  $separator
+   * @param   array|Iterator  $array
+   * @param   string          $separator
    * @return  string
    */
   public static function join($array, $separator = ' ')
@@ -791,10 +794,10 @@ abstract class _
   /**
    * Joins all elements of an array into a string.
    *
-   * @param   array   $array
-   * @param   int     $begin
-   * @param   int     $end
-   * @return  string
+   * @param   array|Iterator  $array
+   * @param   int             $begin
+   * @param   int             $end
+   * @return  array
    */
   public static function slice($array, $begin, $end)
   {
