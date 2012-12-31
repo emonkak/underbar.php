@@ -10,12 +10,12 @@ class RangeGenerator
       do {
         yield $start;
         $start += $step;
-      } while ($start < $stop);
+      } while ($start <= $stop);
     } else {
       do {
         yield $start;
         $start += $step;
-      } while ($start > $stop);
+      } while ($start >= $stop);
     }
   }
 }
