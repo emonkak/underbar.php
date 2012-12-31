@@ -4,10 +4,10 @@ namespace Underscore;
 
 class UnionGenerator
 {
-	public function union(array $arrays)
+	public static function union(array $arrays)
 	{
 		foreach ($arrays as $array) {
-			foreach ($array as $index => $value)
+			foreach ($array as $value)
 				yield $value;
 		}
 	}
