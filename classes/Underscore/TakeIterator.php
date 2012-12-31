@@ -34,13 +34,13 @@ class TakeIterator implements \Iterator
   public function next()
   {
     $this->position++;
-    return is_array($this->list) ? next($this->list) : $this->list->next();
+    is_array($this->list) ? next($this->list) : $this->list->next();
   }
 
   public function rewind()
   {
     $this->position = 0;
-    return is_array($this->list) ? reset($this->list) : $this->list->rewind();
+    is_array($this->list) ? reset($this->list) : $this->list->rewind();
   }
 
   public function valid()

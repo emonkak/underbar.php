@@ -33,12 +33,12 @@ class MapIterator implements \Iterator
 
   public function next()
   {
-    return is_array($this->list) ? next($this->list) : $this->list->next();
+    is_array($this->list) ? next($this->list) : $this->list->next();
   }
 
   public function rewind()
   {
-    return is_array($this->list) ? reset($this->list) : $this->list->rewind();
+    is_array($this->list) ? reset($this->list) : $this->list->rewind();
   }
 
   public function valid()
