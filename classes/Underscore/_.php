@@ -333,7 +333,7 @@ abstract class _
     return $result['value'];
   }
 
-  protected static function _lookupIterator($value)
+  private static function _lookupIterator($value)
   {
     return is_callable($value) ? $value : function($obj) use ($value) {
       return is_array($obj) ? $obj[$value] : $obj->$value;
@@ -460,8 +460,9 @@ abstract class _
    *
    * Alias: head, take
    *
-   * @param  array  $array
-   * @param  int    $n
+   * @param   array  $array
+   * @param   int    $n
+   * @return  array|mixed
    */
   public static function first($array, $n = 1)
   {
