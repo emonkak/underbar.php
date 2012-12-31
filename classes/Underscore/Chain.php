@@ -18,9 +18,7 @@ class Chain
   {
     array_unshift($aruguments, $this->collection);
     $result = call_user_func_array($this->class.'::'.$name, $aruguments);
-    return (is_array($result) || $result instanceof \Iterator)
-         ? new static($result, $this->class)
-         : $result;
+    return new static($result, $this->class);
   }
 
   public function value()

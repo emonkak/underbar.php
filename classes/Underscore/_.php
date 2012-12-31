@@ -486,6 +486,180 @@ abstract class _
     return static::first($array, $n);
   }
 
+  /**
+   * Returns everything but the last entry of the array.
+   *
+   * @param   array  $array
+   * @param   int    $n
+   * @return  array
+   */
+  public static function initial($array, $n = 1)
+  {
+    $array = static::toArray($array);
+    return array_slice($array, 0, count($array) - $n);
+  }
+
+  /**
+   * Returns the last element of an array.
+   *
+   * @param   array  $array
+   * @param   int    $n
+   * @return  array|mixed
+   */
+  public static function last($array, $n = null)
+  {
+    $array = static::toArray($array);
+    return is_int($n) ? array_slice($array, $n) : end($array);
+  }
+
+  /**
+   * Returns the rest of the elements in an array.
+   *
+   * Alias: tail, drop
+   *
+   * @param   array  $array
+   * @param   int    $n
+   * @return  array
+   */
+  public static function rest($array, $index = 1)
+  {
+    return class_exists('Generator')
+         ? DropGenerator::drop($array, $index)
+         : DropIterator::drop($array, $index);
+  }
+
+  public static function tail($array, $index = 1)
+  {
+    return self::rest($array, $index);
+  }
+
+  public static function drop($array, $index = 1)
+  {
+    return self::rest($array, $index);
+  }
+
+  /**
+   * Returns a copy of the array with all falsy values removed.
+   *
+   * @param   array  $array
+   * @return  array
+   */
+  public static function compact($array)
+  {
+    return static::filter($array, function($value) {
+      return !!$value;
+    });
+  }
+
+  /**
+   * Flattens a nested array (the nesting can be to any depth).
+   *
+   * @param   array    $array
+   * @param   boolean  $shallow
+   * @return  array
+   */
+  public static function flatten($array, $shallow = false)
+  {
+    return static::_flatten($array, $shallow, array());
+  }
+
+  private static function _flatten($array, $shallow, $output)
+  {
+    foreach ($array as $index => $value) {
+      if (is_array($value)) {
+        $output = $shallow
+                ? array_merge($output, $value)
+                : static::_flatten($value, $shallow, $output);
+      } else {
+        $output[] = $value;
+      }
+    }
+
+    return $output;
+  }
+
+  /**
+   * Returns a copy of the array with all instances of the values removed.
+   *
+   * @param   array  $array
+   * @param   mixed  *$values
+   * @return  array
+   */
+  public static function without($array)
+  {
+    return static::difference($array, array_slice(func_get_args(), 1));
+  }
+
+  /**
+   * Computes the union of the passed-in arrays: the list of unique items,
+   * in order, that are present in one or more of the arrays.
+   *
+   * @param   array  *$arrays
+   * @return  array
+   */
+  public static function union()
+  {
+    return class_exists('Generator')
+         ? UnionGenerator::union(func_get_args())
+         : UnionIterator::union(func_get_args());
+  }
+
+  /**
+   * Computes the list of values that are the intersection of all the arrays.
+   *
+   * @param   array  $array
+   * @param   array  *$rest
+   * @return  array
+   */
+  public static function intersection()
+  {
+    $args = array_map(get_called_class().'::toArray',
+                      array_slice(func_get_args(), 1));
+    return call_user_func_array('array_intersect', $args);
+  }
+
+  /**
+   * Similar to without, but returns the values from array that are not present
+   * in the other arrays.
+   *
+   * @param   array  $array
+   * @param   array  $others
+   * @return  array
+   */
+  public static function difference($array, array $others)
+  {
+    return static::filter($array, function($value) use ($ohters) {
+      return !in_array($value, $others, true);
+    });
+  }
+
+  /**
+   * Produce a duplicate-free version of the array.
+   *
+   * Alias: unique
+   *
+   * @param   array  $array
+   * @return  array
+   */
+  public static function uniq($array)
+  {
+    return array_unique(static::toArray($array), SORT_REGULAR);
+  }
+
+  public static function unique($array)
+  {
+    return static::uniq($array);
+  }
+
+  /**
+   * A function to create flexibly-numbered lists of integers,
+   * handy for each and map loops.
+   *
+   * @param   int    $start
+   * @param   int    $stop
+   * @param   int    $step
+   * @return  array
+   */
   public static function range($start, $stop = PHP_INT_MAX, $step = 1)
   {
     return class_exists('Generator')
@@ -493,9 +667,138 @@ abstract class _
          : RangeIterator::range($start, $stop, $step);
   }
 
-  public static function chain($collection)
+  /**
+   * Returns a wrapped object. Calling methods on this object will continue to
+   * return wrapped objects until value is used.
+   *
+   * @param   mixed  $obj
+   * @return  Chain
+   */
+  public static function chain($obj)
   {
-    return new Chain($collection, get_called_class());
+    return new Chain($obj, get_called_class());
+  }
+
+  /**
+   * Removes the last element from an array and returns that element.
+   *
+   * @param   array  $array
+   * @return  mixed
+   */
+  public static function pop($array)
+  {
+    return static::initial($array);
+  }
+
+  /**
+   * Adds one or more elements to the end of an array and returns the new length
+   * of the array.
+   *
+   * @param   array  $array
+   * @return  mixed
+   */
+  public static function push($array)
+  {
+    $rest = array_slice(func_get_args(), 1);
+    return array_merge(static::toArray($array), $rest);
+  }
+
+  /**
+   * Reverses the order of the elements of an array -- the first becomes the
+   * last, and the last becomes the first.
+   *
+   * @param   array   $array
+   * @return  string
+   */
+  public static function reverse($array)
+  {
+    return array_reverse(static::toArray($array));
+  }
+
+  /**
+   * Removes the first element from an array and returns that element.
+   *
+   * @param   array  $array
+   * @return  mixed
+   */
+  public static function shift($array)
+  {
+    return static::rest($array);
+  }
+
+  /**
+   * Removes the last element from an array and returns that element.
+   *
+   * @param   array  $array
+   * @return  mixed
+   */
+  public static function sort($array)
+  {
+    $array = static::toArray($array);
+    sort($array);
+    return $array;
+  }
+
+  /**
+   * Removes the first element from an array and returns that element.
+   *
+   * @param   array  $array
+   * @return  mixed
+   */
+  public static function splice($array, $index, $n)
+  {
+    $rest = array_slice(func_get_args(), 3);
+    return array_splice(static::toArray($array), $index, $n, $rest);
+  }
+
+  /**
+   * Adds one or more elements to the front of an array and returns the new
+   * length of the array.
+   *
+   * @param   array  $array
+   * @return  mixed
+   */
+  public static function unshift($array)
+  {
+    $rest = array_slice(func_get_args(), 1);
+    return array_merge($rest, static::toArray($array));
+  }
+
+  /**
+   * Returns a new array comprised of this array joined with other array(s)
+   * and/or value(s).
+   *
+   * @param   array  *$arrays
+   * @return  array
+   */
+  public static function concat()
+  {
+    return call_user_func_array(get_called_class().'::union', func_get_args());
+  }
+
+  /**
+   * Joins all elements of an array into a string.
+   *
+   * @param   array   $array
+   * @param   string  $separator
+   * @return  string
+   */
+  public static function join($array, $separator = ' ')
+  {
+    return implode($separator, static::toArray($array));
+  }
+
+  /**
+   * Joins all elements of an array into a string.
+   *
+   * @param   array   $array
+   * @param   int     $begin
+   * @param   int     $end
+   * @return  string
+   */
+  public static function slice($array, $begin, $end)
+  {
+    return array_slice(static::toArray($array), $begin, $end);
   }
 }
 
