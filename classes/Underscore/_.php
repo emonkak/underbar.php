@@ -239,7 +239,7 @@ abstract class _
    */
   public static function contains($list, $target)
   {
-    foreach ($list as $index => $value) {
+    foreach ($list as $value) {
       if ($value === $target)
         return true;
     }
