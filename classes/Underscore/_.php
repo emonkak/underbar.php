@@ -464,9 +464,9 @@ abstract class _
    * @param   int    $n
    * @return  array|mixed
    */
-  public static function first($array, $n = 1)
+  public static function first($array, $n = null)
   {
-    if ($n > 1) {
+    if (is_int($n)) {
       return class_exists('Generator')
            ? TakeGenerator::take($array, $n)
            : TakeIterator::take($array, $n);
@@ -476,12 +476,12 @@ abstract class _
     }
   }
 
-  public static function head($array, $n = 1)
+  public static function head($array, $n = null)
   {
     return static::first($array, $n);
   }
 
-  public static function take($array, $n = 1)
+  public static function take($array, $n = null)
   {
     return static::first($array, $n);
   }
