@@ -21,11 +21,6 @@ class RangeIterator implements \Iterator
     $this->step = $step;
   }
 
-  public static function range($start, $end, $step)
-  {
-    return new static($start, $end, $step);
-  }
-
   public function current()
   {
     return $this->current;

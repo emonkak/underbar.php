@@ -4,6 +4,13 @@ namespace Underscore;
 
 abstract class _
 {
+  protected static $_useGenerator;
+
+  public static function initialize($options)
+  {
+    static::$_useGenerator = isset($options['useGenerator']) && $options['useGenerator'];
+  }
+
   /**
    * Iterates over a list of elements, yielding each in turn to an iterator
    * function.
@@ -18,6 +25,11 @@ abstract class _
       call_user_func($iterator, $value, $index, $list);
   }
 
+  private static function _wrapArray($list)
+  {
+    return is_array($list) ? new \ArrayObject($list) : $list;
+  }
+
   /**
    * Produces a new array of values by mapping each value in list through a
    * transformation function (iterator).
@@ -30,9 +42,9 @@ abstract class _
    */
   public static function map($list, $iterator)
   {
-    return class_exists('Generator')
-         ? MapGenerator::map($list, $iterator)
-         : MapIterator::map($list, $iterator);
+    return static::$_useGenerator
+         ? Generator::map($list, $iterator)
+         : new MapIterator(static::_wrapArray($list), $iterator);
   }
 
   public static function collect($list, $iterator)
@@ -127,9 +139,11 @@ abstract class _
    */
   public static function filter($list, $iterator)
   {
-    return class_exists('Generator')
-         ? FilterGenerator::filter($list, $iterator)
-         : FilterIterator::filter($list, $iterator);
+    return static::$_useGenerator
+         ? Generator::filter($list, $iterator)
+         : (class_exists('CallbackFilterIterator')
+            ? new \CallbackFilterIterator(static::_wrapArray($list), $iterator)
+            : new FilterIterator(static::_wrapArray($list), $iterator));
   }
 
   public static function select($list, $iterator)
@@ -467,9 +481,9 @@ abstract class _
   public static function first($array, $n = null)
   {
     if (is_int($n)) {
-      return class_exists('Generator')
-           ? TakeGenerator::take($array, $n)
-           : TakeIterator::take($array, $n);
+      return static::$_useGenerator
+           ? Generator::take($array, $n)
+           : new \LimitIterator(static::_wrapArray($array), 0, $n);
     } else {
       foreach ($array as $value)
         return $value;
@@ -523,9 +537,9 @@ abstract class _
    */
   public static function rest($array, $index = 1)
   {
-    return class_exists('Generator')
-         ? DropGenerator::drop($array, $index)
-         : DropIterator::drop($array, $index);
+    return static::$_useGenerator
+         ? Generator::drop($array, $index)
+         : new \LimitIterator(static::_wrapArray($array), $index);
   }
 
   public static function tail($array, $index = 1)
@@ -599,9 +613,9 @@ abstract class _
    */
   public static function union()
   {
-    return class_exists('Generator')
-         ? UnionGenerator::union(func_get_args())
-         : UnionIterator::union(func_get_args());
+    return static::$_useGenerator
+         ? Generator::union(func_get_args())
+         : new UnionIterator(func_get_args());
   }
 
   /**
@@ -661,9 +675,9 @@ abstract class _
    */
   public static function range($start, $stop = PHP_INT_MAX, $step = 1)
   {
-    return class_exists('Generator')
-         ? RangeGenerator::range($start, $stop, $step)
-         : RangeIterator::range($start, $stop, $step);
+    return static::$_useGenerator
+         ? Generator::range($start, $stop, $step)
+         : new RangeIterator($start, $stop, $step);
   }
 
   /**
@@ -802,11 +816,11 @@ abstract class _
    * @param   array|Iterator  $array
    * @param   int             $begin
    * @param   int             $end
-   * @return  array
+   * @return  Iterator
    */
-  public static function slice($array, $begin, $end)
+  public static function slice($array, $begin, $end = -1)
   {
-    return array_slice(static::toArray($array), $begin, $end);
+    return new \LimitIterator($array, $begin, $end);
   }
 }
 

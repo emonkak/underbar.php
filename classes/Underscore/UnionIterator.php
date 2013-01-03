@@ -15,11 +15,6 @@ class UnionIterator implements \Iterator
     $this->arrays = $arrays;
   }
 
-  public static function union(array $arrays)
-  {
-    return new static($arrays);
-  }
-
   public function current()
   {
     return is_array($this->current)
