@@ -81,7 +81,7 @@ abstract class _
    */
   public static function reduceRight($list, $iterator, $memo)
   {
-    foreach (array_reverse($list) as $index => $value)
+    foreach (static::reverse($list) as $index => $value)
       $memo = call_user_func($iterator, $memo, $value, $index, $list);
 
     return $memo;
