@@ -168,7 +168,7 @@ abstract class _
   public static function reject($list, $iterator)
   {
     return static::filter($list, function($value, $index, $list) use ($iterator) {
-      return !call_user_func($iterator, $index, $value, $list);
+      return !call_user_func($iterator, $value, $index, $list);
     });
   }
 
