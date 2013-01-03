@@ -351,17 +351,17 @@ abstract class _
   public static function sortBy($list, $value)
   {
     $iterator = static::_lookupIterator($value);
-    $tmp = array();
+    $result = array();
 
     foreach ($list as $index => $value) {
-      $tmp[] = array(
+      $result[] = array(
         'value' => $value,
         'index' => $index,
         'criteria' => call_user_func($iterator, $value, $index, $list),
       );
     }
 
-    usort($tmp, function($left, $right) {
+    usort($result, function($left, $right) {
       $a = $left['criteria'];
       $b = $right['criteria'];
       if ($a !== $b)
@@ -370,7 +370,7 @@ abstract class _
         return $left['index'] < $right['index'] ? -1 : 1;
     });
 
-    return static::pluck($tmp, 'value');
+    return static::pluck($result, 'value');
   }
 
   /**
@@ -613,8 +613,8 @@ abstract class _
    */
   public static function intersection($array)
   {
-    $args = array_map(get_called_class().'::toArray', func_get_args());
-    return call_user_func_array('array_intersect', $args);
+    $arrays = array_map(get_called_class().'::toArray', func_get_args());
+    return call_user_func_array('array_intersect', $arrays);
   }
 
   /**
@@ -682,11 +682,13 @@ abstract class _
    * Removes the last element from an array and returns that element.
    *
    * @param   array|Iterator  $array
-   * @return  Iterator
+   * @return  array
    */
   public static function pop($array)
   {
-    return static::initial($array);
+    $array = static::toArray($array);
+    array_pop($array);
+    return $array;
   }
 
   /**
@@ -723,7 +725,9 @@ abstract class _
    */
   public static function shift($array)
   {
-    return static::rest($array);
+    $array = static::toArray($array);
+    array_shift($array);
+    return $array;
   }
 
   /**
@@ -772,11 +776,12 @@ abstract class _
    * and/or value(s).
    *
    * @param   array|Iterator  *$arrays
-   * @return  Iterator
+   * @return  array
    */
   public static function concat()
   {
-    return call_user_func_array(get_called_class().'::union', func_get_args());
+    return call_user_func_array('array_merge',
+                                array_map(get_called_class().'::toArray', func_get_args()));
   }
 
   /**
@@ -792,7 +797,7 @@ abstract class _
   }
 
   /**
-   * Joins all elements of an array into a string.
+   * Returns a shallow copy of a portion of an array.
    *
    * @param   array|Iterator  $array
    * @param   int             $begin
