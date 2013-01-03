@@ -50,13 +50,12 @@ class UnionIterator implements \Iterator
   public function valid()
   {
     do {
-      if (is_array($this->current)) {
+      if (is_array($this->current))
         $result = key($this->current) !== null;
-      } elseif ($this->current instanceof \Iterator) {
+      elseif ($this->current instanceof \Iterator)
         $result = $this->current->valid();
-      } else {
+      else
         $result = false;
-      }
     } while (!$result && ($this->current = next($this->arrays)));
 
     return $result;

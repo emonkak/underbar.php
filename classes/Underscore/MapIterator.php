@@ -10,7 +10,7 @@ class MapIterator implements \Iterator
 
   public function __construct($list, $iterator)
   {
-    $this->list = $list;
+    $this->list = is_array($list) ? new \ArrayObject($list) : $list;
     $this->iterator = $iterator;
   }
 
@@ -21,29 +21,30 @@ class MapIterator implements \Iterator
 
   public function current()
   {
-    return is_array($this->list)
-         ? call_user_func($this->iterator, current($this->list), key($this->list), $this->list)
-         : call_user_func($this->iterator, $this->list->current(), $this->list->key, $this->list);
+    return call_user_func($this->iterator,
+                          $this->list->current(),
+                          $this->list->key(),
+                          $this->list);
   }
 
   public function key()
   {
-    return is_array($this->list) ? key($this->list) : $this->list->key();
+    return $this->list->key();
   }
 
   public function next()
   {
-    is_array($this->list) ? next($this->list) : $this->list->next();
+    $this->list->next();
   }
 
   public function rewind()
   {
-    is_array($this->list) ? reset($this->list) : $this->list->rewind();
+    $this->list->rewind();
   }
 
   public function valid()
   {
-    return is_array($this->list) ? key($this->list) !== null : $this->list->valid();
+    return $this->list->valid();
   }
 }
 
