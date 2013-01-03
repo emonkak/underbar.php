@@ -71,7 +71,7 @@ abstract class Generator
             yield $childKey => $childValue;
         }
       } else {
-        yield $value;
+        yield $key => $value;
       }
     }
   }
