@@ -574,22 +574,15 @@ abstract class _
    */
   public static function flatten($array, $shallow = false)
   {
-    return static::_flatten($array, $shallow, array());
-  }
-
-  private static function _flatten($array, $shallow, $output)
-  {
-    foreach ($array as $index => $value) {
-      if (is_array($value)) {
-        $output = $shallow
-                ? array_merge($output, $value)
-                : static::_flatten($value, $shallow, $output);
-      } else {
-        $output[] = $value;
-      }
+    if (static::$_useGenerator) {
+      return Generator::flatten($array, $shallow);
+    } else {
+      $it = new \RecursiveIteratorIterator(
+        new FlattenIterator(static::_wrapArray($array))
+      );
+      $it->setMaxDepth($shallow ? 1 : -1);
+      return $it;
     }
-
-    return $output;
   }
 
   /**

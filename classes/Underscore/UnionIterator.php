@@ -47,7 +47,7 @@ class UnionIterator implements \Iterator
     do {
       if (is_array($this->current))
         $result = key($this->current) !== null;
-      elseif ($this->current instanceof \Iterator)
+      elseif ($this->current instanceof \Traversable)
         $result = $this->current->valid();
       else
         $result = false;

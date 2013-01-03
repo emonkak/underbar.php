@@ -58,6 +58,23 @@ abstract class Generator
         yield $value;
     }
   }
+
+  public static function flatten($array, $shallow)
+  {
+    foreach ($array as $key => $value) {
+      if (is_array($value) || $value instanceof \Traversable) {
+        if ($shallow) {
+          foreach ($value as $childKey => $childValue)
+            yield $childKey => $childValue;
+        } else {
+          foreach (static::flatten($value, $shallow) as $childKey => $childValue)
+            yield $childKey => $childValue;
+        }
+      } else {
+        yield $value;
+      }
+    }
+  }
 }
 
 // __END__
