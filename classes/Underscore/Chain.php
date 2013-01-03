@@ -4,26 +4,26 @@ namespace Underscore;
 
 class Chain
 {
-  protected $collection;
+  protected $value;
 
   protected $class;
 
-  public function __construct($collection, $class)
+  public function __construct($value, $class)
   {
-    $this->collection = $collection;
+    $this->value = $value;
     $this->class = $class;
   }
 
   public function __call($name, $aruguments)
   {
-    array_unshift($aruguments, $this->collection);
+    array_unshift($aruguments, $this->value);
     $result = call_user_func_array($this->class.'::'.$name, $aruguments);
     return new static($result, $this->class);
   }
 
   public function value()
   {
-    return $this->collection;
+    return $this->value;
   }
 }
 

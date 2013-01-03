@@ -286,6 +286,18 @@ abstract class Underscore
     });
   }
 
+  private static function _lookupIterator($value)
+  {
+    if (is_callable($value))
+      return $value;
+    elseif (is_scalar($value))
+      return function($obj) use ($value) {
+        return is_array($obj) ? $obj[$value] : $obj->$value;
+      };
+    else
+      return __CLASS__.'::identity';
+  }
+
   /**
    * Returns the maximum value in list. If iterator is passed, it will be used
    * on each value to generate the criterion by which the value is ranked.
@@ -296,12 +308,11 @@ abstract class Underscore
    */
   public static function max($list, $iterator = null)
   {
+    $iterator = static::_lookupIterator($iterator);
     $result = array('computed' => -PHP_INT_MAX, 'value' => -PHP_INT_MAX);
 
     foreach ($list as $index => $value) {
-      $computed = $iterator
-                ? call_user_func($iterator, $value, $index, $list)
-                : $value;
+      $computed = call_user_func($iterator, $value, $index, $list);
       if ($computed > $result['computed']) {
         $result['computed'] = $computed;
         $result['value'] = $value;
@@ -321,12 +332,11 @@ abstract class Underscore
    */
   public static function min($list, $iterator = null)
   {
+    $iterator = static::_lookupIterator($iterator);
     $result = array('computed' => PHP_INT_MAX, 'value' => PHP_INT_MAX);
 
     foreach ($list as $index => $value) {
-      $computed = $iterator
-                ? call_user_func($iterator, $value, $index, $list)
-                : $value;
+      $computed = call_user_func($iterator, $value, $index, $list);
       if ($computed < $result['computed']) {
         $result['computed'] = $computed;
         $result['value'] = $value;
@@ -334,13 +344,6 @@ abstract class Underscore
     }
 
     return $result['value'];
-  }
-
-  private static function _lookupIterator($value)
-  {
-    return is_callable($value) ? $value : function($obj) use ($value) {
-      return is_array($obj) ? $obj[$value] : $obj->$value;
-    };
   }
 
   /**
@@ -439,7 +442,7 @@ abstract class Underscore
    * @param   array|Iterator  $list
    * @return  array
    */
-  public static function toArray($list)
+  final public static function toArray($list)
   {
     return is_array($list) ? $list : iterator_to_array($list);
   }
@@ -599,7 +602,7 @@ abstract class Underscore
    */
   public static function intersection($array)
   {
-    $arrays = array_map(get_called_class().'::toArray', func_get_args());
+    $arrays = array_map(__CLASS__.'::toArray', func_get_args());
     return call_user_func_array('array_intersect', $arrays);
   }
 
@@ -648,6 +651,17 @@ abstract class Underscore
   public static function range($start, $stop = PHP_INT_MAX, $step = 1)
   {
     return new RangeIterator($start, $stop, $step);
+  }
+
+  /**
+   * Returns the same value that is used as the argument.
+   *
+   * @param   mixed  $value
+   * @return  mixed  $value
+   */
+  final public static function identity($value)
+  {
+    return $value;
   }
 
   /**
@@ -765,7 +779,7 @@ abstract class Underscore
   public static function concat()
   {
     return call_user_func_array('array_merge',
-                                array_map(get_called_class().'::toArray', func_get_args()));
+                                array_map(__CLASS__.'::toArray', func_get_args()));
   }
 
   /**
