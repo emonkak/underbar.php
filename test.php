@@ -4,11 +4,7 @@ require(__DIR__ . DIRECTORY_SEPARATOR . 'underscore.php');
 
 use Underscore\_;
 
-echo _::chain([[1, 2], [3, 4, 5, 6], [[5, 6]]])->flatten(true)->join()->value(), PHP_EOL;
-
-_::initialize(array('useGenerator' => true));
-
-echo _::chain([[1, 2], [3, 4, 5, 6], [[5, 6]]])->flatten(true)->join()->value(), PHP_EOL;
+echo _::chain(array(array(0, 1), array(array(2, 3, 4, 5))))->flatten()->join()->value(), PHP_EOL;
 
 $xs = _::chain(_::range(0))
   ->filter(function($x) { return $x % 2 === 0; })
