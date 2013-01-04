@@ -629,7 +629,12 @@ abstract class Underscore
    */
   public static function uniq($array)
   {
-    return array_unique(static::toArray($array), SORT_REGULAR);
+    $map = array();
+    return static::filter($array, function($value) use (&$map) {
+      if ($result = !isset($map[$value]))
+        $map[$value] = $value;
+      return $result;
+    });
   }
 
   public static function unique($array)
