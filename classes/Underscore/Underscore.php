@@ -632,7 +632,7 @@ abstract class Underscore
     $map = array();
     return static::filter($array, function($value) use (&$map) {
       if ($result = !isset($map[$value]))
-        $map[$value] = $value;
+        $map[$value] = 0;
       return $result;
     });
   }
