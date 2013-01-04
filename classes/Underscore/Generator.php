@@ -59,6 +59,27 @@ trait Generator
   }
 
   /**
+   * Returns everything but the last entry of the array.
+   *
+   * @param   array|Iterator  $array
+   * @param   int             $n
+   * @return  array
+   */
+  public static function initial($array, $n = 1)
+  {
+    $queue = new \SplQueue();
+    $result = array();
+
+    foreach ($array as $index => $value) {
+      $queue->enqueue(array($index, $value));
+      if (count($queue) > $n) {
+        list ($idx, $val) = $queue->dequeue();
+        yield $idx => $val;
+      }
+    }
+  }
+
+  /**
    * Returns the rest of the elements in an array.
    *
    * Alias: tail, drop
