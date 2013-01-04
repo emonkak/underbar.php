@@ -472,12 +472,10 @@ abstract class Underscore
    */
   public static function first($array, $n = null)
   {
-    if (is_int($n)) {
+    if (is_int($n))
       return new \LimitIterator(static::_wrapArray($array), 0, $n);
-    } else {
-      foreach ($array as $value)
-        return $value;
-    }
+    else
+      foreach ($array as $value) return $value;
   }
 
   public static function head($array, $n = null)
