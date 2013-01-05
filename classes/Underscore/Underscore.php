@@ -18,9 +18,14 @@ abstract class Underscore
       call_user_func($iterator, $value, $index, $list);
   }
 
-  protected static function _wrapArray($list)
+  protected static function _wrapIterator($list)
   {
-    return is_array($list) ? new \ArrayObject($list) : $list;
+    if (is_array($list))
+      return new \ArrayIterator($list);
+    elseif (!$list instanceof \Iterator)
+      return new \IteratorIterator($list);
+    else
+      return $list;
   }
 
   /**
@@ -35,12 +40,32 @@ abstract class Underscore
    */
   public static function map($list, $iterator)
   {
-    return new MapIterator(static::_wrapArray($list), $iterator);
+    return new MapIterator(static::_wrapIterator($list), $iterator);
   }
 
   public static function collect($list, $iterator)
   {
     return static::map($list, $iterator);
+  }
+
+  /**
+   * Produces a new array of values by mapping each value in list through a
+   * transformation function (iterator).
+   *
+   * Alias: collectWithKey
+   *
+   * @param   array|Iterator  $list
+   * @param   callable        $iterator
+   * @return  Iterator
+   */
+  public static function mapWithKey($list, $iterator)
+  {
+    return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
+  }
+
+  public static function collectWithKey($list, $iterator)
+  {
+    return static::mapWithKey($list, $iterator);
   }
 
   /**
@@ -131,8 +156,8 @@ abstract class Underscore
   public static function filter($list, $iterator)
   {
     return class_exists('CallbackFilterIterator')
-         ? new \CallbackFilterIterator(static::_wrapArray($list), $iterator)
-         : new FilterIterator(static::_wrapArray($list), $iterator);
+         ? new \CallbackFilterIterator(static::_wrapIterator($list), $iterator)
+         : new FilterIterator(static::_wrapIterator($list), $iterator);
   }
 
   public static function select($list, $iterator)
@@ -440,11 +465,12 @@ abstract class Underscore
    * Converts the list (anything that can be iterated over), into a real Array.
    *
    * @param   array|Iterator  $list
+   * @param   boolean         $useKeys
    * @return  array
    */
-  public static function toArray($list)
+  public static function toArray($list, $useKeys = false)
   {
-    return is_array($list) ? $list : iterator_to_array($list);
+    return is_array($list) ? $list : iterator_to_array($list, $useKeys);
   }
 
   /**
@@ -473,7 +499,7 @@ abstract class Underscore
   public static function first($array, $n = null)
   {
     if (is_int($n))
-      return new \LimitIterator(static::_wrapArray($array), 0, $n);
+      return new \LimitIterator(static::_wrapIterator($array), 0, $n);
     else
       foreach ($array as $value) return $value;
   }
@@ -535,7 +561,7 @@ abstract class Underscore
    */
   public static function rest($array, $index = 1)
   {
-    return new \LimitIterator(static::_wrapArray($array), $index);
+    return new \LimitIterator(static::_wrapIterator($array), $index);
   }
 
   public static function tail($array, $index = 1)
@@ -556,9 +582,7 @@ abstract class Underscore
    */
   public static function compact($array)
   {
-    return static::filter($array, function($value) {
-      return !!$value;
-    });
+    return static::filter($array, get_called_class().'::identity');
   }
 
   /**
@@ -571,7 +595,7 @@ abstract class Underscore
   public static function flatten($array, $shallow = false)
   {
     $it = new \RecursiveIteratorIterator(
-      new FlattenIterator(static::_wrapArray($array))
+      new FlattenIterator(static::_wrapIterator($array))
     );
     $it->setMaxDepth($shallow ? 1 : -1);
     return $it;
@@ -653,16 +677,6 @@ abstract class Underscore
     return static::uniq($array);
   }
 
-  protected static function _wrapIterator($list)
-  {
-    if (is_array($list))
-      return new \ArrayIterator($list);
-    elseif (!$list instanceof \Iterator)
-      return new \IteratorIterator($list);
-    else
-      return $list;
-  }
-
   /**
    * Merges together the values of each of the arrays with the values at the
    * corresponding position.
@@ -679,14 +693,258 @@ abstract class Underscore
   /**
    * Converts arrays into objects.
    *
-   * @param   array|Iterator  list
-   * @param   array|Iterator  values
-   * @return  array
+   * @param   array|Iterator  $list
+   * @param   array|Iterator  $values
+   * @return  Iterator
    */
   public static function object($list, $values = array())
   {
-    return new CombineIterator(static::_wrapIterator($list),
-                               static::_wrapIterator($values));
+    $values = static::_wrapIterator($values);
+    $values->rewind();
+
+    return static::mapWithKey($list, function($value, $key) use ($values) {
+      if ($values->valid()) {
+        $val = $values->current();
+        $values->next();
+      } else {
+        $val = null;
+      };
+      return array($key, $val);
+    });
+  }
+
+  /**
+   * Returns the index at which value can be found in the array, or -1 if value
+   * is not present in the array.
+   *
+   * @param   array|Iterator  $array
+   * @param   mixed           $value
+   * @param   boolean|int     $isSorted
+   * @return  int
+   */
+  public static function indexOf($array, $value, $isSorted = 0)
+  {
+    $array = static::toArray($array);
+    $i = 0;
+    $l = count($array);
+
+    if ($isSorted) {
+      if (is_int($isSorted)) {
+        $i = ($isSorted < 0) ? max(0, $l + $isSorted) : $isSorted;
+      } else {
+        $i = static::sortedIndex($array, $value);
+        return (isset($array[$i]) && $array[$i] === $value) ? $i : -1;
+      }
+    }
+
+    for (; $i < $l; $i++) if ($array[$i] === $value) return $i;
+    return -1;
+  }
+
+  /**
+   * Returns the index of the last occurrence of value in the array, or -1 if
+   * value is not present.
+   *
+   * @param   array|Iterator  $array
+   * @param   mixed           $value
+   * @param   int             $fromIndex
+   * @return  int
+   */
+  public static function lastIndexOf($array, $value, $fromIndex = null)
+  {
+    $array = static::toArray($array);
+    $l = count($array);
+    $i = $fromIndex === null ? $l : min($l, $fromIndex);
+
+    while ($i-- > 0) if ($array[$i] === $value) return $i;
+    return -1;
+  }
+
+  /**
+   * Returns the index at which value can be found in the array, or -1 if value
+   * is not present in the array.
+   *
+   * @param   array|Iterator  $list
+   * @param   mixed           $values
+   * @param   callable        $iterator
+   * @return  int
+   */
+  public static function sortedIndex($list, $value, $iterator = null)
+  {
+    $array = static::toArray($list);
+    $iterator = static::_lookupIterator($iterator);
+    $value = call_user_func($iterator, $value);
+
+    $low = -1;
+    $high = count($array);
+
+    while ($low < $high) {
+      $mid = ($low + $high) / 2;
+      if (call_user_func($iterator, $array[$mid]) < $value)
+        $low = $mid + 1;
+      else
+        $high = $mid;
+    }
+
+    return $low;
+  }
+
+  /**
+   * Retrieve all the names of the object's properties.
+   *
+   * @param   array|Iterator  $object
+   * @return  array
+   */
+  public static function keys($object)
+  {
+    $i = 0;
+    return static::mapWithKey($object, function($value, $key) use (&$i) {
+      return array($i++, $key);
+    });
+  }
+
+  /**
+   * Return all of the values of the object's properties.
+   *
+   * @param   array|Iterator  $object
+   * @return  array
+   */
+  public static function values($object)
+  {
+    $i = 0;
+    return static::mapWithKey($object, function($value) use (&$i) {
+      return array($i++, $value);
+    });
+  }
+
+  /**
+   * Convert an object into a list of [key, value] pairs.
+   *
+   * @param   array|Iterator  $object
+   * @return  array
+   */
+  public static function pairs($object)
+  {
+    return static::map($object, function($value, $key) {
+      return array($key, $value);
+    });
+  }
+
+  /**
+   * Convert an object into a list of [key, value] pairs.
+   *
+   * @param   array|Iterator  $object
+   * @return  array
+   */
+  public static function invert($object)
+  {
+    return static::mapWithKey($object, function($value, $key) {
+      return array($value, $key);
+    });
+  }
+
+  /**
+   * Copy all of the properties in the source objects over to the destination
+   * object, and return the destination object.
+   *
+   * @param   array|Iterator  $destination
+   * @param   array|Iterator  *$sources
+   * @return  array
+   */
+  public static function extend()
+  {
+    $objects = array();
+
+    foreach (func_get_args() as $object)
+      $objects[] = static::toArray($object, true);
+
+    return call_user_func_array('array_merge', $objects);
+  }
+
+  /**
+   * Return a copy of the object, filtered to only have values for the
+   * whitelisted keys (or array of valid keys).
+   *
+   * @param   array|Iterator  $object
+   * @param   string          *$keys
+   * @return  array
+   */
+  public static function pick($object)
+  {
+    $keys = array_slice(func_get_args(), 1);
+    return static::filter($object, function($value, $key) use ($keys) {
+      return in_array($value, $keys, true);
+    });
+  }
+
+  /**
+   * Return a copy of the object, filtered to omit the blacklisted keys
+   * (or array of keys).
+   *
+   * @param   array|Iterator  $object
+   * @param   string          *$keys
+   * @return  array
+   */
+  public static function omit($object)
+  {
+    $keys = array_slice(func_get_args(), 1);
+    return static::filter($object, function($value, $key) use ($keys) {
+      return !in_array($value, $keys, true);
+    });
+  }
+
+  /**
+   * Copy all of the properties in the source objects over to the destination
+   * object, and return the destination object.
+   *
+   * @param   array|Iterator  $object
+   * @param   array|Iterator  *$defaults
+   * @return  array
+   */
+  public static function defaults($object)
+  {
+    foreach (array_slice(func_get_args(), 1) as $default)
+      $objects[] = static::toArray($default, true);
+
+    $objects[] = static::toArray($object, true);
+
+    return call_user_func_array('array_merge', $objects);
+  }
+
+  /**
+   * Create a shallow-copied clone of the object.
+   *
+   * @param   array|object  $object
+   * @return  array|object
+   */
+  public static function duplicate($object)
+  {
+    return is_object($object) ? clone $object : $object;
+  }
+
+  /**
+   * Invokes interceptor with the object, and then returns object.
+   *
+   * @param   array|Iterator  $object
+   * @param   callable        $interceptor
+   * @return  array|object
+   */
+  public static function tap($object, $interceptor)
+  {
+    call_user_func($object, $interceptor);
+    return $object;
+  }
+
+  /**
+   * Does the object contain the given key?
+   *
+   * @param   array|Iterator  $object
+   * @param   int|string      $key
+   * @return  boolean
+   */
+  public static function has($object, $key)
+  {
+    return array_key_exists(static::toArray($object, true), $key);
   }
 
   /**
@@ -718,12 +976,12 @@ abstract class Underscore
    * Returns a wrapped object. Calling methods on this object will continue to
    * return wrapped objects until value is used.
    *
-   * @param   mixed  $obj
+   * @param   mixed  $value
    * @return  Chain
    */
-  public static function chain($obj)
+  public static function chain($value)
   {
-    return new Chain($obj, get_called_class());
+    return new Chain($value, get_called_class());
   }
 
   /**

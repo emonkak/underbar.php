@@ -8,8 +8,6 @@ class UnionIterator implements \Iterator
 
   protected $current;
 
-  protected $index;
-
   public function __construct(array $arrays)
   {
     $this->arrays = $arrays;
@@ -22,7 +20,7 @@ class UnionIterator implements \Iterator
 
   public function key()
   {
-    return $this->index;
+    return $this->current->key();
   }
 
   public function next()
@@ -31,8 +29,6 @@ class UnionIterator implements \Iterator
 
     while (!$this->current->valid() && ($this->current = next($this->arrays)))
       $this->current->rewind();
-
-    $this->index++;
   }
 
   public function rewind()
@@ -43,8 +39,6 @@ class UnionIterator implements \Iterator
       while (!$this->current->valid() && ($this->current = next($this->arrays)))
         $this->current->rewind();
     }
-
-    $this->index = 0;
   }
 
   public function valid()
