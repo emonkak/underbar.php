@@ -598,7 +598,8 @@ abstract class Underscore
    */
   public static function union()
   {
-    return new UnionIterator(func_get_args());
+    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
+    return new UnionIterator($arrays);
   }
 
   /**

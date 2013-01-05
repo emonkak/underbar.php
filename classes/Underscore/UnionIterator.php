@@ -17,9 +17,7 @@ class UnionIterator implements \Iterator
 
   public function current()
   {
-    return is_array($this->current)
-         ? current($this->current)
-         : $this->current->current();
+    return $this->current->current();
   }
 
   public function key()
@@ -29,31 +27,29 @@ class UnionIterator implements \Iterator
 
   public function next()
   {
+    $this->current->next();
+
+    while (!$this->current->valid() && ($this->current = next($this->arrays)))
+      $this->current->rewind();
+
     $this->index++;
-    is_array($this->current) ? next($this->current) : $this->current->next();
   }
 
   public function rewind()
   {
-    foreach ($this->arrays as &$array)
-      is_array($array) ? reset($array) : $array->rewind();
+    if ($this->current = reset($this->arrays)) {
+      $this->current->rewind();
+
+      while (!$this->current->valid() && ($this->current = next($this->arrays)))
+        $this->current->rewind();
+    }
 
     $this->index = 0;
-    $this->current = reset($this->arrays);
   }
 
   public function valid()
   {
-    do {
-      if (is_array($this->current))
-        $result = key($this->current) !== null;
-      elseif ($this->current instanceof \Traversable)
-        $result = $this->current->valid();
-      else
-        $result = false;
-    } while (!$result && ($this->current = next($this->arrays)));
-
-    return $result;
+    return $this->current;
   }
 }
 
