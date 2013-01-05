@@ -18,7 +18,7 @@ abstract class Underscore
       call_user_func($iterator, $value, $index, $list);
   }
 
-  private static function _wrapArray($list)
+  protected static function _wrapArray($list)
   {
     return is_array($list) ? new \ArrayObject($list) : $list;
   }
@@ -286,7 +286,7 @@ abstract class Underscore
     });
   }
 
-  private static function _lookupIterator($value)
+  protected static function _lookupIterator($value)
   {
     if (is_callable($value))
       return $value;
@@ -295,7 +295,7 @@ abstract class Underscore
         return is_array($obj) ? $obj[$value] : $obj->$value;
       };
     else
-      return __CLASS__.'::identity';
+      return get_called_class().'::identity';
   }
 
   /**
@@ -442,7 +442,7 @@ abstract class Underscore
    * @param   array|Iterator  $list
    * @return  array
    */
-  final public static function toArray($list)
+  public static function toArray($list)
   {
     return is_array($list) ? $list : iterator_to_array($list);
   }
@@ -497,8 +497,18 @@ abstract class Underscore
    */
   public static function initial($array, $n = 1)
   {
-    $array = static::toArray($array);
-    return array_slice($array, 0, count($array) - $n);
+    $queue = new \SplQueue();
+    $result = array();
+
+    foreach ($array as $index => $value) {
+      $queue->enqueue(array($index, $value));
+      if (count($queue) > $n) {
+        list ($idx, $val) = $queue->dequeue();
+        $result[$idx] = $val;
+      }
+    }
+
+    return $result;
   }
 
   /**
@@ -600,7 +610,7 @@ abstract class Underscore
    */
   public static function intersection($array)
   {
-    $arrays = array_map(__CLASS__.'::toArray', func_get_args());
+    $arrays = array_map(get_called_class().'::toArray', func_get_args());
     return call_user_func_array('array_intersect', $arrays);
   }
 
@@ -642,6 +652,42 @@ abstract class Underscore
     return static::uniq($array);
   }
 
+  protected static function _wrapIterator($list)
+  {
+    if (is_array($list))
+      return new \ArrayIterator($list);
+    elseif (!$list instanceof \Iterator)
+      return new \IteratorIterator($list);
+    else
+      return $list;
+  }
+
+  /**
+   * Merges together the values of each of the arrays with the values at the
+   * corresponding position.
+   *
+   * @param   array|Iterator  *$arrays
+   * @return  array
+   */
+  public static function zip()
+  {
+    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
+    return new ZipIterator($arrays);
+  }
+
+  /**
+   * Converts arrays into objects.
+   *
+   * @param   array|Iterator  list
+   * @param   array|Iterator  values
+   * @return  array
+   */
+  public static function object($list, $values = array())
+  {
+    return new CombineIterator(static::_wrapIterator($list),
+                               static::_wrapIterator($values));
+  }
+
   /**
    * A function to create flexibly-numbered lists of integers,
    * handy for each and map loops.
@@ -662,7 +708,7 @@ abstract class Underscore
    * @param   mixed  $value
    * @return  mixed  $value
    */
-  final public static function identity($value)
+  public static function identity($value)
   {
     return $value;
   }
@@ -781,8 +827,10 @@ abstract class Underscore
    */
   public static function concat()
   {
-    return call_user_func_array('array_merge',
-                                array_map(__CLASS__.'::toArray', func_get_args()));
+    return call_user_func_array(
+      'array_merge',
+      array_map(get_called_class().'::toArray', func_get_args())
+    );
   }
 
   /**

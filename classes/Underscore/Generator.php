@@ -68,7 +68,6 @@ trait Generator
   public static function initial($array, $n = 1)
   {
     $queue = new \SplQueue();
-    $result = array();
 
     foreach ($array as $index => $value) {
       $queue->enqueue(array($index, $value));
@@ -93,6 +92,60 @@ trait Generator
     foreach ($array as $index => $value) {
       if (--$n < 0)
         yield $index => $value;
+    }
+  }
+
+  /**
+   * Merges together the values of each of the arrays with the values at the
+   * corresponding position.
+   *
+   * @param   array|Iterator  *$array
+   * @return  Iterator
+   */
+  public static function zip()
+  {
+    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
+    $result = array();
+
+    foreach ($arrays as $array) $array->rewind();
+
+    do {
+      $available = false;
+      $values = array();
+
+      foreach ($arrays as $array) {
+        if ($array->valid()) {
+          $available = true;
+          $values[] = $array->current();
+          $array->next();
+        } else {
+          $values[] = null;
+        }
+      }
+
+      yield $values;
+    } while ($available);
+  }
+
+  /**
+   * Converts arrays into objects.
+   *
+   * @param   array|Iterator  list
+   * @param   array           values
+   * @return  array
+   */
+  public static function object($list, $values = array())
+  {
+    $values = static::_wrapIterator($values);
+    $values->rewind();
+    foreach ($list as $key) {
+      if ($values->valid()) {
+        $value = $values->current();
+        $values->next();
+      } else {
+        $value = null;
+      };
+      yield $key => $value;
     }
   }
 
