@@ -8,8 +8,8 @@ abstract class Underscore
    * Iterates over a list of elements, yielding each in turn to an iterator
    * function.
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  void
    */
   public static function each($list, $iterator)
@@ -34,8 +34,8 @@ abstract class Underscore
    *
    * Alias: collect
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function map($list, $iterator)
@@ -54,8 +54,8 @@ abstract class Underscore
    *
    * Alias: collectWithKey
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function mapWithKey($list, $iterator)
@@ -74,8 +74,8 @@ abstract class Underscore
    *
    * Alias: inject, foldl
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @param   mixed           $memo
    * @return  mixed
    */
@@ -102,9 +102,9 @@ abstract class Underscore
    *
    * Alias: foldr
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
-   * @param   mixed           $memo
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
+   * @param   mixed              $memo
    * @return  mixed
    */
   public static function reduceRight($list, $iterator, $memo)
@@ -126,8 +126,8 @@ abstract class Underscore
    *
    * Alias: detect
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  mixed
    */
   public static function find($list, $iterator)
@@ -149,8 +149,8 @@ abstract class Underscore
    *
    * Alias: select
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function filter($list, $iterator)
@@ -169,8 +169,8 @@ abstract class Underscore
    * Looks through each value in the list, returning an array of all the values
    * that contain all of the key-value pairs listed in properties.
    *
-   * @param   array|Iterator  $list
-   * @param   array           $properties
+   * @param   array|Traversable  $list
+   * @param   array              $properties
    * @return  boolean
    */
   public static function where($list, array $properties)
@@ -189,8 +189,8 @@ abstract class Underscore
    * Returns the values in list without the elements that the truth test
    * (iterator) passes. The opposite of filter.
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function reject($list, $iterator)
@@ -205,8 +205,8 @@ abstract class Underscore
    *
    * Alias: all
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  boolean
    */
   public static function every($list, $iterator = null)
@@ -233,8 +233,8 @@ abstract class Underscore
    *
    * Alias: any
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  boolean
    */
   public static function some($list, $iterator = null)
@@ -261,8 +261,8 @@ abstract class Underscore
    *
    * Alias: include
    *
-   * @param   array|Iterator  $list
-   * @param   mixed           $target
+   * @param   array|Traversable  $list
+   * @param   mixed              $target
    * @return  boolean
    */
   public static function contains($list, $target)
@@ -278,8 +278,8 @@ abstract class Underscore
   /**
    * Calls the method named by methodName on each value in the list.
    *
-   * @param   array|Iterator  $list
-   * @param   string          $methodName
+   * @param   array|Traversable  $list
+   * @param   string             $methodName
    * @return  Iterator
    */
   public static function invoke($list, $methodName)
@@ -295,8 +295,8 @@ abstract class Underscore
    * A convenient version of what is perhaps the most common use-case for map:
    * extracting a list of property values.
    *
-   * @param   array|Iterator  $list
-   * @param   string          $propertyName
+   * @param   array|Traversable  $list
+   * @param   string             $propertyName
    * @return  Iterator
    */
   public static function pluck($list, $propertyName)
@@ -327,8 +327,8 @@ abstract class Underscore
    * Returns the maximum value in list. If iterator is passed, it will be used
    * on each value to generate the criterion by which the value is ranked.
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  mixed
    */
   public static function max($list, $iterator = null)
@@ -351,8 +351,8 @@ abstract class Underscore
    * Returns the minimum value in list. If iterator is passed, it will be used
    * on each value to generate the criterion by which the value is ranked.
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  mixed
    */
   public static function min($list, $iterator = null)
@@ -375,8 +375,8 @@ abstract class Underscore
    * Returns a sorted copy of list, ranked in ascending order by the results of
    * running each value through iterator.
    *
-   * @param   array|Iterator   $list
-   * @param   callable|string  $value
+   * @param   array|Traversable  $list
+   * @param   callable|string    $value
    * @return  Iterator
    */
   public static function sortBy($list, $value)
@@ -408,8 +408,8 @@ abstract class Underscore
    * Returns a sorted copy of list, ranked in ascending order by the results of
    * running each value through iterator.
    *
-   * @param   array|Iterator   $list
-   * @param   callable|string  $value
+   * @param   array|Traversable  $list
+   * @param   callable|string    $value
    * @return  array
    */
   public static function groupBy($list, $value)
@@ -430,9 +430,9 @@ abstract class Underscore
    * each group. Similar to groupBy, but instead of returning a list of values,
    * returns a count for the number of values in that group.
    *
-   * @param   array|Iterator   $list
-   * @param   callable|string  $value
-   * @return  Iterator
+   * @param   array|Traversable  $list
+   * @param   callable|string    $value
+   * @return  int
    */
   public static function countBy($list, $value)
   {
@@ -451,7 +451,7 @@ abstract class Underscore
   /**
    * Returns a shuffled copy of the list.
    *
-   * @param   array|Iterator  $list
+   * @param   array|Traversable  $list
    * @return  array
    */
   public static function shuffle($list)
@@ -464,19 +464,23 @@ abstract class Underscore
   /**
    * Converts the list (anything that can be iterated over), into a real Array.
    *
-   * @param   array|Iterator  $list
-   * @param   boolean         $useKeys
+   * @param   array|Traversable  $list
+   * @param   boolean            $useKeys
    * @return  array
    */
   public static function toArray($list, $useKeys = false)
   {
-    return is_array($list) ? $list : iterator_to_array($list, $useKeys);
+    try {
+      return is_array($list) ? $list : iterator_to_array($list, $useKeys);
+    } catch (\OutOfBoundsException $e) {
+      return array();
+    }
   }
 
   /**
    * Return the number of values in the list.
    *
-   * @param   array|Countable|Iterator  $list
+   * @param   array|Countable|Traversable  $list
    * @return  int
    */
   public static function size($list)
@@ -492,8 +496,8 @@ abstract class Underscore
    *
    * Alias: head, take
    *
-   * @param   array|Iterator  $array
-   * @param   int             $n
+   * @param   array|Traversable  $array
+   * @param   int                $n
    * @return  mixed|Iterator
    */
   public static function first($array, $n = null)
@@ -517,8 +521,8 @@ abstract class Underscore
   /**
    * Returns everything but the last entry of the array.
    *
-   * @param   array|Iterator  $array
-   * @param   int             $n
+   * @param   array|Traversable  $array
+   * @param   int                $n
    * @return  array
    */
   public static function initial($array, $n = 1)
@@ -540,8 +544,8 @@ abstract class Underscore
   /**
    * Returns the last element of an array.
    *
-   * @param   array|Iterator  $array
-   * @param   int             $n
+   * @param   array|Traversable  $array
+   * @param   int                $n
    * @return  array|mixed
    */
   public static function last($array, $n = null)
@@ -555,8 +559,8 @@ abstract class Underscore
    *
    * Alias: tail, drop
    *
-   * @param   array|Iterator  $array
-   * @param   int             $index
+   * @param   array|Traversable  $array
+   * @param   int                $index
    * @return  Iterator
    */
   public static function rest($array, $index = 1)
@@ -577,7 +581,7 @@ abstract class Underscore
   /**
    * Returns a copy of the array with all falsy values removed.
    *
-   * @param   array|Iterator  $array
+   * @param   array|Traversable  $array
    * @return  Iterator
    */
   public static function compact($array)
@@ -588,9 +592,9 @@ abstract class Underscore
   /**
    * Flattens a nested array (the nesting can be to any depth).
    *
-   * @param   array|Iterator  $array
-   * @param   boolean         $shallow
-   * @return  array
+   * @param   array|Traversable  $array
+   * @param   boolean            $shallow
+   * @return  Iterator
    */
   public static function flatten($array, $shallow = false)
   {
@@ -604,8 +608,8 @@ abstract class Underscore
   /**
    * Returns a copy of the array with all instances of the values removed.
    *
-   * @param   array|Iterator  $array
-   * @param   mixed           *$values
+   * @param   array|Traversable  $array
+   * @param   mixed              *$values
    * @return  Iterator
    */
   public static function without($array)
@@ -617,7 +621,7 @@ abstract class Underscore
    * Computes the union of the passed-in arrays: the list of unique items,
    * in order, that are present in one or more of the arrays.
    *
-   * @param   array|Iterator  *$arrays
+   * @param   array|Traversable  *$arrays
    * @return  Iterator
    */
   public static function union()
@@ -629,8 +633,8 @@ abstract class Underscore
   /**
    * Computes the list of values that are the intersection of all the arrays.
    *
-   * @param   array|Iterator  $array
-   * @param   array|Iterator  *$rest
+   * @param   array|Traversable  $array
+   * @param   array|Traversable  *$rest
    * @return  array
    */
   public static function intersection($array)
@@ -643,8 +647,8 @@ abstract class Underscore
    * Similar to without, but returns the values from array that are not present
    * in the other arrays.
    *
-   * @param   array|Iterator  $array
-   * @param   array           $others
+   * @param   array|Traversable  $array
+   * @param   array              $others
    * @return  Iterator
    */
   public static function difference($array, array $others)
@@ -659,8 +663,8 @@ abstract class Underscore
    *
    * Alias: unique
    *
-   * @param   array|Iterator  $array
-   * @return  array
+   * @param   array|Traversable  $array
+   * @return  Iterator
    */
   public static function uniq($array)
   {
@@ -681,8 +685,8 @@ abstract class Underscore
    * Merges together the values of each of the arrays with the values at the
    * corresponding position.
    *
-   * @param   array|Iterator  *$arrays
-   * @return  array
+   * @param   array|Traversable  *$arrays
+   * @return  Iterator
    */
   public static function zip()
   {
@@ -693,8 +697,8 @@ abstract class Underscore
   /**
    * Converts arrays into objects.
    *
-   * @param   array|Iterator  $list
-   * @param   array|Iterator  $values
+   * @param   array|Traversable  $list
+   * @param   array|Traversable  $values
    * @return  Iterator
    */
   public static function object($list, $values = array())
@@ -717,9 +721,9 @@ abstract class Underscore
    * Returns the index at which value can be found in the array, or -1 if value
    * is not present in the array.
    *
-   * @param   array|Iterator  $array
-   * @param   mixed           $value
-   * @param   boolean|int     $isSorted
+   * @param   array|Traversable  $array
+   * @param   mixed              $value
+   * @param   boolean|int        $isSorted
    * @return  int
    */
   public static function indexOf($array, $value, $isSorted = 0)
@@ -745,9 +749,9 @@ abstract class Underscore
    * Returns the index of the last occurrence of value in the array, or -1 if
    * value is not present.
    *
-   * @param   array|Iterator  $array
-   * @param   mixed           $value
-   * @param   int             $fromIndex
+   * @param   array|Traversable  $array
+   * @param   mixed              $value
+   * @param   int                $fromIndex
    * @return  int
    */
   public static function lastIndexOf($array, $value, $fromIndex = null)
@@ -764,9 +768,9 @@ abstract class Underscore
    * Returns the index at which value can be found in the array, or -1 if value
    * is not present in the array.
    *
-   * @param   array|Iterator  $list
-   * @param   mixed           $values
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   mixed              $values
+   * @param   callable           $iterator
    * @return  int
    */
   public static function sortedIndex($list, $value, $iterator = null)
@@ -792,8 +796,8 @@ abstract class Underscore
   /**
    * Retrieve all the names of the object's properties.
    *
-   * @param   array|Iterator  $object
-   * @return  array
+   * @param   array|Traversable  $object
+   * @return  Iterator
    */
   public static function keys($object)
   {
@@ -806,8 +810,8 @@ abstract class Underscore
   /**
    * Return all of the values of the object's properties.
    *
-   * @param   array|Iterator  $object
-   * @return  array
+   * @param   array|Traversable  $object
+   * @return  Iterator
    */
   public static function values($object)
   {
@@ -820,8 +824,8 @@ abstract class Underscore
   /**
    * Convert an object into a list of [key, value] pairs.
    *
-   * @param   array|Iterator  $object
-   * @return  array
+   * @param   array|Traversable  $object
+   * @return  Iterator
    */
   public static function pairs($object)
   {
@@ -833,8 +837,8 @@ abstract class Underscore
   /**
    * Convert an object into a list of [key, value] pairs.
    *
-   * @param   array|Iterator  $object
-   * @return  array
+   * @param   array|Traversable  $object
+   * @return  Iterator
    */
   public static function invert($object)
   {
@@ -847,58 +851,54 @@ abstract class Underscore
    * Copy all of the properties in the source objects over to the destination
    * object, and return the destination object.
    *
-   * @param   array|Iterator  $destination
-   * @param   array|Iterator  *$sources
-   * @return  array
+   * @param   array|Traversable  $destination
+   * @param   array|Traversable  *$sources
+   * @return  Iterator
    */
   public static function extend()
   {
-    $objects = array();
-
-    foreach (func_get_args() as $object)
-      $objects[] = static::toArray($object, true);
-
-    return call_user_func_array('array_merge', $objects);
+    return call_user_func_array(get_called_class().'::union', func_get_args());
   }
 
   /**
    * Return a copy of the object, filtered to only have values for the
    * whitelisted keys (or array of valid keys).
    *
-   * @param   array|Iterator  $object
-   * @param   string          *$keys
+   * @param   array|Traversable  $object
+   * @param   string             *$keys
    * @return  array
    */
   public static function pick($object)
   {
+    $array = static::toArray($object);
     $keys = array_slice(func_get_args(), 1);
-    return static::filter($object, function($value, $key) use ($keys) {
-      return in_array($value, $keys, true);
-    });
+    $result = array();
+    foreach ($keys as $key) $result[$key] = $array[$key];
+    return $result;
   }
 
   /**
    * Return a copy of the object, filtered to omit the blacklisted keys
    * (or array of keys).
    *
-   * @param   array|Iterator  $object
-   * @param   string          *$keys
+   * @param   array|Traversable  $object
+   * @param   string             *$keys
    * @return  array
    */
   public static function omit($object)
   {
+    $array = static::toArray($object);
     $keys = array_slice(func_get_args(), 1);
-    return static::filter($object, function($value, $key) use ($keys) {
-      return !in_array($value, $keys, true);
-    });
+    foreach ($keys as $key) unset($array[$key]);
+    return $array;
   }
 
   /**
    * Copy all of the properties in the source objects over to the destination
    * object, and return the destination object.
    *
-   * @param   array|Iterator  $object
-   * @param   array|Iterator  *$defaults
+   * @param   array|Traversable  $object
+   * @param   array|Traversable  *$defaults
    * @return  array
    */
   public static function defaults($object)
@@ -925,21 +925,21 @@ abstract class Underscore
   /**
    * Invokes interceptor with the object, and then returns object.
    *
-   * @param   array|Iterator  $object
-   * @param   callable        $interceptor
+   * @param   array|Traversable  $object
+   * @param   callable           $interceptor
    * @return  array|object
    */
   public static function tap($object, $interceptor)
   {
-    call_user_func($object, $interceptor);
+    call_user_func($interceptor, $object);
     return $object;
   }
 
   /**
    * Does the object contain the given key?
    *
-   * @param   array|Iterator  $object
-   * @param   int|string      $key
+   * @param   array|Traversable  $object
+   * @param   int|string         $key
    * @return  boolean
    */
   public static function has($object, $key)
@@ -987,7 +987,7 @@ abstract class Underscore
   /**
    * Removes the last element from an array and returns that element.
    *
-   * @param   array|Iterator  $array
+   * @param   array|Traversable  $array
    * @return  array
    */
   public static function pop($array)
@@ -1001,8 +1001,8 @@ abstract class Underscore
    * Adds one or more elements to the end of an array and returns the new length
    * of the array.
    *
-   * @param   array|Iterator  $array
-   * @param   mixed           *$values
+   * @param   array|Traversable  $array
+   * @param   mixed              *$values
    * @return  array
    */
   public static function push($array)
@@ -1015,7 +1015,7 @@ abstract class Underscore
    * Reverses the order of the elements of an array -- the first becomes the
    * last, and the last becomes the first.
    *
-   * @param   array|Iterator  $array
+   * @param   array|Traversable  $array
    * @return  array
    */
   public static function reverse($array)
@@ -1026,7 +1026,7 @@ abstract class Underscore
   /**
    * Removes the first element from an array and returns that element.
    *
-   * @param   array|Iterator  $array
+   * @param   array|Traversable  $array
    * @return  array
    */
   public static function shift($array)
@@ -1039,7 +1039,7 @@ abstract class Underscore
   /**
    * Removes the last element from an array and returns that element.
    *
-   * @param   array|Iterator  $array
+   * @param   array|Traversable  $array
    * @return  array
    */
   public static function sort($array)
@@ -1052,9 +1052,9 @@ abstract class Underscore
   /**
    * Removes the first element from an array and returns that element.
    *
-   * @param   array|Iterator  $array
-   * @param   int             $index
-   * @param   int             $n
+   * @param   array|Traversable  $array
+   * @param   int                $index
+   * @param   int                $n
    * @return  array
    */
   public static function splice($array, $index, $n)
@@ -1067,8 +1067,8 @@ abstract class Underscore
    * Adds one or more elements to the front of an array and returns the new
    * length of the array.
    *
-   * @param   array|Iterator  $array
-   * @param   mixed           *$values
+   * @param   array|Traversable  $array
+   * @param   mixed              *$values
    * @return  array
    */
   public static function unshift($array)
@@ -1081,7 +1081,7 @@ abstract class Underscore
    * Returns a new array comprised of this array joined with other array(s)
    * and/or value(s).
    *
-   * @param   array|Iterator  *$arrays
+   * @param   array|Traversable  *$arrays
    * @return  array
    */
   public static function concat()
@@ -1095,8 +1095,8 @@ abstract class Underscore
   /**
    * Joins all elements of an array into a string.
    *
-   * @param   array|Iterator  $array
-   * @param   string          $separator
+   * @param   array|Traversable  $array
+   * @param   string             $separator
    * @return  string
    */
   public static function join($array, $separator = ' ')
@@ -1107,14 +1107,14 @@ abstract class Underscore
   /**
    * Returns a shallow copy of a portion of an array.
    *
-   * @param   array|Iterator  $array
-   * @param   int             $begin
-   * @param   int             $end
+   * @param   array|Traversable  $array
+   * @param   int                $begin
+   * @param   int                $end
    * @return  Iterator
    */
   public static function slice($array, $begin, $end = -1)
   {
-    return new \LimitIterator($array, $begin, $end);
+    return array_slice(static::toArray($array), $begin, $end);
   }
 }
 

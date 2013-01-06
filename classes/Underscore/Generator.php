@@ -10,8 +10,8 @@ trait Generator
    *
    * Alias: collect
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function map($list, $iterator)
@@ -26,8 +26,8 @@ trait Generator
    *
    * Alias: collectWithKey
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function mapWithKey($list, $iterator)
@@ -44,8 +44,8 @@ trait Generator
    *
    * Alias: select
    *
-   * @param   array|Iterator  $list
-   * @param   callable        $iterator
+   * @param   array|Traversable  $list
+   * @param   callable           $iterator
    * @return  Iterator
    */
   public static function filter($list, $iterator)
@@ -62,8 +62,8 @@ trait Generator
    *
    * Alias: head, take
    *
-   * @param   array|Iterator  $array
-   * @param   int             $n
+   * @param   array|Traversable  $array
+   * @param   int                $n
    * @return  mixed|Iterator
    */
   public static function take($array, $n = null)
@@ -79,9 +79,9 @@ trait Generator
   /**
    * Returns everything but the last entry of the array.
    *
-   * @param   array|Iterator  $array
-   * @param   int             $n
-   * @return  array
+   * @param   array|Traversable  $array
+   * @param   int                $n
+   * @return  Iterator
    */
   public static function initial($array, $n = 1)
   {
@@ -101,8 +101,8 @@ trait Generator
    *
    * Alias: tail, drop
    *
-   * @param   array|Iterator  $array
-   * @param   int             $index
+   * @param   array|Traversable  $array
+   * @param   int                $index
    * @return  Iterator
    */
   public static function rest($array, $n = 1)
@@ -117,7 +117,7 @@ trait Generator
    * Merges together the values of each of the arrays with the values at the
    * corresponding position.
    *
-   * @param   array|Iterator  *$array
+   * @param   array|Traversable  *$array
    * @return  Iterator
    */
   public static function zip()
@@ -173,7 +173,7 @@ trait Generator
    * Computes the union of the passed-in arrays: the list of unique items,
    * in order, that are present in one or more of the arrays.
    *
-   * @param   array|Iterator  *$arrays
+   * @param   array|Traversable  *$arrays
    * @return  Iterator
    */
   public static function union()
@@ -187,9 +187,9 @@ trait Generator
   /**
    * Flattens a nested array (the nesting can be to any depth).
    *
-   * @param   array|Iterator  $array
+   * @param   array|Traversable  $array
    * @param   boolean         $shallow
-   * @return  array
+   * @return  Iterator
    */
   public static function flatten($array, $shallow = false)
   {
