@@ -926,7 +926,7 @@ abstract class _
    */
   public static function pick($object)
   {
-    $array = static::toArray($object);
+    $array = static::toArray($object, true);
     $keys = array_slice(func_get_args(), 1);
     $result = array();
     foreach ($keys as $key) $result[$key] = $array[$key];
@@ -943,7 +943,7 @@ abstract class _
    */
   public static function omit($object)
   {
-    $array = static::toArray($object);
+    $array = static::toArray($object, true);
     $keys = array_slice(func_get_args(), 1);
     foreach ($keys as $key) unset($array[$key]);
     return $array;
@@ -1025,7 +1025,7 @@ abstract class _
    * Returns the same value that is used as the argument.
    *
    * @param   mixed  $value
-   * @return  mixed  $value
+   * @return  mixed
    */
   public static function identity($value)
   {
