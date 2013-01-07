@@ -2,51 +2,22 @@
 
 namespace Underscore;
 
-class MapIterator implements \Iterator
+class MapIterator extends \IteratorIterator
 {
-  protected $collection;
-
   protected $iterator;
-
-  protected $current;
 
   public function __construct(\Iterator $list, $iterator)
   {
-    $this->collection = $list;
+    parent::__construct($list);
     $this->iterator = $iterator;
   }
 
   public function current()
   {
-    return $this->current;
-  }
-
-  public function key()
-  {
-    $this->collection->key();
-  }
-
-  public function next()
-  {
-    $this->collection->next();
-    $this->current = call_user_func($this->iterator,
-                                    $this->collection->current(),
-                                    $this->collection->key(),
-                                    $this->collection);
-  }
-
-  public function rewind()
-  {
-    $this->collection->rewind();
-    $this->current = call_user_func($this->iterator,
-                                    $this->collection->current(),
-                                    $this->collection->key(),
-                                    $this->collection);
-  }
-
-  public function valid()
-  {
-    return $this->collection->valid();
+    return call_user_func($this->iterator,
+                          parent::current(),
+                          parent::key(),
+                          $this);
   }
 }
 

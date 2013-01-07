@@ -11,24 +11,14 @@ class MapWithKeyIterator extends MapIterator
     return $this->key;
   }
 
-  public function next()
+  public function current()
   {
-    $this->collection->next();
-    list ($this->key, $this->current) =
+    list ($this->key, $current) =
       call_user_func($this->iterator,
-                     $this->collection->current(),
-                     $this->collection->key(),
-                     $this->collection);
-  }
-
-  public function rewind()
-  {
-    $this->collection->rewind();
-    list ($this->key, $this->current) =
-      call_user_func($this->iterator,
-                     $this->collection->current(),
-                     $this->collection->key(),
-                     $this->collection);
+                     parent::current(),
+                     parent::key(),
+                     $this);
+    return $current;
   }
 }
 
