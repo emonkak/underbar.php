@@ -551,7 +551,10 @@ abstract class Underscore
   public static function last($array, $n = null)
   {
     $array = static::toArray($array);
-    return is_int($n) ? array_slice($array, count($array) - $n) : end($array);
+    if (is_int($n))
+      return $n > 0 ? array_slice($array, -$n) : array();
+    else
+      return end($array);
   }
 
   /**
