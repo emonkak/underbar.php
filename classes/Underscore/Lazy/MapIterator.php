@@ -1,6 +1,6 @@
 <?php
 
-namespace Underscore;
+namespace Underscore\Lazy;
 
 class MapIterator extends \IteratorIterator
 {

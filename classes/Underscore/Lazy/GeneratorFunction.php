@@ -1,8 +1,8 @@
 <?php
 
-namespace Underscore;
+namespace Underscore\Lazy;
 
-trait Generator
+abstract class GeneratorFunction extends \Underscore\_
 {
   /**
    * Produces a new array of values by mapping each value in list through a
@@ -66,7 +66,15 @@ trait Generator
    * @param   int                $n
    * @return  mixed|Iterator
    */
-  public static function take($array, $n = null)
+  public static function first($array, $n = null)
+  {
+    if (is_int($n))
+      return static::_first($array, $n);
+    else
+      foreach ($array as $value) return $value;
+  }
+
+  private static function _first($array, $n = null)
   {
     foreach ($array as $index => $value) {
       if ($n-- > 0)
@@ -87,12 +95,9 @@ trait Generator
   {
     $queue = new \SplQueue();
 
-    foreach ($array as $index => $value) {
-      $queue->enqueue(array($index, $value));
-      if (count($queue) > $n) {
-        list ($idx, $val) = $queue->dequeue();
-        yield $idx => $val;
-      }
+    foreach ($array as $value) {
+      $queue->enqueue($value);
+      if (count($queue) > $n) yield $queue->dequeue();
     }
   }
 
@@ -123,25 +128,23 @@ trait Generator
   public static function zip()
   {
     $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    $result = array();
-
     foreach ($arrays as $array) $array->rewind();
 
     do {
       $available = false;
-      $values = array();
+      $zipped = array();
 
       foreach ($arrays as $array) {
         if ($array->valid()) {
           $available = true;
-          $values[] = $array->current();
+          $zipped[] = $array->current();
           $array->next();
         } else {
-          $values[] = null;
+          $zipped[] = null;
         }
       }
 
-      yield $values;
+      yield $zipped;
     } while ($available);
   }
 
@@ -156,6 +159,10 @@ trait Generator
    */
   public static function range($start, $stop = PHP_INT_MAX, $step = 1)
   {
+    if ($stop === null) {
+      $stop = $start;
+      $start = 0;
+    }
     if ($start < $stop) {
       do {
         yield $start;
