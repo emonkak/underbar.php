@@ -44,33 +44,6 @@ abstract class _
   }
 
   /**
-   * Produces a new array of values by mapping each value in list through a
-   * transformation function (iterator).
-   *
-   * Alias: collectWithKey
-   *
-   * @param   array|Traversable  $list
-   * @param   callable           $iterator
-   * @return  Iterator
-   */
-  public static function mapWithKey($list, $iterator)
-  {
-    $result = array();
-
-    foreach ($list as $index => $value) {
-      list ($key, $val) = call_user_func($iterator, $value, $index, $list);
-      $result[$key] = $val;
-    }
-
-    return $result;
-  }
-
-  public static function collectWithKey($list, $iterator)
-  {
-    return static::mapWithKey($list, $iterator);
-  }
-
-  /**
    * Also known as inject and foldl, reduce boils down a list of values into a
    * single value.
    *
@@ -751,14 +724,14 @@ abstract class _
     $values = static::_wrapIterator($values);
     $values->rewind();
 
-    return static::mapWithKey($list, function($value, $key) use ($values) {
+    return static::_mapWithKey($list, function($value, $key) use ($values) {
       if ($values->valid()) {
         $val = $values->current();
         $values->next();
       } else {
         $val = null;
       };
-      return array($key, $val);
+      return array($value, $val);
     });
   }
 
@@ -844,6 +817,18 @@ abstract class _
     return $low;
   }
 
+  protected static function _mapWithKey($list, $iterator)
+  {
+    $result = array();
+
+    foreach ($list as $index => $value) {
+      list ($key, $val) = call_user_func($iterator, $value, $index, $list);
+      $result[$key] = $val;
+    }
+
+    return $result;
+  }
+
   /**
    * Retrieve all the names of the object's properties.
    *
@@ -853,7 +838,7 @@ abstract class _
   public static function keys($object)
   {
     $i = 0;
-    return static::mapWithKey($object, function($value, $key) use (&$i) {
+    return static::_mapWithKey($object, function($value, $key) use (&$i) {
       return array($i++, $key);
     });
   }
@@ -867,7 +852,7 @@ abstract class _
   public static function values($object)
   {
     $i = 0;
-    return static::mapWithKey($object, function($value) use (&$i) {
+    return static::_mapWithKey($object, function($value) use (&$i) {
       return array($i++, $value);
     });
   }
@@ -893,7 +878,7 @@ abstract class _
    */
   public static function invert($object)
   {
-    return static::mapWithKey($object, function($value, $key) {
+    return static::_mapWithKey($object, function($value, $key) {
       return array($value, $key);
     });
   }

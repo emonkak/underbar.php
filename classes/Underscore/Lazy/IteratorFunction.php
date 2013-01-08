@@ -20,21 +20,6 @@ abstract class IteratorFunction extends \Underscore\_
   }
 
   /**
-   * Produces a new array of values by mapping each value in list through a
-   * transformation function (iterator).
-   *
-   * Alias: collectWithKey
-   *
-   * @param   array|Traversable  $list
-   * @param   callable           $iterator
-   * @return  Iterator
-   */
-  public static function mapWithKey($list, $iterator)
-  {
-    return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
-  }
-
-  /**
    * Looks through each value in the list, returning an array of all the values
    * that pass a truth test (iterator).
    *
@@ -153,6 +138,11 @@ abstract class IteratorFunction extends \Underscore\_
       $start = 0;
     }
     return new RangeIterator($start, $stop, $step);
+  }
+
+  protected static function _mapWithKey($list, $iterator)
+  {
+    return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
   }
 }
 

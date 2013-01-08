@@ -10,6 +10,8 @@ class InitialIterator extends \IteratorIterator
 
   protected $index;
 
+  protected $current;
+
   public function __construct(\Traversable $array, $n)
   {
     parent::__construct($array);
@@ -19,7 +21,7 @@ class InitialIterator extends \IteratorIterator
 
   public function current()
   {
-    return $this->queue->dequeue();
+    return $this->current;
   }
 
   public function key()
@@ -32,6 +34,7 @@ class InitialIterator extends \IteratorIterator
     parent::next();
     $this->queue->enqueue(parent::current());
     $this->index++;
+    $this->current = $this->queue->dequeue();
   }
 
   public function rewind()
@@ -39,13 +42,14 @@ class InitialIterator extends \IteratorIterator
     parent::rewind();
 
     $n = $this->n;
-    do {
-      if (!parent::valid()) break;
+    while (parent::valid()) {
       $this->queue->enqueue(parent::current());
+      if ($n-- <= 0) break;
       parent::next();
-    } while ($n-- > 0);
+    }
 
     $this->index = 0;
+    $this->current = $this->queue->dequeue();
   }
 }
 
