@@ -2,7 +2,7 @@
 
 namespace Underscore\Lazy;
 
-abstract class GeneratorFunction extends \Underscore\_
+abstract class GeneratorFunction extends \Underscore\Strict
 {
   /**
    * Produces a new array of values by mapping each value in list through a
@@ -48,9 +48,9 @@ abstract class GeneratorFunction extends \Underscore\_
    * @param   int                $n
    * @return  mixed|Iterator
    */
-  public static function first($array, $n = null)
+  public static function first($array, $n = null, $guard = null)
   {
-    if (is_int($n))
+    if (is_int($n) && $guard === null)
       return static::_first($array, $n);
     else
       foreach ($array as $value) return $value;
@@ -73,10 +73,11 @@ abstract class GeneratorFunction extends \Underscore\_
    * @param   int                $n
    * @return  Iterator
    */
-  public static function initial($array, $n = 1)
+  public static function initial($array, $n = 1, $guard = null)
   {
     $queue = new \SplQueue();
 
+    if ($guard !== null) $n = 1;
     foreach ($array as $value) {
       $queue->enqueue($value);
       if (count($queue) > $n) yield $queue->dequeue();
@@ -92,8 +93,9 @@ abstract class GeneratorFunction extends \Underscore\_
    * @param   int                $index
    * @return  Iterator
    */
-  public static function rest($array, $n = 1)
+  public static function rest($array, $n = 1, $guard = null)
   {
+    if ($guard !== null) $n = 1;
     foreach ($array as $index => $value) {
       if (--$n < 0)
         yield $index => $value;

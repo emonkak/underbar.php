@@ -2,7 +2,7 @@
 
 namespace Underscore;
 
-abstract class _
+abstract class Strict
 {
   /**
    * Iterates over a list of elements, yielding each in turn to an iterator
@@ -194,7 +194,7 @@ abstract class _
     $result = true;
 
     foreach ($list as $index => $value) {
-      if (!($result = $iterator
+      if (!($result = is_callable($iterator)
                     ? call_user_func($iterator, $value, $index, $list)
                     : $value))
         break;
@@ -222,7 +222,7 @@ abstract class _
     $result = true;
 
     foreach ($list as $index => $value) {
-      if ($result = $iterator
+      if ($result = is_callable($iterator)
                   ? call_user_func($iterator, $value, $index, $list)
                   : $value)
         break;
@@ -485,22 +485,22 @@ abstract class _
    * @param   int                $n
    * @return  mixed|Iterator
    */
-  public static function first($array, $n = null)
+  public static function first($array, $n = null, $guard = null)
   {
-    if (is_int($n))
+    if (is_int($n) && $guard === null)
       return array_slice(static::toArray($array), 0, $n);
     else
       foreach ($array as $value) return $value;
   }
 
-  public static function head($array, $n = null)
+  public static function head($array, $n = null, $guard = null)
   {
-    return static::first($array, $n);
+    return static::first($array, $n, $guard);
   }
 
-  public static function take($array, $n = null)
+  public static function take($array, $n = null, $guard = null)
   {
-    return static::first($array, $n);
+    return static::first($array, $n, $guard);
   }
 
   /**
@@ -510,9 +510,12 @@ abstract class _
    * @param   int                $n
    * @return  array
    */
-  public static function initial($array, $n = 1)
+  public static function initial($array, $n = 1, $guard = null)
   {
-    return $n > 0 ? array_slice(static::toArray($array), 0, -$n) : array();
+    if ($guard !== null) $n = 1;
+    return $n > 0
+         ? array_slice(static::toArray($array), 0, -$n)
+         : array();
   }
 
   /**
@@ -522,10 +525,10 @@ abstract class _
    * @param   int                $n
    * @return  array|mixed
    */
-  public static function last($array, $n = null)
+  public static function last($array, $n = null, $guard = null)
   {
     $array = static::toArray($array);
-    if (is_int($n))
+    if (is_int($n) && $guard === null)
       return $n > 0 ? array_slice($array, -$n) : array();
     else
       return end($array);
@@ -540,19 +543,19 @@ abstract class _
    * @param   int                $index
    * @return  Iterator
    */
-  public static function rest($array, $index = 1)
+  public static function rest($array, $index = 1, $guard = null)
   {
-    return array_slice(static::toArray($array), $index);
+    return array_slice(static::toArray($array), ($guard === null ? $index : 1));
   }
 
-  public static function tail($array, $index = 1)
+  public static function tail($array, $index = 1, $guard = null)
   {
-    return self::rest($array, $index);
+    return self::rest($array, $index, $guard);
   }
 
-  public static function drop($array, $index = 1)
+  public static function drop($array, $index = 1, $guard = null)
   {
-    return self::rest($array, $index);
+    return self::rest($array, $index, $guard);
   }
 
   /**

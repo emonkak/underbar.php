@@ -2,7 +2,7 @@
 
 namespace Underscore\Lazy;
 
-abstract class IteratorFunction extends \Underscore\_
+abstract class IteratorFunction extends \Underscore\Strict
 {
   /**
    * Produces a new array of values by mapping each value in list through a
@@ -46,9 +46,9 @@ abstract class IteratorFunction extends \Underscore\_
    * @param   int                $n
    * @return  mixed|Iterator
    */
-  public static function first($array, $n = null)
+  public static function first($array, $n = null, $guard = null)
   {
-    if (is_int($n))
+    if (is_int($n) && $guard === null)
       return new \LimitIterator(static::_wrapIterator($array), 0, $n);
     else
       foreach ($array as $value) return $value;
@@ -61,8 +61,9 @@ abstract class IteratorFunction extends \Underscore\_
    * @param   int                $n
    * @return  Iterator
    */
-  public static function initial($array, $n = 1)
+  public static function initial($array, $n = 1, $guard = null)
   {
+    if ($guard !== null) $n = 1;
     return new InitialIterator(static::_wrapIterator($array), $n);
   }
 
@@ -75,8 +76,9 @@ abstract class IteratorFunction extends \Underscore\_
    * @param   int                $index
    * @return  Iterator
    */
-  public static function rest($array, $index = 1)
+  public static function rest($array, $index = 1, $guard = null)
   {
+    if ($guard !== null) $index = 1;
     return new \LimitIterator(static::_wrapIterator($array), $index);
   }
 

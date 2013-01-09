@@ -10,7 +10,7 @@ class MapWithKeyIterator extends \IteratorIterator
 
   protected $current;
 
-  public function __construct(\Iterator $list, $iterator)
+  public function __construct(\Traversable $list, $iterator)
   {
     parent::__construct($list);
     $this->iterator = $iterator;
