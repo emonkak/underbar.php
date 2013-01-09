@@ -13,22 +13,20 @@ class FlattenIterator extends \RecursiveIteratorIterator
 
   public function next()
   {
-    $maxDepth = $this->getMaxDepth();
-    if ($maxDepth > 0) {
-      do {
+    parent::next();
+    if (($maxDepth = $this->getMaxDepth()) > 0) {
+      while ((is_array($current = $this->current()) || $current instanceof \Traversable)
+             && $this->getDepth() < $maxDepth)
         parent::next();
-      } while (is_array($this->current()) && $this->getDepth() < $maxDepth);
-    } else {
-      parent::next();
     }
   }
 
   public function rewind()
   {
     parent::rewind();
-    $maxDepth = $this->getMaxDepth();
-    if ($maxDepth > 0) {
-      while (is_array($this->current()) && $this->getDepth() < $maxDepth)
+    if (($maxDepth = $this->getMaxDepth()) > 0) {
+      while ((is_array($current = $this->current()) || $current instanceof \Traversable)
+             && $this->getDepth() < $maxDepth)
         parent::next();
     }
   }
