@@ -89,11 +89,7 @@ abstract class IteratorFunction extends \Underscore\_
    */
   public static function flatten($array, $shallow = false)
   {
-    $it = new \RecursiveIteratorIterator(
-      new FlattenIterator(static::_wrapIterator($array))
-    );
-    $it->setMaxDepth($shallow ? 1 : -1);
-    return $it;
+    return new FlattenIterator(static::_wrapIterator($array), $shallow);;
   }
 
   /**
