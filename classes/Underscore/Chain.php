@@ -4,9 +4,9 @@ namespace Underscore;
 
 class Chain
 {
-  protected $value;
+  private $value;
 
-  protected $class;
+  private $class;
 
   public function __construct($value, $class)
   {
