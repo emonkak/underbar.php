@@ -51,7 +51,7 @@ abstract class Strict
    *
    * @param   array|Traversable  $list
    * @param   callable           $iterator
-   * @param   mixed           $memo
+   * @param   mixed              $memo
    * @return  mixed
    */
   public static function reduce($list, $iterator, $memo)

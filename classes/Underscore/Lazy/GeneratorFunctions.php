@@ -156,7 +156,7 @@ abstract class GeneratorFunctions extends \Underscore\Strict
    * Flattens a nested array (the nesting can be to any depth).
    *
    * @param   array|Traversable  $array
-   * @param   boolean         $shallow
+   * @param   boolean            $shallow
    * @return  Iterator
    */
   public static function flatten($array, $shallow = false)
