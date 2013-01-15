@@ -233,7 +233,7 @@ abstract class Strict
 
   public static function any($list, $iterator = null)
   {
-    return static::any($list, $iterator);
+    return static::some($list, $iterator);
   }
 
   /**
@@ -282,25 +282,13 @@ abstract class Strict
   public static function pluck($list, $propertyName)
   {
     return static::map($list, function($value) use ($propertyName) {
-      if (isset($value[$propertyName]))
+      if (is_array($value) && isset($value[$propertyName]))
         return $value[$propertyName];
-      elseif (isset($value->$propertyName))
+      elseif (is_object($value) && isset($value->$propertyName))
         return $value->$propertyName;
       else
         return null;
     });
-  }
-
-  private static function _lookupIterator($value)
-  {
-    if (is_callable($value))
-      return $value;
-    elseif (is_scalar($value))
-      return function($obj) use ($value) {
-        return is_array($obj) ? $obj[$value] : $obj->$value;
-      };
-    else
-      return get_called_class().'::identity';
   }
 
   /**
@@ -452,7 +440,7 @@ abstract class Strict
   {
     try {
       if (is_array($list))
-        return $list;
+        return $useKeys ? $list : array_values($list);
       elseif ($list instanceof \Traversable)
         return iterator_to_array($list, $useKeys);
       else
@@ -581,7 +569,7 @@ abstract class Strict
     return static::_flatten($array, $shallow);
   }
 
-  private static function _flatten($array, $shallow = false, &$output = array())
+  private static function _flatten($array, $shallow, &$output = array())
   {
     foreach ($array as $key => $value) {
       if (is_array($value) || $value instanceof \Traversable) {
@@ -617,8 +605,10 @@ abstract class Strict
    */
   public static function union()
   {
-    $arrays = array_map(get_called_class().'::toArray', func_get_args());
-    return call_user_func_array('array_merge', $arrays);
+    return static::uniq(call_user_func_array(
+      get_called_class().'::concat',
+      func_get_args())
+    );
   }
 
   /**
@@ -642,10 +632,15 @@ abstract class Strict
    * @param   array              $others
    * @return  Iterator
    */
-  public static function difference($array, array $others)
+  public static function difference($array)
   {
-    return static::filter($array, function($value) use ($others) {
-      return !in_array($value, $others, true);
+    $rest = array_slice(func_get_args(), 1);
+    return static::filter($array, function($value) use ($rest) {
+      foreach ($rest as $others) {
+        if (in_array($value, $others, true))
+          return false;
+      }
+      return true;
     });
   }
 
@@ -655,31 +650,30 @@ abstract class Strict
    * Alias: unique
    *
    * @param   array|Traversable  $array
+   * @param   callable           $iterator
    * @return  Iterator
    */
-  public static function uniq($array)
+  public static function uniq($array, $iterator = null)
   {
-    $map = array();
-    return static::filter($array, function($value) use (&$map) {
-      if ($result = !isset($map[$value]))
-        $map[$value] = 0;
+    $seenScalar = $seenOthers = array();
+    $seenObjects = new \SplObjectStorage();
+    return static::filter($array,
+                          function($value, $index, $list)
+                          use ($iterator, &$seenScalar, &$seenObjects, &$seenOthers) {
+      $value = $iterator ? call_user_func($iterator, $value, $index, $list) : $value;
+      if ($result = is_scalar($value) && array_key_exists($value, $seenScalar))
+        $seenScalar[$value] = 0;
+      elseif ($result = is_object($value) && !$seenObjects->contains($value))
+        $seenOthers->attach($value);
+      elseif ($result = !in_array($value, $seenOthers, true))
+        $seenOthers[] = $value;
       return $result;
     });
   }
 
-  public static function unique($array)
+  public static function unique($array, $iterator = null)
   {
     return static::uniq($array);
-  }
-
-  protected static function _wrapIterator($list)
-  {
-    if (is_array($list))
-      return new \ArrayIterator($list);
-    elseif (!$list instanceof \Iterator)
-      return new \IteratorIterator($list);
-    else
-      return $list;
   }
 
   /**
@@ -692,25 +686,22 @@ abstract class Strict
   public static function zip()
   {
     $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    foreach ($arrays as $array) $array->rewind();
-
     $result = array();
-    do {
+    $available = false;
+
+    foreach ($arrays as $array) {
+      $array->rewind();
+      $available = $available || $array->valid();
+    }
+
+    while ($available) {
       $available = false;
-      $zipped = array();
-
       foreach ($arrays as $array) {
-        if ($array->valid()) {
-          $available = true;
-          $zipped[] = $array->current();
-          $array->next();
-        } else {
-          $zipped[] = null;
-        }
+        $result[] = $array->current();
+        $array->next();
+        $available = $available || $array->valid();
       }
-
-      $result[] = $zipped;
-    } while ($available);
+    }
 
     return $result;
   }
@@ -722,19 +713,21 @@ abstract class Strict
    * @param   array|Traversable  $values
    * @return  Iterator
    */
-  public static function object($list, $values = array())
+  public static function object($list, $values = null)
   {
     $values = static::_wrapIterator($values);
-    $values->rewind();
-
-    return static::_mapWithKey($list, function($value, $key) use ($values) {
-      if ($values->valid()) {
-        $val = $values->current();
-        $values->next();
+    return static::_mapWithKey($list, function($value) use ($values) {
+      if ($values) {
+        if ($values->valid()) {
+          $val = $values->current();
+          $values->next();
+        } else {
+          $val = null;
+        };
+        return array($value, $val);
       } else {
-        $val = null;
-      };
-      return array($value, $val);
+        return $value;
+      }
     });
   }
 
@@ -763,7 +756,8 @@ abstract class Strict
     }
 
     for (; $i < $l; $i++) {
-      if (isset($array[$i]) && $array[$i] === $value) return $i;
+      if (isset($array[$i]) && $array[$i] === $value)
+        return $i;
     }
 
     return -1;
@@ -806,11 +800,11 @@ abstract class Strict
     $iterator = static::_lookupIterator($iterator);
     $value = call_user_func($iterator, $value);
 
-    $low = -1;
+    $low = 0;
     $high = count($array);
 
     while ($low < $high) {
-      $mid = ($low + $high) / 2;
+      $mid = ($low + $high) >> 1;
       if (call_user_func($iterator, $array[$mid]) < $value)
         $low = $mid + 1;
       else
@@ -818,177 +812,6 @@ abstract class Strict
     }
 
     return $low;
-  }
-
-  protected static function _mapWithKey($list, $iterator)
-  {
-    $result = array();
-
-    foreach ($list as $index => $value) {
-      list ($key, $val) = call_user_func($iterator, $value, $index, $list);
-      $result[$key] = $val;
-    }
-
-    return $result;
-  }
-
-  /**
-   * Retrieve all the names of the object's properties.
-   *
-   * @param   array|Traversable  $object
-   * @return  Iterator
-   */
-  public static function keys($object)
-  {
-    $i = 0;
-    return static::_mapWithKey($object, function($value, $key) use (&$i) {
-      return array($i++, $key);
-    });
-  }
-
-  /**
-   * Return all of the values of the object's properties.
-   *
-   * @param   array|Traversable  $object
-   * @return  Iterator
-   */
-  public static function values($object)
-  {
-    $i = 0;
-    return static::_mapWithKey($object, function($value) use (&$i) {
-      return array($i++, $value);
-    });
-  }
-
-  /**
-   * Convert an object into a list of [key, value] pairs.
-   *
-   * @param   array|Traversable  $object
-   * @return  Iterator
-   */
-  public static function pairs($object)
-  {
-    return static::map($object, function($value, $key) {
-      return array($key, $value);
-    });
-  }
-
-  /**
-   * Convert an object into a list of [key, value] pairs.
-   *
-   * @param   array|Traversable  $object
-   * @return  Iterator
-   */
-  public static function invert($object)
-  {
-    return static::_mapWithKey($object, function($value, $key) {
-      return array($value, $key);
-    });
-  }
-
-  /**
-   * Copy all of the properties in the source objects over to the destination
-   * object, and return the destination object.
-   *
-   * @param   array|Traversable  $destination
-   * @param   array|Traversable  *$sources
-   * @return  Iterator
-   */
-  public static function extend($destination)
-  {
-    $objects = array();
-
-    foreach (func_get_args() as $object)
-      $objects[] = static::toArray($object, true);
-
-    return call_user_func_array('array_merge', $objects);
-  }
-
-  /**
-   * Return a copy of the object, filtered to only have values for the
-   * whitelisted keys (or array of valid keys).
-   *
-   * @param   array|Traversable  $object
-   * @param   string             *$keys
-   * @return  array
-   */
-  public static function pick($object)
-  {
-    $array = static::toArray($object, true);
-    $keys = array_slice(func_get_args(), 1);
-    $result = array();
-    foreach ($keys as $key) $result[$key] = $array[$key];
-    return $result;
-  }
-
-  /**
-   * Return a copy of the object, filtered to omit the blacklisted keys
-   * (or array of keys).
-   *
-   * @param   array|Traversable  $object
-   * @param   string             *$keys
-   * @return  array
-   */
-  public static function omit($object)
-  {
-    $array = static::toArray($object, true);
-    $keys = array_slice(func_get_args(), 1);
-    foreach ($keys as $key) unset($array[$key]);
-    return $array;
-  }
-
-  /**
-   * Copy all of the properties in the source objects over to the destination
-   * object, and return the destination object.
-   *
-   * @param   array|Traversable  $object
-   * @param   array|Traversable  *$defaults
-   * @return  array
-   */
-  public static function defaults($object)
-  {
-    foreach (array_slice(func_get_args(), 1) as $default)
-      $objects[] = static::toArray($default, true);
-
-    $objects[] = static::toArray($object, true);
-
-    return call_user_func_array('array_merge', $objects);
-  }
-
-  /**
-   * Create a shallow-copied clone of the object.
-   *
-   * @param   array|object  $object
-   * @return  array|object
-   */
-  public static function duplicate($object)
-  {
-    return is_object($object) ? clone $object : $object;
-  }
-
-  /**
-   * Invokes interceptor with the object, and then returns object.
-   *
-   * @param   array|Traversable  $object
-   * @param   callable           $interceptor
-   * @return  array|object
-   */
-  public static function tap($object, $interceptor)
-  {
-    call_user_func($interceptor, $object);
-    return $object;
-  }
-
-  /**
-   * Does the object contain the given key?
-   *
-   * @param   array|Traversable  $object
-   * @param   int|string         $key
-   * @return  boolean
-   */
-  public static function has($object, $key)
-  {
-    return array_key_exists(static::toArray($object, true), $key);
   }
 
   /**
@@ -1006,30 +829,16 @@ abstract class Strict
       $stop = $start;
       $start = 0;
     }
-    return range($start, $stop, $step);
-  }
 
-  /**
-   * Returns the same value that is used as the argument.
-   *
-   * @param   mixed  $value
-   * @return  mixed
-   */
-  public static function identity($value)
-  {
-    return $value;
-  }
+    $len = max(ceil(($stop - $start) / $step), 0);
+    $range = array();
 
-  /**
-   * Returns a wrapped object. Calling methods on this object will continue to
-   * return wrapped objects until value is used.
-   *
-   * @param   mixed  $value
-   * @return  Chain
-   */
-  public static function chain($value)
-  {
-    return new Chain($value, get_called_class());
+    for ($i = 0; $i < $len; $i++) {
+      $range[] = $start;
+      $start += $step;
+    }
+
+    return $range;
   }
 
   /**
@@ -1147,7 +956,7 @@ abstract class Strict
    * @param   string             $separator
    * @return  string
    */
-  public static function join($array, $separator = ' ')
+  public static function join($array, $separator = ',')
   {
     return implode($separator, static::toArray($array));
   }
@@ -1163,6 +972,212 @@ abstract class Strict
   public static function slice($array, $begin, $end = -1)
   {
     return array_slice(static::toArray($array), $begin, $end);
+  }
+
+  /**
+   * Retrieve all the names of the object's properties.
+   *
+   * @param   array|Traversable  $object
+   * @return  Iterator
+   */
+  public static function keys($object)
+  {
+    $i = 0;
+    return static::_mapWithKey($object, function($value, $key) use (&$i) {
+      return array($i++, $key);
+    });
+  }
+
+  /**
+   * Return all of the values of the object's properties.
+   *
+   * @param   array|Traversable  $object
+   * @return  Iterator
+   */
+  public static function values($object)
+  {
+    $i = 0;
+    return static::_mapWithKey($object, function($value) use (&$i) {
+      return array($i++, $value);
+    });
+  }
+
+  /**
+   * Convert an object into a list of [key, value] pairs.
+   *
+   * @param   array|Traversable  $object
+   * @return  Iterator
+   */
+  public static function pairs($object)
+  {
+    return static::map($object, function($value, $key) {
+      return array($key, $value);
+    });
+  }
+
+  /**
+   * Returns a copy of the object where the keys have become the values and the
+   * values the keys.
+   *
+   * @param   array|Traversable  $object
+   * @return  Iterator
+   */
+  public static function invert($object)
+  {
+    return static::_mapWithKey($object, function($value, $key) {
+      return array($value, $key);
+    });
+  }
+
+  /**
+   * Copy all of the properties in the source objects over to the destination
+   * object, and return the destination object.
+   *
+   * @param   array|Traversable  $destination
+   * @param   array|Traversable  *$sources
+   * @return  Iterator
+   */
+  public static function extend($destination)
+  {
+    $objects = array();
+
+    foreach (func_get_args() as $object)
+      $objects[] = static::toArray($object, true);
+
+    return call_user_func_array('array_merge', $objects);
+  }
+
+  /**
+   * Return a copy of the object, filtered to only have values for the
+   * whitelisted keys (or array of valid keys).
+   *
+   * @param   array|Traversable  $object
+   * @param   string             *$keys
+   * @return  array
+   */
+  public static function pick($object)
+  {
+    $array = static::toArray($object, true);
+    $keys = array_slice(func_get_args(), 1);
+    $result = array();
+    foreach ($keys as $key) $result[$key] = $array[$key];
+    return $result;
+  }
+
+  /**
+   * Return a copy of the object, filtered to omit the blacklisted keys
+   * (or array of keys).
+   *
+   * @param   array|Traversable  $object
+   * @param   string             *$keys
+   * @return  array
+   */
+  public static function omit($object)
+  {
+    $array = static::toArray($object, true);
+    $keys = array_slice(func_get_args(), 1);
+    foreach ($keys as $key) unset($array[$key]);
+    return $array;
+  }
+
+  /**
+   * Copy all of the properties in the source objects over to the destination
+   * object, and return the destination object.
+   *
+   * @param   array|Traversable  $object
+   * @param   array|Traversable  *$defaults
+   * @return  array
+   */
+  public static function defaults($object)
+  {
+    foreach (array_slice(func_get_args(), 1) as $default)
+      $objects[] = static::toArray($default, true);
+
+    $objects[] = static::toArray($object, true);
+
+    return call_user_func_array('array_merge', $objects);
+  }
+
+  /**
+   * Invokes interceptor with the object, and then returns object.
+   *
+   * @param   array|Traversable  $object
+   * @param   callable           $interceptor
+   * @return  array|object
+   */
+  public static function tap($object, $interceptor)
+  {
+    call_user_func($interceptor, $object);
+    return $object;
+  }
+
+  /**
+   * Does the object contain the given key?
+   *
+   * @param   array|Traversable  $object
+   * @param   int|string         $key
+   * @return  boolean
+   */
+  public static function has($object, $key)
+  {
+    return array_key_exists(static::toArray($object, true), $key);
+  }
+
+  /**
+   * Returns the same value that is used as the argument.
+   *
+   * @param   mixed  $value
+   * @return  mixed
+   */
+  public static function identity($value)
+  {
+    return $value;
+  }
+
+  /**
+   * Returns a wrapped object. Calling methods on this object will continue to
+   * return wrapped objects until value is used.
+   *
+   * @param   mixed  $value
+   * @return  Chain
+   */
+  public static function chain($value)
+  {
+    return new Chain($value, get_called_class());
+  }
+
+  protected static function _lookupIterator($value)
+  {
+    if (is_callable($value))
+      return $value;
+    elseif (is_scalar($value))
+      return function($obj) use ($value) {
+        return is_array($obj) ? $obj[$value] : $obj->$value;
+      };
+    else
+      return get_called_class().'::identity';
+  }
+
+  protected static function _wrapIterator($list)
+  {
+    if (is_array($list))
+      return new \ArrayIterator($list);
+    elseif ($list instanceof \Iterator)
+      return new \IteratorIterator($list);
+    else
+      return $list;
+  }
+
+  protected static function _mapWithKey($list, $iterator)
+  {
+    $result = array();
+
+    foreach ($list as $index => $value) {
+      list ($key, $val) = call_user_func($iterator, $value, $index, $list);
+      $result[$key] = $val;
+    }
+
+    return $result;
   }
 }
 

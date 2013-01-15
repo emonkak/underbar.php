@@ -2,7 +2,7 @@
 
 namespace Underscore\Lazy;
 
-abstract class GeneratorFunction extends \Underscore\Strict
+abstract class GeneratorFunctions extends \Underscore\Strict
 {
   /**
    * Produces a new array of values by mapping each value in list through a
@@ -112,24 +112,21 @@ abstract class GeneratorFunction extends \Underscore\Strict
   public static function zip()
   {
     $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    foreach ($arrays as $array) $array->rewind();
+    $available = false;
 
-    do {
+    foreach ($arrays as $array) {
+      $array->rewind();
+      $available = $available || $array->valid();
+    }
+
+    while ($available) {
       $available = false;
-      $zipped = array();
-
       foreach ($arrays as $array) {
-        if ($array->valid()) {
-          $available = true;
-          $zipped[] = $array->current();
-          $array->next();
-        } else {
-          $zipped[] = null;
-        }
+        yield $array->current();
+        $array->next();
+        $available = $available || $array->valid();
       }
-
-      yield $zipped;
-    } while ($available);
+    }
   }
 
   /**
@@ -141,37 +138,17 @@ abstract class GeneratorFunction extends \Underscore\Strict
    * @param   int       $step
    * @return  Iterator
    */
-  public static function range($start, $stop = PHP_INT_MAX, $step = 1)
+  public static function range($start, $stop = null, $step = 1)
   {
     if ($stop === null) {
       $stop = $start;
       $start = 0;
     }
-    if ($start < $stop) {
-      do {
-        yield $start;
-        $start += $step;
-      } while ($start <= $stop);
-    } else {
-      do {
-        yield $start;
-        $start += $step;
-      } while ($start >= $stop);
-    }
-  }
 
-  /**
-   * Computes the union of the passed-in arrays: the list of unique items,
-   * in order, that are present in one or more of the arrays.
-   *
-   * @param   array|Traversable  *$arrays
-   * @return  Iterator
-   */
-  public static function union()
-  {
-    foreach (func_get_args() as $array) {
-      foreach ($array as $key => $value)
-        yield $key => $value;
+    $len = max(ceil(($stop - $start) / $step), 0);
+    for ($i = 0; $i < $len; $i++) {
+      yield $start;
+      $start += $step;
     }
   }
 
@@ -196,6 +173,21 @@ abstract class GeneratorFunction extends \Underscore\Strict
       } else {
         yield $key => $value;
       }
+    }
+  }
+
+  /**
+   * Returns a new array comprised of this array joined with other array(s)
+   * and/or value(s).
+   *
+   * @param   array|Traversable  *$arrays
+   * @return  array
+   */
+  public static function concat()
+  {
+    foreach (func_get_args() as $array) {
+      foreach ($array as $key => $value)
+        yield $key => $value;
     }
   }
 

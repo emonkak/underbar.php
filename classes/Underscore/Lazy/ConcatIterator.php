@@ -2,7 +2,7 @@
 
 namespace Underscore\Lazy;
 
-class UnionIterator implements \Iterator
+class ConcatIterator implements \Iterator
 {
   protected $arrays;
 

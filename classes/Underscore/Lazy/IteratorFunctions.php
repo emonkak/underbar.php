@@ -2,7 +2,7 @@
 
 namespace Underscore\Lazy;
 
-abstract class IteratorFunction extends \Underscore\Strict
+abstract class IteratorFunctions extends \Underscore\Strict
 {
   /**
    * Produces a new array of values by mapping each value in list through a
@@ -95,19 +95,6 @@ abstract class IteratorFunction extends \Underscore\Strict
   }
 
   /**
-   * Computes the union of the passed-in arrays: the list of unique items,
-   * in order, that are present in one or more of the arrays.
-   *
-   * @param   array|Traversable  *$arrays
-   * @return  Iterator
-   */
-  public static function union()
-  {
-    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    return new UnionIterator($arrays);
-  }
-
-  /**
    * Merges together the values of each of the arrays with the values at the
    * corresponding position.
    *
@@ -117,7 +104,7 @@ abstract class IteratorFunction extends \Underscore\Strict
   public static function zip()
   {
     $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    return new ZipIterator($arrays);
+    return new \RecursiveIteratorIterator(new ZipIterator($arrays));
   }
 
   /**
@@ -131,11 +118,25 @@ abstract class IteratorFunction extends \Underscore\Strict
    */
   public static function range($start, $stop = null, $step = 1)
   {
+    // TODO: pass test
     if ($stop === null) {
       $stop = $start;
       $start = 0;
     }
     return new RangeIterator($start, $stop, $step);
+  }
+
+  /**
+   * Returns a new array comprised of this array joined with other array(s)
+   * and/or value(s).
+   *
+   * @param   array|Traversable  *$arrays
+   * @return  array
+   */
+  public static function concat()
+  {
+    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
+    return new ConcatIterator($arrays);
   }
 
   protected static function _mapWithKey($list, $iterator)

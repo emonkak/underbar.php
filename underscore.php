@@ -8,6 +8,9 @@ spl_autoload_register(function($className) {
               . DIRECTORY_SEPARATOR
               . str_replace('\\', DIRECTORY_SEPARATOR, $className)
               . '.php';
-    require($fileName);
+    if (is_file($fileName)) require $fileName;
   }
 });
+
+// __END__
+// vim: expandtab softtabstop=2 shiftwidth=2

@@ -2,7 +2,7 @@
 
 namespace Underscore\Lazy;
 
-class ZipIterator implements \Iterator
+class ZipIterator implements \RecursiveIterator
 {
   protected $arrays;
 
@@ -13,14 +13,25 @@ class ZipIterator implements \Iterator
     $this->arrays = $arrays;
   }
 
+  public function getChildren()
+  {
+    return new \RecursiveArrayIterator($this->current());
+  }
+
+  public function hasChildren()
+  {
+    return true;
+  }
+
   public function current()
   {
-    $values = array();
+    $zipped = array();
+    $index = $this->index * count($this->arrays);
 
     foreach ($this->arrays as $array)
-      $values[] = $array->current();
+      $zipped[$index++] = $array->current();
 
-    return $values;
+    return $zipped;
   }
 
   public function key()
@@ -30,15 +41,13 @@ class ZipIterator implements \Iterator
 
   public function next()
   {
-    foreach ($this->arrays as $array)
-      $array->next();
+    foreach ($this->arrays as $array) $array->next();
     $this->index++;
   }
 
   public function rewind()
   {
-    foreach ($this->arrays as $array)
-      $array->rewind();
+    foreach ($this->arrays as $array) $array->rewind();
     $this->index = 0;
   }
 
