@@ -31,7 +31,7 @@ abstract class IteratorFunctions extends \Underscore\Strict
    */
   public static function filter($list, $iterator)
   {
-    return class_exists('CallbackFilterIterator')
+    return class_exists('CallbackFilterIterator', false)
          ? new \CallbackFilterIterator(static::_wrapIterator($list), $iterator)
          : new FilterIterator(static::_wrapIterator($list), $iterator);
   }

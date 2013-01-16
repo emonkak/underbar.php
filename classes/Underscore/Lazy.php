@@ -2,7 +2,7 @@
 
 namespace Underscore;
 
-if (class_exists('Generator'))
+if (class_exists('Generator', false))
   class_alias('Underscore\\Lazy\\GeneratorFunctions', 'Underscore\\Lazy');
 else
   class_alias('Underscore\\Lazy\\IteratorFunctions', 'Underscore\\Lazy');
