@@ -1,6 +1,6 @@
 <?php
 
-namespace Underscore\Lazy;
+namespace Understrike\Lazy;
 
 class FilterIterator extends \FilterIterator
 {

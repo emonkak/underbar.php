@@ -1,10 +1,10 @@
 <?php
 
 spl_autoload_register(function($className) {
-  if (strpos($className, 'Underscore\\') === 0) {
+  if (strpos($className, 'Understrike\\') === 0) {
     $fileName = __DIR__
               . DIRECTORY_SEPARATOR
-              . 'classes'
+              . 'src'
               . DIRECTORY_SEPARATOR
               . str_replace('\\', DIRECTORY_SEPARATOR, $className)
               . '.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Underscore;
+namespace Understrike;
 
 abstract class Strict
 {

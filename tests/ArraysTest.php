@@ -298,12 +298,12 @@ class ArraysTest extends PHPUnit_Framework_TestCase
   public function provider()
   {
     $classes = array(
-      array('Underscore\\Strict'),
-      array('Underscore\\Lazy\\IteratorFunctions'),
+      array('Understrike\\Strict'),
+      array('Understrike\\Lazy\\IteratorFunctions'),
     );
 
     if (class_exists('Generator'))
-      $classes[] = array('Underscore\\Lazy\\GeneratorFunctions');
+      $classes[] = array('Understrike\\Lazy\\GeneratorFunctions');
 
     return $classes;
   }

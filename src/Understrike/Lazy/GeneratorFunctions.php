@@ -1,8 +1,8 @@
 <?php
 
-namespace Underscore\Lazy;
+namespace Understrike\Lazy;
 
-abstract class IteratorFunctions extends \Underscore\Strict
+abstract class GeneratorFunctions extends \Understrike\Strict
 {
   /**
    * Produces a new array of values by mapping each value in list through a
@@ -16,7 +16,8 @@ abstract class IteratorFunctions extends \Underscore\Strict
    */
   public static function map($list, $iterator)
   {
-    return new MapIterator(static::_wrapIterator($list), $iterator);
+    foreach ($list as $index => $value)
+      yield $index => call_user_func($iterator, $value, $index, $list);
   }
 
   /**
@@ -31,9 +32,10 @@ abstract class IteratorFunctions extends \Underscore\Strict
    */
   public static function filter($list, $iterator)
   {
-    return class_exists('CallbackFilterIterator', false)
-         ? new \CallbackFilterIterator(static::_wrapIterator($list), $iterator)
-         : new FilterIterator(static::_wrapIterator($list), $iterator);
+    foreach ($list as $index => $value) {
+      if (call_user_func($iterator, $value, $index, $list))
+        yield $index => $value;
+    }
   }
 
   /**
@@ -49,9 +51,19 @@ abstract class IteratorFunctions extends \Underscore\Strict
   public static function first($array, $n = null, $guard = null)
   {
     if (is_int($n) && $guard === null)
-      return new \LimitIterator(static::_wrapIterator($array), 0, $n);
+      return static::_first($array, $n);
     else
       foreach ($array as $value) return $value;
+  }
+
+  private static function _first($array, $n = null)
+  {
+    foreach ($array as $index => $value) {
+      if ($n-- > 0)
+        yield $index => $value;
+      else
+        break;
+    }
   }
 
   /**
@@ -63,8 +75,13 @@ abstract class IteratorFunctions extends \Underscore\Strict
    */
   public static function initial($array, $n = 1, $guard = null)
   {
+    $queue = new \SplQueue();
+
     if ($guard !== null) $n = 1;
-    return new InitialIterator(static::_wrapIterator($array), $n);
+    foreach ($array as $value) {
+      $queue->enqueue($value);
+      if (count($queue) > $n) yield $queue->dequeue();
+    }
   }
 
   /**
@@ -76,35 +93,40 @@ abstract class IteratorFunctions extends \Underscore\Strict
    * @param   int                $index
    * @return  Iterator
    */
-  public static function rest($array, $index = 1, $guard = null)
+  public static function rest($array, $n = 1, $guard = null)
   {
-    if ($guard !== null) $index = 1;
-    return new \LimitIterator(static::_wrapIterator($array), $index);
-  }
-
-  /**
-   * Flattens a nested array (the nesting can be to any depth).
-   *
-   * @param   array|Traversable  $array
-   * @param   boolean            $shallow
-   * @return  Iterator
-   */
-  public static function flatten($array, $shallow = false)
-  {
-    return new FlattenIterator(static::_wrapIterator($array), $shallow);;
+    if ($guard !== null) $n = 1;
+    foreach ($array as $index => $value) {
+      if (--$n < 0)
+        yield $index => $value;
+    }
   }
 
   /**
    * Merges together the values of each of the arrays with the values at the
    * corresponding position.
    *
-   * @param   array|Traversable  *$arrays
+   * @param   array|Traversable  *$array
    * @return  Iterator
    */
   public static function zip()
   {
     $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    return new \RecursiveIteratorIterator(new ZipIterator($arrays));
+    $available = false;
+
+    foreach ($arrays as $array) {
+      $array->rewind();
+      $available = $available || $array->valid();
+    }
+
+    while ($available) {
+      $available = false;
+      foreach ($arrays as $array) {
+        yield $array->current();
+        $array->next();
+        $available = $available || $array->valid();
+      }
+    }
   }
 
   /**
@@ -118,12 +140,40 @@ abstract class IteratorFunctions extends \Underscore\Strict
    */
   public static function range($start, $stop = null, $step = 1)
   {
-    // TODO: pass test
     if ($stop === null) {
       $stop = $start;
       $start = 0;
     }
-    return new RangeIterator($start, $stop, $step);
+
+    $len = max(ceil(($stop - $start) / $step), 0);
+    for ($i = 0; $i < $len; $i++) {
+      yield $start;
+      $start += $step;
+    }
+  }
+
+  /**
+   * Flattens a nested array (the nesting can be to any depth).
+   *
+   * @param   array|Traversable  $array
+   * @param   boolean            $shallow
+   * @return  Iterator
+   */
+  public static function flatten($array, $shallow = false)
+  {
+    foreach ($array as $key => $value) {
+      if (is_array($value) || $value instanceof \Traversable) {
+        if ($shallow) {
+          foreach ($value as $childKey => $childValue)
+            yield $childKey => $childValue;
+        } else {
+          foreach (static::flatten($value, $shallow) as $childKey => $childValue)
+            yield $childKey => $childValue;
+        }
+      } else {
+        yield $key => $value;
+      }
+    }
   }
 
   /**
@@ -135,13 +185,18 @@ abstract class IteratorFunctions extends \Underscore\Strict
    */
   public static function concat()
   {
-    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    return new ConcatIterator($arrays);
+    foreach (func_get_args() as $array) {
+      foreach ($array as $key => $value)
+        yield $key => $value;
+    }
   }
 
   protected static function _mapWithKey($list, $iterator)
   {
-    return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
+    foreach ($list as $index => $value) {
+      list ($key, $val) = call_user_func($iterator, $value, $index, $list);
+      yield $key => $val;
+    }
   }
 }
 

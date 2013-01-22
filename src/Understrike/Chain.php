@@ -1,6 +1,6 @@
 <?php
 
-namespace Underscore;
+namespace Understrike;
 
 class Chain
 {
