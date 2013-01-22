@@ -13,11 +13,11 @@ class FilterIterator extends \FilterIterator
   public function accept()
   {
     return call_user_func($this->iterator,
-                          $this->current(),
-                          $this->key(),
-                          $this);
+      $this->current(),
+      $this->key(),
+      $this);
   }
 }
 
 // __END__
-// vim: expandtab softtabstop=2 shiftwidth=2
+// vim: expandtab softtabstop=4 shiftwidth=4

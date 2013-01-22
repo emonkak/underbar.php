@@ -4,52 +4,52 @@ namespace Understrike\Lazy;
 
 class RangeIterator implements \Iterator
 {
-  protected $start;
+    protected $start;
 
-  protected $end;
+    protected $end;
 
-  protected $step;
+    protected $step;
 
-  protected $index;
+    protected $index;
 
-  protected $current;
+    protected $current;
 
-  public function __construct($start, $end, $step)
-  {
-    $this->start = $start;
-    $this->end = $end;
-    $this->step = $step;
-  }
+    public function __construct($start, $end, $step)
+    {
+        $this->start = $start;
+        $this->end = $end;
+        $this->step = $step;
+    }
 
-  public function current()
-  {
-    return $this->current;
-  }
+    public function current()
+    {
+        return $this->current;
+    }
 
-  public function key()
-  {
-    return $this->index;
-  }
+    public function key()
+    {
+        return $this->index;
+    }
 
-  public function next()
-  {
-    $this->index++;
-    $this->current += $this->step;
-  }
+    public function next()
+    {
+        $this->index++;
+        $this->current += $this->step;
+    }
 
-  public function rewind()
-  {
-    $this->index = 0;
-    $this->current = $this->start;
-  }
+    public function rewind()
+    {
+        $this->index = 0;
+        $this->current = $this->start;
+    }
 
-  public function valid()
-  {
-    return $this->start > $this->end
-         ? $this->current >= $this->end
-         : $this->current <= $this->end;
-  }
+    public function valid()
+    {
+        return $this->start > $this->end
+            ? $this->current >= $this->end
+            : $this->current <= $this->end;
+    }
 }
 
 // __END__
-// vim: expandtab softtabstop=2 shiftwidth=2
+// vim: expandtab softtabstop=4 shiftwidth=4

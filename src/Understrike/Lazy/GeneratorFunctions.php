@@ -4,201 +4,201 @@ namespace Understrike\Lazy;
 
 abstract class GeneratorFunctions extends \Understrike\Strict
 {
-  /**
-   * Produces a new array of values by mapping each value in list through a
-   * transformation function (iterator).
-   *
-   * Alias: collect
-   *
-   * @param   array|Traversable  $list
-   * @param   callable           $iterator
-   * @return  Iterator
-   */
-  public static function map($list, $iterator)
-  {
-    foreach ($list as $index => $value)
-      yield $index => call_user_func($iterator, $value, $index, $list);
-  }
-
-  /**
-   * Looks through each value in the list, returning an array of all the values
-   * that pass a truth test (iterator).
-   *
-   * Alias: select
-   *
-   * @param   array|Traversable  $list
-   * @param   callable           $iterator
-   * @return  Iterator
-   */
-  public static function filter($list, $iterator)
-  {
-    foreach ($list as $index => $value) {
-      if (call_user_func($iterator, $value, $index, $list))
-        yield $index => $value;
-    }
-  }
-
-  /**
-   * Returns the first element of an array.
-   * Passing n will return the first n elements of the array.
-   *
-   * Alias: head, take
-   *
-   * @param   array|Traversable  $array
-   * @param   int                $n
-   * @return  mixed|Iterator
-   */
-  public static function first($array, $n = null, $guard = null)
-  {
-    if (is_int($n) && $guard === null)
-      return static::_first($array, $n);
-    else
-      foreach ($array as $value) return $value;
-  }
-
-  private static function _first($array, $n = null)
-  {
-    foreach ($array as $index => $value) {
-      if ($n-- > 0)
-        yield $index => $value;
-      else
-        break;
-    }
-  }
-
-  /**
-   * Returns everything but the last entry of the array.
-   *
-   * @param   array|Traversable  $array
-   * @param   int                $n
-   * @return  Iterator
-   */
-  public static function initial($array, $n = 1, $guard = null)
-  {
-    $queue = new \SplQueue();
-
-    if ($guard !== null) $n = 1;
-    foreach ($array as $value) {
-      $queue->enqueue($value);
-      if (count($queue) > $n) yield $queue->dequeue();
-    }
-  }
-
-  /**
-   * Returns the rest of the elements in an array.
-   *
-   * Alias: tail, drop
-   *
-   * @param   array|Traversable  $array
-   * @param   int                $index
-   * @return  Iterator
-   */
-  public static function rest($array, $n = 1, $guard = null)
-  {
-    if ($guard !== null) $n = 1;
-    foreach ($array as $index => $value) {
-      if (--$n < 0)
-        yield $index => $value;
-    }
-  }
-
-  /**
-   * Merges together the values of each of the arrays with the values at the
-   * corresponding position.
-   *
-   * @param   array|Traversable  *$array
-   * @return  Iterator
-   */
-  public static function zip()
-  {
-    $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-    $available = false;
-
-    foreach ($arrays as $array) {
-      $array->rewind();
-      $available = $available || $array->valid();
+    /**
+     * Produces a new array of values by mapping each value in list through a
+     * transformation function (iterator).
+     *
+     * Alias: collect
+     *
+     * @param   array|Traversable  $list
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function map($list, $iterator)
+    {
+        foreach ($list as $index => $value)
+            yield $index => call_user_func($iterator, $value, $index, $list);
     }
 
-    while ($available) {
-      $available = false;
-      foreach ($arrays as $array) {
-        yield $array->current();
-        $array->next();
-        $available = $available || $array->valid();
-      }
-    }
-  }
-
-  /**
-   * A function to create flexibly-numbered lists of integers,
-   * handy for each and map loops.
-   *
-   * @param   int       $start
-   * @param   int       $stop
-   * @param   int       $step
-   * @return  Iterator
-   */
-  public static function range($start, $stop = null, $step = 1)
-  {
-    if ($stop === null) {
-      $stop = $start;
-      $start = 0;
-    }
-
-    $len = max(ceil(($stop - $start) / $step), 0);
-    for ($i = 0; $i < $len; $i++) {
-      yield $start;
-      $start += $step;
-    }
-  }
-
-  /**
-   * Flattens a nested array (the nesting can be to any depth).
-   *
-   * @param   array|Traversable  $array
-   * @param   boolean            $shallow
-   * @return  Iterator
-   */
-  public static function flatten($array, $shallow = false)
-  {
-    foreach ($array as $key => $value) {
-      if (is_array($value) || $value instanceof \Traversable) {
-        if ($shallow) {
-          foreach ($value as $childKey => $childValue)
-            yield $childKey => $childValue;
-        } else {
-          foreach (static::flatten($value, $shallow) as $childKey => $childValue)
-            yield $childKey => $childValue;
+    /**
+     * Looks through each value in the list, returning an array of all the values
+     * that pass a truth test (iterator).
+     *
+     * Alias: select
+     *
+     * @param   array|Traversable  $list
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function filter($list, $iterator)
+    {
+        foreach ($list as $index => $value) {
+            if (call_user_func($iterator, $value, $index, $list))
+                yield $index => $value;
         }
-      } else {
-        yield $key => $value;
-      }
     }
-  }
 
-  /**
-   * Returns a new array comprised of this array joined with other array(s)
-   * and/or value(s).
-   *
-   * @param   array|Traversable  *$arrays
-   * @return  array
-   */
-  public static function concat()
-  {
-    foreach (func_get_args() as $array) {
-      foreach ($array as $key => $value)
-        yield $key => $value;
+    /**
+     * Returns the first element of an array.
+     * Passing n will return the first n elements of the array.
+     *
+     * Alias: head, take
+     *
+     * @param   array|Traversable  $array
+     * @param   int                $n
+     * @return  mixed|Iterator
+     */
+    public static function first($array, $n = null, $guard = null)
+    {
+        if (is_int($n) && $guard === null)
+            return static::_first($array, $n);
+        else
+            foreach ($array as $value) return $value;
     }
-  }
 
-  protected static function _mapWithKey($list, $iterator)
-  {
-    foreach ($list as $index => $value) {
-      list ($key, $val) = call_user_func($iterator, $value, $index, $list);
-      yield $key => $val;
+    private static function _first($array, $n = null)
+    {
+        foreach ($array as $index => $value) {
+            if ($n-- > 0)
+                yield $index => $value;
+            else
+                break;
+        }
     }
-  }
+
+    /**
+     * Returns everything but the last entry of the array.
+     *
+     * @param   array|Traversable  $array
+     * @param   int                $n
+     * @return  Iterator
+     */
+    public static function initial($array, $n = 1, $guard = null)
+    {
+        $queue = new \SplQueue();
+
+        if ($guard !== null) $n = 1;
+        foreach ($array as $value) {
+            $queue->enqueue($value);
+            if (count($queue) > $n) yield $queue->dequeue();
+        }
+    }
+
+    /**
+     * Returns the rest of the elements in an array.
+     *
+     * Alias: tail, drop
+     *
+     * @param   array|Traversable  $array
+     * @param   int                $index
+     * @return  Iterator
+     */
+    public static function rest($array, $n = 1, $guard = null)
+    {
+        if ($guard !== null) $n = 1;
+        foreach ($array as $index => $value) {
+            if (--$n < 0)
+                yield $index => $value;
+        }
+    }
+
+    /**
+     * Merges together the values of each of the arrays with the values at the
+     * corresponding position.
+     *
+     * @param   array|Traversable  *$array
+     * @return  Iterator
+     */
+    public static function zip()
+    {
+        $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
+        $available = false;
+
+        foreach ($arrays as $array) {
+            $array->rewind();
+            $available = $available || $array->valid();
+        }
+
+        while ($available) {
+            $available = false;
+            foreach ($arrays as $array) {
+                yield $array->current();
+                $array->next();
+                $available = $available || $array->valid();
+            }
+        }
+    }
+
+    /**
+     * A function to create flexibly-numbered lists of integers,
+     * handy for each and map loops.
+     *
+     * @param   int       $start
+     * @param   int       $stop
+     * @param   int       $step
+     * @return  Iterator
+     */
+    public static function range($start, $stop = null, $step = 1)
+    {
+        if ($stop === null) {
+            $stop = $start;
+            $start = 0;
+        }
+
+        $len = max(ceil(($stop - $start) / $step), 0);
+        for ($i = 0; $i < $len; $i++) {
+            yield $start;
+            $start += $step;
+        }
+    }
+
+    /**
+     * Flattens a nested array (the nesting can be to any depth).
+     *
+     * @param   array|Traversable  $array
+     * @param   boolean            $shallow
+     * @return  Iterator
+     */
+    public static function flatten($array, $shallow = false)
+    {
+        foreach ($array as $key => $value) {
+            if (is_array($value) || $value instanceof \Traversable) {
+                if ($shallow) {
+                    foreach ($value as $childKey => $childValue)
+                        yield $childKey => $childValue;
+                } else {
+                    foreach (static::flatten($value, $shallow) as $childKey => $childValue)
+                        yield $childKey => $childValue;
+                }
+            } else {
+                yield $key => $value;
+            }
+        }
+    }
+
+    /**
+     * Returns a new array comprised of this array joined with other array(s)
+     * and/or value(s).
+     *
+     * @param   array|Traversable  *$arrays
+     * @return  array
+     */
+    public static function concat()
+    {
+        foreach (func_get_args() as $array) {
+            foreach ($array as $key => $value)
+                yield $key => $value;
+        }
+    }
+
+    protected static function _mapWithKey($list, $iterator)
+    {
+        foreach ($list as $index => $value) {
+            list ($key, $val) = call_user_func($iterator, $value, $index, $list);
+            yield $key => $val;
+        }
+    }
 }
 
 // __END__
-// vim: expandtab softtabstop=2 shiftwidth=2
+// vim: expandtab softtabstop=4 shiftwidth=4
