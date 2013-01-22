@@ -1,6 +1,6 @@
 <?php
 
-require(__DIR__ . DIRECTORY_SEPARATOR . 'understrike.php');
+require(__DIR__ . '/vendor/autoload.php');
 
 use Understrike\Lazy as _;
 

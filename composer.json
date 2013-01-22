@@ -1,0 +1,17 @@
+{
+    "name": "emonkak/understrike",
+    "authors": [
+        {
+            "name": "Emon Tsukimiya",
+            "email": "emonkak@gmail.com"
+        }
+    ],
+    "require": {
+
+    },
+    "autoload": {
+        "psr-0": {
+            "Understrike": "src/"
+        }
+    }
+}
