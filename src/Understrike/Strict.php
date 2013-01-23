@@ -113,9 +113,19 @@ abstract class Strict
         }
     }
 
+    public static function findSafe($list, $iterator)
+    {
+        return Option::fromValue(static::find($list, $iterator));
+    }
+
     public static function detect($list, $iterator)
     {
         return static::find($list, $iterator);
+    }
+
+    public static function detectSafe($list, $iterator)
+    {
+        return Option::fromValue(static::find($list, $iterator));
     }
 
     /**
@@ -315,6 +325,11 @@ abstract class Strict
         return $result['value'];
     }
 
+    public static function maxSafe($list, $iterator = null)
+    {
+        return Option::fromValue(static::max($list, $iterator), -PHP_INT_MAX);
+    }
+
     /**
      * Returns the minimum value in list. If iterator is passed, it will be used
      * on each value to generate the criterion by which the value is ranked.
@@ -337,6 +352,11 @@ abstract class Strict
         }
 
         return $result['value'];
+    }
+
+    public static function minSafe($list, $iterator = null)
+    {
+        return Option::fromValue(static::max($list, $iterator), PHP_INT_MAX);
     }
 
     /**
@@ -482,14 +502,29 @@ abstract class Strict
             foreach ($array as $value) return $value;
     }
 
+    public static function firstSafe($array, $n = null, $guard = null)
+    {
+        return Option::fromValue(static::first($array, $n, $guard));
+    }
+
     public static function head($array, $n = null, $guard = null)
     {
         return static::first($array, $n, $guard);
     }
 
+    public static function headSafe($array, $n = null, $guard)
+    {
+        return Option::fromValue(static::first($array, $n, $guard));
+    }
+
     public static function take($array, $n = null, $guard = null)
     {
         return static::first($array, $n, $guard);
+    }
+
+    public static function takeSafe($array, $n = null, $guard)
+    {
+        return Option::fromValue(static::first($array, $n, $guard));
     }
 
     /**
@@ -521,6 +556,11 @@ abstract class Strict
             return $n > 0 ? array_slice($array, -$n) : array();
         else
             return end($array);
+    }
+
+    public static function lastSafe($array, $n = null, $guard)
+    {
+        return Option::fromValue(static::last($array, $n, $guard));
     }
 
     /**
@@ -619,7 +659,7 @@ abstract class Strict
      * @param   array|Traversable  *$rest
      * @return  array
      */
-    public static function intersection($array)
+    public static function intersection()
     {
         $arrays = array_map(get_called_class().'::toArray', func_get_args());
         return call_user_func_array('array_intersect', $arrays);
@@ -630,7 +670,7 @@ abstract class Strict
      * in the other arrays.
      *
      * @param   array|Traversable  $array
-     * @param   array              $others
+     * @param   array              *$others
      * @return  Iterator
      */
     public static function difference($array)
