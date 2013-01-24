@@ -2,10 +2,10 @@
 
 namespace Understrike;
 
-use Understrike\Strict as _;
-
 abstract class Option implements \IteratorAggregate
 {
+    use Enumerable;
+
     /**
      * @param   mixed   $value
      * @param   mixed   $none
