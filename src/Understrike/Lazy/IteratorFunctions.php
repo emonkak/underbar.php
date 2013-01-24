@@ -118,7 +118,6 @@ abstract class IteratorFunctions extends \Understrike\Strict
      */
     public static function range($start, $stop = null, $step = 1)
     {
-        // TODO: pass test
         if ($stop === null) {
             $stop = $start;
             $start = 0;

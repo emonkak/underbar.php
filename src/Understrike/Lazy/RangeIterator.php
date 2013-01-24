@@ -6,19 +6,19 @@ class RangeIterator implements \Iterator
 {
     protected $start;
 
-    protected $end;
-
     protected $step;
+
+    protected $len;
 
     protected $index;
 
     protected $current;
 
-    public function __construct($start, $end, $step)
+    public function __construct($start, $stop, $step)
     {
         $this->start = $start;
-        $this->end = $end;
         $this->step = $step;
+        $this->len = max(ceil(($stop - $start) / $step), 0);
     }
 
     public function current()
@@ -45,9 +45,7 @@ class RangeIterator implements \Iterator
 
     public function valid()
     {
-        return $this->start > $this->end
-            ? $this->current >= $this->end
-            : $this->current <= $this->end;
+        return $this->index < $this->len;
     }
 }
 
