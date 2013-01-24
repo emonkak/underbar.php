@@ -103,7 +103,7 @@ final class Option_Some extends Option
      */
     public function flatMap($iterator)
     {
-        return call_user_func($iterator, $value, 0, $this);
+        return call_user_func($iterator, $this->value, 0, $this);
     }
 }
 
