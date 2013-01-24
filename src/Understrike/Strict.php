@@ -1156,6 +1156,18 @@ abstract class Strict
     }
 
     /**
+     * Create a shallow-copied clone of the object. Any nested objects or arrays
+     * will be copied by reference, not duplicated.
+     *
+     * @param    mixed  $object
+     * @return   mixed
+     */
+    public static function duplicate($object)
+    {
+        return is_object($object) ? clone $object : $object;
+    }
+
+    /**
      * Does the object contain the given key?
      *
      * @param   array|Traversable  $object
