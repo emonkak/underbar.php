@@ -247,7 +247,7 @@ abstract class Strict
      */
     public static function some($list, $iterator = null)
     {
-        $result = true;
+        $result = false;
         if (!is_callable($iterator))
             $iterator = get_called_class().'::identity';
 
