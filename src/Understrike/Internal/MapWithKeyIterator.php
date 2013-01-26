@@ -1,6 +1,6 @@
 <?php
 
-namespace Understrike\Lazy;
+namespace Understrike\Internal;
 
 class MapWithKeyIterator extends \IteratorIterator
 {

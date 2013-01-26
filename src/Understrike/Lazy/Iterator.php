@@ -1,8 +1,8 @@
 <?php
 
-namespace Understrike\Lazy;
+namespace Understrike;
 
-abstract class IteratorFunctions extends \Understrike\Strict
+abstract class Lazy_Iterator extends Strict
 {
     /**
      * Produces a new array of values by mapping each value in list through a
@@ -16,7 +16,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
      */
     public static function map($list, $iterator)
     {
-        return new MapIterator(static::_wrapIterator($list), $iterator);
+        return new Internal\MapIterator(static::_wrapIterator($list), $iterator);
     }
 
     /**
@@ -26,7 +26,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
      */
     public static function mapWithKey($list, $iterator)
     {
-        return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
+        return new Internal\MapWithKeyIterator(static::_wrapIterator($list), $iterator);
     }
 
     /**
@@ -43,7 +43,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
     {
         return class_exists('CallbackFilterIterator', false)
             ? new \CallbackFilterIterator(static::_wrapIterator($list), $iterator)
-            : new FilterIterator(static::_wrapIterator($list), $iterator);
+            : new Internal\FilterIterator(static::_wrapIterator($list), $iterator);
     }
 
     /**
@@ -76,7 +76,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
     public static function initial($array, $n = 1, $guard = null)
     {
         if ($guard !== null) $n = 1;
-        return new InitialIterator(static::_wrapIterator($array), $n);
+        return new Internal\InitialIterator(static::_wrapIterator($array), $n);
     }
 
     /**
@@ -103,7 +103,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
      */
     public static function flatten($array, $shallow = false)
     {
-        return new FlattenIterator(static::_wrapIterator($array), $shallow);;
+        return new Internal\FlattenIterator(static::_wrapIterator($array), $shallow);;
     }
 
     /**
@@ -116,7 +116,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
     public static function zip()
     {
         $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-        return new \RecursiveIteratorIterator(new ZipIterator($arrays));
+        return new \RecursiveIteratorIterator(new Internal\ZipIterator($arrays));
     }
 
     /**
@@ -134,7 +134,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
             $stop = $start;
             $start = 0;
         }
-        return new RangeIterator($start, $stop, $step);
+        return new Internal\RangeIterator($start, $stop, $step);
     }
 
     /**
