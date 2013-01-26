@@ -898,33 +898,6 @@ abstract class Strict
     }
 
     /**
-     * Removes the last element from an array and returns that element.
-     *
-     * @param   array|Traversable  $array
-     * @return  array
-     */
-    public static function pop($array)
-    {
-        $array = static::toArray($array);
-        array_pop($array);
-        return $array;
-    }
-
-    /**
-     * Adds one or more elements to the end of an array and returns the new
-     * length of the array.
-     *
-     * @param   array|Traversable  $array
-     * @param   mixed              *$values
-     * @return  array
-     */
-    public static function push($array)
-    {
-        $rest = array_slice(func_get_args(), 1);
-        return array_merge(static::toArray($array), $rest);
-    }
-
-    /**
      * Reverses the order of the elements of an array -- the first becomes the
      * last, and the last becomes the first.
      *
@@ -934,19 +907,6 @@ abstract class Strict
     public static function reverse($array)
     {
         return array_reverse(static::toArray($array));
-    }
-
-    /**
-     * Removes the first element from an array and returns that element.
-     *
-     * @param   array|Traversable  $array
-     * @return  array
-     */
-    public static function shift($array)
-    {
-        $array = static::toArray($array);
-        array_shift($array);
-        return $array;
     }
 
     /**
@@ -960,34 +920,6 @@ abstract class Strict
         $array = static::toArray($array);
         sort($array);
         return $array;
-    }
-
-    /**
-     * Removes the first element from an array and returns that element.
-     *
-     * @param   array|Traversable  $array
-     * @param   int                $index
-     * @param   int                $n
-     * @return  array
-     */
-    public static function splice($array, $index, $n)
-    {
-        $rest = array_slice(func_get_args(), 3);
-        return array_splice(static::toArray($array), $index, $n, $rest);
-    }
-
-    /**
-     * Adds one or more elements to the front of an array and returns the new
-     * length of the array.
-     *
-     * @param   array|Traversable  $array
-     * @param   mixed              *$values
-     * @return  array
-     */
-    public static function unshift($array)
-    {
-        $rest = array_slice(func_get_args(), 1);
-        return array_merge($rest, static::toArray($array));
     }
 
     /**
