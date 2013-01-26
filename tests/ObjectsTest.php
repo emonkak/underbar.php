@@ -143,8 +143,8 @@ class ObjectsTest extends PHPUnit_Framework_TestCase
         $clone->name = 'curly';
         $this->assertNotEquals($clone->name, $moe->name, 'clones can change shallow attributes without affecting the original');
 
-        $this->assertEquals($_::duplicate(1), 1, 'non objects should not be changed by clone');
-        $this->assertEquals($_::duplicate(null), null, 'non objects should not be changed by clone');
+        $this->assertEquals(1, $_::duplicate(1), 'non objects should not be changed by clone');
+        $this->assertEquals(null, $_::duplicate(null), 'non objects should not be changed by clone');
     }
 
     public function provider()
