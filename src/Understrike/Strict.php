@@ -328,8 +328,12 @@ abstract class Strict
      */
     public static function max($list, $iterator = null)
     {
-        $iterator = static::_lookupIterator($iterator);
-        $result = array('computed' => -PHP_INT_MAX, 'value' => -PHP_INT_MAX);
+        if (!$iterator) {
+            $array = static::toArray($list);
+            return empty($array) ? -INF : max($array);
+        }
+
+        $result = array('computed' => -INF, 'value' => -INF);
 
         foreach ($list as $index => $value) {
             $computed = call_user_func($iterator, $value, $index, $list);
@@ -342,11 +346,6 @@ abstract class Strict
         return $result['value'];
     }
 
-    public static function maxSafe($list, $iterator = null)
-    {
-        return Option::fromValue(static::max($list, $iterator), -PHP_INT_MAX);
-    }
-
     /**
      * Returns the minimum value in list. If iterator is passed, it will be used
      * on each value to generate the criterion by which the value is ranked.
@@ -357,9 +356,12 @@ abstract class Strict
      */
     public static function min($list, $iterator = null)
     {
-        $iterator = static::_lookupIterator($iterator);
-        $result = array('computed' => PHP_INT_MAX, 'value' => PHP_INT_MAX);
+        if (!$iterator) {
+            $array = static::toArray($list);
+            return empty($array) ? INF : min($array);
+        }
 
+        $result = array('computed' => INF, 'value' => INF);
         foreach ($list as $index => $value) {
             $computed = call_user_func($iterator, $value, $index, $list);
             if ($computed < $result['computed']) {
@@ -369,11 +371,6 @@ abstract class Strict
         }
 
         return $result['value'];
-    }
-
-    public static function minSafe($list, $iterator = null)
-    {
-        return Option::fromValue(static::max($list, $iterator), PHP_INT_MAX);
     }
 
     /**
