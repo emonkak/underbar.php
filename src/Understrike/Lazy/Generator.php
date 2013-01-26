@@ -248,6 +248,15 @@ abstract class Lazy_Generator extends Strict
                 yield $key => $value;
         }
     }
+
+    /**
+     * @param   mixed     $value
+     * @return  Iterator
+     */
+    public static function repeat($value)
+    {
+        while (true) yield $value;
+    }
 }
 
 // __END__

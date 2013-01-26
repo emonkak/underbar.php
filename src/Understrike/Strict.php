@@ -1184,6 +1184,15 @@ abstract class Strict
     }
 
     /**
+     * @param   mixed     $value
+     * @return  Iterator
+     */
+    public static function repeat($value)
+    {
+        throw new \OverflowException();
+    }
+
+    /**
      * Returns a wrapped object. Calling methods on this object will continue to
      * return wrapped objects until value is used.
      *

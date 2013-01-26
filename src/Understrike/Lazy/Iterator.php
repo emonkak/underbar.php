@@ -195,6 +195,15 @@ abstract class Lazy_Iterator extends Strict
             $it->append(static::_wrapIterator($array));
         return $it;
     }
+
+    /**
+     * @param   mixed     $value
+     * @return  Iterator
+     */
+    public static function repeat($value)
+    {
+        return new Internal\RepeatIterator($value);
+    }
 }
 
 // __END__
