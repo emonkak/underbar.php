@@ -2,10 +2,12 @@
     "name": "emonkak/understrike",
     "authors": [
         {
-            "name": "Emon Tsukimiya",
+            "name": "Shota Nozaki",
             "email": "emonkak@gmail.com"
         }
     ],
+    "license": "MIT",
+    "version": "0.0.0",
     "require": {
 
     },
