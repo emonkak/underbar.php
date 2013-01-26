@@ -476,16 +476,14 @@ abstract class Strict
      */
     public static function toArray($list, $useKeys = false)
     {
-        try {
-            if (is_array($list))
-                return $useKeys ? $list : array_values($list);
-            elseif ($list instanceof \Traversable)
-                return iterator_to_array($list, $useKeys);
-            else
-                return array();
-        } catch (\OutOfBoundsException $e) {
+        if (is_array($list))
+            return $useKeys ? $list : array_values($list);
+        elseif ($list instanceof \Generator)
+            return iterator_to_array(clone $list, $useKeys);
+        elseif ($list instanceof \Traversable)
+            return iterator_to_array($list, $useKeys);
+        else
             return array();
-        }
     }
 
     /**
@@ -513,7 +511,7 @@ abstract class Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if (is_int($n) && $guard === null)
+        if ($n > 0 && $guard === null)
             return array_slice(static::toArray($array), 0, $n);
         else
             foreach ($array as $value) return $value;

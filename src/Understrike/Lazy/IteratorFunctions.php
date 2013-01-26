@@ -58,7 +58,7 @@ abstract class IteratorFunctions extends \Understrike\Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if (is_int($n) && $guard === null)
+        if ($n > 0 && $guard === null)
             return new \LimitIterator(static::_wrapIterator($array), 0, $n);
         else
             foreach ($array as $value) return $value;
