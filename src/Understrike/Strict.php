@@ -413,7 +413,7 @@ abstract class Strict
      * @param   callable|string    $value
      * @return  array
      */
-    public static function groupBy($list, $value)
+    public static function groupBy($list, $value = null)
     {
         $iterator = static::_lookupIterator($value);
         $result = array();
@@ -435,7 +435,7 @@ abstract class Strict
      * @param   callable|string    $value
      * @return  int
      */
-    public static function countBy($list, $value)
+    public static function countBy($list, $value = null)
     {
         $iterator = static::_lookupIterator($value);
         $result = array();
