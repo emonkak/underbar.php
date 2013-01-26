@@ -108,6 +108,19 @@ abstract class Lazy_Iterator extends Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function dropWhile($array, $iterator)
+    {
+        return new Internal\DropWhileIterator(
+            static::_wrapIterator($array),
+            $iterator
+        );
+    }
+
+    /**
      * Flattens a nested array (the nesting can be to any depth).
      *
      * @param   array|Traversable  $array

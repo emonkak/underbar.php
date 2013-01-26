@@ -129,6 +129,21 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @param   callable           $iterator
+     * @return  mixed|Iterator
+     */
+    public static function dropWhile($array, $iterator)
+    {
+        $accepted = false;
+        foreach ($array as $index => $value) {
+            if ($accepted
+                || ($accepted = !call_user_func($iterator, $value, $index, $array)))
+                yield $index => $value;
+        }
+    }
+
+    /**
      * Merges together the values of each of the arrays with the values at the
      * corresponding position.
      *

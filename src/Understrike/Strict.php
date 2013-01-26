@@ -614,6 +614,23 @@ abstract class Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @param   callable           $iterator
+     * @return  mixed|Iterator
+     */
+    public static function dropWhile($array, $iterator)
+    {
+        $result = array();
+        $accepted = false;
+        foreach ($array as $index => $value) {
+            if ($accepted
+                || ($accepted = !call_user_func($iterator, $value, $index, $array)))
+                $result[$index] = $value;
+        }
+        return $result;
+    }
+
+    /**
      * Returns a copy of the array with all falsy values removed.
      *
      * @param   array|Traversable  $array
