@@ -15,5 +15,8 @@
         "psr-0": {
             "Understrike": "src/"
         }
+    },
+    "scripts": {
+      "post-install-cmd": "make"
     }
 }
