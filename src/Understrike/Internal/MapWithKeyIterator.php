@@ -4,11 +4,11 @@ namespace Understrike\Internal;
 
 class MapWithKeyIterator extends \IteratorIterator
 {
-    protected $iterator;
+    private $iterator;
 
-    protected $key;
+    private $key;
 
-    protected $current;
+    private $current;
 
     public function __construct(\Traversable $list, $iterator)
     {

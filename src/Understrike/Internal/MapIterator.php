@@ -4,7 +4,7 @@ namespace Understrike\Internal;
 
 class MapIterator extends \IteratorIterator
 {
-    protected $iterator;
+    private $iterator;
 
     public function __construct(\Traversable $list, $iterator)
     {

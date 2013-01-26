@@ -4,13 +4,13 @@ namespace Understrike\Internal;
 
 class InitialIterator extends \IteratorIterator
 {
-    protected $queue;
+    private $queue;
 
-    protected $n;
+    private $n;
 
-    protected $index;
+    private $index;
 
-    protected $current;
+    private $current;
 
     public function __construct(\Traversable $array, $n)
     {

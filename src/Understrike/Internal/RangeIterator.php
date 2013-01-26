@@ -4,15 +4,15 @@ namespace Understrike\Internal;
 
 class RangeIterator implements \Iterator
 {
-    protected $start;
+    private $start;
 
-    protected $step;
+    private $step;
 
-    protected $len;
+    private $len;
 
-    protected $index;
+    private $index;
 
-    protected $current;
+    private $current;
 
     public function __construct($start, $stop, $step)
     {
