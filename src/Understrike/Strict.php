@@ -479,7 +479,7 @@ abstract class Strict
         elseif ($list instanceof \Traversable)
             return iterator_to_array($list, $preserveKeys);
         else
-            return array();
+            return (array) $list;
     }
 
     /**
@@ -1159,9 +1159,12 @@ abstract class Strict
     public static function pick($object)
     {
         $array = static::toArray($object, true);
-        $keys = array_slice(func_get_args(), 1);
+        $keys = call_user_func_array(__CLASS__.'::concat',
+                                     array_slice(func_get_args(), 1));
         $result = array();
-        foreach ($keys as $key) $result[$key] = $array[$key];
+        foreach ($keys as $key) {
+            if (isset($array[$key])) $result[$key] = $array[$key];
+        }
         return $result;
     }
 
@@ -1176,7 +1179,8 @@ abstract class Strict
     public static function omit($object)
     {
         $array = static::toArray($object, true);
-        $keys = array_slice(func_get_args(), 1);
+        $keys = call_user_func_array(__CLASS__.'::concat',
+                                     array_slice(func_get_args(), 1));
         foreach ($keys as $key) unset($array[$key]);
         return $array;
     }
@@ -1191,12 +1195,13 @@ abstract class Strict
      */
     public static function defaults($object)
     {
-        foreach (array_slice(func_get_args(), 1) as $default)
-            $objects[] = static::toArray($default, true);
-
-        $objects[] = static::toArray($object, true);
-
-        return call_user_func_array('array_merge', $objects);
+        $object = static::toArray($object, true);
+        foreach (array_slice(func_get_args(), 1) as $default) {
+            foreach ((array) $default as $key => $value) {
+                if (!isset($object[$key])) $object[$key] = $value;
+            }
+        }
+        return $object;
     }
 
     /**
