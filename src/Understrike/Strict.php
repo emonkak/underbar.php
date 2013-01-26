@@ -507,7 +507,7 @@ abstract class Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if (is_int($n) && $guard === null)
+        if ($n !== null && $guard === null)
             return $n > 0 ? array_slice(static::toArray($array), 0, $n) : array();
         else
             foreach ($array as $value) return $value;
@@ -563,7 +563,7 @@ abstract class Strict
     public static function last($array, $n = null, $guard = null)
     {
         $array = static::toArray($array);
-        if (is_int($n) && $guard === null)
+        if ($n !== null && $guard === null)
             return $n > 0 ? array_slice($array, -$n) : array();
         else
             return empty($array) ? null : end($array);
@@ -802,11 +802,11 @@ abstract class Strict
         $l = count($array);
 
         if ($isSorted) {
-            if (is_int($isSorted)) {
-                $i = ($isSorted < 0) ? max(0, $l + $isSorted) : $isSorted;
-            } else {
+            if ($isSorted === true) {
                 $i = static::sortedIndex($array, $value);
                 return (isset($array[$i]) && $array[$i] === $value) ? $i : -1;
+            } else {
+                $i = ($isSorted < 0) ? max(0, $l + $isSorted) : $isSorted;
             }
         }
 
@@ -831,7 +831,7 @@ abstract class Strict
     {
         $array = static::toArray($array);
         $l = count($array);
-        $i = is_int($fromIndex) ? min($l, $fromIndex) : $l;
+        $i = $fromIndex !== null ? min($l, $fromIndex) : $l;
 
         while ($i-- > 0) {
             if (isset($array[$i]) && $array[$i] === $value) return $i;

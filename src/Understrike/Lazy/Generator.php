@@ -63,7 +63,7 @@ abstract class Lazy_Generator extends Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if (is_int($n) && $guard === null)
+        if ($n !== null && $guard === null)
             return static::_first($array, $n);
         else
             foreach ($array as $value) return $value;

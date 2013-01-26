@@ -58,7 +58,7 @@ abstract class Lazy_Iterator extends Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if (is_int($n) && $guard === null)
+        if ($n !== null && $guard === null)
             return $n > 0
                 ? new \LimitIterator(static::_wrapIterator($array), 0, $n)
                 : new \EmptyIterator();
