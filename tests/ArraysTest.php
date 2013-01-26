@@ -138,19 +138,19 @@ class ArraysTest extends PHPUnit_Framework_TestCase
     {
         $list = array(1, 2, 1, 3, 1, 4);
         $shouldBe = array(1, 2, 3, 4);
-        $this->assertEquals($shouldBe, $_::toArray($_::uniq($list)), 'can find the unique values');
-        $this->assertEquals($shouldBe, $_::toArray($_::unique($list)), 'alias as unique');
+        $this->assertEquals($shouldBe, $_::values($_::uniq($list)), 'can find the unique values');
+        $this->assertEquals($shouldBe, $_::values($_::unique($list)), 'alias as unique');
 
         $list = array(array('name' => 'moe'), array('name' => 'curly'), array('name' => 'larry'), array('name' => 'curly'));
         $iterator = function($value) { return $value['name']; };
         $result = $_::map($_::uniq($list, $iterator), $iterator);
         $shouldBe = array('moe', 'curly', 'larry');
-        $this->assertEquals($shouldBe, $_::toArray($result), 'can find the unique values of an array using a custom iterator');
+        $this->assertEquals($shouldBe, $_::values($result), 'can find the unique values of an array using a custom iterator');
 
         $list = array(1, 2, 2, 3, 4, 4);
         $result = $_::uniq($list, function($value) { return $value + 1; });
         $shouldBe = array(1, 2, 3, 4);
-        $this->assertEquals($shouldBe, $_::toArray($result), 'iterator works');
+        $this->assertEquals($shouldBe, $_::values($result), 'iterator works');
     }
 
     /**
@@ -171,11 +171,11 @@ class ArraysTest extends PHPUnit_Framework_TestCase
     {
         $result = $_::union(array(1, 2, 3), array(2, 30, 1), array(1, 40));
         $shouldBe = array(1, 2, 3, 30, 40);
-        $this->assertEquals($shouldBe, $_::toArray($result), 'takes the union of a list of arrays');
+        $this->assertEquals($shouldBe, $_::values($result), 'takes the union of a list of arrays');
 
         $result = $_::union(array(1, 2, 3), array(2, 30, 1), array(1, 40, array(1)));
         $shouldBe = array(1, 2, 3, 30, 40, array(1));
-        $this->assertEquals($shouldBe, $_::toArray($result), 'takes the union of a list of nested arrays');
+        $this->assertEquals($shouldBe, $_::values($result), 'takes the union of a list of nested arrays');
     }
 
     /**
@@ -185,11 +185,11 @@ class ArraysTest extends PHPUnit_Framework_TestCase
     {
         $result = $_::difference(array(1, 2, 3), array(2, 30, 40));
         $shouldBe = array(1, 3);
-        $this->assertEquals($shouldBe, $_::toArray($result), 'takes the difference of two arrays');
+        $this->assertEquals($shouldBe, $_::values($result), 'takes the difference of two arrays');
 
         $result = $_::difference(array(1, 2, 3, 4), array(2, 30, 40), array(1, 11, 111));
         $shouldBe = array(3, 4);
-        $this->assertEquals($shouldBe, $_::toArray($result), 'takes the difference of three arrays');
+        $this->assertEquals($shouldBe, $_::values($result), 'takes the difference of three arrays');
     }
 
     /**

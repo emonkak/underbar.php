@@ -44,23 +44,6 @@ abstract class Strict
     }
 
     /**
-     * @param   array|Traversable  $list
-     * @param   callable           $iterator
-     * @return  Iterator
-     */
-    public static function mapWithKey($list, $iterator)
-    {
-        $result = array();
-
-        foreach ($list as $index => $value) {
-            list ($key, $val) = call_user_func($iterator, $value, $index, $list);
-            $result[$key] = $val;
-        }
-
-        return $result;
-    }
-
-    /**
      * Also known as inject and foldl, reduce boils down a list of values into a
      * single value.
      *
@@ -470,10 +453,10 @@ abstract class Strict
      * @param   boolean            $preserveKeys
      * @return  array
      */
-    public static function toArray($list, $preserveKeys = false)
+    public static function toArray($list, $preserveKeys = null)
     {
         if (is_array($list))
-            return $preserveKeys ? $list : array_values($list);
+            return $preserveKeys === false ? array_values($list) : $list;
         elseif ($list instanceof \Generator)
             return iterator_to_array(clone $list, $preserveKeys);
         elseif ($list instanceof \Traversable)
@@ -805,20 +788,21 @@ abstract class Strict
      */
     public static function object($list, $values = null)
     {
+        $result = array();
         $values = static::_wrapIterator($values);
-        return static::mapWithKey($list, function($value) use ($values) {
-            if ($values) {
+        if ($values) {
+            foreach ($list as $key) {
                 if ($values->valid()) {
-                    $val = $values->current();
+                    $result[$key] = $values->current();
                     $values->next();
                 } else {
-                    $val = null;
-                };
-                return array($value, $val);
-            } else {
-                return $value;
+                    $result[$key] = null;
+                }
             }
-        });
+        } else {
+            foreach ($list as $value) $result[$value[0]] = $value[1];
+        }
+        return $result;
     }
 
     /**
@@ -1046,7 +1030,7 @@ abstract class Strict
     {
         return call_user_func_array(
             'array_merge',
-            array_map(get_called_class().'::toArray', func_get_args())
+            array_map(get_called_class().'::values', func_get_args())
         );
     }
 
@@ -1083,10 +1067,7 @@ abstract class Strict
      */
     public static function keys($object)
     {
-        $i = 0;
-        return static::mapWithKey($object, function($value, $key) use (&$i) {
-            return array($i++, $key);
-        });
+        return array_keys(static::toArray($object, true));
     }
 
     /**
@@ -1097,10 +1078,7 @@ abstract class Strict
      */
     public static function values($object)
     {
-        $i = 0;
-        return static::mapWithKey($object, function($value) use (&$i) {
-            return array($i++, $value);
-        });
+        return static::toArray($object, false);
     }
 
     /**
@@ -1125,9 +1103,7 @@ abstract class Strict
      */
     public static function invert($object)
     {
-        return static::mapWithKey($object, function($value, $key) {
-            return array($value, $key);
-        });
+        return array_flip(static::toArray($object, true));
     }
 
     /**

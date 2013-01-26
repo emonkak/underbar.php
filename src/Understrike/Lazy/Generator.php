@@ -21,19 +21,6 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
-     * @param   array|Traversable  $list
-     * @param   callable           $iterator
-     * @return  Iterator
-     */
-    public static function mapWithKey($list, $iterator)
-    {
-        foreach ($list as $index => $value) {
-            list ($key, $val) = call_user_func($iterator, $value, $index, $list);
-            yield $key => $val;
-        }
-    }
-
-    /**
      * Looks through each value in the list, returning an array of all the values
      * that pass a truth test (iterator).
      *

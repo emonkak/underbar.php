@@ -20,16 +20,6 @@ abstract class Lazy_Iterator extends Strict
     }
 
     /**
-     * @param   array|Traversable  $list
-     * @param   callable           $iterator
-     * @return  Iterator
-     */
-    public static function mapWithKey($list, $iterator)
-    {
-        return new Internal\MapWithKeyIterator(static::_wrapIterator($list), $iterator);
-    }
-
-    /**
      * Looks through each value in the list, returning an array of all the values
      * that pass a truth test (iterator).
      *
