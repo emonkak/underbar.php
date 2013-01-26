@@ -80,6 +80,19 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function takeWhile($array, $iterator)
+    {
+        foreach ($array as $index => $value) {
+            if (!call_user_func($iterator, $value, $index, $array)) break;
+            yield $index => $value;
+        }
+    }
+
+    /**
      * Returns everything but the last entry of the array.
      *
      * @param   array|Traversable  $array

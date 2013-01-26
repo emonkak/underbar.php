@@ -67,6 +67,19 @@ abstract class Lazy_Iterator extends Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function takeWhile($array, $iterator)
+    {
+        return new Internal\TakeWhileIterator(
+            static::_wrapIterator($array),
+            $iterator
+        );
+    }
+
+    /**
      * Returns everything but the last entry of the array.
      *
      * @param   array|Traversable  $array

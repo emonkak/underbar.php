@@ -539,6 +539,21 @@ abstract class Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function takeWhile($array, $iterator)
+    {
+        $result = array();
+        foreach ($array as $index => $value) {
+            if (!call_user_func($iterator, $value, $index, $array)) break;
+            $result[$index] = $value;
+        }
+        return $result;
+    }
+
+    /**
      * Returns everything but the last entry of the array.
      *
      * @param   array|Traversable  $array
