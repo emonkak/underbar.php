@@ -194,6 +194,19 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @return  Iterator
+     */
+    public static function cycle($array, $n = null)
+    {
+        if ($n !== null) {
+            while (true) foreach ($array as $value) yield $value;
+        } else {
+            while ($n-- > 0) foreach ($array as $value) yield $value;
+        }
+    }
+
+    /**
      * Returns a new array comprised of this array joined with other array(s)
      * and/or value(s).
      *

@@ -900,6 +900,21 @@ abstract class Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @return  Iterator
+     */
+    public static function cycle($array, $n = null)
+    {
+        $result = array();
+        if ($n !== null) {
+            while (true) foreach ($array as $value) $result[] = $value;
+        } else {
+            while ($n-- > 0) foreach ($array as $value) $result[] = $value;
+        }
+        return $result;
+    }
+
+    /**
      * Reverses the order of the elements of an array -- the first becomes the
      * last, and the last becomes the first.
      *

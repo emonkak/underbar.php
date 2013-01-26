@@ -140,6 +140,22 @@ abstract class Lazy_Iterator extends Strict
     }
 
     /**
+     * @param   array|Traversable  $array
+     * @return  Iterator
+     */
+    public static function cycle($array, $n = null)
+    {
+        $wrapped = static::_wrapIterator($array);
+        if ($n !== null) {
+            $it = new \AppendIterator();
+            while ($n-- > 0) $it->append($wrapped);
+            return $it;
+        } else {
+            return new \InfiniteIterator($wrapped);
+        }
+    }
+
+    /**
      * Returns a new array comprised of this array joined with other array(s)
      * and/or value(s).
      *
