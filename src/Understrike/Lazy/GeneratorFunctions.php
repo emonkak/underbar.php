@@ -63,7 +63,7 @@ abstract class GeneratorFunctions extends \Understrike\Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if ($n > 0 && $guard === null)
+        if (is_int($n) && $guard === null)
             return static::_first($array, $n);
         else
             foreach ($array as $value) return $value;

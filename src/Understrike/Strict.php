@@ -507,8 +507,8 @@ abstract class Strict
      */
     public static function first($array, $n = null, $guard = null)
     {
-        if ($n > 0 && $guard === null)
-            return array_slice(static::toArray($array), 0, $n);
+        if (is_int($n) && $guard === null)
+            return $n > 0 ? array_slice(static::toArray($array), 0, $n) : array();
         else
             foreach ($array as $value) return $value;
     }
@@ -566,7 +566,7 @@ abstract class Strict
         if (is_int($n) && $guard === null)
             return $n > 0 ? array_slice($array, -$n) : array();
         else
-            return end($array);
+            return empty($array) ? null : end($array);
     }
 
     public static function lastSafe($array, $n = null, $guard)
