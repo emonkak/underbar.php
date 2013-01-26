@@ -20,6 +20,16 @@ abstract class IteratorFunctions extends \Understrike\Strict
     }
 
     /**
+     * @param   array|Traversable  $list
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function mapWithKey($list, $iterator)
+    {
+        return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
+    }
+
+    /**
      * Looks through each value in the list, returning an array of all the values
      * that pass a truth test (iterator).
      *
@@ -138,11 +148,6 @@ abstract class IteratorFunctions extends \Understrike\Strict
         $iterator = new \AppendIterator();
         foreach ($arrays as $array) $iterator->append($array);
         return $iterator;
-    }
-
-    protected static function _mapWithKey($list, $iterator)
-    {
-        return new MapWithKeyIterator(static::_wrapIterator($list), $iterator);
     }
 }
 

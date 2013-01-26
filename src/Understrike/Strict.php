@@ -44,6 +44,23 @@ abstract class Strict
     }
 
     /**
+     * @param   array|Traversable  $list
+     * @param   callable           $iterator
+     * @return  Iterator
+     */
+    public static function mapWithKey($list, $iterator)
+    {
+        $result = array();
+
+        foreach ($list as $index => $value) {
+            list ($key, $val) = call_user_func($iterator, $value, $index, $list);
+            $result[$key] = $val;
+        }
+
+        return $result;
+    }
+
+    /**
      * Also known as inject and foldl, reduce boils down a list of values into a
      * single value.
      *
@@ -760,7 +777,7 @@ abstract class Strict
     public static function object($list, $values = null)
     {
         $values = static::_wrapIterator($values);
-        return static::_mapWithKey($list, function($value) use ($values) {
+        return static::mapWithKey($list, function($value) use ($values) {
             if ($values) {
                 if ($values->valid()) {
                     $val = $values->current();
@@ -1027,7 +1044,7 @@ abstract class Strict
     public static function keys($object)
     {
         $i = 0;
-        return static::_mapWithKey($object, function($value, $key) use (&$i) {
+        return static::mapWithKey($object, function($value, $key) use (&$i) {
             return array($i++, $key);
         });
     }
@@ -1041,7 +1058,7 @@ abstract class Strict
     public static function values($object)
     {
         $i = 0;
-        return static::_mapWithKey($object, function($value) use (&$i) {
+        return static::mapWithKey($object, function($value) use (&$i) {
             return array($i++, $value);
         });
     }
@@ -1068,7 +1085,7 @@ abstract class Strict
      */
     public static function invert($object)
     {
-        return static::_mapWithKey($object, function($value, $key) {
+        return static::mapWithKey($object, function($value, $key) {
             return array($value, $key);
         });
     }
@@ -1231,18 +1248,6 @@ abstract class Strict
             return new \IteratorIterator($list);
         else
             return $list;
-    }
-
-    protected static function _mapWithKey($list, $iterator)
-    {
-        $result = array();
-
-        foreach ($list as $index => $value) {
-            list ($key, $val) = call_user_func($iterator, $value, $index, $list);
-            $result[$key] = $val;
-        }
-
-        return $result;
     }
 }
 
