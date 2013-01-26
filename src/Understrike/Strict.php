@@ -906,7 +906,7 @@ abstract class Strict
      */
     public static function reverse($array)
     {
-        return array_reverse(static::toArray($array));
+        return array_reverse(static::toArray($array, true), true);
     }
 
     /**
