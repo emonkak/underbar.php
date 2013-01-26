@@ -1,8 +1,8 @@
 <?php
 
-namespace Understrike;
+namespace Understrike\Internal;
 
-class Chain
+final class Chain
 {
     private $value;
 
@@ -17,8 +17,8 @@ class Chain
     public function __call($name, $aruguments)
     {
         array_unshift($aruguments, $this->value);
-        $result = call_user_func_array($this->class.'::'.$name, $aruguments);
-        return new static($result, $this->class);
+        $this->value = call_user_func_array($this->class.'::'.$name, $aruguments);
+        return $this;
     }
 
     public function value()

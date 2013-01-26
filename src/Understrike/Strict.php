@@ -1195,11 +1195,20 @@ abstract class Strict
      * return wrapped objects until value is used.
      *
      * @param   mixed  $value
-     * @return  Chain
+     * @return  Internal\Chain
      */
     public static function chain($value)
     {
-        return new Chain($value, get_called_class());
+        return new Internal\Chain($value, get_called_class());
+    }
+
+    /**
+     * @param   mixed  $value
+     * @return  Internal\Wrapper
+     */
+    public static function wrap($value)
+    {
+        return new Internal\Wrapper($value, get_called_class());
     }
 
     protected static function _lookupIterator($value)

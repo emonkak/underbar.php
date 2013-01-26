@@ -1,8 +1,8 @@
 <?php
 
-namespace Understrike;
+namespace Understrike\Internal;
 
-class Wrapper
+final class Wrapper
 {
     private $value;
 
