@@ -8,7 +8,7 @@ class CollectionsTest extends PHPUnit_Framework_TestCase
     public function testEach($_)
     {
         $_::each(array(1, 2, 3), function($num, $i) {
-            $this->assertEquals($num, $i + 1, 'each iterators provide value and iteration count');
+            PHPUnit_Framework_TestCase::assertEquals($num, $i + 1, 'each iterators provide value and iteration count');
         });
 
         $answers = array();
@@ -277,7 +277,7 @@ class CollectionsTest extends PHPUnit_Framework_TestCase
         $result = $_::pluck($people, 'name');
         $this->assertEquals(array('moe', 'curly'), $_::toArray($result), 'stooges sorted by age');
 
-        $list = [null, 4, 1, null, 3, 2];
+        $list = array(null, 4, 1, null, 3, 2);
         $sorted = $_::sortBy($list, "$_::identity");
         $this->assertEquals(array(null, null, 1, 2, 3, 4), $_::toArray($sorted), 'sortBy with undefined values');
 

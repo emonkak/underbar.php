@@ -183,7 +183,7 @@ class ArraysTest extends PHPUnit_Framework_TestCase
      */
     public function testDifference($_)
     {
-        $result = $_::difference([1, 2, 3], [2, 30, 40]);
+        $result = $_::difference(array(1, 2, 3), array(2, 30, 40));
         $shouldBe = array(1, 3);
         $this->assertEquals($shouldBe, $_::toArray($result), 'takes the difference of two arrays');
 
