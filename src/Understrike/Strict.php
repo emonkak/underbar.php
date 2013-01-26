@@ -467,17 +467,17 @@ abstract class Strict
      * Array.
      *
      * @param   array|Traversable  $list
-     * @param   boolean            $useKeys
+     * @param   boolean            $preserveKeys
      * @return  array
      */
-    public static function toArray($list, $useKeys = false)
+    public static function toArray($list, $preserveKeys = false)
     {
         if (is_array($list))
-            return $useKeys ? $list : array_values($list);
+            return $preserveKeys ? $list : array_values($list);
         elseif ($list instanceof \Generator)
-            return iterator_to_array(clone $list, $useKeys);
+            return iterator_to_array(clone $list, $preserveKeys);
         elseif ($list instanceof \Traversable)
-            return iterator_to_array($list, $useKeys);
+            return iterator_to_array($list, $preserveKeys);
         else
             return array();
     }
@@ -1141,15 +1141,6 @@ abstract class Strict
      * @return  Internal\Chain
      */
     public static function chain($value)
-    {
-        return new Internal\Chain($value, get_called_class());
-    }
-
-    /**
-     * @param   mixed  $value
-     * @return  Internal\Wrapper
-     */
-    public static function wrap($value)
     {
         return new Internal\Wrapper($value, get_called_class());
     }
