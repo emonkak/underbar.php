@@ -939,7 +939,7 @@ abstract class Strict
     {
         $result = array();
         if ($n !== null) {
-            while (true) foreach ($array as $value) $result[] = $value;
+            throw new \OverflowException();
         } else {
             while ($n-- > 0) foreach ($array as $value) $result[] = $value;
         }
