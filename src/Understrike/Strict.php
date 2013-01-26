@@ -740,21 +740,24 @@ abstract class Strict
      */
     public static function zip()
     {
-        $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-        $result = array();
-        $available = false;
+        $arrays = $zipped = $result = array();;
+        $loop = false;
 
-        foreach ($arrays as $array) {
-            $array->rewind();
-            $available = $available || $array->valid();
+        foreach (func_get_args() as $array) {
+            $arrays[] = $wrapped = static::_wrapIterator($array);
+            $wrapped->rewind();
+            $loop = $loop || $wrapped->valid();
+            $zipped[] = $wrapped->current();
         }
 
-        while ($available) {
-            $available = false;
+        while ($loop) {
+            $result[] = $zipped;
+            $zipped = array();
+            $loop = false;
             foreach ($arrays as $array) {
-                $result[] = $array->current();
                 $array->next();
-                $available = $available || $array->valid();
+                $zipped[] = $array->current();
+                $loop = $loop || $array->valid();
             }
         }
 

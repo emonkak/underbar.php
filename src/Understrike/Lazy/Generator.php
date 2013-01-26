@@ -124,20 +124,24 @@ abstract class Lazy_Generator extends Strict
      */
     public static function zip()
     {
-        $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-        $available = false;
+        $arrays = $zipped = array();;
+        $loop = false;
 
-        foreach ($arrays as $array) {
-            $array->rewind();
-            $available = $available || $array->valid();
+        foreach (func_get_args() as $array) {
+            $arrays[] = $wrapped = static::_wrapIterator($array);
+            $wrapped->rewind();
+            $loop = $loop || $wrapped->valid();
+            $zipped[] = $wrapped->current();
         }
 
-        while ($available) {
-            $available = false;
+        while ($loop) {
+            yield $zipped;
+            $zipped = array();
+            $loop = false;
             foreach ($arrays as $array) {
-                yield $array->current();
                 $array->next();
-                $available = $available || $array->valid();
+                $zipped[] = $array->current();
+                $loop = $loop || $array->valid();
             }
         }
     }

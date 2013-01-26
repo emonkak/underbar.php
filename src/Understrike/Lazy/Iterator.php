@@ -115,8 +115,10 @@ abstract class Lazy_Iterator extends Strict
      */
     public static function zip()
     {
-        $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-        return new \RecursiveIteratorIterator(new Internal\ZipIterator($arrays));
+        $it = new \MultipleIterator(\MultipleIterator::MIT_NEED_ANY);
+        foreach (func_get_args() as $array)
+            $it->attachIterator(static::_wrapIterator($array));
+        return $it;
     }
 
     /**

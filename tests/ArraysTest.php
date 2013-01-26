@@ -202,7 +202,7 @@ class ArraysTest extends PHPUnit_Framework_TestCase
         $leaders = array(true);
 
         $stooges = $_::zip($names, $ages, $leaders);
-        $shouldBe = array('moe', 30, true, 'larry', 40, null, 'curly', 50, null);
+        $shouldBe = array(array('moe', 30, true), array('larry', 40, null), array('curly', 50, null));
         $this->assertEquals($shouldBe, $_::toArray($stooges), 'zipped together arrays of different lengths');
     }
 
