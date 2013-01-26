@@ -267,8 +267,6 @@ abstract class Strict
     /**
      * Returns true if the value is present in the list.
      *
-     * Alias: include
-     *
      * @param   array|Traversable  $list
      * @param   mixed              $target
      * @return  boolean
@@ -287,6 +285,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   string             $methodName
+     * @param   miexed             *$arguments
      * @return  Iterator
      */
     public static function invoke($list, $methodName)
@@ -1025,7 +1024,7 @@ abstract class Strict
      * @param   array|Traversable  *$sources
      * @return  Iterator
      */
-    public static function extend($destination)
+    public static function extend()
     {
         $objects = array();
 
