@@ -147,29 +147,6 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
-     * A function to create flexibly-numbered lists of integers,
-     * handy for each and map loops.
-     *
-     * @param   int       $start
-     * @param   int       $stop
-     * @param   int       $step
-     * @return  Iterator
-     */
-    public static function range($start, $stop = null, $step = 1)
-    {
-        if ($stop === null) {
-            $stop = $start;
-            $start = 0;
-        }
-
-        $len = max(ceil(($stop - $start) / $step), 0);
-        for ($i = 0; $i < $len; $i++) {
-            yield $start;
-            $start += $step;
-        }
-    }
-
-    /**
      * Flattens a nested array (the nesting can be to any depth).
      *
      * @param   array|Traversable  $array
@@ -190,6 +167,29 @@ abstract class Lazy_Generator extends Strict
             } else {
                 yield $key => $value;
             }
+        }
+    }
+
+    /**
+     * A function to create flexibly-numbered lists of integers,
+     * handy for each and map loops.
+     *
+     * @param   int       $start
+     * @param   int       $stop
+     * @param   int       $step
+     * @return  Iterator
+     */
+    public static function range($start, $stop = null, $step = 1)
+    {
+        if ($stop === null) {
+            $stop = $start;
+            $start = 0;
+        }
+
+        $len = max(ceil(($stop - $start) / $step), 0);
+        for ($i = 0; $i < $len; $i++) {
+            yield $start;
+            $start += $step;
         }
     }
 

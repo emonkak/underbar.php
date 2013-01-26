@@ -103,7 +103,7 @@ abstract class Lazy_Iterator extends Strict
      */
     public static function flatten($array, $shallow = false)
     {
-        return new Internal\FlattenIterator(static::_wrapIterator($array), $shallow);;
+        return new Internal\FlattenIterator(static::_wrapIterator($array), $shallow);
     }
 
     /**
@@ -148,10 +148,10 @@ abstract class Lazy_Iterator extends Strict
      */
     public static function concat()
     {
-        $arrays = array_map(get_called_class().'::_wrapIterator', func_get_args());
-        $iterator = new \AppendIterator();
-        foreach ($arrays as $array) $iterator->append($array);
-        return $iterator;
+        $it = new \AppendIterator();
+        foreach (func_get_args() as $array)
+            $it->append(static::_wrapIterator($array));
+        return $it;
     }
 }
 

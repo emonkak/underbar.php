@@ -7,7 +7,7 @@ class FlattenIterator extends \RecursiveIteratorIterator
     public function __construct(\Traversable $array, $shallow)
     {
         parent::__construct(
-            new FlattenIteratorInner($array),
+            new FlattenInnerIterator($array),
             $shallow ? self::SELF_FIRST : self::LEAVES_ONLY
         );
         $this->setMaxDepth($shallow ? 1 : -1);
@@ -34,7 +34,7 @@ class FlattenIterator extends \RecursiveIteratorIterator
     }
 }
 
-class FlattenIteratorInner extends \IteratorIterator implements \RecursiveIterator
+class FlattenInnerIterator extends \IteratorIterator implements \RecursiveIterator
 {
     public function getChildren()
     {
