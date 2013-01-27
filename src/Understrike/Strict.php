@@ -847,21 +847,17 @@ abstract class Strict
     public static function indexOf($array, $value, $isSorted = 0)
     {
         $array = static::toArray($array);
-        $i = 0;
-        $l = count($array);
 
-        if ($isSorted) {
-            if ($isSorted === true) {
-                $i = static::sortedIndex($array, $value);
-                return (isset($array[$i]) && $array[$i] === $value) ? $i : -1;
-            } else {
-                $i = ($isSorted < 0) ? max(0, $l + $isSorted) : $isSorted;
+        if ($isSorted === true) {
+            $i = static::sortedIndex($array, $value);
+            return (isset($array[$i]) && $array[$i] === $value) ? $i : -1;
+        } else {
+            $l = count($array);
+            $i = ($isSorted < 0) ? max(0, $l + $isSorted) : $isSorted;
+            for (; $i < $l; $i++) {
+                if (isset($array[$i]) && $array[$i] === $value)
+                    return $i;
             }
-        }
-
-        for (; $i < $l; $i++) {
-            if (isset($array[$i]) && $array[$i] === $value)
-                return $i;
         }
 
         return -1;
@@ -880,7 +876,7 @@ abstract class Strict
     {
         $array = static::toArray($array);
         $l = count($array);
-        $i = $fromIndex !== null ? min($l, $fromIndex) : $l;
+        $i = ($fromIndex !== null) ? min($l, $fromIndex) : $l;
 
         while ($i-- > 0) {
             if (isset($array[$i]) && $array[$i] === $value) return $i;
