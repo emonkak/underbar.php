@@ -458,7 +458,7 @@ abstract class Strict
         if (is_array($list))
             return $preserveKeys === false ? array_values($list) : $list;
         elseif ($list instanceof \Generator)
-            return iterator_to_array(clone $list, $preserveKeys);
+            return iterator_to_array($list, $preserveKeys);
         elseif ($list instanceof \Traversable)
             return iterator_to_array($list, $preserveKeys);
         else
