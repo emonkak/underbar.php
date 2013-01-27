@@ -26,7 +26,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   callable           $iterator
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function map($list, $iterator)
     {
@@ -113,14 +113,21 @@ abstract class Strict
         }
     }
 
-    public static function findSafe($list, $iterator)
-    {
-        return Option::fromValue(static::find($list, $iterator));
-    }
-
     public static function detect($list, $iterator)
     {
         return static::find($list, $iterator);
+    }
+
+    /**
+     * Alias: detectSafe
+     *
+     * @param   array|Traversable  $list
+     * @param   callable           $iterator
+     * @return  Option
+     */
+    public static function findSafe($list, $iterator)
+    {
+        return Option::fromValue(static::find($list, $iterator));
     }
 
     public static function detectSafe($list, $iterator)
@@ -136,7 +143,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   callable           $iterator
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function filter($list, $iterator)
     {
@@ -181,7 +188,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   callable           $iterator
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function reject($list, $iterator)
     {
@@ -269,7 +276,7 @@ abstract class Strict
      * @param   array|Traversable  $list
      * @param   string             $methodName
      * @param   miexed             *$arguments
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function invoke($list, $methodName)
     {
@@ -286,7 +293,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   string             $propertyName
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function pluck($list, $propertyName)
     {
@@ -361,7 +368,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   callable|string    $value
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function sortBy($list, $value)
     {
@@ -468,10 +475,10 @@ abstract class Strict
     /**
      * Return the number of values in the list.
      *
+     * Alias: count
+     *
      * @param   array|Countable|Traversable  $list
      * @return  int
-     *
-     * Alias: count
      */
     public static function size($list)
     {
@@ -503,24 +510,31 @@ abstract class Strict
             foreach ($array as $value) return $value;
     }
 
-    public static function firstSafe($array, $n = null, $guard = null)
-    {
-        return Option::fromValue(static::first($array, $n, $guard));
-    }
-
     public static function head($array, $n = null, $guard = null)
     {
         return static::first($array, $n, $guard);
     }
 
-    public static function headSafe($array, $n = null, $guard)
+    public static function take($array, $n = null, $guard = null)
+    {
+        return static::first($array, $n, $guard);
+    }
+
+    /**
+     * Alias: headSafe, takeSafe
+     *
+     * @param   array|Traversable  $array
+     * @param   int                $n
+     * @return  Option
+     */
+    public static function firstSafe($array, $n = null, $guard = null)
     {
         return Option::fromValue(static::first($array, $n, $guard));
     }
 
-    public static function take($array, $n = null, $guard = null)
+    public static function headSafe($array, $n = null, $guard)
     {
-        return static::first($array, $n, $guard);
+        return Option::fromValue(static::first($array, $n, $guard));
     }
 
     public static function takeSafe($array, $n = null, $guard)
@@ -548,7 +562,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $array
      * @param   int                $n
-     * @return  array
+     * @return  array|Iterator
      */
     public static function initial($array, $n = 1, $guard = null)
     {
@@ -586,11 +600,12 @@ abstract class Strict
      *
      * @param   array|Traversable  $array
      * @param   int                $index
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function rest($array, $index = 1, $guard = null)
     {
-        return array_slice(static::toArray($array), ($guard === null ? $index : 1));
+        if ($guard !== null) $index = 1;
+        return array_slice(static::toArray($array), $index);
     }
 
     public static function tail($array, $index = 1, $guard = null)
@@ -624,7 +639,7 @@ abstract class Strict
      * Returns a copy of the array with all falsy values removed.
      *
      * @param   array|Traversable  $array
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function compact($array)
     {
@@ -636,7 +651,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $array
      * @param   boolean            $shallow
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function flatten($array, $shallow = false)
     {
@@ -663,7 +678,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $array
      * @param   mixed              *$values
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function without($array)
     {
@@ -675,7 +690,7 @@ abstract class Strict
      * in order, that are present in one or more of the arrays.
      *
      * @param   array|Traversable  *$arrays
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function union()
     {
@@ -704,7 +719,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $array
      * @param   array              *$others
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function difference($array)
     {
@@ -725,7 +740,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $array
      * @param   callable           $iterator
-     * @return  Iterator
+     * @return  array|iterator
      */
     public static function uniq($array, $iterator = null)
     {
@@ -758,7 +773,7 @@ abstract class Strict
      * corresponding position.
      *
      * @param   array|Traversable  *$arrays
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function zip()
     {
@@ -791,7 +806,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $list
      * @param   array|Traversable  $values
-     * @return  Iterator
+     * @return  array|Iterator
      */
     public static function object($list, $values = null)
     {
@@ -899,10 +914,10 @@ abstract class Strict
      * A function to create flexibly-numbered lists of integers,
      * handy for each and map loops.
      *
-     * @param   int       $start
-     * @param   int       $stop
-     * @param   int       $step
-     * @return  Iterator
+     * @param   int             $start
+     * @param   int             $stop
+     * @param   int             $step
+     * @return  array|Iterator
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -924,7 +939,7 @@ abstract class Strict
 
     /**
      * @param   array|Traversable  $array
-     * @return  Iterator
+     * @return  array|Iterator
      * @throws  OverflowException
      */
     public static function cycle($array, $n = null)
@@ -942,7 +957,7 @@ abstract class Strict
      * Removes the last element from an array and returns that element.
      *
      * @param   array|Traversable  $array
-     * @return  array
+     * @return  array|Iterator
      */
     public static function pop($array)
     {
@@ -979,7 +994,7 @@ abstract class Strict
      * Removes the first element from an array and returns that element.
      *
      * @param   array|Traversable  $array
-     * @return  array
+     * @return  array|Iterator
      */
     public static function shift($array)
     {
@@ -1032,7 +1047,7 @@ abstract class Strict
      * and/or value(s).
      *
      * @param   array|Traversable  *$arrays
-     * @return  array
+     * @return  array|Iterator
      */
     public static function concat()
     {
@@ -1251,7 +1266,7 @@ abstract class Strict
      * return wrapped objects until value is used.
      *
      * @param   mixed  $value
-     * @return  Internal\Chain
+     * @return  Internal\Wrapper
      */
     public static function chain($value)
     {
