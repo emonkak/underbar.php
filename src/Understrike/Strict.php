@@ -1290,6 +1290,8 @@ abstract class Strict
         if (is_array($list))
             return new \ArrayIterator($list);
         elseif ($list instanceof \Iterator)
+            return $list;
+        elseif ($list instanceof \Traversable)
             return new \IteratorIterator($list);
         else
             return $list;
