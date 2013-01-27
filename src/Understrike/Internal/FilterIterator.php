@@ -6,7 +6,7 @@ class FilterIterator extends \FilterIterator
 {
     private $iterator;
 
-    public function __construct(\Traversable $list, $iterator)
+    public function __construct(\Iterator $list, $iterator)
     {
         parent::__construct($list);
         $this->iterator = $iterator;

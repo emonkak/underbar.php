@@ -6,7 +6,7 @@ class DropWhileIterator extends \FilterIterator
 {
     private $accepted = false;
 
-    public function __construct(\Traversable $list, $iterator)
+    public function __construct(\Iterator $list, $iterator)
     {
         parent::__construct($list);
         $this->iterator = $iterator;

@@ -12,7 +12,7 @@ class InitialIterator extends \IteratorIterator
 
     private $current;
 
-    public function __construct(\Traversable $array, $n)
+    public function __construct(\Iterator $array, $n)
     {
         parent::__construct($array);
         $this->queue = new \SplQueue();

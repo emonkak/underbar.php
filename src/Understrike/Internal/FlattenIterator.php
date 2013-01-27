@@ -4,7 +4,7 @@ namespace Understrike\Internal;
 
 class FlattenIterator extends \RecursiveIteratorIterator
 {
-    public function __construct(\Traversable $array, $shallow)
+    public function __construct(\Iterator $array, $shallow)
     {
         parent::__construct(
             new FlattenInnerIterator($array),
