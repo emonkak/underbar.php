@@ -2,7 +2,7 @@
 
 namespace Understrike\Internal;
 
-final class Wrapper implements \IteratorAggregate
+final class Wrapper implements \Countable, \IteratorAggregate
 {
     private $value;
 
@@ -26,6 +26,11 @@ final class Wrapper implements \IteratorAggregate
     public function value()
     {
         return $this->value;
+    }
+
+    public function count()
+    {
+        return call_user_func($this->class.'::size', $this->value);
     }
 
     public function toArray($preserveKeys = false)
