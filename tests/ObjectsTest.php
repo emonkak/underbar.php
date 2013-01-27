@@ -8,11 +8,11 @@ class ObjectsTest extends PHPUnit_Framework_TestCase
     public function testKeys($_)
     {
         $result = $_::keys(array('one' => 1, 'two' => 2));
-        $this->assertEquals(array('one', 'two'), $_::toArray($result), 'can extract the keys from an object');
+        $this->assertEquals(array('one', 'two'), $result, 'can extract the keys from an object');
 
         // the test above is not safe because it relies on for-in enumeration order
         $result = $_::keys(array('1' => 0));
-        $this->assertEquals(array(1), $_::toArray($result), 'is not fooled by sparse arrays; see issue #95');
+        $this->assertEquals(array(1), $result, 'is not fooled by sparse arrays; see issue #95');
 
     }
 
@@ -22,7 +22,7 @@ class ObjectsTest extends PHPUnit_Framework_TestCase
     public function testValues($_)
     {
         $result = $_::values(array('one' => 1, 'two' => 2));
-        $this->assertEquals(array(1, 2), $_::toArray($result, true), 'can extract the values from an object');
+        $this->assertEquals(array(1, 2), $result, 'can extract the values from an object');
     }
 
     /**
@@ -32,10 +32,10 @@ class ObjectsTest extends PHPUnit_Framework_TestCase
     {
         $obj = array('first' => 'Moe', 'second' => 'Larry', 'third' => 'Curly');
 
-        $result = $_::chain($obj)->invert()->keys()->toArray(true);
+        $result = $_::chain($obj)->invert()->keys()->value();
         $this->assertEquals(array('Moe', 'Larry', 'Curly'), $result, 'can invert an object');
 
-        $result = $_::chain($obj)->invert()->invert()->toArray(true);
+        $result = $_::chain($obj)->invert()->invert()->value();
         $this->assertEquals($obj, $result, 'two inverts gets you back where you started');
     }
 
