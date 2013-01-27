@@ -761,7 +761,7 @@ abstract class Strict
                 return $result;
             } elseif (is_object($value)) {
                 if ($result = !$seenObjects->contains($value))
-                    $seenOthers->attach($value);
+                    $seenObjects->attach($value);
                 return $result;
             }
             // Slowly
