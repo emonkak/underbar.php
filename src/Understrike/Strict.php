@@ -752,12 +752,20 @@ abstract class Strict
             &$seenObjects,
             &$seenOthers
         ) {
-            $value = $iterator ? call_user_func($iterator, $value, $index, $list) : $value;
-            if ($result = is_scalar($value) && array_key_exists($value, $seenScalar))
-                $seenScalar[$value] = 0;
-            elseif ($result = is_object($value) && !$seenObjects->contains($value))
-                $seenOthers->attach($value);
-            elseif ($result = !in_array($value, $seenOthers, true))
+            $value = $iterator
+                ? call_user_func($iterator, $value, $index, $list)
+                : $value;
+            if (is_scalar($value)) {
+                if ($result = !isset($seenScalar[$value]))
+                    $seenScalar[$value] = 0;
+                return $result;
+            } elseif (is_object($value)) {
+                if ($result = !$seenObjects->contains($value))
+                    $seenOthers->attach($value);
+                return $result;
+            }
+            // Slowly
+            if ($result = !in_array($value, $seenOthers, true))
                 $seenOthers[] = $value;
             return $result;
         });
