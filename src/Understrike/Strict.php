@@ -925,6 +925,7 @@ abstract class Strict
     /**
      * @param   array|Traversable  $array
      * @return  Iterator
+     * @throws  OverflowException
      */
     public static function cycle($array, $n = null)
     {
@@ -1059,7 +1060,7 @@ abstract class Strict
      * @param   array|Traversable  $array
      * @param   int                $begin
      * @param   int                $end
-     * @return  Iterator
+     * @return  array
      */
     public static function slice($array, $begin, $end = -1)
     {
@@ -1070,7 +1071,7 @@ abstract class Strict
      * Retrieve all the names of the object's properties.
      *
      * @param   array|Traversable  $object
-     * @return  Iterator
+     * @return  array
      */
     public static function keys($object)
     {
@@ -1081,7 +1082,7 @@ abstract class Strict
      * Return all of the values of the object's properties.
      *
      * @param   array|Traversable  $object
-     * @return  Iterator
+     * @return  array
      */
     public static function values($object)
     {
@@ -1092,7 +1093,7 @@ abstract class Strict
      * Convert an object into a list of [key, value] pairs.
      *
      * @param   array|Traversable  $object
-     * @return  Iterator
+     * @return  array
      */
     public static function pairs($object)
     {
@@ -1106,7 +1107,7 @@ abstract class Strict
      * values the keys.
      *
      * @param   array|Traversable  $object
-     * @return  Iterator
+     * @return  array
      */
     public static function invert($object)
     {
@@ -1119,7 +1120,7 @@ abstract class Strict
      *
      * @param   array|Traversable  $destination
      * @param   array|Traversable  *$sources
-     * @return  Iterator
+     * @return  array
      */
     public static function extend()
     {
@@ -1190,9 +1191,9 @@ abstract class Strict
     /**
      * Invokes interceptor with the object, and then returns object.
      *
-     * @param   array|Traversable  $object
-     * @param   callable           $interceptor
-     * @return  array|object
+     * @param   mixed     $object
+     * @param   callable  $interceptor
+     * @return  mixed
      */
     public static function tap($object, $interceptor)
     {
@@ -1236,8 +1237,9 @@ abstract class Strict
     }
 
     /**
-     * @param   mixed     $value
+     * @param   mixed              $value
      * @return  Iterator
+     * @throws  OverflowException
      */
     public static function repeat($value)
     {
