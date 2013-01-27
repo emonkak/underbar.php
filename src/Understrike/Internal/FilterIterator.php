@@ -4,6 +4,8 @@ namespace Understrike\Internal;
 
 class FilterIterator extends \FilterIterator
 {
+    private $iterator;
+
     public function __construct(\Traversable $list, $iterator)
     {
         parent::__construct($list);
