@@ -470,12 +470,19 @@ abstract class Strict
      *
      * @param   array|Countable|Traversable  $list
      * @return  int
+     *
+     * Alias: count
      */
     public static function size($list)
     {
         if ($list instanceof \Countable) return count($list);
         if ($list instanceof \Traversable) return iterator_count($list);
         return count($list);
+    }
+
+    public static function count($list)
+    {
+        return static::size($list);
     }
 
     /**
