@@ -216,13 +216,13 @@ class CollectionsTest extends PHPUnit_Framework_TestCase
             array('a' => 1, 'b' => 3),
             array('a' => 1, 'b' => 4)
         );
-        $result = $_::where($list, array('a' => 1));
-        $this->assertCount(3, $_::toArray($result));
+        $result = $_::chain($list)->where(array('a' => 1))->toArray();
+        $this->assertCount(3, $result);
         $this->assertEquals(array('a' => 1, 'b' => 4), $_::last($result));
 
-        $result = $_::where($list, array('b' => 2));
+        $result = $_::chain($list)->where(array('b' => 2))->toArray();
+        $this->assertCount(2, $result);
         $this->assertEquals(array('a' => 1, 'b' => 2), $_::first($result));
-        $this->assertCount(2, $_::toArray($result));
     }
 
     /**
