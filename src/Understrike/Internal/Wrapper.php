@@ -17,10 +17,13 @@ final class Wrapper implements \Countable, \IteratorAggregate
     public function __call($name, $aruguments)
     {
         array_unshift($aruguments, $this->value);
-        $this->value = call_user_func_array($this->class.'::'.$name, $aruguments);
-        return ($this->value instanceof \Traversable || is_array($this->value))
-            ? $this
-            : $this->value;
+        $result = call_user_func_array($this->class.'::'.$name, $aruguments);
+        if ($result instanceof \Traversable || is_array($result)) {
+            $this->value = $result;
+            return $this;
+        } else {
+            return $result;
+        }
     }
 
     public function value()
