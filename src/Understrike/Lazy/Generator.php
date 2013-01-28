@@ -226,7 +226,7 @@ abstract class Lazy_Generator extends Strict
      * and/or value(s).
      *
      * @param   array|Traversable  *$arrays
-     * @return  array
+     * @return  Iterator
      */
     public static function concat()
     {
