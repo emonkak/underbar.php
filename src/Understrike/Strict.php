@@ -810,6 +810,23 @@ abstract class Strict
     }
 
     /**
+     * @param   array|Traversable  *$arrays
+     * @param   callable           $iterator
+     * @return  array|Iterator
+     */
+    public static function zipWith()
+    {
+        $arrays = func_get_args();
+        $iterator = array_pop($arrays);
+        $zipped = call_user_func_array(get_called_class().'::zip', $arrays);
+        return static::map($zipped, function($values, $index, $array) use ($iterator) {
+            $values[] = $index;
+            $values[] = $array;
+            return call_user_func_array($iterator, $values);
+        });
+    }
+
+    /**
      * Converts arrays into objects.
      *
      * @param   array|Traversable  $list
