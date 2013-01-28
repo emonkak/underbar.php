@@ -432,8 +432,10 @@ abstract class Strict
 
         foreach ($list as $index => $value) {
             $key = call_user_func($iterator, $value, $index, $list);
-            if (!isset($result[$key])) $result[$key] = 0;
-            $result[$key]++;
+            if (isset($result[$key]))
+                $result[$key]++;
+            else
+                $result[$key] = 1;
         }
 
         return $result;
