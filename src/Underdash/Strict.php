@@ -1133,7 +1133,7 @@ abstract class Strict
      * Convert an object into a list of [key, value] pairs.
      *
      * @param   array|Traversable  $object
-     * @return  array
+     * @return  array|Iterator
      */
     public static function pairs($object)
     {
@@ -1292,7 +1292,7 @@ abstract class Strict
      * Returns a wrapped object. Calling methods on this object will continue to
      * return wrapped objects until value is used.
      *
-     * @param   mixed  $value
+     * @param   mixed             $value
      * @return  Internal\Wrapper
      */
     public static function chain($value)
