@@ -322,17 +322,17 @@ abstract class Strict
             return empty($array) ? -INF : max($array);
         }
 
-        $result = array('computed' => -INF, 'value' => -INF);
-
+        $computed = -INF;
+        $result = -INF;
         foreach ($list as $index => $value) {
-            $computed = call_user_func($iterator, $value, $index, $list);
-            if ($computed > $result['computed']) {
-                $result['computed'] = $computed;
-                $result['value'] = $value;
+            $current = call_user_func($iterator, $value, $index, $list);
+            if ($current > $computed) {
+                $computed = $current;
+                $result = $value;
             }
         }
 
-        return $result['value'];
+        return $result;
     }
 
     /**
@@ -350,16 +350,17 @@ abstract class Strict
             return empty($array) ? INF : min($array);
         }
 
-        $result = array('computed' => INF, 'value' => INF);
+        $computed = INF;
+        $result = INF;
         foreach ($list as $index => $value) {
-            $computed = call_user_func($iterator, $value, $index, $list);
-            if ($computed < $result['computed']) {
-                $result['computed'] = $computed;
-                $result['value'] = $value;
+            $current = call_user_func($iterator, $value, $index, $list);
+            if ($current < $computed) {
+                $computed = $current;
+                $result = $value;
             }
         }
 
-        return $result['value'];
+        return $result;
     }
 
     /**
