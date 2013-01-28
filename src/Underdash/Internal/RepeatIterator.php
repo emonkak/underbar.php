@@ -8,9 +8,12 @@ class RepeatIterator implements \Iterator
 
     private $index;
 
-    public function __construct($value)
+    private $n;
+
+    public function __construct($value, $n)
     {
         $this->value = $value;
+        $this->n = $n;
     }
 
     public function current()
@@ -35,7 +38,7 @@ class RepeatIterator implements \Iterator
 
     public function valid()
     {
-        return true;
+        return $this->n - $this->index;
     }
 }
 

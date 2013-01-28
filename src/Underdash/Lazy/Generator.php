@@ -238,11 +238,12 @@ abstract class Lazy_Generator extends Strict
 
     /**
      * @param   mixed     $value
+     * @param   int       $n
      * @return  Iterator
      */
-    public static function repeat($value)
+    public static function repeat($value, $n = -1)
     {
-        while (true) yield $value;
+        while ($n--) yield $value;
     }
 }
 

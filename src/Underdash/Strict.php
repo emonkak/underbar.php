@@ -1278,12 +1278,14 @@ abstract class Strict
 
     /**
      * @param   mixed              $value
-     * @return  Iterator
+     * @param   int                $n
+     * @return  array|Iterator
      * @throws  OverflowException
      */
-    public static function repeat($value)
+    public static function repeat($value, $n = -1)
     {
-        throw new \OverflowException();
+        if ($n < 0) throw new \OverflowException();
+        return array_fill(0, $n, $value);
     }
 
     /**

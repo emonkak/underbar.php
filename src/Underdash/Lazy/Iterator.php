@@ -188,11 +188,12 @@ abstract class Lazy_Iterator extends Strict
 
     /**
      * @param   mixed     $value
+     * @param   int       $n
      * @return  Iterator
      */
-    public static function repeat($value)
+    public static function repeat($value, $n = -1)
     {
-        return new Internal\RepeatIterator($value);
+        return new Internal\RepeatIterator($value, $n);
     }
 }
 
