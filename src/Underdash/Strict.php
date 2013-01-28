@@ -255,6 +255,28 @@ abstract class Strict
     }
 
     /**
+     * @param   array|Traversable  $list
+     * @return  int
+     */
+    public static function sum($list)
+    {
+        $result = 0;
+        foreach ($list as $value) $result += $value;
+        return $result;
+    }
+
+    /**
+     * @param   array|Traversable  $list
+     * @return  int
+     */
+    public static function product($list)
+    {
+        $result = 1;
+        foreach ($list as $value) $result *= $value;
+        return $result;
+    }
+
+    /**
      * Returns true if the value is present in the list.
      *
      * @param   array|Traversable  $list
