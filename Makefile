@@ -1,12 +1,12 @@
-all: src/Understrike/Enumerable.php
+all: src/Underdash/Enumerable.php
 
-src/Understrike/Enumerable.php: scripts/generate-enumerable-trait.php src/Understrike/Strict.php
+src/Underdash/Enumerable.php: scripts/generate-enumerable-trait.php src/Underdash/Strict.php
 	php $< > $@
 
 test:
 	@phpunit .
 
 clean:
-	rm -f src/Understrike/Enumerable.php
+	rm -f src/Underdash/Enumerable.php
 
-.PHONY: all test clean
+.PHONY: all clean test

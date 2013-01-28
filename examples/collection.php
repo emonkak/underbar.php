@@ -6,7 +6,7 @@ require(__DIR__ . '/../vendor/autoload.php');
 
 class Collection implements \IteratorAggregate
 {
-    use \Understrike\Enumerable;
+    use \Underdash\Enumerable;
 
     protected $models;
 
@@ -24,7 +24,7 @@ class Collection implements \IteratorAggregate
 $begin = microtime(true);
 
 $pdo = new \PDO('mysql:host=localhost;dbname=fuel_dev', 'root', 'root');
-$stmt = $pdo->query('SELECT * FROM choices AS t0, choices AS t1');
+$stmt = $pdo->query('SELECT * FROM choices AS t0, choices AS t1 LIMIT 10000');
 $stmt->setFetchMode(\PDO::FETCH_CLASS, 'StdClass');
 
 // slow and use huge memory

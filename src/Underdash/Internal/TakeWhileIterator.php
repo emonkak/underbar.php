@@ -1,8 +1,8 @@
 <?php
 
-namespace Understrike\Internal;
+namespace Underdash\Internal;
 
-class FilterIterator extends \FilterIterator
+class TakeWhileIterator extends \IteratorIterator
 {
     private $iterator;
 
@@ -12,11 +12,11 @@ class FilterIterator extends \FilterIterator
         $this->iterator = $iterator;
     }
 
-    public function accept()
+    public function valid()
     {
         return call_user_func($this->iterator,
-            $this->current(),
-            $this->key(),
+            parent::current(),
+            parent::key(),
             $this);
     }
 }

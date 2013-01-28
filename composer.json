@@ -1,5 +1,5 @@
 {
-    "name": "emonkak/understrike",
+    "name": "emonkak/underdash.php",
     "authors": [
         {
             "name": "Shota Nozaki",
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Understrike": "src/"
+            "Underdash": "src/"
         }
     },
     "scripts": {

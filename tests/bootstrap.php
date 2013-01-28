@@ -5,12 +5,12 @@ date_default_timezone_set('UTC');
 function provideClasses()
 {
     $classes = array(
-        array('Understrike\\Strict'),
-        array('Understrike\\Lazy_Iterator'),
+        array('Underdash\\Strict'),
+        array('Underdash\\Lazy_Iterator'),
     );
 
     if (class_exists('Generator', false))
-        $classes[] = array('Understrike\\Lazy_Generator');
+        $classes[] = array('Underdash\\Lazy_Generator');
 
     return $classes;
 }

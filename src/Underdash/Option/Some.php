@@ -1,6 +1,6 @@
 <?php
 
-namespace Understrike;
+namespace Underdash;
 
 final class Option_Some extends Option
 {

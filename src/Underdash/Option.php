@@ -1,19 +1,21 @@
 <?php
 
-namespace Understrike;
+namespace Underdash;
 
-final class Option_None extends Option
+abstract class Option implements \IteratorAggregate
 {
-    private static $instance;
+    use Enumerable;
 
     /**
-     * Create singleton instance.
-     *
-     * @return  None
+     * @param   mixed   $value
+     * @param   mixed   $none
+     * @return  Option
      */
-    public static function instance()
+    final public static function fromValue($value, $none = null)
     {
-        return static::$instance === null ? new static() : static::$instance;
+        return $value === $none
+            ? Option_None::instance()
+            : new Option_Some($value);
     }
 
     /**
@@ -22,10 +24,7 @@ final class Option_None extends Option
      * @throws  RuntimeException
      * @return  mixed
      */
-    public function get()
-    {
-        throw new \RuntimeException();
-    }
+    abstract public function get();
 
     /**
      * Returns the option's value if the option is nonempty, * otherwise return
@@ -34,28 +33,23 @@ final class Option_None extends Option
      * @param   mixed  $default
      * @return  mixed
      */
-    public function getOrElse($default)
-    {
-        return $default;
-    }
-
-    /**
-     * @see     IteratorAggregate
-     * @return  Traversable
-     */
-    public function getIterator()
-    {
-        return new \EmptyIterator();
-    }
+    abstract public function getOrElse($default);
 
     /**
      * Returns true if the option is None, false otherwise.
      *
      * @return  boolean
      */
-    public function isEmpty()
+    abstract public function isEmpty();
+
+    /**
+     * Returns true if the option is an instance of Some, false otherwise.
+     *
+     * @return  boolean
+     */
+    public function isDefined()
     {
-        return true;
+        return !$this->isEmpty();
     }
 
     /**
@@ -65,10 +59,7 @@ final class Option_None extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function map($iterator)
-    {
-        return $this;
-    }
+    abstract public function map($iterator);
 
     /**
      * Returns this Option if it is nonempty and applying the predicate p to
@@ -77,10 +68,7 @@ final class Option_None extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function filter($iterator)
-    {
-        return $this;
-    }
+    abstract public function filter($iterator);
 
     /**
      * Returns this Option if it is nonempty and applying the predicate p to
@@ -89,10 +77,7 @@ final class Option_None extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function filterNot($iterator)
-    {
-        return $this;
-    }
+    abstract public function filterNot($iterator);
 
     /**
      * Returns the result of applying f to this Option's value if this Option is
@@ -101,10 +86,7 @@ final class Option_None extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function flatMap($iterator)
-    {
-        return $this;
-    }
+    abstract public function flatMap($iterator);
 }
 
 // __END__
