@@ -31,11 +31,6 @@ final class Wrapper implements \Countable, \IteratorAggregate
         return call_user_func($this->class.'::size', $this->value);
     }
 
-    public function toArray($preserveKeys = false)
-    {
-        return call_user_func($this->class.'::toArray', $this->value, $preserveKeys);
-    }
-
     public function getIterator()
     {
         if ($this->value instanceof \Traversable)
