@@ -459,18 +459,18 @@ abstract class Strict
      * Converts the list (anything that can be iterated over), into a real
      * Array.
      *
-     * @param   array|Traversable  $list
-     * @param   boolean            $preserveKeys
+     * @param   mixed    $list
+     * @param   boolean  $preserveKeys
      * @return  array
      */
     public static function toArray($list, $preserveKeys = null)
     {
         if (is_array($list))
             return $preserveKeys === false ? array_values($list) : $list;
-        elseif ($list instanceof \Generator)
-            return iterator_to_array($list, $preserveKeys);
         elseif ($list instanceof \Traversable)
             return iterator_to_array($list, $preserveKeys);
+        elseif (is_string($list))
+            return str_split($list);
         else
             return (array) $list;
     }
@@ -480,13 +480,14 @@ abstract class Strict
      *
      * Alias: count
      *
-     * @param   array|Countable|Traversable  $list
+     * @param   mixed  $list
      * @return  int
      */
     public static function size($list)
     {
         if ($list instanceof \Countable) return count($list);
         if ($list instanceof \Traversable) return iterator_count($list);
+        if (is_string($list)) return mb_strlen($list);
         return count($list);
     }
 

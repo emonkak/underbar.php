@@ -419,7 +419,7 @@ class CollectionsTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(3, $_::size(array('one' => 1, 'two' => 2, 'three' => 3)), 'can compute the size of an object');
         $this->assertEquals(3, $_::size($_::range(3)), 'can compute the size of an array');
-        $this->assertEquals(1, $_::size('hello'), 'work on not list');
+        $this->assertEquals(5, $_::size('hello'), 'can compute the size of a string');
         $this->assertEquals(0, $_::size(null), 'handles nulls');
     }
 
