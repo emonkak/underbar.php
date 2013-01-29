@@ -210,8 +210,7 @@ abstract class Strict
     public static function every($list, $iterator = null)
     {
         $result = true;
-        if (!is_callable($iterator))
-            $iterator = get_called_class().'::identity';
+        if (!$iterator) $iterator = get_called_class().'::identity';
 
         foreach ($list as $index => $value) {
             if (!($result = call_user_func($iterator, $value, $index, $list)))
@@ -238,8 +237,7 @@ abstract class Strict
     public static function some($list, $iterator = null)
     {
         $result = false;
-        if (!is_callable($iterator))
-            $iterator = get_called_class().'::identity';
+        if (!$iterator) $iterator = get_called_class().'::identity';
 
         foreach ($list as $index => $value) {
             if ($result = call_user_func($iterator, $value, $index, $list))
