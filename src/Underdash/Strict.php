@@ -1367,6 +1367,117 @@ abstract class Strict
     }
 
     /**
+     * Partially apply a function by filling in any number of its arguments,
+     * without changing its dynamic this value. A close cousin of bind.
+     *
+     * @category  Functions
+     * @param     callable  $func
+     * @param     mixed     *$args
+     * @return    callable
+     */
+    public static function partial($func)
+    {
+        $args = array_slice(func_get_args(), 1);
+        return function() use ($func, $args) {
+            return call_user_func_array($func, array_merge($args, func_get_args()));
+        };
+    }
+
+    /**
+     * Memoizes a given function by caching the computed result. Useful for
+     * speeding up slow-running computations.
+     *
+     * @category  Functions
+     * @param     callable  $func
+     * @param     callable  $hasher
+     * @return    callable
+     */
+    public static function memoize($func, $hasher = null)
+    {
+        $memo = array();
+        if (!$hasher) $hasher = get_called_class().'::identity';
+        return function() use ($func, $hasher, &$memo) {
+            $args = func_get_args();
+            $key = call_user_func_array($hasher, $args);
+            return isset($memo[$key])
+                ? $memo[$key]
+                : ($memo[$key] = call_user_func_array($func, $args));
+        };
+    }
+
+    /**
+     * Creates a version of the function that can only be called one time.
+     *
+     * @category  Functions
+     * @param     callable  $func
+     * @return    callable
+     */
+    public static function once($func)
+    {
+        $run = false;
+        $memo = null;
+        return function() use ($func, &$run, &$memo) {
+            if ($run) return $memo;
+            $run = true;
+            return $memo = call_user_func_array($func, func_get_args());
+        };
+    }
+
+    /**
+     * Creates a version of the function that can only be called one time.
+     *
+     * @category  Functions
+     * @param     int       $times
+     * @param     callable  $func
+     * @return    callable
+     */
+    public static function after($times, $func)
+    {
+        if ($times < 1) return $func;
+        return function() use (&$times, $func) {
+            if (--$times < 1)
+                return call_user_func_array($func, func_get_args());
+        };
+    }
+
+    /**
+     * Wraps the first function inside of the wrapper function, passing it as
+     * the first argument.
+     *
+     * @category  Functions
+     * @param     callable  $func
+     * @param     callable  $wrapper
+     * @return    callable
+     */
+    public static function wrap($func, $wrapper)
+    {
+        return function() use ($func, $wrapper) {
+            $args = func_get_args();
+            array_unshift($args, $func);
+            return call_user_func_array($wrapper, $args);
+        };
+    }
+
+    /**
+     * Returns the composition of a list of functions, where each function
+     * consumes the return value of the function that follows.
+     *
+     * @category  Functions
+     * @param     callable   *$functions
+     * @return    callable
+     */
+    public static function compose()
+    {
+        $functions = func_get_args();
+        return function() use ($functions) {
+            $args = func_get_args();
+            for ($i = count($functions); $i--;)
+                $args = array(call_user_func_array($functions[$i], $args));
+            return $args[0];
+        };
+    }
+
+    /**
      * Returns the same value that is used as the argument.
      *
      * @category  Utility
