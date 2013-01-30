@@ -10,9 +10,10 @@ abstract class Lazy_Generator extends Strict
      *
      * Alias: collect
      *
-     * @param   array|Traversable  $list
-     * @param   callable           $iterator
-     * @return  Iterator
+     * @category  Collections
+     * @param     array|Traversable  $list
+     * @param     callable           $iterator
+     * @return    Iterator
      */
     public static function map($list, $iterator)
     {
@@ -31,9 +32,10 @@ abstract class Lazy_Generator extends Strict
      *
      * Alias: select
      *
-     * @param   array|Traversable  $list
-     * @param   callable           $iterator
-     * @return  Iterator
+     * @category  Collections
+     * @param     array|Traversable  $list
+     * @param     callable           $iterator
+     * @return    Iterator
      */
     public static function filter($list, $iterator)
     {
@@ -54,9 +56,10 @@ abstract class Lazy_Generator extends Strict
      *
      * Alias: head, take
      *
-     * @param   array|Traversable  $array
-     * @param   int                $n
-     * @return  mixed|Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     int                $n
+     * @return    mixed|Iterator
      */
     public static function first($array, $n = null, $guard = null)
     {
@@ -77,9 +80,10 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
-     * @param   array|Traversable  $array
-     * @param   callable           $iterator
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     callable           $iterator
+     * @return    Iterator
      */
     public static function takeWhile($array, $iterator)
     {
@@ -97,9 +101,10 @@ abstract class Lazy_Generator extends Strict
     /**
      * Returns everything but the last entry of the array.
      *
-     * @param   array|Traversable  $array
-     * @param   int                $n
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     int                $n
+     * @return    Iterator
      */
     public static function initial($array, $n = 1, $guard = null)
     {
@@ -122,9 +127,10 @@ abstract class Lazy_Generator extends Strict
      *
      * Alias: tail, drop
      *
-     * @param   array|Traversable  $array
-     * @param   int                $index
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     int                $index
+     * @return    Iterator
      */
     public static function rest($array, $n = 1, $guard = null)
     {
@@ -141,9 +147,10 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
-     * @param   array|Traversable  $array
-     * @param   callable           $iterator
-     * @return  mixed|Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     callable           $iterator
+     * @return    mixed|Iterator
      */
     public static function dropWhile($array, $iterator)
     {
@@ -164,8 +171,9 @@ abstract class Lazy_Generator extends Strict
      * Merges together the values of each of the arrays with the values at the
      * corresponding position.
      *
-     * @param   array|Traversable  *$array
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  *$array
+     * @return    Iterator
      */
     public static function zip()
     {
@@ -201,9 +209,10 @@ abstract class Lazy_Generator extends Strict
     /**
      * Flattens a nested array (the nesting can be to any depth).
      *
-     * @param   array|Traversable  $array
-     * @param   boolean            $shallow
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     boolean            $shallow
+     * @return    Iterator
      */
     public static function flatten($array, $shallow = false)
     {
@@ -231,10 +240,11 @@ abstract class Lazy_Generator extends Strict
      * A function to create flexibly-numbered lists of integers,
      * handy for each and map loops.
      *
-     * @param   int       $start
-     * @param   int       $stop
-     * @param   int       $step
-     * @return  Iterator
+     * @category  Arrays
+     * @param     int       $start
+     * @param     int       $stop
+     * @param     int       $step
+     * @return    Iterator
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -256,8 +266,9 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
-     * @param   array|Traversable  $array
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @return    Iterator
      */
     public static function cycle($array, $n = null)
     {
@@ -274,11 +285,27 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
+     * @param   mixed     $value
+     * @param   int       $n
+     * @return  Iterator
+     */
+    public static function repeat($value, $n = -1)
+    {
+        return new Internal\RewindableGenerator(static::_repeat($value, $n));
+    }
+
+    private static function _repeat($value, $n = -1)
+    {
+        while ($n--) yield $value;
+    }
+
+    /**
      * Returns a new array comprised of this array joined with other array(s)
      * and/or value(s).
      *
-     * @param   array|Traversable  *$arrays
-     * @return  Iterator
+     * @category  Arrays
+     * @param     array|Traversable  *$arrays
+     * @return    Iterator
      */
     public static function concat()
     {
@@ -293,21 +320,6 @@ abstract class Lazy_Generator extends Strict
             foreach ($array as $key => $value)
                 yield $key => $value;
         }
-    }
-
-    /**
-     * @param   mixed     $value
-     * @param   int       $n
-     * @return  Iterator
-     */
-    public static function repeat($value, $n = -1)
-    {
-        return new Internal\RewindableGenerator(static::_repeat($value, $n));
-    }
-
-    private static function _repeat($value, $n = -1)
-    {
-        while ($n--) yield $value;
     }
 }
 
