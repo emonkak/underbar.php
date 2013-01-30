@@ -1,6 +1,6 @@
 <?php
 
-namespace Underdash\Internal;
+namespace Underbar\Internal;
 
 class ZipIterator extends \MultipleIterator
 {

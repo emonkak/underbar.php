@@ -2,13 +2,13 @@
 
 require(__DIR__ . '/../vendor/autoload.php');
 
-use Underdash\Lazy as _;
+use Underbar\Lazy as _;
 
 // warm
-class_exists('Underdash\\Lazy');
-class_exists('Underdash\\Lazy_Iterator');
-class_exists('Underdash\\Lazy_Generator');
-class_exists('Underdash\\Strict');
+class_exists('Underbar\\Lazy');
+class_exists('Underbar\\Lazy_Iterator');
+class_exists('Underbar\\Lazy_Generator');
+class_exists('Underbar\\Strict');
 
 function bench($subject, $callback)
 {
@@ -38,8 +38,8 @@ $f = function($_, $xs) {
         ->take(10000)
         ->each("$_::identity");
 };
-bench('lazy iterator', $f, 'Underdash\\Lazy_Iterator', $xs);
-bench('lazy generator', $f, 'Underdash\\Lazy_Generator', $xs);
+bench('lazy iterator', $f, 'Underbar\\Lazy_Iterator', $xs);
+bench('lazy generator', $f, 'Underbar\\Lazy_Generator', $xs);
 bench('strict fast', function($xs) {
     $f = function($x) { return $x * 2; };
     $g = function($x) { return $x % 10 !== 0; };
@@ -52,7 +52,7 @@ bench('strict fast', function($xs) {
         next($ys);
     }
 }, $xs);
-bench('strict', $f, 'Underdash\\Strict', $xs);
+bench('strict', $f, 'Underbar\\Strict', $xs);
 
 // __END__
 // vim: expandtab softtabstop=4 shiftwidth=4

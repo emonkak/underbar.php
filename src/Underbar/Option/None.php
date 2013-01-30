@@ -1,6 +1,6 @@
 <?php
 
-namespace Underdash;
+namespace Underbar;
 
 final class Option_None extends Option
 {

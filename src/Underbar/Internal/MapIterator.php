@@ -1,8 +1,8 @@
 <?php
 
-namespace Underdash\Internal;
+namespace Underbar\Internal;
 
-class TakeWhileIterator extends \IteratorIterator
+class MapIterator extends \IteratorIterator
 {
     private $iterator;
 
@@ -12,7 +12,7 @@ class TakeWhileIterator extends \IteratorIterator
         $this->iterator = $iterator;
     }
 
-    public function valid()
+    public function current()
     {
         return call_user_func($this->iterator,
             parent::current(),

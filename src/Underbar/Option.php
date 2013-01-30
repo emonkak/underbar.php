@@ -1,14 +1,21 @@
 <?php
 
-namespace Underdash;
+namespace Underbar;
 
-final class Option_Some extends Option
+abstract class Option implements \IteratorAggregate
 {
-    private $value;
+    use Enumerable;
 
-    public function __construct($value)
+    /**
+     * @param   mixed   $value
+     * @param   mixed   $none
+     * @return  Option
+     */
+    final public static function fromValue($value, $none = null)
     {
-        $this->value = $value;
+        return $value === $none
+            ? Option_None::instance()
+            : new Option_Some($value);
     }
 
     /**
@@ -16,10 +23,7 @@ final class Option_Some extends Option
      *
      * @return  mixed
      */
-    public function get()
-    {
-        return $this->value;
-    }
+    abstract public function get();
 
     /**
      * Returns the option's value if the option is nonempty, * otherwise return
@@ -28,28 +32,23 @@ final class Option_Some extends Option
      * @param   mixed  $default
      * @return  mixed
      */
-    public function getOrElse($default)
-    {
-        return $this->value;
-    }
-
-    /**
-     * @see     IteratorAggregate
-     * @return  Traversable
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator(array($this->value));
-    }
+    abstract public function getOrElse($default);
 
     /**
      * Returns true if the option is None, false otherwise.
      *
      * @return  boolean
      */
-    public function isEmpty()
+    abstract public function isEmpty();
+
+    /**
+     * Returns true if the option is an instance of Some, false otherwise.
+     *
+     * @return  boolean
+     */
+    public function isDefined()
     {
-        return false;
+        return !$this->isEmpty();
     }
 
     /**
@@ -59,11 +58,7 @@ final class Option_Some extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function map($iterator)
-    {
-        $result = call_user_func($iterator, $this->value, 0, $this);
-        return Option::fromValue($result);
-    }
+    abstract public function map($iterator);
 
     /**
      * Returns this Option if it is nonempty and applying the predicate p to
@@ -72,12 +67,7 @@ final class Option_Some extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function filter($iterator)
-    {
-        return call_user_func($iterator, $this->value, 0, $this)
-            ? $this
-            : Option_None::instance();
-    }
+    abstract public function filter($iterator);
 
     /**
      * Returns this Option if it is nonempty and applying the predicate p to
@@ -86,12 +76,7 @@ final class Option_Some extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function filterNot($iterator)
-    {
-        return call_user_func($iterator, $this->value, 0, $this)
-            ? Option_None::instance()
-            : $this;
-    }
+    abstract public function filterNot($iterator);
 
     /**
      * Returns the result of applying f to this Option's value if this Option is
@@ -100,10 +85,7 @@ final class Option_Some extends Option
      * @param   callable  $iterator
      * @return  Option
      */
-    public function flatMap($iterator)
-    {
-        return call_user_func($iterator, $this->value, 0, $this);
-    }
+    abstract public function flatMap($iterator);
 }
 
 // __END__

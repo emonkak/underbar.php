@@ -1,15 +1,15 @@
 SOURCES=$(shell find src tests -name '*.php')
 
-all: src/Underdash/Enumerable.php
+all: src/Underbar/Enumerable.php
 
-src/Underdash/Enumerable.php: scripts/generate-enumerable-trait.php src/Underdash/Strict.php
+src/Underbar/Enumerable.php: scripts/generate-enumerable-trait.php src/Underbar/Strict.php
 	php $< > $@
 
 report/index.html: $(SOURCES)
 	@phpunit --coverage-html report .
 
 clean:
-	rm -f src/Underdash/Enumerable.php
+	rm -f src/Underbar/Enumerable.php
 
 report: report/index.html
 

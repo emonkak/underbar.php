@@ -1,6 +1,6 @@
 <?php
 
-namespace Underdash;
+namespace Underbar;
 
 abstract class Strict
 {

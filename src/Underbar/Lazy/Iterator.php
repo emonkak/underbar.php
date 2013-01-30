@@ -1,6 +1,6 @@
 <?php
 
-namespace Underdash;
+namespace Underbar;
 
 abstract class Lazy_Iterator extends Strict
 {

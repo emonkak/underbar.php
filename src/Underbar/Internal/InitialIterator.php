@@ -1,6 +1,6 @@
 <?php
 
-namespace Underdash\Internal;
+namespace Underbar\Internal;
 
 class InitialIterator extends \IteratorIterator
 {

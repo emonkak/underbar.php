@@ -1,9 +1,9 @@
 <?php require __DIR__ . '/../vendor/autoload.php'; echo '<?php', "\n"; ?>
-namespace Underdash;
+namespace Underbar;
 trait Enumerable {
-<?php foreach (get_class_methods('Underdash\\Strict') as $m): ?>
-<?php if (!in_array($m, array('range'))): ?>
-public function <?php echo $m ?>(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underdash\\Strict::<?php echo $m ?>',$args);}
+<?php $r = new ReflectionClass('Underbar\\Strict'); foreach ($r->getMethods() as $m): ?>
+<?php if (preg_match('/\*\s+@category\s+(Collections|Arrays|Chaining)/', $m->getDocComment())): ?>
+public function <?php echo $m->getName() ?>(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\\Strict::<?php echo $m->getName() ?>',$args);}
 <?php endif ?>
 <?php endforeach ?>
 public function lazy(){return Lazy::chain($this);}
