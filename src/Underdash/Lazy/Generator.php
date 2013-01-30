@@ -16,6 +16,11 @@ abstract class Lazy_Generator extends Strict
      */
     public static function map($list, $iterator)
     {
+        return new Internal\RewindableGenerator(static::_map($list, $iterator));
+    }
+
+    private static function _map($list, $iterator)
+    {
         foreach ($list as $index => $value)
             yield $index => call_user_func($iterator, $value, $index, $list);
     }
@@ -31,6 +36,11 @@ abstract class Lazy_Generator extends Strict
      * @return  Iterator
      */
     public static function filter($list, $iterator)
+    {
+        return new Internal\RewindableGenerator(static::_filter($list, $iterator));
+    }
+
+    private static function _filter($list, $iterator)
     {
         foreach ($list as $index => $value) {
             if (call_user_func($iterator, $value, $index, $list))
@@ -51,7 +61,7 @@ abstract class Lazy_Generator extends Strict
     public static function first($array, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null)
-            return static::_first($array, $n);
+            return new Internal\RewindableGenerator(static::_first($array, $n));
         else
             foreach ($array as $value) return $value;
     }
@@ -73,6 +83,11 @@ abstract class Lazy_Generator extends Strict
      */
     public static function takeWhile($array, $iterator)
     {
+        return new Internal\RewindableGenerator(static::_takeWhile($array, $iterator));
+    }
+
+    private static function _takeWhile($array, $iterator)
+    {
         foreach ($array as $index => $value) {
             if (!call_user_func($iterator, $value, $index, $array)) break;
             yield $index => $value;
@@ -87,6 +102,11 @@ abstract class Lazy_Generator extends Strict
      * @return  Iterator
      */
     public static function initial($array, $n = 1, $guard = null)
+    {
+        return new Internal\RewindableGenerator(static::_initial($array, $n, $guard));
+    }
+
+    private static function _initial($array, $n = 1, $guard = null)
     {
         $queue = new \SplQueue();
 
@@ -108,6 +128,11 @@ abstract class Lazy_Generator extends Strict
      */
     public static function rest($array, $n = 1, $guard = null)
     {
+        return new Internal\RewindableGenerator(static::_rest($array, $n, $guard));
+    }
+
+    private static function _rest($array, $n = 1, $guard = null)
+    {
         if ($guard !== null) $n = 1;
         foreach ($array as $index => $value) {
             if (--$n < 0)
@@ -121,6 +146,11 @@ abstract class Lazy_Generator extends Strict
      * @return  mixed|Iterator
      */
     public static function dropWhile($array, $iterator)
+    {
+        return new Internal\RewindableGenerator(static::_dropWhile($array, $iterator));
+    }
+
+    private static function _dropWhile($array, $iterator)
     {
         $accepted = false;
         foreach ($array as $index => $value) {
@@ -139,7 +169,14 @@ abstract class Lazy_Generator extends Strict
      */
     public static function zip()
     {
-        $arrays = $zipped = array();;
+        return new Internal\RewindableGenerator(
+            call_user_func_array(get_called_class().'::_zip', func_get_args())
+        );
+    }
+
+    private static function _zip()
+    {
+        $arrays = $zipped = array();
         $loop = false;
 
         foreach (func_get_args() as $array) {
@@ -170,6 +207,11 @@ abstract class Lazy_Generator extends Strict
      */
     public static function flatten($array, $shallow = false)
     {
+        return new Internal\RewindableGenerator(static::_flatten($array, $shallow));
+    }
+
+    private static function _flatten($array, $shallow = false)
+    {
         foreach ($array as $key => $value) {
             if (is_array($value) || $value instanceof \Traversable) {
                 if ($shallow) {
@@ -196,6 +238,11 @@ abstract class Lazy_Generator extends Strict
      */
     public static function range($start, $stop = null, $step = 1)
     {
+        return new Internal\RewindableGenerator(static::_range($start, $stop, $step));
+    }
+
+    private static function _range($start, $stop = null, $step = 1)
+    {
         if ($stop === null) {
             $stop = $start;
             $start = 0;
@@ -214,6 +261,11 @@ abstract class Lazy_Generator extends Strict
      */
     public static function cycle($array, $n = null)
     {
+        return new Internal\RewindableGenerator(static::_cycle($array, $n));
+    }
+
+    private static function _cycle($array, $n = null)
+    {
         if ($n !== null) {
             while (true) foreach ($array as $value) yield $value;
         } else {
@@ -230,6 +282,13 @@ abstract class Lazy_Generator extends Strict
      */
     public static function concat()
     {
+        return new Internal\RewindableGenerator(
+            call_user_func_array(get_called_class().'::_concat', func_get_args())
+        );
+    }
+
+    private static function _concat()
+    {
         foreach (func_get_args() as $array) {
             foreach ($array as $key => $value)
                 yield $key => $value;
@@ -242,6 +301,11 @@ abstract class Lazy_Generator extends Strict
      * @return  Iterator
      */
     public static function repeat($value, $n = -1)
+    {
+        return new Internal\RewindableGenerator(static::_repeat($value, $n));
+    }
+
+    private static function _repeat($value, $n = -1)
     {
         while ($n--) yield $value;
     }
