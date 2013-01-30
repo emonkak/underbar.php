@@ -768,30 +768,33 @@ abstract class Strict
      */
     public static function uniq($array, $iterator = null)
     {
-        $seenScalar = $seenOthers = array();
-        $seenObjects = new \SplObjectStorage();
+        $seenScalar = $seenObjects = $seenOthers = array();
+        $iterator = static::_lookupIterator($iterator);
         return static::filter($array, function($value, $index, $list) use (
             $iterator,
             &$seenScalar,
             &$seenObjects,
             &$seenOthers
         ) {
-            $value = $iterator
-                ? call_user_func($iterator, $value, $index, $list)
-                : $value;
+            $value = call_user_func($iterator, $value, $index, $list);
+
             if (is_scalar($value)) {
-                if ($result = !isset($seenScalar[$value]))
+                if (!isset($seenScalar[$value])) {
                     $seenScalar[$value] = 0;
-                return $result;
+                    return true;
+                }
             } elseif (is_object($value)) {
-                if ($result = !$seenObjects->contains($value))
-                    $seenObjects->attach($value);
-                return $result;
-            }
-            // Slowly
-            if ($result = !in_array($value, $seenOthers, true))
+                $hash = spl_object_hash($value);
+                if (!isset($seenObjects[$hash])) {
+                    $seenObjects[$hash] = 0;
+                    return true;
+                }
+            } elseif (!in_array($value, $seenOthers, true)) {
                 $seenOthers[] = $value;
-            return $result;
+                return true;
+            }
+
+            return false;
         });
     }
 
