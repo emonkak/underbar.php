@@ -395,7 +395,7 @@ class CollectionsTest extends PHPUnit_Framework_TestCase
     public function testShuffle($_)
     {
         $numbers = $_::toArray($_::range(10));
-        $shuffled = $_::chain($numbers)->shuffle()->sort()->toArray()->value();
+        $shuffled = $_::chain($numbers)->shuffle()->sort()->toArray();
         $this->assertEquals($numbers, $shuffled, 'contains the same members before and after shuffle');
     }
 
