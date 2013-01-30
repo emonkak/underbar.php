@@ -17,8 +17,8 @@ final class Wrapper implements \Countable, \IteratorAggregate
     public function __call($name, $aruguments)
     {
         array_unshift($aruguments, $this->value);
-        $this->value = call_user_func_array($this->class.'::'.$name, $aruguments);
-        return $this;
+        $value = call_user_func_array($this->class.'::'.$name, $aruguments);
+        return new static($value, $this->class);
     }
 
     public function value()
