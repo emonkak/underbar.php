@@ -194,6 +194,18 @@ abstract class Lazy_Iterator extends Strict
     }
 
     /**
+     * @category  Arrays
+     * @param     mixed           $memo
+     * @param     callable        $iterator
+     * @return    array|Iterator
+     * @throws    OverflowException
+     */
+    public static function iterate($memo, $iterator)
+    {
+        return new Internal\IterateIterator($memo, $iterator);
+    }
+
+    /**
      * Returns a new array comprised of this array joined with other array(s)
      * and/or value(s).
      *

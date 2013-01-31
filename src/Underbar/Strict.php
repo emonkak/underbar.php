@@ -1085,6 +1085,18 @@ abstract class Strict
     }
 
     /**
+     * @category  Arrays
+     * @param     mixed           $memo
+     * @param     callable        $iterator
+     * @return    array|Iterator
+     * @throws    OverflowException
+     */
+    public static function iterate($memo, $iterator)
+    {
+        throw new \OverflowException();
+    }
+
+    /**
      * Removes the last element from an array and returns that element.
      *
      * @category  Arrays

@@ -300,6 +300,26 @@ abstract class Lazy_Generator extends Strict
     }
 
     /**
+     * @category  Arrays
+     * @param     mixed           $memo
+     * @param     callable        $iterator
+     * @return    array|Iterator
+     * @throws    OverflowException
+     */
+    public static function iterate($memo, $iterator)
+    {
+        return new Internal\RewindableGenerator(static::_iterate($memo, $iterator));
+    }
+
+    private static function _iterate($memo, $iterator)
+    {
+        while (true) {
+            yield $memo;
+            $memo = call_user_func($iterator, $memo);
+        }
+    }
+
+    /**
      * Returns a new array comprised of this array joined with other array(s)
      * and/or value(s).
      *
