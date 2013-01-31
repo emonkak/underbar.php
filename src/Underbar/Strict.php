@@ -1395,13 +1395,22 @@ abstract class Strict
      * Does the object contain the given key?
      *
      * @category  Objects
-     * @param     array|Traversable  $object
-     * @param     int|string         $key
+     * @param     array|object|Traversable  $object
+     * @param     int|string                $key
      * @return    boolean
      */
     public static function has($object, $key)
     {
-        return array_key_exists(static::toArray($object, true), $key);
+        if (is_array($object)) return isset($object[$key]);
+        if ($object instanceof \Traversable) {
+            foreach ($object as $k => $_) {
+                if ($k === $key) return true;
+            }
+            return false;
+        }
+
+        // given a object
+        return isset($object->$key);
     }
 
     /**
