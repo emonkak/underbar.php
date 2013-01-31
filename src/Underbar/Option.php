@@ -62,6 +62,15 @@ abstract class Option implements \IteratorAggregate
     abstract public function map($iterator);
 
     /**
+     * Returns true if this option is nonempty and the predicate p returns true
+     * when applied to this Option's value. Otherwise, returns false.
+     *
+     * @param   callable  $iterator
+     * @return  boolean
+     */
+    abstract public function exists($iterator);
+
+    /**
      * Returns this Option if it is nonempty and applying the predicate p to
      * this Option's value returns true. Otherwise, return None.
      *
@@ -87,6 +96,21 @@ abstract class Option implements \IteratorAggregate
      * @return  Option
      */
     abstract public function flatMap($iterator);
+
+    /**
+     * Returns the option's value if it is nonempty, or null if it is empty.
+     *
+     * @param   Option  $value
+     * @return  Option
+     */
+    abstract public function orElse(Option $value);
+
+    /**
+     * Returns the option's value if it is nonempty, or null if it is empty.
+     *
+     * @return  mixed
+     */
+    abstract public function orNull();
 }
 
 // __END__

@@ -71,6 +71,18 @@ final class Option_None extends Option
     }
 
     /**
+     * Returns true if this option is nonempty and the predicate p returns true
+     * when applied to this Option's value. Otherwise, returns false.
+     *
+     * @param   callable  $iterator
+     * @return  boolean
+     */
+    public function exists($iterator)
+    {
+        return false;
+    }
+
+    /**
      * Returns this Option if it is nonempty and applying the predicate p to
      * this Option's value returns true. Otherwise, return None.
      *
@@ -104,6 +116,27 @@ final class Option_None extends Option
     public function flatMap($iterator)
     {
         return $this;
+    }
+
+    /**
+     * Returns the option's value if it is nonempty, or null if it is empty.
+     *
+     * @param   Option  $value
+     * @return  Option
+     */
+    public function orElse(Option $value)
+    {
+        return $value;
+    }
+
+    /**
+     * Returns the option's value if it is nonempty, or null if it is empty.
+     *
+     * @return  mixed
+     */
+    public function orNull()
+    {
+        return null;
     }
 }
 
