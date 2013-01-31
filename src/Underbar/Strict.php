@@ -1490,6 +1490,22 @@ abstract class Strict
     }
 
     /**
+     * Invokes the given iterator function n times. Each invocation of iterator
+     * is called with an index argument.
+     *
+     * @category  Utility
+     * @param     int       $n
+     * @param     callable  $iterator
+     * @return    array
+     */
+    public static function times($n, $iterator)
+    {
+        $accum = array();
+        for ($i = 0; $i < $n; $i++) $accum[] = call_user_func($iterator, $i);
+        return $accum;
+    }
+
+    /**
      * Returns a wrapped object. Calling methods on this object will continue to
      * return wrapped objects until value is used.
      *
