@@ -308,16 +308,16 @@ abstract class Strict
      *
      * @category  Collections
      * @param     array|Traversable  $list
-     * @param     string             $methodName
+     * @param     string             $method
      * @param     miexed             *$arguments
      * @return    array|Iterator
      */
-    public static function invoke($list, $methodName)
+    public static function invoke($list, $method)
     {
         $args = array_slice(func_get_args(), 2);
 
-        return static::map($list, function($value) use ($methodName, $args) {
-            return call_user_func_array(array($value, $methodName), $args);
+        return static::map($list, function($value) use ($method, $args) {
+            return call_user_func_array(array($value, $method), $args);
         });
     }
 
@@ -327,16 +327,16 @@ abstract class Strict
      *
      * @category  Collections
      * @param     array|Traversable  $list
-     * @param     string             $propertyName
+     * @param     string             $property
      * @return    array|Iterator
      */
-    public static function pluck($list, $propertyName)
+    public static function pluck($list, $property)
     {
-        return static::map($list, function($value) use ($propertyName) {
-            if (is_array($value) && isset($value[$propertyName]))
-                return $value[$propertyName];
-            elseif (is_object($value) && isset($value->$propertyName))
-                return $value->$propertyName;
+        return static::map($list, function($value) use ($property) {
+            if (is_array($value) && isset($value[$property]))
+                return $value[$property];
+            elseif (is_object($value) && isset($value->$property))
+                return $value->$property;
             else
                 return null;
         });
