@@ -14,6 +14,7 @@ final class Option_Some extends Option
     /**
      * Returns the option's value.
      *
+     * @throws  RuntimeException
      * @return  mixed
      */
     public function get()

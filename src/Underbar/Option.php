@@ -21,6 +21,7 @@ abstract class Option implements \IteratorAggregate
     /**
      * Returns the option's value.
      *
+     * @throws  RuntimeException
      * @return  mixed
      */
     abstract public function get();

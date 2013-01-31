@@ -19,11 +19,12 @@ final class Option_None extends Option
     /**
      * Returns the option's value.
      *
+     * @throws  RuntimeException
      * @return  mixed
      */
     public function get()
     {
-        return null;
+        throw new \RuntimeException();
     }
 
     /**
