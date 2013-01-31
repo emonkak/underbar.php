@@ -175,10 +175,10 @@ abstract class Strict
      *
      * @category  Collections
      * @param     array|Traversable  $list
-     * @param     array              $properties
+     * @param     array|Traversable  $properties
      * @return    boolean
      */
-    public static function where($list, array $properties)
+    public static function where($list, $properties)
     {
         return static::filter($list, function($value) use ($properties) {
             foreach ($properties as $propKey => $propValue) {
@@ -188,6 +188,32 @@ abstract class Strict
             }
             return true;
         });
+    }
+
+    /**
+     * Looks through the list and returns the first value that matches all of
+     * the key-value pairs listed in properties.
+     *
+     * @category  Collections
+     * @param     array|Traversable  $list
+     * @param     array|Traversable  $properties
+     * @return    mixed
+     */
+    public static function findWhere($list, $properties)
+    {
+        return static::find($list, function($value) use ($properties) {
+            foreach ($properties as $propKey => $propValue) {
+                if (!((isset($value->$propKey) && $value->$propKey === $propValue)
+                      || (isset($value[$propKey]) && $value[$propKey] === $propValue)))
+                    return false;
+            }
+            return true;
+        });
+    }
+
+    public static function findWhereSafe($list, $properties)
+    {
+        return Option::fromValue(static::findWhere($list, $properties));
     }
 
     /**
