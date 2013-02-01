@@ -14,8 +14,8 @@ abstract class Option implements \IteratorAggregate
     final public static function fromValue($value, $none = null)
     {
         return $value === $none
-            ? Option_None::instance()
-            : new Option_Some($value);
+            ? Option\None::instance()
+            : new Option\Some($value);
     }
 
     /**

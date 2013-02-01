@@ -1,8 +1,10 @@
 <?php
 
-namespace Underbar;
+namespace Underbar\Option;
 
-final class Option_Some extends Option
+use Underbar\Option;
+
+final class Some extends Option
 {
     private $value;
 

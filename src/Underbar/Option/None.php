@@ -1,8 +1,10 @@
 <?php
 
-namespace Underbar;
+namespace Underbar\Option;
 
-final class Option_None extends Option
+use Underbar\Option;
+
+final class None extends Option
 {
     private static $instance;
 
