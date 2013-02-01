@@ -433,7 +433,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $list
      * @param     callable|string    $value
-     * @return    array|Iterator
+     * @return    array
      */
     public static function sortBy($list, $value)
     {
@@ -457,7 +457,7 @@ abstract class Strict
                 return $left['index'] < $right['index'] ? -1 : 1;
         });
 
-        return static::pluck($result, 'value');
+        return self::pluck($result, 'value');
     }
 
     /**
