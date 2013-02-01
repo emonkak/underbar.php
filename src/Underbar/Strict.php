@@ -1205,7 +1205,7 @@ abstract class Strict
     {
         return call_user_func_array(
             'array_merge',
-            array_map(get_called_class().'::values', func_get_args())
+            array_map(get_called_class().'::toArray', func_get_args())
         );
     }
 
@@ -1245,7 +1245,9 @@ abstract class Strict
      */
     public static function keys($object)
     {
-        return array_keys(static::toArray($object, true));
+        $result = array();
+        foreach ($object as $key => $value) $result[] = $key;
+        return $result;
     }
 
     /**
@@ -1257,7 +1259,9 @@ abstract class Strict
      */
     public static function values($object)
     {
-        return static::toArray($object, false);
+        $result = array();
+        foreach ($object as $value) $result[] = $value;
+        return $result;
     }
 
     /**
@@ -1265,13 +1269,13 @@ abstract class Strict
      *
      * @category  Objects
      * @param     array|Traversable  $object
-     * @return    array|Iterator
+     * @return    array
      */
     public static function pairs($object)
     {
-        return static::map($object, function($value, $key) {
-            return array($key, $value);
-        });
+        $result = array();
+        foreach ($object as $key => $value) $result[] = array($key, $value);
+        return $result;
     }
 
     /**
@@ -1284,7 +1288,9 @@ abstract class Strict
      */
     public static function invert($object)
     {
-        return array_flip(static::toArray($object, true));
+        $result = array();
+        foreach ($object as $key => $value) $result[$value] = $key;
+        return $result;
     }
 
     /**
@@ -1296,14 +1302,24 @@ abstract class Strict
      * @param     array|Traversable  *$sources
      * @return    array
      */
-    public static function extend()
+    public static function extend($destination)
     {
-        $objects = array();
+        if ($destination instanceof \Traversable)
+            $destination = iterator_to_array($destination, true);
 
-        foreach (func_get_args() as $object)
-            $objects[] = static::toArray($object, true);
+        if (is_array($destination)) {
+            foreach (array_slice(func_get_args(), 1) as $object) {
+                foreach ($object as $key => $value)
+                    $destination[$key] = $value;
+            }
+        } else {
+            foreach (array_slice(func_get_args(), 1) as $object) {
+                foreach ($object as $key => $value)
+                    $destination->$key = $value;
+            }
+        }
 
-        return call_user_func_array('array_merge', $objects);
+        return $destination;
     }
 
     /**
@@ -1311,20 +1327,20 @@ abstract class Strict
      * whitelisted keys (or array of valid keys).
      *
      * @category  Objects
-     * @param     array|Traversable  $object
-     * @param     string             *$keys
-     * @return    array
+     * @param     array|Traversable         $object
+     * @param     array|string|Traversable  *$keys
+     * @return    array|Iterator
      */
     public static function pick($object)
     {
-        $array = static::toArray($object, true);
-        $keys = call_user_func_array(__CLASS__.'::concat',
-                                     array_slice(func_get_args(), 1));
-        $result = array();
-        foreach ($keys as $key) {
-            if (isset($array[$key])) $result[$key] = $array[$key];
+        $whitelist = array();
+        foreach (array_slice(func_get_args(), 1) as $keys) {
+            foreach (static::_toTraversable($keys) as $key) $whitelist[$key] = 0;
         }
-        return $result;
+
+        return static::filter($object, function($value, $key) use ($whitelist) {
+            return isset($whitelist[$key]);
+        });
     }
 
     /**
@@ -1332,17 +1348,20 @@ abstract class Strict
      * (or array of keys).
      *
      * @category  Objects
-     * @param     array|Traversable  $object
-     * @param     string             *$keys
-     * @return    array
+     * @param     array|Traversable         $object
+     * @param     array|string|Traversable  *$keys
+     * @return    array|Iterator
      */
     public static function omit($object)
     {
-        $array = static::toArray($object, true);
-        $keys = call_user_func_array(__CLASS__.'::concat',
-                                     array_slice(func_get_args(), 1));
-        foreach ($keys as $key) unset($array[$key]);
-        return $array;
+        $blacklist = array();
+        foreach (array_slice(func_get_args(), 1) as $keys) {
+            foreach (static::_toTraversable($keys) as $key) $blacklist[$key] = 0;
+        }
+
+        return static::filter($object, function($value, $key) use ($blacklist) {
+            return !isset($blacklist[$key]);
+        });
     }
 
     /**
@@ -1352,16 +1371,27 @@ abstract class Strict
      * @category  Objects
      * @param     array|Traversable  $object
      * @param     array|Traversable  *$defaults
-     * @return    array
+     * @return    array|object
      */
     public static function defaults($object)
     {
-        $object = static::toArray($object, true);
-        foreach (array_slice(func_get_args(), 1) as $default) {
-            foreach ((array) $default as $key => $value) {
-                if (!isset($object[$key])) $object[$key] = $value;
+        if ($object instanceof \Traversable)
+            $object = iterator_to_array($destination, true);
+
+        if (is_array($object)) {
+            foreach (array_slice(func_get_args(), 1) as $default) {
+                foreach ($default as $key => $value) {
+                    if (!isset($object[$key])) $object[$key] = $value;
+                }
+            }
+        } else {
+            foreach (array_slice(func_get_args(), 1) as $default) {
+                foreach ($default as $key => $value) {
+                    if (!isset($object->$key)) $object->$key = $value;
+                }
             }
         }
+
         return $object;
     }
 
@@ -1588,6 +1618,14 @@ abstract class Strict
             return new \IteratorIterator($list);
         else
             return $list;
+    }
+
+    protected static function _toTraversable($list)
+    {
+        if (is_array($list) || $list instanceof \Traversable)
+            return $list;
+        else
+            return (array) $list;
     }
 }
 
