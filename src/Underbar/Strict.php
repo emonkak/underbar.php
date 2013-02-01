@@ -930,6 +930,7 @@ abstract class Strict
         $result = array();
         $values = static::_wrapIterator($values);
         if ($values) {
+            $values->rewind();
             foreach ($list as $key) {
                 if ($values->valid()) {
                     $result[$key] = $values->current();
