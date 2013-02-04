@@ -23,61 +23,63 @@ However not aim full compatibility of it.
 
 # Example
 
-	require __DIR__ . 'vendor/autoload.php';
+```php
+require __DIR__ . 'vendor/autoload.php';
 
-	use Underbar\Lazy as _;
+use Underbar\Lazy as _;
 
-	// Take five elements from a even infinite list
-	_::chain(0)
-		->iterate(function($n) { return $n + 1; })
-		->filter(function($n) { return $n % 2 === 0; })
-		->take(5)
-		->each(functions($n) { echo $n, PHP_EOL; });
-	// => 0
-	//    2
-	//    4
-	//    6
-	//    8
+// Take five elements from a even infinite list
+_::chain(0)
+    ->iterate(function($n) { return $n + 1; })
+    ->filter(function($n) { return $n % 2 === 0; })
+    ->take(5)
+    ->each(functions($n) { echo $n, PHP_EOL; });
+// => 0
+//    2
+//    4
+//    6
+//    8
 
-	// Get a first element
-	echo _::first(array(100)), PHP_EOL;
-	// => 100
+// Get a first element
+echo _::first(array(100)), PHP_EOL;
+// => 100
 
-	// Get a first element when empty array
-	echo _::firstSafe(array())->getOrElse('empty'), PHP_EOL;
-	// => 'empty'
+// Get a first element when empty array
+echo _::firstSafe(array())->getOrElse('empty'), PHP_EOL;
+// => 'empty'
 
-	// Declare enumerable collection class
-	class Collection implements \Iterator
-	{
-		use \Underbar\Enumerable;
+// Declare enumerable collection class
+class Collection implements \Iterator
+{
+    use \Underbar\Enumerable;
 
-		protected $array;
+    protected $array;
 
-		public function __construct()
-		{
-			$this->array = func_get_args();
-		}
+    public function __construct()
+    {
+        $this->array = func_get_args();
+    }
 
-		public function getIterator()
-		{
-			return new \ArrayIterator($this->array);
-		}
-	}
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->array);
+    }
+}
 
-	$collection = new Collection(1, 2, 3);
+$collection = new Collection(1, 2, 3);
 
-	$twice = $collection->map(function($n) { return $n * 2; });
-	echo _::join($twice, ', '), PHP_EOL;
-	// => '2, 4, 6'
+$twice = $collection->map(function($n) { return $n * 2; });
+echo _::join($twice, ', '), PHP_EOL;
+// => '2, 4, 6'
 
-	$twiceCycle = $collection
-		->lazy()
-		->cycle()
-		->map(function($n) { return $n * 2; })
-		->take(6);
-	echo _::join($twice, ', '), PHP_EOL;
-	// => '2, 4, 6, 2, 4, 6'
+$twiceCycle = $collection
+    ->lazy()
+    ->cycle()
+    ->map(function($n) { return $n * 2; })
+    ->take(6);
+echo _::join($twice, ', '), PHP_EOL;
+// => '2, 4, 6, 2, 4, 6'
+```
 
 # Available functions
 
