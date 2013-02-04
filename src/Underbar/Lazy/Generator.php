@@ -279,7 +279,7 @@ abstract class Generator extends \Underbar\Strict
 
     private static function _cycle($array, $n = null)
     {
-        if ($n !== null) {
+        if ($n === null) {
             while (true) foreach ($array as $value) yield $value;
         } else {
             while ($n-- > 0) foreach ($array as $value) yield $value;
