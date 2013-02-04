@@ -53,7 +53,7 @@ echo _::firstSafe(array())->getOrElse('empty'), PHP_EOL;
 // => 'empty'
 
 // Declare enumerable collection class
-class Collection implements \Iterator
+class Collection implements \IteratorAggregate
 {
     use \Underbar\Enumerable;
 
