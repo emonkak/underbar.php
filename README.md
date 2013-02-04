@@ -9,6 +9,10 @@ However not aim full compatibility of it.
 - PHP 5.3 or higher
 - [Composer](http://getcomposer.org/)
 
+# Licence
+
+MIT Licence
+
 # Features
 
 - undersocre.js compatible (not fully)
@@ -148,9 +152,6 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 - `unique($array, $iterator = null)`
 - `zip()`
 - `zipWith()`
-
-## Objects
-
 - `object($list, $values = null)`
 - `indexOf($array, $value, $isSorted = 0)`
 - `lastIndexOf($array, $value, $fromIndex = null)`
@@ -169,6 +170,9 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 - `concat()`
 - `join($array, $separator = ',')`
 - `slice($array, $begin, $end = -1)`
+
+## Objects
+
 - `keys($object)`
 - `values($object)`
 - `pairs($object)`
