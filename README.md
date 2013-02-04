@@ -77,7 +77,7 @@ $twiceCycle = $collection
     ->cycle()
     ->map(function($n) { return $n * 2; })
     ->take(6);
-echo _::join($twice, ', '), PHP_EOL;
+echo _::join($twiceCycle, ', '), PHP_EOL;
 // => '2, 4, 6, 2, 4, 6'
 ```
 
