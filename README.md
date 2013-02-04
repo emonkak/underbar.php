@@ -180,10 +180,10 @@ echo _::join($twice, ', '), PHP_EOL;
 - `tap($object, $interceptor)`
 - `duplicate($object)`
 - `has($object, $key)`
-- `partial($func)`
 
 ## Functions
 
+- `partial($func)`
 - `memoize($func, $hasher = null)`
 - `once($func)`
 - `after($times, $func)`
