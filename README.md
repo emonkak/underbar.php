@@ -28,7 +28,7 @@ MIT Licence
 # Example
 
 ```php
-require __DIR__ . 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 use Underbar\Lazy as _;
 
