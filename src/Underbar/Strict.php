@@ -1273,9 +1273,9 @@ abstract class Strict
      */
     public static function pairs($object)
     {
-        $result = array();
-        foreach ($object as $key => $value) $result[] = array($key, $value);
-        return $result;
+        return static::map($object, function($value, $key) {
+            return array($key, $value);
+        });
     }
 
     /**
