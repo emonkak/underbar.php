@@ -30,7 +30,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * The remaining number of tasks
      *
-     * @var  array
+     * @var  int
      */
     protected $remain = 0;
 
@@ -96,7 +96,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Start a worker process.
      *
-     * @return  int  Process ID
+     * @return  int  The forked process ID
      */
     public function fork()
     {
@@ -120,7 +120,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Stop a worker process.
      *
-     * @return  int  Process ID
+     * @return  int  The terminated process ID
      */
     public function terminate()
     {
