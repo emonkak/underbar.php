@@ -150,7 +150,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Push all values to the queue.
      *
-     * @param   array  $values  The array of the pushed value
+     * @param   array|Traversable  $values  The array of the pushed value
      * @return  void
      */
     public function pushAll($values)
@@ -158,7 +158,7 @@ class Concurrent implements \Iterator, \Countable
         foreach ($values as $value) {
             $this->queue[] = $value;
         }
-        for ($i = count($values); $i-- && !empty($this->queue); $this->flush());
+        for ($i = count($this->queue); $i-- && !empty($this->queue); $this->flush());
     }
 
     /**
