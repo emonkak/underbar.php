@@ -1159,7 +1159,7 @@ abstract class Strict
     public static function sort($array)
     {
         $array = static::toArray($array);
-        sort($array);
+        array_multisort($array);
         return $array;
     }
 
