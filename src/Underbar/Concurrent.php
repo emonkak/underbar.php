@@ -285,8 +285,9 @@ class Concurrent implements \Iterator, \Countable
                     break;
                 }
                 $result = serialize($this->queue->dequeue()) . PHP_EOL;
-                fwrite($socket, $result);
-                $this->remain++;
+                if (fwrite($socket, $result) !== false) {
+                    $this->remain++;
+                }
             }
         }
     }
