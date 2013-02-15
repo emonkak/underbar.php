@@ -262,7 +262,9 @@ class Concurrent implements \Iterator, \Countable
 
         if (stream_select($read, $write, $except, $time) > 0) {
             foreach ($read as $socket) {
-                $this->results->enqueue(unserialize(fgets($socket)));
+                if (($result = unserialize(fgets($socket))) !== false) {
+                    $this->results->enqueue($result);
+                }
                 $this->remain--;
             }
         }
