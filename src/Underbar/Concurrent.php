@@ -16,16 +16,16 @@ class Concurrent implements \Iterator, \Countable
     /**
      * The queue of processing data
      *
-     * @var  array
+     * @var  SplQueue
      */
-    protected $queue = array();
+    protected $queue;
 
     /**
      * Processing results
      *
-     * @var  array
+     * @var  SplQueue
      */
-    protected $results = array();
+    protected $results;
 
     /**
      * The remaining number of tasks
@@ -74,6 +74,8 @@ class Concurrent implements \Iterator, \Countable
      */
     public function __construct($procedure, $n = 1, $timeout = null)
     {
+        $this->queue = new \SplQueue();
+        $this->results = new \SplQueue();
         $this->procedure = $procedure;
         $this->timeout = $timeout;
 
@@ -143,7 +145,7 @@ class Concurrent implements \Iterator, \Countable
      */
     public function push($value)
     {
-        $this->queue[] = $value;
+        $this->queue->enqueue($value);
         $this->flush();
     }
 
@@ -156,9 +158,9 @@ class Concurrent implements \Iterator, \Countable
     public function pushAll($values)
     {
         foreach ($values as $value) {
-            $this->queue[] = $value;
+            $this->queue->enqueue($value);
         }
-        for ($i = count($this->queue); $i-- && !empty($this->queue); $this->flush());
+        for ($i = count($this->queue); $i-- && count($this->queue); $this->flush());
     }
 
     /**
@@ -169,7 +171,7 @@ class Concurrent implements \Iterator, \Countable
     public function result()
     {
         $this->fill();
-        return array_pop($this->results);
+        return $this->results->dequeue();
     }
 
     /**
@@ -180,7 +182,7 @@ class Concurrent implements \Iterator, \Countable
      */
     public function current()
     {
-        return $this->results[0];
+        return $this->results->bottom();
     }
 
     /**
@@ -200,7 +202,7 @@ class Concurrent implements \Iterator, \Countable
      */
     public function next()
     {
-        array_shift($this->results);
+        $this->results->dequeue();
         $this->fill();
     }
 
@@ -210,7 +212,6 @@ class Concurrent implements \Iterator, \Countable
      */
     public function rewind()
     {
-        array_shift($this->results);
         $this->fill();
     }
 
@@ -220,7 +221,7 @@ class Concurrent implements \Iterator, \Countable
      */
     public function valid()
     {
-        return !empty($this->results);
+        return count($this->results);
     }
 
     /**
@@ -250,18 +251,18 @@ class Concurrent implements \Iterator, \Countable
      */
     protected function fill()
     {
-        if ($this->remain <= 0) {
+        if (count($this) <= 0) {
             return;
         }
 
         $read = $this->sockets;
         $write = null;
         $except = null;
-        $time = empty($this->results) ? $this->timeout : 0;
+        $time = count($this->results) > 0 ? 0 : $this->timeout;
 
         if (stream_select($read, $write, $except, $time) > 0) {
             foreach ($read as $socket) {
-                $this->results[] = unserialize(fgets($socket));
+                $this->results->enqueue(unserialize(fgets($socket)));
                 $this->remain--;
             }
         }
@@ -280,10 +281,10 @@ class Concurrent implements \Iterator, \Countable
 
         if (stream_select($read, $write, $except, $this->timeout) > 0) {
             foreach ($write as $socket) {
-                if (empty($this->queue)) {
+                if (count($this->queue) === 0) {
                     break;
                 }
-                $result = serialize(array_pop($this->queue)) . PHP_EOL;
+                $result = serialize($this->queue->dequeue()) . PHP_EOL;
                 fwrite($socket, $result);
                 $this->remain++;
             }
