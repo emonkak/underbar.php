@@ -109,6 +109,9 @@ class Concurrent implements \Iterator, \Countable
             exit(1);
         } elseif ($pid === 0) {
             fclose($pair[0]);
+            foreach ($this->sockets as $socket) {
+                fclose($socket);
+            }
             $this->loop($pair[1]);
             exit;
         }
