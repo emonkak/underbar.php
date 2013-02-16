@@ -45,18 +45,6 @@ abstract class Strict
         return static::map($list, $iterator);
     }
 
-    public static function parallelMap($list, $iterator, $n = 1)
-    {
-        $concurrent = new Concurrent($iterator, $n);
-        $concurrent->pushAll($list);
-        return $concurrent;
-    }
-
-    public static function parallelCollect($list, $iterator, $n = 1)
-    {
-        return static::parallelMap($list, $iterator, $n);
-    }
-
     /**
      * Also known as inject and foldl, reduce boils down a list of values into a
      * single value.
@@ -575,6 +563,25 @@ abstract class Strict
     public static function count($list)
     {
         return static::size($list);
+    }
+
+    public static function parallel($list, $n = 1, $timeout = null)
+    {
+        $concurrent = new Concurrent('call_user_func', $n, $timeout);
+        $concurrent->pushAll($list);
+        return $concurrent;
+    }
+
+    public static function parallelMap($list, $iterator, $n = 1, $timeout = null)
+    {
+        $concurrent = new Concurrent($iterator, $n, $timeout);
+        $concurrent->pushAll($list);
+        return $concurrent;
+    }
+
+    public static function parallelCollect($list, $iterator, $n = 1)
+    {
+        return static::parallelMap($list, $iterator, $n);
     }
 
     /**
