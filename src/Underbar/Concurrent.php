@@ -44,7 +44,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * The timeout of a IO wait
      *
-     * @var  callable
+     * @var  int
      */
     protected $timeout;
 
@@ -98,7 +98,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Start a worker process.
      *
-     * @return  int  A forked process ID
+     * @return  int  Forked process ID
      */
     public function fork()
     {
@@ -278,7 +278,7 @@ class Concurrent implements \Iterator, \Countable
     }
 
     /**
-     * Write queueing values (will block).
+     * Write queueing values (might block).
      *
      * @return  void
      */
