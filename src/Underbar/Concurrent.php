@@ -277,6 +277,10 @@ class Concurrent implements \Iterator, \Countable
      */
     protected function flush()
     {
+        if (empty($this->sockets)) {
+            $this->fork();
+        }
+
         $read = null;
         $write = $this->sockets;
         $except = null;
