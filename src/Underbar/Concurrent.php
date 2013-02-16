@@ -106,8 +106,10 @@ class Concurrent implements \Iterator, \Countable
 
         $pid = pcntl_fork();
         if ($pid < 0) {
+            // Failed fork
             exit(1);
         } elseif ($pid === 0) {
+            // is worker process
             fclose($pair[0]);
             foreach ($this->sockets as $socket) {
                 fclose($socket);
@@ -228,8 +230,10 @@ class Concurrent implements \Iterator, \Countable
     }
 
     /**
+     * Remaining number of tasks
+     *
      * @see     Countable
-     * @return  int        Remaining number of tasks
+     * @return  int
      */
     public function count()
     {
