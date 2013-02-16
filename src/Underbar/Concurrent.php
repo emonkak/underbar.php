@@ -52,7 +52,7 @@ class Concurrent implements \Iterator, \Countable
      * Send the signal.
      *
      * @param   int   $pid     Process ID
-     * @param   int   $signal  The signal to sent
+     * @param   int   $signal  Signal to sent
      * @return  bool
      */
     protected static function signal($pid, $signal)
@@ -68,9 +68,9 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Forked processes and start tasks.
      *
-     * @param  callable  $procedure  The procedure to execute in child processes
-     * @param  int       $n          The number of process
-     * @param  int       $timeout    The timeout of a IO wait
+     * @param  callable  $procedure  Procedure to execute in child processes
+     * @param  int       $n          Number of process
+     * @param  int       $timeout    Timeout of a IO wait
      */
     public function __construct($procedure, $n = 1, $timeout = null)
     {
@@ -98,11 +98,11 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Start a worker process.
      *
-     * @return  int  The forked process ID
+     * @return  int  A forked process ID
      */
     public function fork()
     {
-        $pair = $this->socketPair();
+        $pair = $this->pair();
 
         $pid = pcntl_fork();
         if ($pid < 0) {
@@ -122,7 +122,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Stop a worker process.
      *
-     * @return  int  The terminated process ID
+     * @return  int  Terminated process ID
      */
     public function terminate()
     {
@@ -152,7 +152,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Push all values to the queue.
      *
-     * @param   array|Traversable  $values  The array of the pushed value
+     * @param   array|Traversable  $values  Array of the pushed value
      * @return  void
      */
     public function pushAll($values)
@@ -226,7 +226,7 @@ class Concurrent implements \Iterator, \Countable
 
     /**
      * @see     Countable
-     * @return  int        The remaining number of tasks
+     * @return  int        Remaining number of tasks
      */
     public function count()
     {
@@ -238,7 +238,7 @@ class Concurrent implements \Iterator, \Countable
      *
      * @return  array
      */
-    protected function socketPair()
+    protected function pair()
     {
         return stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
     }
@@ -302,7 +302,7 @@ class Concurrent implements \Iterator, \Countable
      */
     protected function loop($socket)
     {
-        while (true) {
+        for (;;) {
             // is blocking
             $data = unserialize(fgets($socket));
             if ($data === false) {
