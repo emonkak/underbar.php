@@ -210,9 +210,9 @@ class Concurrent implements \Iterator, \Countable
     public function result()
     {
         $this->fill();
-        return count($this->results) > 0
-            ? $this->results->dequeue()
-            : null;
+        return $this->results->isEmpty()
+            ? null
+            : $this->results->dequeue();
     }
 
     /**
@@ -234,7 +234,6 @@ class Concurrent implements \Iterator, \Countable
      */
     public function key()
     {
-        // Not implemented
     }
 
     /**
@@ -262,7 +261,7 @@ class Concurrent implements \Iterator, \Countable
      */
     public function valid()
     {
-        return count($this->results);
+        return !$this->results->isEmpty();
     }
 
     /**
@@ -321,7 +320,7 @@ class Concurrent implements \Iterator, \Countable
 
         if (stream_select($read, $write, $except, $this->timeout) > 0) {
             foreach ($write as $socket) {
-                if (count($this->queue) === 0) {
+                if ($this->queue->isEmpty()) {
                     break;
                 }
                 if (static::write($socket, $this->queue->dequeue()) !== false) {
