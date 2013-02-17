@@ -54,7 +54,8 @@ class ChainingTest extends PHPUnit_Framework_TestCase
             ->unshift(17)
             ->pop()
             ->map(function($n) { return $n * 2; })
-            ->toArray();
+            ->toArray()
+            ->value();
         $shouldBe = array(34, 10, 8, 6, 4, 2, 10, 10);
         $this->assertEquals($shouldBe, $numbers, 'can chain together array functions.');
     }
