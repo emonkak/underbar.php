@@ -351,7 +351,7 @@ class Concurrent implements \Iterator, \Countable
     protected function loop($socket)
     {
         for (;;) {
-            // normally blocking
+            // is blocking
             if (($result = static::read($socket)) !== false) {
                 static::write($socket, call_user_func($this->procedure, $result));
             } else {
