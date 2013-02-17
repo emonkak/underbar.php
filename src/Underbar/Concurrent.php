@@ -128,9 +128,7 @@ class Concurrent implements \Iterator, \Countable
     {
         foreach ($this->sockets as $pid => $socket) {
             fclose($socket);
-            if ($pid > 0) {
-                static::signal($pid, SIGTERM);
-            }
+            static::signal($pid, SIGTERM);
         }
     }
 
@@ -144,15 +142,14 @@ class Concurrent implements \Iterator, \Countable
         $pair = $this->pair();
 
         $pid = pcntl_fork();
-        if ($pid < 0) {
-            // Failed fork
+        if ($pid < 0) {  // Failed fork
             exit(1);
-        } elseif ($pid === 0) {
-            // is worker process
+        } elseif ($pid === 0) {  // is worker process
             fclose($pair[0]);
             foreach ($this->sockets as $socket) {
                 fclose($socket);
             }
+            $this->sockets = array();
             $this->loop($pair[1]);
             exit;
         }
@@ -170,12 +167,13 @@ class Concurrent implements \Iterator, \Countable
      */
     public function terminate()
     {
-        if (($pid = key($this->sockets)) !== null) {
-            // Quit a worker
-            fwrite($this->sockets[$pid], PHP_EOL);
+        if ($socket = end($this->sockets)) {
+            // Quit the worker
+            fwrite($socket, PHP_EOL);
         }
 
-        return $pid;
+        // Return the process ID
+        return key($this->sockets);
     }
 
     /**
@@ -205,14 +203,16 @@ class Concurrent implements \Iterator, \Countable
     }
 
     /**
-     * Return only one result.
+     * Return a result.
      *
      * @return  mixed
      */
     public function result()
     {
         $this->fill();
-        return $this->results->dequeue();
+        return count($this->results) > 0
+            ? $this->results->dequeue()
+            : null;
     }
 
     /**
