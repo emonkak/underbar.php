@@ -66,6 +66,42 @@ class Concurrent implements \Iterator, \Countable
     }
 
     /**
+     * Return the socket pair for interprocess communication.
+     *
+     * @return  array
+     */
+    protected static function pair()
+    {
+        return stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+    }
+
+    /**
+     * Read data with unserialize from a socket.
+     *
+     * @param   resource  $socket
+     * @return  mixed
+     */
+    protected static function read($socket)
+    {
+        if (($result = fgets($socket)) !== false) {
+            $result = unserialize($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Write data with serialize to a socket.
+     *
+     * @param   resource  $socket
+     * @return  mixed
+     */
+    protected static function write($socket, $value)
+    {
+        return fwrite($socket, serialize($value) . PHP_EOL);
+    }
+
+    /**
      * Forked processes and start tasks.
      *
      * @param  callable  $procedure  Procedure to execute in child processes
@@ -91,7 +127,9 @@ class Concurrent implements \Iterator, \Countable
     {
         foreach ($this->sockets as $pid => $socket) {
             fclose($socket);
-            static::signal($pid, SIGTERM);
+            if ($pid > 0) {
+                static::signal($pid, SIGTERM);
+            }
         }
     }
 
@@ -114,6 +152,10 @@ class Concurrent implements \Iterator, \Countable
             foreach ($this->sockets as $socket) {
                 fclose($socket);
             }
+
+            $this->sockets = array($pair[1]);
+            pcntl_signal(SIGCHLD, array($this, 'handler'));
+
             $this->loop($pair[1]);
             exit;
         }
@@ -132,10 +174,17 @@ class Concurrent implements \Iterator, \Countable
     public function terminate()
     {
         if (($pid = key($this->sockets)) !== null) {
-            static::signal($pid, SIGTERM);
+            static::signal($pid, SIGCHLD);
             pcntl_waitpid($pid, $status);
 
-            fclose($this->sockets[$pid]);
+            $socket = $this->sockets[$pid];
+            while (!feof($socket) && $this->remain--) {
+                if (($result = static::read($socket)) !== false) {
+                    $this->results->enqueue($result);
+                }
+            }
+
+            fclose($socket);
             unset($this->sockets[$pid]);
         }
 
@@ -241,16 +290,6 @@ class Concurrent implements \Iterator, \Countable
     }
 
     /**
-     * Return the socket pair for interprocess communication.
-     *
-     * @return  array
-     */
-    protected function pair()
-    {
-        return stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
-    }
-
-    /**
      * Read process results.
      * Block when result is empty.
      *
@@ -269,7 +308,7 @@ class Concurrent implements \Iterator, \Countable
 
         if (stream_select($read, $write, $except, $time) > 0) {
             foreach ($read as $socket) {
-                if (($result = unserialize(fgets($socket))) !== false) {
+                if (($result = static::read($socket)) !== false) {
                     $this->results->enqueue($result);
                 }
                 $this->remain--;
@@ -298,8 +337,7 @@ class Concurrent implements \Iterator, \Countable
                 if (count($this->queue) === 0) {
                     break;
                 }
-                $result = serialize($this->queue->dequeue()) . PHP_EOL;
-                if (fwrite($socket, $result) !== false) {
+                if (static::write($socket, $this->queue->dequeue()) !== false) {
                     $this->remain++;
                 }
             }
@@ -315,16 +353,26 @@ class Concurrent implements \Iterator, \Countable
     protected function loop($socket)
     {
         for (;;) {
-            // is blocking
-            $data = unserialize(fgets($socket));
-            if ($data === false) {
-                continue;
+            // normally blocking
+            if (($result = static::read($socket)) !== false) {
+                static::write($socket, call_user_func($this->procedure, $result));
+            } else {
+                break;
             }
 
-            $result = serialize(call_user_func($this->procedure, $data))
-                    . PHP_EOL;
-            fwrite($socket, $result);
+            pcntl_signal_dispatch();
         }
+    }
+
+    /**
+     * Signal handler for a worker process
+     *
+     * @param   int   $signal
+     * @return  void
+     */
+    protected function handler($signal)
+    {
+        stream_set_blocking($this->sockets[0], 0);
     }
 }
 
