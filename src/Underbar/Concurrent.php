@@ -84,7 +84,7 @@ class Concurrent implements \Iterator, \Countable
     protected static function read($socket)
     {
         if (($result = fgets($socket)) !== false) {
-            $result = unserialize($result);
+            $result = @unserialize($result);
         }
 
         return $result;
@@ -152,10 +152,6 @@ class Concurrent implements \Iterator, \Countable
             foreach ($this->sockets as $socket) {
                 fclose($socket);
             }
-
-            $this->sockets = array($pair[1]);
-            pcntl_signal(SIGCHLD, array($this, 'handler'));
-
             $this->loop($pair[1]);
             exit;
         }
@@ -174,10 +170,12 @@ class Concurrent implements \Iterator, \Countable
     public function terminate()
     {
         if (($pid = key($this->sockets)) !== null) {
-            static::signal($pid, SIGCHLD);
+            $socket = $this->sockets[$pid];
+
+            // Quit a worker
+            fwrite($socket, PHP_EOL);
             pcntl_waitpid($pid, $status);
 
-            $socket = $this->sockets[$pid];
             while (!feof($socket) && $this->remain--) {
                 if (($result = static::read($socket)) !== false) {
                     $this->results->enqueue($result);
@@ -359,20 +357,7 @@ class Concurrent implements \Iterator, \Countable
             } else {
                 break;
             }
-
-            pcntl_signal_dispatch();
         }
-    }
-
-    /**
-     * Signal handler for a worker process
-     *
-     * @param   int   $signal
-     * @return  void
-     */
-    protected function handler($signal)
-    {
-        stream_set_blocking($this->sockets[0], 0);
     }
 }
 
