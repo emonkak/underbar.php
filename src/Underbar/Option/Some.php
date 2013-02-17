@@ -91,7 +91,7 @@ final class Some extends Option
     {
         return call_user_func($iterator, $this->value, 0, $this)
             ? $this
-            : Option_None::instance();
+            : Option\None::instance();
     }
 
     /**
@@ -104,7 +104,7 @@ final class Some extends Option
     public function filterNot($iterator)
     {
         return call_user_func($iterator, $this->value, 0, $this)
-            ? Option_None::instance()
+            ? Option\None::instance()
             : $this;
     }
 
