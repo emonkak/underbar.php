@@ -170,20 +170,8 @@ class Concurrent implements \Iterator, \Countable
     public function terminate()
     {
         if (($pid = key($this->sockets)) !== null) {
-            $socket = $this->sockets[$pid];
-
             // Quit a worker
-            fwrite($socket, PHP_EOL);
-            pcntl_waitpid($pid, $status);
-
-            while (!feof($socket) && $this->remain--) {
-                if (($result = static::read($socket)) !== false) {
-                    $this->results->enqueue($result);
-                }
-            }
-
-            fclose($socket);
-            unset($this->sockets[$pid]);
+            fwrite($this->sockets[$pid], PHP_EOL);
         }
 
         return $pid;
