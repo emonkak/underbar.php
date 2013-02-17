@@ -165,7 +165,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Stop a worker process.
      *
-     * @return  int  Terminated process ID
+     * @return  int  A process ID to be stopped
      */
     public function terminate()
     {
@@ -180,7 +180,7 @@ class Concurrent implements \Iterator, \Countable
     /**
      * Push a value to the queue.
      *
-     * @param   mixed  $value  The pushed value
+     * @param   mixed  $value  A pushed value
      * @return  void
      */
     public function push($value)
