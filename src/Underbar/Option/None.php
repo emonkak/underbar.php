@@ -18,6 +18,10 @@ final class None extends Option
         return static::$instance === null ? new static() : static::$instance;
     }
 
+    private function __construct()
+    {
+    }
+
     /**
      * Returns the option's value.
      *
