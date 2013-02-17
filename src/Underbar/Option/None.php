@@ -140,6 +140,15 @@ final class None extends Option
     {
         return null;
     }
+
+    /**
+     * @see     Countable
+     * @return  mixed
+     */
+    public function count()
+    {
+        return 0;
+    }
 }
 
 // __END__

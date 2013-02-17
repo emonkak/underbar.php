@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-abstract class Option implements \IteratorAggregate
+abstract class Option implements \IteratorAggregate, \Countable
 {
     use Enumerable;
 

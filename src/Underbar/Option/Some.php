@@ -140,6 +140,15 @@ final class Some extends Option
     {
         return $this->value;
     }
+
+    /**
+     * @see     Countable
+     * @return  mixed
+     */
+    public function count()
+    {
+        return 1;
+    }
 }
 
 // __END__

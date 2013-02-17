@@ -560,11 +560,6 @@ abstract class Strict
         return count($list);
     }
 
-    public static function count($list)
-    {
-        return static::size($list);
-    }
-
     public static function parallel($list, $n = 1, $timeout = null)
     {
         $concurrent = new Concurrent('call_user_func', $n, $timeout);
