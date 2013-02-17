@@ -94,6 +94,7 @@ class Concurrent implements \Iterator, \Countable
      * Write data with serialize to a socket.
      *
      * @param   resource  $socket
+     * @param   mixed     $value
      * @return  mixed
      */
     protected static function write($socket, $value)
