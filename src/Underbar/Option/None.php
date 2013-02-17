@@ -15,11 +15,14 @@ final class None extends Option
      */
     public static function instance()
     {
-        return static::$instance === null ? new static() : static::$instance;
+        return static::$instance === null
+            ? new static()
+            : static::$instance;
     }
 
     private function __construct()
     {
+        static::$instance = $this;
     }
 
     /**
