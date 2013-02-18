@@ -199,7 +199,7 @@ class Concurrent implements \Iterator, \Countable
         foreach ($values as $value) {
             $this->queue->enqueue($value);
         }
-        for ($i = count($this->queue); $i-- && count($this->queue); $this->flush());
+        for ($i = count($this->queue); $i-- && !$this->queue->isEmpty(); $this->flush());
     }
 
     /**
@@ -265,7 +265,7 @@ class Concurrent implements \Iterator, \Countable
     }
 
     /**
-     * Remaining number of tasks
+     * Remaining number of tasks.
      *
      * @see     Countable
      * @return  int
@@ -277,7 +277,7 @@ class Concurrent implements \Iterator, \Countable
 
     /**
      * Read process results.
-     * Block when result is empty.
+     * Block when results are empty.
      *
      * @return  void
      */
