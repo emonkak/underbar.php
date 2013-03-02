@@ -1,6 +1,6 @@
 <?php
 
-class ChainingTest extends PHPUnit_Framework_TestCase
+class ChainingTest extends Underbar_TestCase
 {
     /**
      * @dataProvider provider
@@ -58,11 +58,6 @@ class ChainingTest extends PHPUnit_Framework_TestCase
             ->value();
         $shouldBe = array(34, 10, 8, 6, 4, 2, 10, 10);
         $this->assertEquals($shouldBe, $numbers, 'can chain together array functions.');
-    }
-
-    public function provider()
-    {
-        return provideClasses();
     }
 }
 

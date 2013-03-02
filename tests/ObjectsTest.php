@@ -1,6 +1,6 @@
 <?php
 
-class ObjectsTest extends PHPUnit_Framework_TestCase
+class ObjectsTest extends Underbar_TestCase
 {
     /**
      * @dataProvider provider
@@ -139,11 +139,6 @@ class ObjectsTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $_::duplicate(1), 'non objects should not be changed by clone');
         $this->assertEquals(null, $_::duplicate(null), 'non objects should not be changed by clone');
-    }
-
-    public function provider()
-    {
-        return provideClasses();
     }
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-class CollectionsTest extends PHPUnit_Framework_TestCase
+class CollectionsTest extends Underbar_TestCase
 {
     /**
      * @dataProvider provider
@@ -421,10 +421,5 @@ class CollectionsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(3, $_::size($_::range(3)), 'can compute the size of an array');
         $this->assertEquals(5, $_::size('hello'), 'can compute the size of a string');
         $this->assertEquals(0, $_::size(null), 'handles nulls');
-    }
-
-    public function provider()
-    {
-        return provideClasses();
     }
 }

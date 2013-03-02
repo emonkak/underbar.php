@@ -1,6 +1,6 @@
 <?php
 
-class ArraysTest extends PHPUnit_Framework_TestCase
+class ArraysTest extends Underbar_TestCase
 {
     /**
      * @dataProvider provider
@@ -293,11 +293,6 @@ class ArraysTest extends PHPUnit_Framework_TestCase
         $result = $_::range(0, -10, -1);
         $shouldBe = array(0, -1, -2, -3, -4, -5, -6, -7, -8, -9);
         $this->assertEquals($shouldBe, $_::toArray($result), 'final example in the Python docs');
-    }
-
-    public function provider()
-    {
-        return provideClasses();
     }
 }
 
