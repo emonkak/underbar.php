@@ -1177,6 +1177,19 @@ abstract class Strict
     }
 
     /**
+     * @category  Arrays
+     * @param     array|Traversable  $array
+     * @param     callable           $compare
+     * @return    array
+     */
+    public static function sortByKey($array, $compare = null)
+    {
+        $array = static::toArray($array);
+        $compare ? uksort($array, $compare) : ksort($array);
+        return $array;
+    }
+
+    /**
      * Removes the first element from an array and returns that element.
      *
      * @category  Arrays
