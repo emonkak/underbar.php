@@ -1610,6 +1610,19 @@ abstract class Strict
     }
 
     /**
+     * @category  Utility
+     * @param     callable  $iterator
+     * @param     mixed     *$args
+     * @return    float
+     */
+    public static function bench($iterator)
+    {
+        $start = microtime(true);
+        call_user_func_array($iterator, array_slice(func_get_args(), 1));
+        return microtime(true) - $start;
+    }
+
+    /**
      * Returns a wrapped object. Calling methods on this object will continue to
      * return wrapped objects until value is used.
      *
