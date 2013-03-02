@@ -1164,16 +1164,15 @@ abstract class Strict
     }
 
     /**
-     * Removes the last element from an array and returns that element.
-     *
      * @category  Arrays
      * @param     array|Traversable  $array
+     * @param     callable           $compare
      * @return    array
      */
-    public static function sort($array)
+    public static function sort($array, $compare = null)
     {
         $array = static::toArray($array);
-        array_multisort($array);
+        $compare ? usort($array, $compare) : sort($array);
         return $array;
     }
 
