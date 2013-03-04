@@ -2,9 +2,7 @@
 
 namespace Underbar\Lazy;
 
-use Underbar\Internal;
-
-abstract class Generator extends GeneratorUnsafe
+abstract class GeneratorUnsafe extends \Underbar\Strict
 {
     /**
      * Produces a new array of values by mapping each value in list through a
@@ -19,7 +17,8 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function map($list, $iterator)
     {
-        return new Internal\RewindableGenerator(parent::map($list, $iterator));
+        foreach ($list as $index => $value)
+            yield $index => call_user_func($iterator, $value, $index, $list);
     }
 
     /**
@@ -35,7 +34,10 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function filter($list, $iterator)
     {
-        return new Internal\RewindableGenerator(parent::filter($list, $iterator));
+        foreach ($list as $index => $value) {
+            if (call_user_func($iterator, $value, $index, $list))
+                yield $index => $value;
+        }
     }
 
     /**
@@ -52,9 +54,19 @@ abstract class Generator extends GeneratorUnsafe
     public static function first($array, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null)
-            return new Internal\RewindableGenerator(parent::_first($array, $n));
+            return static::_first($array, $n);
         else
             foreach ($array as $value) return $value;
+    }
+
+    protected static function _first($array, $n = null)
+    {
+        foreach ($array as $index => $value) {
+            if ($n-- > 0)
+                yield $index => $value;
+            else
+                break;
+        }
     }
 
     /**
@@ -65,7 +77,10 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function takeWhile($array, $iterator)
     {
-        return new Internal\RewindableGenerator(parent::takeWhile($array, $iterator));
+        foreach ($array as $index => $value) {
+            if (!call_user_func($iterator, $value, $index, $array)) break;
+            yield $index => $value;
+        }
     }
 
     /**
@@ -78,7 +93,13 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function initial($array, $n = 1, $guard = null)
     {
-        return new Internal\RewindableGenerator(parent::initial($array, $n, $guard));
+        $queue = new \SplQueue();
+
+        if ($guard !== null) $n = 1;
+        foreach ($array as $value) {
+            $queue->enqueue($value);
+            if (count($queue) > $n) yield $queue->dequeue();
+        }
     }
 
     /**
@@ -93,7 +114,11 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function rest($array, $n = 1, $guard = null)
     {
-        return new Internal\RewindableGenerator(parent::rest($array, $n, $guard));
+        if ($guard !== null) $n = 1;
+        foreach ($array as $index => $value) {
+            if (--$n < 0)
+                yield $index => $value;
+        }
     }
 
     /**
@@ -104,7 +129,12 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function dropWhile($array, $iterator)
     {
-        return new Internal\RewindableGenerator(parent::dropWhile($array, $iterator));
+        $accepted = false;
+        foreach ($array as $index => $value) {
+            if ($accepted
+                || ($accepted = !call_user_func($iterator, $value, $index, $array)))
+                yield $index => $value;
+        }
     }
 
     /**
@@ -117,9 +147,26 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function zip()
     {
-        return new Internal\RewindableGenerator(
-            call_user_func_array(get_parent_class().'::zip', func_get_args())
-        );
+        $arrays = $zipped = array();
+        $loop = false;
+
+        foreach (func_get_args() as $array) {
+            $arrays[] = $wrapped = static::_wrapIterator($array);
+            $wrapped->rewind();
+            $loop = $loop || $wrapped->valid();
+            $zipped[] = $wrapped->current();
+        }
+
+        while ($loop) {
+            yield $zipped;
+            $zipped = array();
+            $loop = false;
+            foreach ($arrays as $array) {
+                $array->next();
+                $zipped[] = $array->current();
+                $loop = $loop || $array->valid();
+            }
+        }
     }
 
     /**
@@ -132,7 +179,19 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function flatten($array, $shallow = false)
     {
-        return new Internal\RewindableGenerator(parent::flatten($array, $shallow));
+        foreach ($array as $key => $value) {
+            if (is_array($value) || $value instanceof \Traversable) {
+                if ($shallow) {
+                    foreach ($value as $childKey => $childValue)
+                        yield $childKey => $childValue;
+                } else {
+                    foreach (static::flatten($value, $shallow) as $childKey => $childValue)
+                        yield $childKey => $childValue;
+                }
+            } else {
+                yield $key => $value;
+            }
+        }
     }
 
     /**
@@ -147,7 +206,16 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function range($start, $stop = null, $step = 1)
     {
-        return new Internal\RewindableGenerator(parent::range($start, $stop, $step));
+        if ($stop === null) {
+            $stop = $start;
+            $start = 0;
+        }
+
+        $len = max(ceil(($stop - $start) / $step), 0);
+        for ($i = 0; $i < $len; $i++) {
+            yield $start;
+            $start += $step;
+        }
     }
 
     /**
@@ -157,7 +225,11 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function cycle($array, $n = null)
     {
-        return new Internal\RewindableGenerator(parent::cycle($array, $n));
+        if ($n === null) {
+            while (true) foreach ($array as $value) yield $value;
+        } else {
+            while ($n-- > 0) foreach ($array as $value) yield $value;
+        }
     }
 
     /**
@@ -167,7 +239,7 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function repeat($value, $n = -1)
     {
-        return new Internal\RewindableGenerator(parent::repeat($value, $n));
+        while ($n--) yield $value;
     }
 
     /**
@@ -179,7 +251,10 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function iterate($memo, $iterator)
     {
-        return new Internal\RewindableGenerator(parent::iterate($memo, $iterator));
+        while (true) {
+            yield $memo;
+            $memo = call_user_func($iterator, $memo);
+        }
     }
 
     /**
@@ -192,9 +267,10 @@ abstract class Generator extends GeneratorUnsafe
      */
     public static function concat()
     {
-        return new Internal\RewindableGenerator(
-            call_user_func_array(get_parent_class().'::concat', func_get_args())
-        );
+        foreach (func_get_args() as $array) {
+            foreach ($array as $key => $value)
+                yield $key => $value;
+        }
     }
 }
 
