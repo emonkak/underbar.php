@@ -1,10 +1,8 @@
 <?php
 
-namespace Underbar\Lazy;
+namespace Underbar;
 
-use Underbar\Internal;
-
-abstract class Iterator extends \Underbar\Strict
+abstract class LazyIterator extends Strict
 {
     /**
      * Produces a new array of values by mapping each value in list through a

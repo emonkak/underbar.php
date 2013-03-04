@@ -1611,15 +1611,21 @@ abstract class Strict
 
     /**
      * @category  Utility
-     * @param     callable  $iterator
-     * @param     mixed     *$args
-     * @return    float
+     * @param     array|callable  $iterator
+     * @param     mixed           *$args
+     * @return    float|Iterator
      */
     public static function bench($iterator)
     {
-        $start = microtime(true);
-        call_user_func_array($iterator, array_slice(func_get_args(), 1));
-        return microtime(true) - $start;
+        if (is_array($iterator) || $iterator instanceof \Traversable) {
+            return static::map($iterator, function($procedure) {
+                return call_user_func_array(get_called_class().'::bench', $procedure);
+            });
+        } else {
+            $start = microtime(true);
+            call_user_func_array($iterator, array_slice(func_get_args(), 1));
+            return microtime(true) - $start;
+        }
     }
 
     /**
