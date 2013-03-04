@@ -560,16 +560,9 @@ abstract class Strict
         return count($list);
     }
 
-    public static function parallel($list, $n = 1, $timeout = null)
-    {
-        $concurrent = new Concurrent('call_user_func', $n, $timeout);
-        $concurrent->pushAll($list);
-        return $concurrent;
-    }
-
     public static function parallelMap($list, $iterator, $n = 1, $timeout = null)
     {
-        $concurrent = new Concurrent($iterator, $n, $timeout);
+        $concurrent = new Parallel($iterator, $n, $timeout);
         $concurrent->pushAll($list);
         return $concurrent;
     }

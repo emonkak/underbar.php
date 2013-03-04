@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-class Concurrent implements \Iterator, \Countable
+class Parallel implements \Iterator, \Countable
 {
     use Enumerable;
 
