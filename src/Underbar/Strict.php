@@ -1238,7 +1238,11 @@ abstract class Strict
      */
     public static function join($array, $separator = ',')
     {
-        return implode($separator, static::toArray($array));
+        $str = '';
+        foreach ($array as $value) {
+            $str .= $value . $separator;
+        }
+        return rtrim($str, $separator);
     }
 
     /**
