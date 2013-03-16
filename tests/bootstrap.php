@@ -10,11 +10,11 @@ class Underbar_TestCase extends PHPUnit_Framework_TestCase
     {
         $classes = array(
             array('Underbar\\Strict'),
-            array('Underbar\\LazyIterator'),
+            array('Underbar\\Lazy\\Iterator'),
         );
 
         if (class_exists('Generator', false)) {
-            $classes[] = array('Underbar\\LazyGenerator');
+            $classes[] = array('Underbar\\Lazy\\Generator');
         }
 
         return $classes;

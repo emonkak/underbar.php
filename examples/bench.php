@@ -2,14 +2,7 @@
 
 require(__DIR__ . '/../vendor/autoload.php');
 
-use Underbar\Strict as _;
-
-// warm
-class_exists('Underbar\\Lazy');
-class_exists('Underbar\\LazyIterator');
-class_exists('Underbar\\LazyGenerator');
-class_exists('Underbar\\LazyGeneratorUnsafe');
-class_exists('Underbar\\Strict');
+use Underbar\Underbar as _;
 
 $xs = range(0, 100000);
 $f = function($_, $xs) {
@@ -22,11 +15,11 @@ $f = function($_, $xs) {
 };
 
 _::chain(array(
-    'LazyIterator'        => array($f, 'Underbar\\LazyIterator', $xs),
-    'LazyGenerator'       => array($f, 'Underbar\\LazyGenerator', $xs),
-    'LazyGeneratorUnsafe' => array($f, 'Underbar\\LazyGeneratorUnsafe', $xs),
-    'Strict'              => array($f, 'Underbar\\Strict', $xs),
-))->bench()->tap('var_export');
+    'Lazy\\Iterator'        => array($f, 'Underbar\\Lazy\\Iterator', $xs),
+    'Lazy\\Generator'       => array($f, 'Underbar\\Lazy\\Generator', $xs),
+    'Lazy\\GeneratorUnsafe' => array($f, 'Underbar\\Lazy\\GeneratorUnsafe', $xs),
+    'Strict'                => array($f, 'Underbar\\Strict', $xs),
+))->bench()->toArray(true)->tap('var_export');
 
 // __END__
 // vim: expandtab softtabstop=4 shiftwidth=4
