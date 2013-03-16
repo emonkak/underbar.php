@@ -1242,7 +1242,7 @@ abstract class Strict
         foreach ($array as $value) {
             $str .= $value . $separator;
         }
-        return rtrim($str, $separator);
+        return substr($str, 0, -strlen($separator));
     }
 
     /**
