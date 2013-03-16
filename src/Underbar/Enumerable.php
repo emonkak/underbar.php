@@ -35,7 +35,6 @@ public function countBy(){$args=func_get_args();array_unshift($args,$this);retur
 public function shuffle(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::shuffle',$args);}
 public function toArray(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::toArray',$args);}
 public function size(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::size',$args);}
-public function parallel(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::parallel',$args);}
 public function parallelMap(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::parallelMap',$args);}
 public function parallelCollect(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::parallelCollect',$args);}
 public function first(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::first',$args);}
@@ -80,6 +79,17 @@ public function unshift(){$args=func_get_args();array_unshift($args,$this);retur
 public function concat(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::concat',$args);}
 public function join(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::join',$args);}
 public function slice(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::slice',$args);}
+public function keys(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::keys',$args);}
+public function values(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::values',$args);}
+public function pairs(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::pairs',$args);}
+public function invert(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::invert',$args);}
+public function extend(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::extend',$args);}
+public function pick(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::pick',$args);}
+public function omit(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::omit',$args);}
+public function defaults(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::defaults',$args);}
+public function tap(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::tap',$args);}
+public function duplicate(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::duplicate',$args);}
+public function has(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::has',$args);}
 public function chain(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Strict::chain',$args);}
 public function lazy(){return Lazy::chain($this);}
 }
