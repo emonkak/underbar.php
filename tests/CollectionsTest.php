@@ -124,10 +124,10 @@ class CollectionsTest extends Underbar_TestCase
     public function testFilter($_)
     {
         $evens = $_::filter(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(2, 4, 6), $_::values($evens), 'selected each even number');
+        $this->assertEquals(array(2, 4, 6), $_::toArray($evens, false), 'selected each even number');
 
         $evens = $_::select(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(2, 4, 6), $_::values($evens), 'aliased as "select"');
+        $this->assertEquals(array(2, 4, 6), $_::toArray($evens, false), 'aliased as "select"');
     }
 
     /**
@@ -136,7 +136,7 @@ class CollectionsTest extends Underbar_TestCase
     public function testReject($_)
     {
         $odds = $_::reject(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(1, 3, 5), $_::values($odds), 'rejected each even number');
+        $this->assertEquals(array(1, 3, 5), $_::toArray($odds, false), 'rejected each even number');
     }
 
     /**

@@ -1292,9 +1292,11 @@ abstract class Strict
      */
     public static function keys($object)
     {
-        $result = array();
-        foreach ($object as $key => $value) $result[] = $key;
-        return $result;
+        if (is_array($object)) return array_keys($object);
+        $i = 0;
+        return static::map($object, function($value, $index) {
+            return $index;
+        });
     }
 
     /**
@@ -1306,9 +1308,11 @@ abstract class Strict
      */
     public static function values($object)
     {
-        $result = array();
-        foreach ($object as $value) $result[] = $value;
-        return $result;
+        if (is_array($object)) return array_values($object);
+        $i = 0;
+        return static::mapKey($object, function() use (&$i) {
+            return $i++;
+        });
     }
 
     /**
