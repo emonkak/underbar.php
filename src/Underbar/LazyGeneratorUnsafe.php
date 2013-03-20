@@ -1,10 +1,8 @@
 <?php
 
-namespace Underbar\Lazy;
+namespace Underbar;
 
-use Underbar\Strict;
-
-abstract class GeneratorUnsafe extends Strict
+abstract class LazyGeneratorUnsafe extends Strict
 {
     /**
      * Produces a new array of values by mapping each value in list through a

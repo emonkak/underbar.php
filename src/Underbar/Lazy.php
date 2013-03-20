@@ -3,9 +3,9 @@
 namespace Underbar;
 
 if (class_exists('Generator', false)) {
-    class_alias('Underbar\\Lazy\\Generator', 'Underbar\\Lazy');
+    class_alias('Underbar\\LazyGenerator', 'Underbar\\Lazy');
 } else {
-    class_alias('Underbar\\Lazy\\Iterator', 'Underbar\\Lazy');
+    class_alias('Underbar\\LazyIterator', 'Underbar\\Lazy');
 }
 
 // __END__
