@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-abstract class LazyGeneratorUnsafe extends Strict
+abstract class LazyUnsafeGenerator extends Strict
 {
     /**
      * Produces a new array of values by mapping each value in list through a

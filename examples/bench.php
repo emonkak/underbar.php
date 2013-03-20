@@ -8,7 +8,7 @@ use Underbar\Strict as _;
 class_exists('Underbar\\Lazy');
 class_exists('Underbar\\LazyIterator');
 class_exists('Underbar\\LazyGenerator');
-class_exists('Underbar\\LazyGeneratorUnsafe');
+class_exists('Underbar\\LazyUnsafeGenerator');
 class_exists('Underbar\\Strict');
 
 $xs = range(0, 100000);
@@ -24,7 +24,7 @@ $f = function($_, $xs) {
 _::chain(array(
     'LazyIterator'        => array($f, 'Underbar\\LazyIterator', $xs),
     'LazyGenerator'       => array($f, 'Underbar\\LazyGenerator', $xs),
-    'LazyGeneratorUnsafe' => array($f, 'Underbar\\LazyGeneratorUnsafe', $xs),
+    'LazyUnsafeGenerator' => array($f, 'Underbar\\LazyUnsafeGenerator', $xs),
     'Strict'              => array($f, 'Underbar\\Strict', $xs),
 ))->bench()->tap('var_export');
 
