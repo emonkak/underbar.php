@@ -46,6 +46,30 @@ abstract class Strict
     }
 
     /**
+     * Alias: collectKey
+     *
+     * @category  Collections
+     * @param     array|Traversable  $list
+     * @param     callable           $iterator
+     * @return    array|Iterator
+     */
+    public static function mapKey($list, $iterator)
+    {
+        $result = array();
+
+        foreach ($list as $index => $value) {
+            $result[call_user_func($iterator, $value, $index, $list)] = $value;
+        }
+
+        return $result;
+    }
+
+    public static function collectKey($list, $iterator)
+    {
+        return static::mapKey($list, $iterator);
+    }
+
+    /**
      * Also known as inject and foldl, reduce boils down a list of values into a
      * single value.
      *

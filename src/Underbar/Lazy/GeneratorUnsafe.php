@@ -24,6 +24,21 @@ abstract class GeneratorUnsafe extends Strict
     }
 
     /**
+     * Alias: collectKey
+     *
+     * @category  Collections
+     * @param     array|Traversable  $list
+     * @param     callable           $iterator
+     * @return    Iterator
+     */
+    public static function mapKey($list, $iterator)
+    {
+        foreach ($list as $index => $value) {
+            yield call_user_func($iterator, $value, $index, $list) => $value;
+        }
+    }
+
+    /**
      * Looks through each value in the list, returning an array of all the values
      * that pass a truth test (iterator).
      *

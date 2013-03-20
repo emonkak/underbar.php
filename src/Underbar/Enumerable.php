@@ -4,6 +4,8 @@ trait Enumerable {
 public function each(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::each',$args);}
 public function map(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::map',$args);}
 public function collect(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::collect',$args);}
+public function mapKey(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::mapKey',$args);}
+public function collectKey(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::collectKey',$args);}
 public function reduce(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::reduce',$args);}
 public function inject(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::inject',$args);}
 public function foldl(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Underbar::foldl',$args);}
