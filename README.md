@@ -105,109 +105,202 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 
 ### Collections
 
-#### each(*array* $xs, *callable* $f)
-#### map(*array* $xs, *callable* $f)
-#### collect(*array* $xs, *callable* $f)
-#### mapKey(*array* $xs, *callable* $f)
-#### collectKey(*array* $xs, *callable* $f)
-#### parallelMap(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
-#### parallelCollect(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
-#### collectKey(*array* $xs, *callable* $f)
-#### reduce(*array* $xs, *callable* $f, $acc)
-#### inject(*array* $xs, *callable* $f, $acc)
-#### foldl(*array* $xs, *callable* $f, $acc)
-#### reduceRight(*array* $xs, *callable* $f, $acc)
-#### foldr(*array* $xs, *callable* $f, $acc)
-#### find(*array* $xs, *callable* $f)
-#### detect(*array* $xs, *callable* $f)
-#### findSafe(*array* $xs, *callable* $f)
-#### detectSafe(*array* $xs, *callable* $f)
-#### filter(*array* $xs, *callable* $f)
-#### select(*array* $xs, *callable* $f)
-#### where(*array* $xs, *array* $properties)
-#### findWhere(*array* $xs, *array* $properties)
-#### findWhereSafe(*array* $xs, *array* $properties)
-#### reject(*array* $xs, *callable* $f)
-#### every(*array* $xs, *callable* $f = null)
-#### all(*array* $xs, *callable* $f = null)
-#### some(*array* $xs, *callable* $f = null)
-#### any(*array* $xs, *callable* $f = null)
-#### sum(*array* $xs)
-#### product(*array* $xs)
-#### contains(*array* $xs, *mixed* $target)
-#### invoke(*array* $xs, *string* $method)
-#### pluck(*array* $xs, *string* $property)
-#### max(*array* $xs, *callable* $f = null)
-#### min(*array* $xs, *callable* $f = null)
-#### sortBy(*array* $xs, *mixed* $value)
-#### groupBy(*array* $xs, *mixed* $value = null)
-#### countBy(*array* $xs, *mixed* $value = null)
-#### shuffle(*array* $xs)
-#### toArray(*array* $xs, *bool* $preserveKeys = null)
-#### size(*array* $xs)
-#### count(*array* $xs)
+**each**(*array* $xs, *callable* $f)
+
+**map**(*array* $xs, *callable* $f)
+
+**collect**(*array* $xs, *callable* $f)
+
+**mapKey**(*array* $xs, *callable* $f)
+
+**collectKey**(*array* $xs, *callable* $f)
+
+**parallelMap**(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
+
+**parallelCollect**(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
+
+**collectKey**(*array* $xs, *callable* $f)
+
+**reduce**(*array* $xs, *callable* $f, $acc)
+
+**inject**(*array* $xs, *callable* $f, $acc)
+
+**foldl**(*array* $xs, *callable* $f, $acc)
+
+**reduceRight**(*array* $xs, *callable* $f, $acc)
+
+**foldr**(*array* $xs, *callable* $f, $acc)
+
+**find**(*array* $xs, *callable* $f)
+
+**detect**(*array* $xs, *callable* $f)
+
+**findSafe**(*array* $xs, *callable* $f)
+
+**detectSafe**(*array* $xs, *callable* $f)
+
+**filter**(*array* $xs, *callable* $f)
+
+**select**(*array* $xs, *callable* $f)
+
+**where**(*array* $xs, *array* $properties)
+
+**findWhere**(*array* $xs, *array* $properties)
+
+**findWhereSafe**(*array* $xs, *array* $properties)
+
+**reject**(*array* $xs, *callable* $f)
+
+**every**(*array* $xs, *callable* $f = null)
+
+**all**(*array* $xs, *callable* $f = null)
+
+**some**(*array* $xs, *callable* $f = null)
+
+**any**(*array* $xs, *callable* $f = null)
+
+**sum**(*array* $xs)
+
+**product**(*array* $xs)
+
+**contains**(*array* $xs, *mixed* $target)
+
+**invoke**(*array* $xs, *string* $method)
+
+**pluck**(*array* $xs, *string* $property)
+
+**max**(*array* $xs, *callable* $f = null)
+
+**min**(*array* $xs, *callable* $f = null)
+
+**sortBy**(*array* $xs, *mixed* $value)
+
+**groupBy**(*array* $xs, *mixed* $value = null)
+
+**countBy**(*array* $xs, *mixed* $value = null)
+
+**shuffle**(*array* $xs)
+
+**toArray**(*array* $xs, *bool* $preserveKeys = null)
+
+**size**(*array* $xs)
+
+**count**(*array* $xs)
 
 ### Arrays
 
-#### first(*array* $xs [, *int* $n = null])
-#### head(*array* $xs [, *int* $n = null])
-#### take(*array* $xs [, int $n = null])
-#### firstSafe(*array* $xs [, *int* $n = null])
-#### headSafe(*array* $xs [, *int* $n = null])
-#### takeSafe(*array* $xs [, *int* $n = null])
-#### takeWhile(*array* $xs, callable $f)
-#### initial(*array* $xs [, *int* $n = 1])
-#### last(*array* $xs [, *int* $n = null])
-#### lastSafe(*array* $xs [, *int* $n = null])
-#### rest(*array* $xs [, *int* $n = 0])
-#### tail(*array* $xs [, *int* $n = 0])
-#### drop(*array* $xs [, *int* $n = 0])
-#### dropWhile(*array* $xs, callable $f)
-#### compact(*array* $xs)
-#### flatten(*array* $xs [, *bool* $shallow = false])
-#### without(*array* $xs [, *mixed* $values, ...])
-#### union([*array* $xss, ...])
-#### *int*ersection(*array* $xs [, *array* $rest, ...])
-#### difference(*array* $xs [, *array* $others, ...])
-#### uniq(*array* $xs [, callable $f = null])
-#### unique($xs [, callable $f = null])
-#### zip([*array* $xss, ...])
-#### zipWith(*array* $xss, ..., callable $f)
-#### object(*array* $xs [, *array* $values = null])
-#### indexOf(*array* $xs [, *mixed* $value [, *bool|int* $isSorted = 0]])
-#### lastIndexOf(*array* $xs, *mixed* $value [, *int* $fromIndex = null])
-#### sortedIndex(*array* $xs, *mixed* $value [, callable $f = null])
-#### range(*int* $start [, *int* $stop = null [, *int* $step = 1]])
-#### cycle(*array* $xs [, *int* $n = null])
-#### repeat(*mixed* $value [, *int* $n = -1])
-#### iterate(*mixed* $acc [, callable $f])
-#### pop(*array* $xs)
-#### push(*array* $xs [, *mixed* $values, ...])
-#### reverse(*array* $xs)
-#### shift(*array* $xs)
-#### sort(*array* $xs)
-#### splice(*array* $xs, *int* $index, *int* $n)
-#### unshift(*array* $xs [, *mixed* $values, ...])
-#### concat(*array* $xss, ...)
-#### join(*array* $xs [, *string* $separator = ','])
-#### slice(*array* $xs, *int* $begin [, *int* $end = -1])
+**first**(*array* $xs [, *int* $n = null])
+
+**head**(*array* $xs [, *int* $n = null])
+
+**take**(*array* $xs [, int $n = null])
+
+**firstSafe**(*array* $xs [, *int* $n = null])
+
+**headSafe**(*array* $xs [, *int* $n = null])
+
+**takeSafe**(*array* $xs [, *int* $n = null])
+
+**takeWhile**(*array* $xs, callable $f)
+
+**initial**(*array* $xs [, *int* $n = 1])
+
+**last**(*array* $xs [, *int* $n = null])
+
+**lastSafe**(*array* $xs [, *int* $n = null])
+
+**rest**(*array* $xs [, *int* $n = 0])
+
+**tail**(*array* $xs [, *int* $n = 0])
+
+**drop**(*array* $xs [, *int* $n = 0])
+
+**dropWhile**(*array* $xs, callable $f)
+
+**compact**(*array* $xs)
+
+**flatten**(*array* $xs [, *bool* $shallow = false])
+
+**without**(*array* $xs [, *mixed* $values, ...])
+
+**union**([*array* $xss, ...])
+
+**intersection**(*array* $xs [, *array* $rest, ...])
+
+**difference**(*array* $xs [, *array* $others, ...])
+
+**uniq**(*array* $xs [, callable $f = null])
+
+**unique**($xs [, callable $f = null])
+
+**zip**([*array* $xss, ...])
+
+**zipWith**(*array* $xss, ..., callable $f)
+
+**object**(*array* $xs [, *array* $values = null])
+
+**indexOf**(*array* $xs [, *mixed* $value [, *bool|int* $isSorted = 0]])
+
+**lastIndexOf**(*array* $xs, *mixed* $value [, *int* $fromIndex = null])
+
+**sortedIndex**(*array* $xs, *mixed* $value [, callable $f = null])
+
+**range**(*int* $start [, *int* $stop = null [, *int* $step = 1]])
+
+**cycle**(*array* $xs [, *int* $n = null])
+
+**repeat**(*mixed* $value [, *int* $n = -1])
+
+**iterate**(*mixed* $acc [, callable $f])
+
+**pop**(*array* $xs)
+
+**push**(*array* $xs [, *mixed* $values, ...])
+
+**reverse**(*array* $xs)
+
+**shift**(*array* $xs)
+
+**sort**(*array* $xs)
+
+**splice**(*array* $xs, *int* $index, *int* $n)
+
+**unshift**(*array* $xs [, *mixed* $values, ...])
+
+**concat**(*array* $xss, ...)
+
+**join**(*array* $xs [, *string* $separator = ','])
+
+**slice**(*array* $xs, *int* $begin [, *int* $end = -1])
 
 ### Objects
 
-#### keys(*array* $xs)
-#### values(*array* $xs)
-#### pairs(*array* $xs)
-#### invert(*array* $xs)
-#### extend(*array* $destination [, *array* $sources])
-#### pick(*array* $xs [, *array|mixed* $keys])
-#### omit(*array* $xs [, *array|mixed* $keys])
-#### defaults(*array* $xs [, *array* $defaults])
-#### tap(*array* $xs, *callable* $interceptor)
-#### duplicate(*mixed* $value)
-#### has(*array* $xs, *mixed* $key)
+**keys**(*array* $xs)
+
+**values**(*array* $xs)
+
+**pairs**(*array* $xs)
+
+**invert**(*array* $xs)
+
+**extend**(*array* $destination [, *array* $sources])
+
+**pick**(*array* $xs [, *array|mixed* $keys])
+
+**omit**(*array* $xs [, *array|mixed* $keys])
+
+**defaults**(*array* $xs [, *array* $defaults])
+
+**tap**(*array* $xs, *callable* $interceptor)
+
+**duplicate**(*mixed* $value)
+
+**has**(*array* $xs, *mixed* $key)
 
 ### Utilities
 
-#### identity(*mixed* $value)
-#### times(*int* $n, *callable* $f)
-#### chain(*mixed* $value)
+**identity**(*mixed* $value)
+
+**times**(*int* $n, *callable* $f)
+
+**chain**(*mixed* $value)
