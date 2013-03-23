@@ -1526,14 +1526,14 @@ abstract class Strict
      * Invokes interceptor with the object, and then returns object.
      *
      * @category  Objects
-     * @param     mixed     $xs
+     * @param     mixed     $value
      * @param     callable  $interceptor
      * @return    mixed
      */
-    public static function tap($xs, $interceptor)
+    public static function tap($value, $interceptor)
     {
-        call_user_func($interceptor, $xs);
-        return $object;
+        call_user_func($interceptor, $value);
+        return $value;
     }
 
     /**

@@ -291,7 +291,7 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 
 **defaults**(*array* $xs [, *array* $defaults])
 
-**tap**(*array* $xs, *callable* $interceptor)
+**tap**(*mixed* $value, *callable* $interceptor)
 
 **duplicate**(*mixed* $value)
 
