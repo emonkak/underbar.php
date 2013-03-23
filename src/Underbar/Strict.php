@@ -9,14 +9,15 @@ abstract class Strict
      * function.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    void
      */
-    public static function each($list, $iterator)
+    public static function each($xs, $f)
     {
-        foreach ($list as $index => $value)
-            call_user_func($iterator, $value, $index, $list);
+        foreach ($xs as $i => $x) {
+            call_user_func($f, $x, $i, $xs);
+        }
     }
 
     /**
@@ -26,47 +27,65 @@ abstract class Strict
      * Alias: collect
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    array|Iterator
      */
-    public static function map($list, $iterator)
+    public static function map($xs, $f)
     {
-        $result = array();
-
-        foreach ($list as $index => $value)
-            $result[$index] = call_user_func($iterator, $value, $index, $list);
-
-        return $result;
+        $ys = array();
+        foreach ($xs as $i => $x) {
+            $ys[$i] = call_user_func($f, $x, $i, $xs);
+        }
+        return $ys;
     }
 
-    public static function collect($list, $iterator)
+    public static function collect($xs, $f)
     {
-        return static::map($list, $iterator);
+        return static::map($xs, $f);
     }
 
     /**
      * Alias: collectKey
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    array|Iterator
      */
-    public static function mapKey($list, $iterator)
+    public static function mapKey($xs, $f)
     {
-        $result = array();
-
-        foreach ($list as $index => $value) {
-            $result[call_user_func($iterator, $value, $index, $list)] = $value;
+        $ys = array();
+        foreach ($xs as $i => $x) {
+            $ys[call_user_func($f, $x, $i, $xs)] = $x;
         }
-
-        return $result;
+        return $ys;
     }
 
-    public static function collectKey($list, $iterator)
+    public static function collectKey($xs, $f)
     {
-        return static::mapKey($list, $iterator);
+        return static::mapKey($xs, $f);
+    }
+
+    /**
+     * Alias: parallelCollect
+     *
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     int                $timeout
+     * @return    Parallel
+     */
+    public static function parallelMap($xs, $f, $n = 1, $timeout = null)
+    {
+        $concurrent = new Parallel($f, $n, $timeout);
+        $concurrent->pushAll($xs);
+        return $concurrent;
+    }
+
+    public static function parallelCollect($xs, $f, $n = 1, $timeout = null)
+    {
+        return static::parallelMap($xs, $f, $n, $timeout);
     }
 
     /**
@@ -76,27 +95,27 @@ abstract class Strict
      * Alias: inject, foldl
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
-     * @param     mixed              $memo
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
      * @return    mixed
      */
-    public static function reduce($list, $iterator, $memo)
+    public static function reduce($xs, $f, $acc)
     {
-        foreach ($list as $index => $value)
-            $memo = call_user_func($iterator, $memo, $value, $index, $list);
-
-        return $memo;
+        foreach ($xs as $i => $x) {
+            $acc = call_user_func($f, $acc, $x, $i, $xs);
+        }
+        return $acc;
     }
 
-    public static function inject($list, $iterator, $memo)
+    public static function inject($xs, $f, $acc)
     {
-        return static::reduce($list, $iterator, $memo);
+        return static::reduce($xs, $f, $acc);
     }
 
-    public static function foldl($list, $iterator, $memo)
+    public static function foldl($xs, $f, $acc)
     {
-        return static::reduce($list, $iterator, $memo);
+        return static::reduce($xs, $f, $acc);
     }
 
     /**
@@ -105,22 +124,22 @@ abstract class Strict
      * Alias: foldr
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
-     * @param     mixed              $memo
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
      * @return    mixed
      */
-    public static function reduceRight($list, $iterator, $memo)
+    public static function reduceRight($xs, $f, $acc)
     {
-        foreach (static::reverse($list) as $index => $value)
-            $memo = call_user_func($iterator, $memo, $value, $index, $list);
-
-        return $memo;
+        foreach (static::reverse($xs) as $i => $x) {
+            $acc = call_user_func($f, $acc, $x, $i, $xs);
+        }
+        return $acc;
     }
 
-    public static function foldr($list, $iterator, $memo)
+    public static function foldr($xs, $f, $acc)
     {
-        return static::reduceRight($list, $iterator, $memo);
+        return static::reduceRight($xs, $f, $acc);
     }
 
     /**
@@ -130,39 +149,40 @@ abstract class Strict
      * Alias: detect
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    mixed
      */
-    public static function find($list, $iterator)
+    public static function find($xs, $f)
     {
-        foreach ($list as $index => $value) {
-            if (call_user_func($iterator, $value, $index, $list))
-                return $value;
+        foreach ($xs as $i => $x) {
+            if (call_user_func($f, $x, $i, $xs)) {
+                return $x;
+            }
         }
     }
 
-    public static function detect($list, $iterator)
+    public static function detect($xs, $f)
     {
-        return static::find($list, $iterator);
+        return static::find($xs, $f);
     }
 
     /**
      * Alias: detectSafe
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    Option
      */
-    public static function findSafe($list, $iterator)
+    public static function findSafe($xs, $f)
     {
-        return Option::fromValue(static::find($list, $iterator));
+        return Option::fromValue(static::find($xs, $f));
     }
 
-    public static function detectSafe($list, $iterator)
+    public static function detectSafe($xs, $f)
     {
-        return Option::fromValue(static::find($list, $iterator));
+        return Option::fromValue(static::find($xs, $f));
     }
 
     /**
@@ -172,25 +192,24 @@ abstract class Strict
      * Alias: select
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    array|Iterator
      */
-    public static function filter($list, $iterator)
+    public static function filter($xs, $f)
     {
-        $result = array();
-
-        foreach ($list as $index => $value) {
-            if (call_user_func($iterator, $value, $index, $list))
-                $result[$index] = $value;
+        $ys = array();
+        foreach ($xs as $i => $x) {
+            if (call_user_func($f, $x, $i, $xs)) {
+                $ys[$i] = $x;
+            }
         }
-
-        return $result;
+        return $ys;
     }
 
-    public static function select($list, $iterator)
+    public static function select($xs, $f)
     {
-        return static::filter($list, $iterator);
+        return static::filter($xs, $f);
     }
 
     /**
@@ -198,17 +217,18 @@ abstract class Strict
      * values that contain all of the key-value pairs listed in properties.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @param     array|Traversable  $properties
      * @return    boolean
      */
-    public static function where($list, $properties)
+    public static function where($xs, $properties)
     {
-        return static::filter($list, function($value) use ($properties) {
-            foreach ($properties as $propKey => $propValue) {
-                if (!((isset($value->$propKey) && $value->$propKey === $propValue)
-                      || (isset($value[$propKey]) && $value[$propKey] === $propValue)))
+        return static::filter($xs, function($x) use ($properties) {
+            foreach ($properties as $key => $value) {
+                if (!((isset($x->$key) && $x->$key === $value)
+                      || (isset($x[$key]) && $x[$key] === $value))) {
                     return false;
+                }
             }
             return true;
         });
@@ -219,25 +239,26 @@ abstract class Strict
      * the key-value pairs listed in properties.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @param     array|Traversable  $properties
      * @return    mixed
      */
-    public static function findWhere($list, $properties)
+    public static function findWhere($xs, $properties)
     {
-        return static::find($list, function($value) use ($properties) {
-            foreach ($properties as $propKey => $propValue) {
-                if (!((isset($value->$propKey) && $value->$propKey === $propValue)
-                      || (isset($value[$propKey]) && $value[$propKey] === $propValue)))
+        return static::find($xs, function($x) use ($properties) {
+            foreach ($properties as $key => $value) {
+                if (!((isset($x->$key) && $x->$key === $value)
+                      || (isset($x[$key]) && $x[$key] === $value))) {
                     return false;
+                }
             }
             return true;
         });
     }
 
-    public static function findWhereSafe($list, $properties)
+    public static function findWhereSafe($xs, $properties)
     {
-        return Option::fromValue(static::findWhere($list, $properties));
+        return Option::fromValue(static::findWhere($xs, $properties));
     }
 
     /**
@@ -245,14 +266,14 @@ abstract class Strict
      * (iterator) passes. The opposite of filter.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    array|Iterator
      */
-    public static function reject($list, $iterator)
+    public static function reject($xs, $f)
     {
-        return static::filter($list, function($value, $index, $list) use ($iterator) {
-            return !call_user_func($iterator, $value, $index, $list);
+        return static::filter($xs, function($x, $i, $xs) use ($f) {
+            return !call_user_func($f, $x, $i, $xs);
         });
     }
 
@@ -263,26 +284,26 @@ abstract class Strict
      * Alias: all
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    boolean
      */
-    public static function every($list, $iterator = null)
+    public static function every($xs, $f = null)
     {
-        $result = true;
-        if (!$iterator) $iterator = get_called_class().'::identity';
+        $f = static::_lookupIterator($f);
 
-        foreach ($list as $index => $value) {
-            if (!($result = call_user_func($iterator, $value, $index, $list)))
-                break;
+        foreach ($xs as $i => $x) {
+            if (!call_user_func($f, $x, $i, $xs)) {
+                return false;
+            }
         }
 
-        return !!$result;
+        return true;
     }
 
-    public static function all($list, $iterator = null)
+    public static function all($xs, $f = null)
     {
-        return static::every($list, $iterator);
+        return static::every($xs, $f);
     }
 
     /**
@@ -291,65 +312,70 @@ abstract class Strict
      * Alias: any
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    boolean
      */
-    public static function some($list, $iterator = null)
+    public static function some($xs, $f = null)
     {
-        $result = false;
-        if (!$iterator) $iterator = get_called_class().'::identity';
+        $f = static::_lookupIterator($f);
 
-        foreach ($list as $index => $value) {
-            if ($result = call_user_func($iterator, $value, $index, $list))
-                break;
+        foreach ($xs as $i => $x) {
+            if (call_user_func($f, $x, $i, $xs)) {
+                return true;
+            }
         }
 
-        return !!$result;
+        return false;
     }
 
-    public static function any($list, $iterator = null)
+    public static function any($xs, $f = null)
     {
-        return static::some($list, $iterator);
+        return static::some($xs, $f);
     }
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @return    int
      */
-    public static function sum($list)
+    public static function sum($xs)
     {
-        $result = 0;
-        foreach ($list as $value) $result += $value;
-        return $result;
+        $acc = 0;
+        foreach ($xs as $x) {
+            $acc += $x;
+        }
+        return $acc;
     }
 
     /**
-     * @param   array|Traversable  $list
+     * @param   array|Traversable  $xs
      * @return  int
      */
-    public static function product($list)
+    public static function product($xs)
     {
-        $result = 1;
-        foreach ($list as $value) $result *= $value;
-        return $result;
+        $acc = 1;
+        foreach ($xs as $x) {
+            $acc *= $x;
+        }
+        return $acc;
     }
 
     /**
      * Returns true if the value is present in the list.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @param     mixed              $target
      * @return    boolean
      */
-    public static function contains($list, $target)
+    public static function contains($xs, $target)
     {
-        foreach ($list as $value) {
-            if ($value === $target) return true;
+        foreach ($xs as $x) {
+            if ($x === $target) {
+                return true;
+            }
         }
-
         return false;
     }
 
@@ -357,17 +383,16 @@ abstract class Strict
      * Calls the method named by methodName on each value in the list.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @param     string             $method
      * @param     miexed             *$arguments
      * @return    array|Iterator
      */
-    public static function invoke($list, $method)
+    public static function invoke($xs, $method)
     {
         $args = array_slice(func_get_args(), 2);
-
-        return static::map($list, function($value) use ($method, $args) {
-            return call_user_func_array(array($value, $method), $args);
+        return static::map($xs, function($x) use ($method, $args) {
+            return call_user_func_array(array($x, $method), $args);
         });
     }
 
@@ -376,19 +401,20 @@ abstract class Strict
      * extracting a list of property values.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @param     string             $property
      * @return    array|Iterator
      */
-    public static function pluck($list, $property)
+    public static function pluck($xs, $property)
     {
-        return static::map($list, function($value) use ($property) {
-            if (is_array($value) && isset($value[$property]))
-                return $value[$property];
-            elseif (is_object($value) && isset($value->$property))
-                return $value->$property;
-            else
+        return static::map($xs, function($x) use ($property) {
+            if (isset($x->$property)) {
+                return $x->$property;
+            } elseif (isset($x[$property])) {
+                return $x[$property];
+            } else {
                 return null;
+            }
         });
     }
 
@@ -397,24 +423,24 @@ abstract class Strict
      * on each value to generate the criterion by which the value is ranked.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    mixed
      */
-    public static function max($list, $iterator = null)
+    public static function max($xs, $f = null)
     {
-        if (!$iterator) {
-            $array = static::toArray($list);
-            return empty($array) ? -INF : max($array);
+        if ($f === null) {
+            $xs = static::toArray($xs);
+            return empty($xs) ? -INF : max($xs);
         }
 
         $computed = -INF;
         $result = -INF;
-        foreach ($list as $index => $value) {
-            $current = call_user_func($iterator, $value, $index, $list);
+        foreach ($xs as $i => $x) {
+            $current = call_user_func($f, $x, $i, $xs);
             if ($current > $computed) {
                 $computed = $current;
-                $result = $value;
+                $result = $x;
             }
         }
 
@@ -426,24 +452,24 @@ abstract class Strict
      * on each value to generate the criterion by which the value is ranked.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    mixed
      */
-    public static function min($list, $iterator = null)
+    public static function min($xs, $f = null)
     {
-        if (!$iterator) {
-            $array = static::toArray($list);
-            return empty($array) ? INF : min($array);
+        if ($f === null) {
+            $xs = static::toArray($xs);
+            return empty($xs) ? INF : min($xs);
         }
 
         $computed = INF;
         $result = INF;
-        foreach ($list as $index => $value) {
-            $current = call_user_func($iterator, $value, $index, $list);
+        foreach ($xs as $i => $x) {
+            $current = call_user_func($f, $x, $i, $xs);
             if ($current < $computed) {
                 $computed = $current;
-                $result = $value;
+                $result = $x;
             }
         }
 
@@ -455,30 +481,31 @@ abstract class Strict
      * of running each value through iterator.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable|string    $value
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $x
      * @return    array
      */
-    public static function sortBy($list, $value)
+    public static function sortBy($xs, $x)
     {
-        $iterator = static::_lookupIterator($value);
+        $f = static::_lookupIterator($x);
         $result = array();
 
-        foreach ($list as $index => $value) {
+        foreach ($xs as $i => $x) {
             $result[] = array(
-                'value' => $value,
-                'index' => $index,
-                'criteria' => call_user_func($iterator, $value, $index, $list),
+                'value' => $x,
+                'index' => $i,
+                'criteria' => call_user_func($f, $x, $i, $xs),
             );
         }
 
         usort($result, function($left, $right) {
             $a = $left['criteria'];
             $b = $right['criteria'];
-            if ($a !== $b)
-                return ($a < $b) ? -1 : 1;
-            else
+            if ($a !== $b) {
+                return $a < $b ? -1 : 1;
+            } else {
                 return $left['index'] < $right['index'] ? -1 : 1;
+            }
         });
 
         return self::pluck($result, 'value');
@@ -489,18 +516,18 @@ abstract class Strict
      * running each value through iterator.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable|string    $value
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $x
      * @return    array
      */
-    public static function groupBy($list, $value = null)
+    public static function groupBy($xs, $x = null)
     {
-        $iterator = static::_lookupIterator($value);
+        $f = static::_lookupIterator($x);
         $result = array();
 
-        foreach ($list as $index => $value) {
-            $key = call_user_func($iterator, $value, $index, $list);
-            $result[$key][] = $value;
+        foreach ($xs as $i => $x) {
+            $key = call_user_func($f, $x, $i, $xs);
+            $result[$key][] = $x;
         }
 
         return $result;
@@ -512,21 +539,22 @@ abstract class Strict
      * returns a count for the number of values in that group.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable|string    $value
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $x
      * @return    int
      */
-    public static function countBy($list, $value = null)
+    public static function countBy($xs, $x = null)
     {
-        $iterator = static::_lookupIterator($value);
+        $f = static::_lookupIterator($x);
         $result = array();
 
-        foreach ($list as $index => $value) {
-            $key = call_user_func($iterator, $value, $index, $list);
-            if (isset($result[$key]))
+        foreach ($xs as $i => $x) {
+            $key = call_user_func($f, $x, $i, $xs);
+            if (isset($result[$key])) {
                 $result[$key]++;
-            else
+            } else {
                 $result[$key] = 1;
+            }
         }
 
         return $result;
@@ -536,14 +564,14 @@ abstract class Strict
      * Returns a shuffled copy of the list.
      *
      * @category  Collections
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function shuffle($list)
+    public static function shuffle($xs)
     {
-        $result = static::toArray($list);
-        shuffle($result);
-        return $result;
+        $xs = static::toArray($xs);
+        shuffle($xs);
+        return $xs;
     }
 
     /**
@@ -551,20 +579,22 @@ abstract class Strict
      * Array.
      *
      * @category  Collections
-     * @param     mixed    $list
+     * @param     mixed    $xs
      * @param     boolean  $preserveKeys
      * @return    array
      */
-    public static function toArray($list, $preserveKeys = null)
+    public static function toArray($xs, $preserveKeys = null)
     {
-        if (is_array($list))
-            return $preserveKeys === false ? array_values($list) : $list;
-        elseif ($list instanceof \Traversable)
-            return iterator_to_array($list, $preserveKeys);
-        elseif (is_string($list))
-            return str_split($list);
-        else
-            return (array) $list;
+        if (is_array($xs)) {
+            return $preserveKeys === false ? array_values($xs) : $xs;
+        }
+        if ($xs instanceof \Traversable) {
+            return iterator_to_array($xs, $preserveKeys);
+        }
+        if (is_string($xs)) {
+            return str_split($xs);
+        }
+        return (array) $xs;
     }
 
     /**
@@ -573,27 +603,21 @@ abstract class Strict
      * Alias: count
      *
      * @category  Collections
-     * @param     mixed  $list
+     * @param     mixed  $xs
      * @return    int
      */
-    public static function size($list)
+    public static function size($xs)
     {
-        if ($list instanceof \Countable) return count($list);
-        if ($list instanceof \Traversable) return iterator_count($list);
-        if (is_string($list)) return mb_strlen($list);
-        return count($list);
-    }
-
-    public static function parallelMap($list, $iterator, $n = 1, $timeout = null)
-    {
-        $concurrent = new Parallel($iterator, $n, $timeout);
-        $concurrent->pushAll($list);
-        return $concurrent;
-    }
-
-    public static function parallelCollect($list, $iterator, $n = 1)
-    {
-        return static::parallelMap($list, $iterator, $n);
+        if ($xs instanceof \Countable) {
+            return count($xs);
+        }
+        if ($xs instanceof \Traversable) {
+            return iterator_count($xs);
+        }
+        if (is_string($xs)) {
+            return mb_strlen($xs);
+        }
+        return count($xs);
     }
 
     /**
@@ -603,63 +627,68 @@ abstract class Strict
      * Alias: head, take
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
      * @return    mixed|Iterator
      */
-    public static function first($array, $n = null, $guard = null)
+    public static function first($xs, $n = null, $guard = null)
     {
-        if ($n !== null && $guard === null)
-            return $n > 0 ? array_slice(static::toArray($array), 0, $n) : array();
-        else
-            foreach ($array as $value) return $value;
+        if ($n !== null && $guard === null) {
+            return $n > 0 ? array_slice(static::toArray($xs), 0, $n) : array();
+        }
+
+        foreach ($xs as $x) {
+            return $x;
+        }
     }
 
-    public static function head($array, $n = null, $guard = null)
+    public static function head($xs, $n = null, $guard = null)
     {
-        return static::first($array, $n, $guard);
+        return static::first($xs, $n, $guard);
     }
 
-    public static function take($array, $n = null, $guard = null)
+    public static function take($xs, $n = null, $guard = null)
     {
-        return static::first($array, $n, $guard);
+        return static::first($xs, $n, $guard);
     }
 
     /**
      * Alias: headSafe, takeSafe
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
      * @return    Option
      */
-    public static function firstSafe($array, $n = null, $guard = null)
+    public static function firstSafe($xs, $n = null, $guard = null)
     {
-        return Option::fromValue(static::first($array, $n, $guard));
+        return Option::fromValue(static::first($xs, $n, $guard));
     }
 
-    public static function headSafe($array, $n = null, $guard)
+    public static function headSafe($xs, $n = null, $guard)
     {
-        return Option::fromValue(static::first($array, $n, $guard));
+        return Option::fromValue(static::first($xs, $n, $guard));
     }
 
-    public static function takeSafe($array, $n = null, $guard)
+    public static function takeSafe($xs, $n = null, $guard)
     {
-        return Option::fromValue(static::first($array, $n, $guard));
+        return Option::fromValue(static::first($xs, $n, $guard));
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    Iterator
      */
-    public static function takeWhile($array, $iterator)
+    public static function takeWhile($xs, $f)
     {
         $result = array();
-        foreach ($array as $index => $value) {
-            if (!call_user_func($iterator, $value, $index, $array)) break;
-            $result[$index] = $value;
+        foreach ($xs as $i => $x) {
+            if (!call_user_func($f, $x, $i, $xs)) {
+                break;
+            }
+            $result[$i] = $x;
         }
         return $result;
     }
@@ -668,38 +697,38 @@ abstract class Strict
      * Returns everything but the last entry of the array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
      * @return    array|Iterator
      */
-    public static function initial($array, $n = 1, $guard = null)
+    public static function initial($xs, $n = 1, $guard = null)
     {
-        if ($guard !== null) $n = 1;
-        return $n > 0
-            ? array_slice(static::toArray($array), 0, -$n)
-            : array();
+        if ($guard !== null) {
+            $n = 1;
+        }
+        return $n > 0 ? array_slice(static::toArray($xs), 0, -$n) : array();
     }
 
     /**
      * Returns the last element of an array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
      * @return    array|mixed
      */
-    public static function last($array, $n = null, $guard = null)
+    public static function last($xs, $n = null, $guard = null)
     {
-        $array = static::toArray($array);
-        if ($n !== null && $guard === null)
-            return $n > 0 ? array_slice($array, -$n) : array();
-        else
-            return empty($array) ? null : end($array);
+        $xs = static::toArray($xs);
+        if ($n !== null && $guard === null) {
+            return $n > 0 ? array_slice($xs, -$n) : array();
+        }
+        return empty($xs) ? null : end($xs);
     }
 
-    public static function lastSafe($array, $n = null, $guard)
+    public static function lastSafe($xs, $n = null, $guard)
     {
-        return Option::fromValue(static::last($array, $n, $guard));
+        return Option::fromValue(static::last($xs, $n, $guard));
     }
 
     /**
@@ -708,40 +737,42 @@ abstract class Strict
      * Alias: tail, drop
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     int                $index
+     * @param     array|Traversable  $xs
+     * @param     int                $n
      * @return    array|Iterator
      */
-    public static function rest($array, $index = 1, $guard = null)
+    public static function rest($xs, $n = 1, $guard = null)
     {
-        if ($guard !== null) $index = 1;
-        return array_slice(static::toArray($array), $index);
+        if ($guard !== null) {
+            $n = 1;
+        }
+        return array_slice(static::toArray($xs), $n);
     }
 
-    public static function tail($array, $index = 1, $guard = null)
+    public static function tail($xs, $n = 1, $guard = null)
     {
-        return self::rest($array, $index, $guard);
+        return self::rest($xs, $n, $guard);
     }
 
-    public static function drop($array, $index = 1, $guard = null)
+    public static function drop($xs, $n = 1, $guard = null)
     {
-        return self::rest($array, $index, $guard);
+        return self::rest($xs, $n, $guard);
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    mixed|Iterator
      */
-    public static function dropWhile($array, $iterator)
+    public static function dropWhile($xs, $f)
     {
         $result = array();
         $accepted = false;
-        foreach ($array as $index => $value) {
-            if ($accepted
-                || ($accepted = !call_user_func($iterator, $value, $index, $array)))
-                $result[$index] = $value;
+        foreach ($xs as $i => $x) {
+            if ($accepted || ($accepted = !call_user_func($f, $x, $i, $xs))) {
+                $result[$i] = $x;
+            }
         }
         return $result;
     }
@@ -750,37 +781,40 @@ abstract class Strict
      * Returns a copy of the array with all falsy values removed.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @return    array|Iterator
      */
-    public static function compact($array)
+    public static function compact($xs)
     {
-        return static::filter($array, get_called_class().'::identity');
+        return static::filter($xs, get_called_class().'::identity');
     }
 
     /**
      * Flattens a nested array (the nesting can be to any depth).
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     boolean            $shallow
      * @return    array|Iterator
      */
-    public static function flatten($array, $shallow = false)
+    public static function flatten($xs, $shallow = false)
     {
-        return static::_flatten($array, $shallow);
+        return static::_flatten($xs, $shallow);
     }
 
-    private static function _flatten($array, $shallow, &$output = array())
+    private static function _flatten($xss, $shallow, &$output = array())
     {
-        foreach ($array as $key => $value) {
-            if (is_array($value) || $value instanceof \Traversable) {
-                if ($shallow)
-                    foreach ($value as $childValue) $output[] = $childValue;
-                else
-                    static::_flatten($value, $shallow, $output);
+        foreach ($xss as $xs) {
+            if (static::_isTraversable($xs)) {
+                if ($shallow) {
+                    foreach ($xs as $x) {
+                        $output[] = $x;
+                    }
+                } else {
+                    static::_flatten($xs, $shallow, $output);
+                }
             } else {
-                $output[] = $value;
+                $output[] = $xs;
             }
         }
         return $output;
@@ -790,13 +824,13 @@ abstract class Strict
      * Returns a copy of the array with all instances of the values removed.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     mixed              *$values
      * @return    array|Iterator
      */
-    public static function without($array)
+    public static function without($xs)
     {
-        return static::difference($array, array_slice(func_get_args(), 1));
+        return static::difference($xs, array_slice(func_get_args(), 1));
     }
 
     /**
@@ -804,7 +838,7 @@ abstract class Strict
      * in order, that are present in one or more of the arrays.
      *
      * @category  Arrays
-     * @param     array|Traversable  *$arrays
+     * @param     array|Traversable  *$xss
      * @return    array|Iterator
      */
     public static function union()
@@ -818,14 +852,14 @@ abstract class Strict
     /**
      * Computes the list of values that are the intersection of all the arrays.
      *
-     * @param   array|Traversable  $array
+     * @param   array|Traversable  $xs
      * @param   array|Traversable  *$rest
      * @return  array
      */
     public static function intersection()
     {
-        $arrays = array_map(get_called_class().'::toArray', func_get_args());
-        return call_user_func_array('array_intersect', $arrays);
+        $xss = array_map(get_called_class().'::toArray', func_get_args());
+        return call_user_func_array('array_intersect', $xss);
     }
 
     /**
@@ -833,17 +867,18 @@ abstract class Strict
      * in the other arrays.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     array              *$others
      * @return    array|Iterator
      */
-    public static function difference($array)
+    public static function difference($xs)
     {
-        $rest = array_slice(func_get_args(), 1);
-        return static::filter($array, function($value) use ($rest) {
-            foreach ($rest as $others) {
-                if (in_array($value, $others, true))
+        $others = array_slice(func_get_args(), 1);
+        return static::filter($xs, function($x) use ($others) {
+            foreach ($others as $other) {
+                if (in_array($x, $other, true)) {
                     return false;
+                }
             }
             return true;
         });
@@ -855,35 +890,35 @@ abstract class Strict
      * Alias: unique
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    array|iterator
      */
-    public static function uniq($array, $iterator = null)
+    public static function uniq($xs, $f = null)
     {
         $seenScalar = $seenObjects = $seenOthers = array();
-        $iterator = static::_lookupIterator($iterator);
-        return static::filter($array, function($value, $index, $list) use (
-            $iterator,
+        $f = static::_lookupIterator($f);
+        return static::filter($xs, function($x, $i, $xs) use (
+            $f,
             &$seenScalar,
             &$seenObjects,
             &$seenOthers
         ) {
-            $value = call_user_func($iterator, $value, $index, $list);
+            $x = call_user_func($f, $x, $i, $xs);
 
-            if (is_scalar($value)) {
-                if (!isset($seenScalar[$value])) {
-                    $seenScalar[$value] = 0;
+            if (is_scalar($x)) {
+                if (!isset($seenScalar[$x])) {
+                    $seenScalar[$x] = 0;
                     return true;
                 }
-            } elseif (is_object($value)) {
-                $hash = spl_object_hash($value);
+            } elseif (is_object($x)) {
+                $hash = spl_object_hash($x);
                 if (!isset($seenObjects[$hash])) {
                     $seenObjects[$hash] = 0;
                     return true;
                 }
-            } elseif (!in_array($value, $seenOthers, true)) {
-                $seenOthers[] = $value;
+            } elseif (!in_array($x, $seenOthers, true)) {
+                $seenOthers[] = $x;
                 return true;
             }
 
@@ -891,9 +926,9 @@ abstract class Strict
         });
     }
 
-    public static function unique($array, $iterator = null)
+    public static function unique($xs, $f = null)
     {
-        return static::uniq($array);
+        return static::uniq($xs);
     }
 
     /**
@@ -901,16 +936,16 @@ abstract class Strict
      * corresponding position.
      *
      * @category  Arrays
-     * @param     array|Traversable  *$arrays
+     * @param     array|Traversable  *$xss
      * @return    array|Iterator
      */
     public static function zip()
     {
-        $arrays = $zipped = $result = array();;
+        $xss = $zipped = $result = array();;
         $loop = false;
 
-        foreach (func_get_args() as $array) {
-            $arrays[] = $wrapped = static::_wrapIterator($array);
+        foreach (func_get_args() as $xs) {
+            $xss[] = $wrapped = static::_wrapIterator($xs);
             $wrapped->rewind();
             $loop = $loop || $wrapped->valid();
             $zipped[] = $wrapped->current();
@@ -920,10 +955,10 @@ abstract class Strict
             $result[] = $zipped;
             $zipped = array();
             $loop = false;
-            foreach ($arrays as $array) {
-                $array->next();
-                $zipped[] = $array->current();
-                $loop = $loop || $array->valid();
+            foreach ($xss as $xs) {
+                $xs->next();
+                $zipped[] = $xs->current();
+                $loop = $loop || $xs->valid();
             }
         }
 
@@ -932,19 +967,19 @@ abstract class Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  *$arrays
-     * @param     callable           $iterator
+     * @param     array|Traversable  *$xss
+     * @param     callable           $f
      * @return    array|Iterator
      */
     public static function zipWith()
     {
-        $arrays = func_get_args();
-        $iterator = array_pop($arrays);
-        $zipped = call_user_func_array(get_called_class().'::zip', $arrays);
-        return static::map($zipped, function($values, $index, $array) use ($iterator) {
-            $values[] = $index;
-            $values[] = $array;
-            return call_user_func_array($iterator, $values);
+        $xss = func_get_args();
+        $f = array_pop($xss);
+        $zipped = call_user_func_array(get_called_class().'::zip', $xss);
+        return static::map($zipped, function($xs, $i, $xs) use ($f) {
+            $xs[] = $i;
+            $xs[] = $xs;
+            return call_user_func_array($f, $xs);
         });
     }
 
@@ -952,17 +987,17 @@ abstract class Strict
      * Converts arrays into objects.
      *
      * @category  Arrays
-     * @param     array|Traversable  $list
+     * @param     array|Traversable  $xs
      * @param     array|Traversable  $values
      * @return    array|Iterator
      */
-    public static function object($list, $values = null)
+    public static function object($xs, $values = null)
     {
         $result = array();
         $values = static::_wrapIterator($values);
-        if ($values) {
+        if ($values !== null) {
             $values->rewind();
-            foreach ($list as $key) {
+            foreach ($xs as $key) {
                 if ($values->valid()) {
                     $result[$key] = $values->current();
                     $values->next();
@@ -971,7 +1006,9 @@ abstract class Strict
                 }
             }
         } else {
-            foreach ($list as $value) $result[$value[0]] = $value[1];
+            foreach ($xs as $x) {
+                $result[$x[0]] = $x[1];
+            }
         }
         return $result;
     }
@@ -981,24 +1018,25 @@ abstract class Strict
      * value is not present in the array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     mixed              $value
      * @param     boolean|int        $isSorted
      * @return    int
      */
-    public static function indexOf($array, $value, $isSorted = 0)
+    public static function indexOf($xs, $value, $isSorted = 0)
     {
-        $array = static::toArray($array);
+        $xs = static::toArray($xs);
 
         if ($isSorted === true) {
-            $i = static::sortedIndex($array, $value);
-            return (isset($array[$i]) && $array[$i] === $value) ? $i : -1;
+            $i = static::sortedIndex($xs, $value);
+            return (isset($xs[$i]) && $xs[$i] === $value) ? $i : -1;
         } else {
-            $l = count($array);
-            $i = ($isSorted < 0) ? max(0, $l + $isSorted) : $isSorted;
+            $l = count($xs);
+            $i = $isSorted < 0 ? max(0, $l + $isSorted) : $isSorted;
             for (; $i < $l; $i++) {
-                if (isset($array[$i]) && $array[$i] === $value)
+                if (isset($xs[$i]) && $xs[$i] === $value) {
                     return $i;
+                }
             }
         }
 
@@ -1010,19 +1048,21 @@ abstract class Strict
      * value is not present.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     mixed              $value
+     * @param     array|Traversable  $xs
+     * @param     mixed              $x
      * @param     int                $fromIndex
      * @return    int
      */
-    public static function lastIndexOf($array, $value, $fromIndex = null)
+    public static function lastIndexOf($xs, $x, $fromIndex = null)
     {
-        $array = static::toArray($array);
-        $l = count($array);
-        $i = ($fromIndex !== null) ? min($l, $fromIndex) : $l;
+        $xs = static::toArray($xs);
+        $l = count($xs);
+        $i = $fromIndex !== null ? min($l, $fromIndex) : $l;
 
         while ($i-- > 0) {
-            if (isset($array[$i]) && $array[$i] === $value) return $i;
+            if (isset($xs[$i]) && $xs[$i] === $x) {
+                return $i;
+            }
         }
 
         return -1;
@@ -1033,26 +1073,27 @@ abstract class Strict
      * value is not present in the array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $list
-     * @param     mixed              $values
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     mixed              $xs
+     * @param     callable           $f
      * @return    int
      */
-    public static function sortedIndex($list, $value, $iterator = null)
+    public static function sortedIndex($xs, $x, $f = null)
     {
-        $array = static::toArray($list);
-        $iterator = static::_lookupIterator($iterator);
-        $value = call_user_func($iterator, $value);
+        $xs = static::toArray($xs);
+        $f = static::_lookupIterator($f);
+        $x = call_user_func($f, $x);
 
         $low = 0;
-        $high = count($array);
+        $high = count($xs);
 
         while ($low < $high) {
             $mid = ($low + $high) >> 1;
-            if (call_user_func($iterator, $array[$mid]) < $value)
+            if (call_user_func($f, $xs[$mid]) < $x) {
                 $low = $mid + 1;
-            else
+            } else {
                 $high = $mid;
+            }
         }
 
         return $low;
@@ -1075,10 +1116,10 @@ abstract class Strict
             $start = 0;
         }
 
-        $len = max(ceil(($stop - $start) / $step), 0);
+        $l = max(ceil(($stop - $start) / $step), 0);
         $range = array();
 
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $l; $i++) {
             $range[] = $start;
             $start += $step;
         }
@@ -1088,42 +1129,48 @@ abstract class Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
+     * @param     int                $n
      * @return    array|Iterator
      * @throws    OverflowException
      */
-    public static function cycle($array, $n = null)
+    public static function cycle($xs, $n = null)
     {
         $result = array();
         if ($n !== null) {
             throw new \OverflowException();
-        } else {
-            while ($n-- > 0) foreach ($array as $value) $result[] = $value;
+        }
+        while ($n-- > 0) {
+            foreach ($xs as $x) {
+                $result[] = $x;
+            }
         }
         return $result;
     }
 
     /**
      * @category  Arrays
-     * @param     mixed              $value
+     * @param     mixed              $x
      * @param     int                $n
      * @return    array|Iterator
      * @throws    OverflowException
      */
-    public static function repeat($value, $n = -1)
+    public static function repeat($x, $n = -1)
     {
-        if ($n < 0) throw new \OverflowException();
-        return array_fill(0, $n, $value);
+        if ($n < 0) {
+            throw new \OverflowException();
+        }
+        return array_fill(0, $n, $x);
     }
 
     /**
      * @category  Arrays
-     * @param     mixed           $memo
-     * @param     callable        $iterator
+     * @param     mixed           $acc
+     * @param     callable        $f
      * @return    array|Iterator
      * @throws    OverflowException
      */
-    public static function iterate($memo, $iterator)
+    public static function iterate($acc, $f)
     {
         throw new \OverflowException();
     }
@@ -1132,12 +1179,12 @@ abstract class Strict
      * Removes the last element from an array and returns that element.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @return    array|Iterator
      */
-    public static function pop($array)
+    public static function pop($xs)
     {
-        return static::initial($array);
+        return static::initial($xs);
     }
 
     /**
@@ -1145,14 +1192,14 @@ abstract class Strict
      * length of the array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     mixed              *$values
      * @return    array
      */
-    public static function push($array)
+    public static function push($xs)
     {
-        $rest = array_slice(func_get_args(), 1);
-        return array_merge(static::toArray($array), $rest);
+        $values = array_slice(func_get_args(), 1);
+        return array_merge(static::toArray($xs), $values);
     }
 
     /**
@@ -1160,65 +1207,65 @@ abstract class Strict
      * last, and the last becomes the first.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function reverse($array)
+    public static function reverse($xs)
     {
-        return array_reverse(static::toArray($array, true), true);
+        return array_reverse(static::toArray($xs, true), true);
     }
 
     /**
      * Removes the first element from an array and returns that element.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @return    array|Iterator
      */
-    public static function shift($array)
+    public static function shift($xs)
     {
-        return static::rest($array);
+        return static::rest($xs);
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     callable           $compare
      * @return    array
      */
-    public static function sort($array, $compare = null)
+    public static function sort($xs, $compare = null)
     {
-        $array = static::toArray($array);
-        $compare ? usort($array, $compare) : sort($array);
-        return $array;
+        $xs = static::toArray($xs);
+        is_callable($compare) ? usort($xs, $compare) : sort($xs);
+        return $xs;
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     callable           $compare
      * @return    array
      */
-    public static function sortByKey($array, $compare = null)
+    public static function sortByKey($xs, $compare = null)
     {
-        $array = static::toArray($array);
-        $compare ? uksort($array, $compare) : ksort($array);
-        return $array;
+        $xs = static::toArray($xs);
+        is_callable($compare) ? uksort($xs, $compare) : ksort($xs);
+        return $xs;
     }
 
     /**
      * Removes the first element from an array and returns that element.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $index
      * @param     int                $n
      * @return    array
      */
-    public static function splice($array, $index, $n)
+    public static function splice($xs, $index, $n)
     {
         $rest = array_slice(func_get_args(), 3);
-        return array_splice(static::toArray($array), $index, $n, $rest);
+        return array_splice(static::toArray($xs), $index, $n, $rest);
     }
 
     /**
@@ -1226,14 +1273,14 @@ abstract class Strict
      * length of the array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     mixed              *$values
      * @return    array
      */
-    public static function unshift($array)
+    public static function unshift($xs)
     {
-        $rest = array_slice(func_get_args(), 1);
-        return array_merge($rest, static::toArray($array));
+        $values = array_slice(func_get_args(), 1);
+        return array_merge($values, static::toArray($xs));
     }
 
     /**
@@ -1241,7 +1288,7 @@ abstract class Strict
      * and/or value(s).
      *
      * @category  Arrays
-     * @param     array|Traversable  *$arrays
+     * @param     array|Traversable  *$xss
      * @return    array|Iterator
      */
     public static function concat()
@@ -1256,15 +1303,15 @@ abstract class Strict
      * Joins all elements of an array into a string.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     string             $separator
      * @return    string
      */
-    public static function join($array, $separator = ',')
+    public static function join($xs, $separator = ',')
     {
         $str = '';
-        foreach ($array as $value) {
-            $str .= $value . $separator;
+        foreach ($xs as $x) {
+            $str .= $x . $separator;
         }
         return substr($str, 0, -strlen($separator));
     }
@@ -1273,14 +1320,14 @@ abstract class Strict
      * Returns a shallow copy of a portion of an array.
      *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $begin
      * @param     int                $end
      * @return    array
      */
-    public static function slice($array, $begin, $end = -1)
+    public static function slice($xs, $begin, $end = -1)
     {
-        return array_slice(static::toArray($array), $begin, $end);
+        return array_slice(static::toArray($xs), $begin, $end);
     }
 
     /**
@@ -1290,12 +1337,13 @@ abstract class Strict
      * @param     array|Traversable  $object
      * @return    array
      */
-    public static function keys($object)
+    public static function keys($xs)
     {
-        if (is_array($object)) return array_keys($object);
-        $i = 0;
-        return static::map($object, function($value, $index) {
-            return $index;
+        if (is_array($xs)) {
+            return array_keys($xs);
+        }
+        return static::map($xs, function($x, $k) {
+            return $k;
         });
     }
 
@@ -1303,14 +1351,16 @@ abstract class Strict
      * Return all of the values of the object's properties.
      *
      * @category  Objects
-     * @param     array|Traversable  $object
+     * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function values($object)
+    public static function values($xs)
     {
-        if (is_array($object)) return array_values($object);
+        if (is_array($xs)) {
+            return array_values($xs);
+        }
         $i = 0;
-        return static::mapKey($object, function() use (&$i) {
+        return static::mapKey($xs, function() use (&$i) {
             return $i++;
         });
     }
@@ -1319,13 +1369,13 @@ abstract class Strict
      * Convert an object into a list of [key, value] pairs.
      *
      * @category  Objects
-     * @param     array|Traversable  $object
+     * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function pairs($object)
+    public static function pairs($xs)
     {
-        return static::map($object, function($value, $key) {
-            return array($key, $value);
+        return static::map($xs, function($x, $k) {
+            return array($k, $x);
         });
     }
 
@@ -1334,13 +1384,15 @@ abstract class Strict
      * values the keys.
      *
      * @category  Objects
-     * @param     array|Traversable  $object
+     * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function invert($object)
+    public static function invert($xs)
     {
         $result = array();
-        foreach ($object as $key => $value) $result[$value] = $key;
+        foreach ($xs as $k => $x) {
+            $result[$x] = $k;
+        }
         return $result;
     }
 
@@ -1355,18 +1407,20 @@ abstract class Strict
      */
     public static function extend($destination)
     {
-        if ($destination instanceof \Traversable)
+        if ($destination instanceof \Traversable) {
             $destination = iterator_to_array($destination, true);
+        }
 
-        if (is_array($destination)) {
-            foreach (array_slice(func_get_args(), 1) as $object) {
-                foreach ($object as $key => $value)
-                    $destination[$key] = $value;
-            }
-        } else {
-            foreach (array_slice(func_get_args(), 1) as $object) {
-                foreach ($object as $key => $value)
-                    $destination->$key = $value;
+        $sources = array_slice(func_get_args(), 1);
+        foreach ($sources as $xs) {
+            if (is_array($destination)) {
+                foreach ($xs as $k => $x) {
+                    $destination[$k] = $x;
+                }
+            } else {
+                foreach ($xs as $k => $x) {
+                    $destination->$k = $x;
+                }
             }
         }
 
@@ -1378,19 +1432,27 @@ abstract class Strict
      * whitelisted keys (or array of valid keys).
      *
      * @category  Objects
-     * @param     array|Traversable         $object
+     * @param     array|Traversable         $xs
      * @param     array|string|Traversable  *$keys
      * @return    array|Iterator
      */
-    public static function pick($object)
+    public static function pick($xs)
     {
         $whitelist = array();
-        foreach (array_slice(func_get_args(), 1) as $keys) {
-            foreach (static::_toTraversable($keys) as $key) $whitelist[$key] = 0;
+        $keys = array_slice(func_get_args(), 1);
+
+        foreach ($keys as $key) {
+            if (static::_isTraversable($key)) {
+                foreach ($key as $k) {
+                    $whitelist[$k] = 0;
+                }
+            } else {
+                $whitelist[$key] = 0;
+            }
         }
 
-        return static::filter($object, function($value, $key) use ($whitelist) {
-            return isset($whitelist[$key]);
+        return static::filter($xs, function($x, $k) use ($whitelist) {
+            return isset($whitelist[$k]);
         });
     }
 
@@ -1399,19 +1461,27 @@ abstract class Strict
      * (or array of keys).
      *
      * @category  Objects
-     * @param     array|Traversable         $object
+     * @param     array|Traversable         $xs
      * @param     array|string|Traversable  *$keys
      * @return    array|Iterator
      */
-    public static function omit($object)
+    public static function omit($xs)
     {
         $blacklist = array();
-        foreach (array_slice(func_get_args(), 1) as $keys) {
-            foreach (static::_toTraversable($keys) as $key) $blacklist[$key] = 0;
+        $keys = array_slice(func_get_args(), 1);
+
+        foreach ($keys as $key) {
+            if (static::_isTraversable($key)) {
+                foreach ($key as $k) {
+                    $blacklist[$k] = 0;
+                }
+            } else {
+                $blacklist[$key] = 0;
+            }
         }
 
-        return static::filter($object, function($value, $key) use ($blacklist) {
-            return !isset($blacklist[$key]);
+        return static::filter($xs, function($x, $k) use ($blacklist) {
+            return !isset($blacklist[$k]);
         });
     }
 
@@ -1420,43 +1490,49 @@ abstract class Strict
      * object, and return the destination object.
      *
      * @category  Objects
-     * @param     array|Traversable  $object
+     * @param     array|Traversable  $xs
      * @param     array|Traversable  *$defaults
      * @return    array|object
      */
-    public static function defaults($object)
+    public static function defaults($xs)
     {
-        if ($object instanceof \Traversable)
-            $object = iterator_to_array($destination, true);
+        if ($xs instanceof \Traversable) {
+            $xs = iterator_to_array($xs, true);
+        }
 
-        if (is_array($object)) {
-            foreach (array_slice(func_get_args(), 1) as $default) {
-                foreach ($default as $key => $value) {
-                    if (!isset($object[$key])) $object[$key] = $value;
+        $defaults = array_slice(func_get_args(), 1);
+        if (is_array($xs)) {
+            foreach ($defaults as $default) {
+                foreach ($default as $k => $x) {
+                    if (!isset($xs[$k])) {
+                        $xs[$k] = $x;
+                    }
                 }
             }
         } else {
-            foreach (array_slice(func_get_args(), 1) as $default) {
-                foreach ($default as $key => $value) {
-                    if (!isset($object->$key)) $object->$key = $value;
+            foreach ($defaults as $default) {
+                foreach ($default as $k => $x) {
+                    if (!isset($xs->$k)) {
+                        $xs->$k = $x;
+                    }
                 }
             }
         }
 
-        return $object;
+        return $xs;
     }
 
     /**
      * Invokes interceptor with the object, and then returns object.
      *
      * @category  Objects
-     * @param     mixed     $object
+     * @param     mixed     $xs
      * @param     callable  $interceptor
      * @return    mixed
      */
-    public static function tap($object, $interceptor)
+    public static function tap($xs, $interceptor)
     {
-        call_user_func($interceptor, $object);
+        call_user_func($interceptor, $xs);
         return $object;
     }
 
@@ -1465,145 +1541,38 @@ abstract class Strict
      * will be copied by reference, not duplicated.
      *
      * @category  Objects
-     * @param     mixed  $object
+     * @param     mixed    $xs
      * @return    mixed
      */
-    public static function duplicate($object)
+    public static function duplicate($xs)
     {
-        return is_object($object) ? clone $object : $object;
+        return is_object($xs) ? clone $xs : $xs;
     }
 
     /**
      * Does the object contain the given key?
      *
      * @category  Objects
-     * @param     array|object|Traversable  $object
+     * @param     array|object|Traversable  $xs
      * @param     int|string                $key
      * @return    boolean
      */
-    public static function has($object, $key)
+    public static function has($xs, $key)
     {
-        if (is_array($object)) return isset($object[$key]);
-        if ($object instanceof \Traversable) {
-            foreach ($object as $k => $_) {
-                if ($k === $key) return true;
+        if (is_array($xs)) {
+            return isset($xs[$key]);
+        }
+        if ($xs instanceof \Traversable) {
+            foreach ($xs as $k => $_) {
+                if ($k === $key) {
+                    return true;
+                }
             }
             return false;
         }
 
         // given a object
-        return isset($object->$key);
-    }
-
-    /**
-     * Partially apply a function by filling in any number of its arguments,
-     * without changing its dynamic this value. A close cousin of bind.
-     *
-     * @category  Functions
-     * @param     callable  $func
-     * @param     mixed     *$args
-     * @return    callable
-     */
-    public static function partial($func)
-    {
-        $args = array_slice(func_get_args(), 1);
-        return function() use ($func, $args) {
-            return call_user_func_array($func, array_merge($args, func_get_args()));
-        };
-    }
-
-    /**
-     * Memoizes a given function by caching the computed result. Useful for
-     * speeding up slow-running computations.
-     *
-     * @category  Functions
-     * @param     callable  $func
-     * @param     callable  $hasher
-     * @return    callable
-     */
-    public static function memoize($func, $hasher = null)
-    {
-        $memo = array();
-        if (!$hasher) $hasher = get_called_class().'::identity';
-        return function() use ($func, $hasher, &$memo) {
-            $args = func_get_args();
-            $key = call_user_func_array($hasher, $args);
-            return isset($memo[$key])
-                ? $memo[$key]
-                : ($memo[$key] = call_user_func_array($func, $args));
-        };
-    }
-
-    /**
-     * Creates a version of the function that can only be called one time.
-     *
-     * @category  Functions
-     * @param     callable  $func
-     * @return    callable
-     */
-    public static function once($func)
-    {
-        $run = false;
-        $memo = null;
-        return function() use ($func, &$run, &$memo) {
-            if ($run) return $memo;
-            $run = true;
-            return $memo = call_user_func_array($func, func_get_args());
-        };
-    }
-
-    /**
-     * Creates a version of the function that can only be called one time.
-     *
-     * @category  Functions
-     * @param     int       $times
-     * @param     callable  $func
-     * @return    callable
-     */
-    public static function after($times, $func)
-    {
-        if ($times < 1) return $func;
-        return function() use (&$times, $func) {
-            if (--$times < 1)
-                return call_user_func_array($func, func_get_args());
-        };
-    }
-
-    /**
-     * Wraps the first function inside of the wrapper function, passing it as
-     * the first argument.
-     *
-     * @category  Functions
-     * @param     callable  $func
-     * @param     callable  $wrapper
-     * @return    callable
-     */
-    public static function wrap($func, $wrapper)
-    {
-        return function() use ($func, $wrapper) {
-            $args = func_get_args();
-            array_unshift($args, $func);
-            return call_user_func_array($wrapper, $args);
-        };
-    }
-
-    /**
-     * Returns the composition of a list of functions, where each function
-     * consumes the return value of the function that follows.
-     *
-     * @category  Functions
-     * @param     callable   *$functions
-     * @return    callable
-     */
-    public static function compose()
-    {
-        $functions = func_get_args();
-        return function() use ($functions) {
-            $args = func_get_args();
-            for ($i = count($functions); $i--;)
-                $args = array(call_user_func_array($functions[$i], $args));
-            return $args[0];
-        };
+        return isset($xs->$key);
     }
 
     /**
@@ -1624,33 +1593,30 @@ abstract class Strict
      *
      * @category  Utility
      * @param     int       $n
-     * @param     callable  $iterator
+     * @param     callable  $f
      * @return    array
      */
-    public static function times($n, $iterator)
+    public static function times($n, $f)
     {
-        $accum = array();
-        for ($i = 0; $i < $n; $i++) $accum[] = call_user_func($iterator, $i);
-        return $accum;
+        $acc = array();
+        while ($n-- > 0) {
+            $acc[] = call_user_func($f, $i);
+        }
+        return $acc;
     }
 
     /**
      * @category  Utility
-     * @param     array|callable  $iterator
+     * @param     array|callable  $f
      * @param     mixed           *$args
      * @return    float|Iterator
      */
-    public static function bench($iterator)
+    public static function bench($f)
     {
-        if (is_array($iterator) || $iterator instanceof \Traversable) {
-            return static::map($iterator, function($procedure) {
-                return call_user_func_array(get_called_class().'::bench', $procedure);
-            });
-        } else {
-            $start = microtime(true);
-            call_user_func_array($iterator, array_slice(func_get_args(), 1));
-            return microtime(true) - $start;
-        }
+        $args = array_slice(func_get_args(), 1);
+        $start = microtime(true);
+        call_user_func_array($f, $args);
+        return microtime(true) - $start;
     }
 
     /**
@@ -1668,34 +1634,39 @@ abstract class Strict
 
     protected static function _lookupIterator($value)
     {
-        if (is_callable($value))
+        if (is_callable($value)) {
             return $value;
-        elseif (is_scalar($value))
-            return function($obj) use ($value) {
-                return is_array($obj) ? $obj[$value] : $obj->$value;
+        }
+        if (is_scalar($value)) {
+            return function($xs) use ($value) {
+                return is_array($xs) ? $xs[$value] : $xs->$value;
             };
-        else
-            return get_called_class().'::identity';
+        }
+        return get_called_class().'::identity';
     }
 
-    protected static function _wrapIterator($list)
+    protected static function _wrapIterator($xs)
     {
-        if (is_array($list))
-            return new \ArrayIterator($list);
-        elseif ($list instanceof \Iterator)
-            return $list;
-        elseif ($list instanceof \Traversable)
-            return new \IteratorIterator($list);
-        else
-            return $list;
+        if (is_array($xs)) {
+            return new \ArrayIterator($xs);
+        }
+        if ($xs instanceof \Iterator) {
+            return $xs;
+        }
+        if ($xs instanceof \Traversable) {
+            return new \IteratorIterator($xs);
+        }
+        return $xs;
     }
 
-    protected static function _toTraversable($list)
+    protected static function _isTraversable($xs)
     {
-        if (is_array($list) || $list instanceof \Traversable)
-            return $list;
-        else
-            return (array) $list;
+        return is_array($xs) || $xs instanceof \Traversable;
+    }
+
+    protected static function _toTraversable($xs)
+    {
+        return static::_isTraversable($xs) ? $xs : (array) $xs;
     }
 }
 

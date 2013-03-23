@@ -4,20 +4,22 @@ namespace Underbar\Internal;
 
 class TakeWhileIterator extends \IteratorIterator
 {
-    private $iterator;
+    private $f;
 
-    public function __construct(\Iterator $list, $iterator)
+    public function __construct($xs, $f)
     {
-        parent::__construct($list);
-        $this->iterator = $iterator;
+        parent::__construct($xs);
+        $this->f = $f;
     }
 
     public function valid()
     {
-        return call_user_func($this->iterator,
+        return call_user_func(
+            $this->f,
             parent::current(),
             parent::key(),
-            $this);
+            $this
+        );
     }
 }
 

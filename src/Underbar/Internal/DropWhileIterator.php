@@ -5,21 +5,25 @@ namespace Underbar\Internal;
 class DropWhileIterator extends \FilterIterator
 {
     private $accepted = false;
+    private $f;
 
-    public function __construct(\Iterator $list, $iterator)
+    public function __construct($xs, $f)
     {
-        parent::__construct($list);
-        $this->iterator = $iterator;
+        parent::__construct($xs);
+        $this->f = $f;
     }
 
     public function accept()
     {
-        return $this->accepted
-            || ($this->accepted =
-                    !call_user_func($this->iterator,
-                                    $this->current(),
-                                    $this->key(),
-                                    $this));
+        if (!$this->accepted) {
+            $this->accepted = !call_user_func(
+                $this->f,
+                $this->current(),
+                $this->key(),
+                $this
+            );
+        }
+        return $this->accepted;
     }
 
     public function rewind()

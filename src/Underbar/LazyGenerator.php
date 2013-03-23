@@ -5,123 +5,101 @@ namespace Underbar;
 abstract class LazyGenerator extends LazyUnsafeGenerator
 {
     /**
-     * Produces a new array of values by mapping each value in list through a
-     * transformation function (iterator).
-     *
-     * Alias: collect
-     *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    Iterator
      */
-    public static function map($list, $iterator)
+    public static function map($xs, $f)
     {
-        return new Internal\RewindableGenerator(parent::map($list, $iterator));
+        return new Internal\RewindableGenerator(parent::map($xs, $f));
     }
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    Iterator
      */
-    public static function mapKey($list, $iterator)
+    public static function mapKey($xs, $f)
     {
-        return new Internal\RewindableGenerator(parent::mapKey($list, $iterator));
+        return new Internal\RewindableGenerator(parent::mapKey($xs, $f));
     }
 
     /**
-     * Looks through each value in the list, returning an array of all the values
-     * that pass a truth test (iterator).
-     *
-     * Alias: select
-     *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    Iterator
      */
-    public static function filter($list, $iterator)
+    public static function filter($xs, $f)
     {
-        return new Internal\RewindableGenerator(parent::filter($list, $iterator));
+        return new Internal\RewindableGenerator(parent::filter($xs, $f));
     }
 
     /**
-     * Returns the first element of an array.
-     * Passing n will return the first n elements of the array.
-     *
-     * Alias: head, take
-     *
      * @category  Arrays
      * @param     array|Traversable  $array
      * @param     int                $n
      * @return    mixed|Iterator
      */
-    public static function first($array, $n = null, $guard = null)
+    public static function first($xs, $n = null, $guard = null)
     {
-        if ($n !== null && $guard === null)
-            return new Internal\RewindableGenerator(parent::_first($array, $n));
-        else
-            foreach ($array as $value) return $value;
+        if ($n !== null && $guard === null) {
+            return new Internal\RewindableGenerator(parent::_first($xs, $n));
+        }
+        foreach ($xs as $x) {
+            return $x;
+        }
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    Iterator
      */
-    public static function takeWhile($array, $iterator)
+    public static function takeWhile($xs, $f)
     {
-        return new Internal\RewindableGenerator(parent::takeWhile($array, $iterator));
+        return new Internal\RewindableGenerator(parent::takeWhile($xs, $f));
     }
 
     /**
-     * Returns everything but the last entry of the array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
      * @return    Iterator
      */
-    public static function initial($array, $n = 1, $guard = null)
+    public static function initial($xs, $n = 1, $guard = null)
     {
-        return new Internal\RewindableGenerator(parent::initial($array, $n, $guard));
+        return new Internal\RewindableGenerator(parent::initial($xs, $n, $guard));
     }
 
     /**
-     * Returns the rest of the elements in an array.
-     *
-     * Alias: tail, drop
-     *
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     int                $index
+     * @param     array|Traversable  $xs
+     * @param     int                $n
      * @return    Iterator
      */
-    public static function rest($array, $n = 1, $guard = null)
+    public static function rest($xs, $n = 1, $guard = null)
     {
-        return new Internal\RewindableGenerator(parent::rest($array, $n, $guard));
+        return new Internal\RewindableGenerator(parent::rest($xs, $n, $guard));
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
      * @return    mixed|Iterator
      */
-    public static function dropWhile($array, $iterator)
+    public static function dropWhile($xs, $f)
     {
-        return new Internal\RewindableGenerator(parent::dropWhile($array, $iterator));
+        return new Internal\RewindableGenerator(parent::dropWhile($xs, $f));
     }
 
     /**
-     * Merges together the values of each of the arrays with the values at the
-     * corresponding position.
-     *
      * @category  Arrays
-     * @param     array|Traversable  *$array
+     * @param     array|Traversable  *$xss
      * @return    Iterator
      */
     public static function zip()
@@ -132,22 +110,17 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
     }
 
     /**
-     * Flattens a nested array (the nesting can be to any depth).
-     *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     boolean            $shallow
      * @return    Iterator
      */
-    public static function flatten($array, $shallow = false)
+    public static function flatten($xs, $shallow = false)
     {
-        return new Internal\RewindableGenerator(parent::flatten($array, $shallow));
+        return new Internal\RewindableGenerator(parent::flatten($xs, $shallow));
     }
 
     /**
-     * A function to create flexibly-numbered lists of integers,
-     * handy for each and map loops.
-     *
      * @category  Arrays
      * @param     int       $start
      * @param     int       $stop
@@ -161,12 +134,12 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @return    Iterator
      */
-    public static function cycle($array, $n = null)
+    public static function cycle($xs, $n = null)
     {
-        return new Internal\RewindableGenerator(parent::cycle($array, $n));
+        return new Internal\RewindableGenerator(parent::cycle($xs, $n));
     }
 
     /**
@@ -181,22 +154,18 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
 
     /**
      * @category  Arrays
-     * @param     mixed           $memo
-     * @param     callable        $iterator
-     * @return    array|Iterator
-     * @throws    OverflowException
+     * @param     mixed     $acc
+     * @param     callable  $f
+     * @return    Iterator
      */
-    public static function iterate($memo, $iterator)
+    public static function iterate($acc, $f)
     {
-        return new Internal\RewindableGenerator(parent::iterate($memo, $iterator));
+        return new Internal\RewindableGenerator(parent::iterate($acc, $f));
     }
 
     /**
-     * Returns a new array comprised of this array joined with other array(s)
-     * and/or value(s).
-     *
      * @category  Arrays
-     * @param     array|Traversable  *$arrays
+     * @param     array|Traversable  *$xss
      * @return    Iterator
      */
     public static function concat()

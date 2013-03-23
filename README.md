@@ -1,12 +1,12 @@
 # underbar.php
 
-underbar.php is a underscore.js like collection library.
+underbar.php is a underscore.js like library.
 
-However not aim full compatibility of it.
+However not aim full compatibility of undersocre.js.
 
 # Requirements
 
-- PHP 5.3 or higher
+- PHP 5.3 or higher (Suggest PHP 5.4 or higher)
 - [Composer](http://getcomposer.org/)
 
 # Licence
@@ -15,15 +15,29 @@ MIT Licence
 
 # Features
 
-- undersocre.js compatible (not fully)
-- Add some functions like a functional language (e.g `takeWhile()`, `dropWhile()`, `cycle()`, `repeat()`, `iterate()`)
+- undersocre.js like API
+- Available some functions like a functional language (e.g `takeWhile()`, `dropWhile()`, `cycle()`, `repeat()`, `iterate()`)
 - Available `Option` (also known as `Maybe`) class and null safe functions (e.g. `headSafe()`, `findSafe()`)
 - Implement strict and lazy version functions on the same interface
-- Support `Generator` when running on PHP 5.5
-- Provide trait which add useful collection operated methods
-- PSR-2 compliance (not complete yet)
+- Use `Generator` when running on PHP 5.5
+- Provide `Enumerable` trait
+- PSR-2 compliance
 
 # Getting Started
+
+1. Install [Composer](http://getcomposer.org/).
+2. Create the `composer.json`
+3. Execute `composer.phar install`
+
+**composer.json**
+
+```json
+{
+    "require": {
+        "emonkak/underbar.php": "dev-master"
+    }
+}
+```
 
 # Example
 
@@ -85,117 +99,115 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 // => '2, 4, 6, 2, 4, 6'
 ```
 
-# Available functions
+# API
 
-## Collections
+## Underbar\Strict and Underbar\Lazy
 
-- `each($list, $iterator)`
-- `map($list, $iterator)`
-- `collect($list, $iterator)`
-- `reduce($list, $iterator, $memo)`
-- `inject($list, $iterator, $memo)`
-- `foldl($list, $iterator, $memo)`
-- `reduceRight($list, $iterator, $memo)`
-- `foldr($list, $iterator, $memo)`
-- `find($list, $iterator)`
-- `detect($list, $iterator)`
-- `findSafe($list, $iterator)`
-- `detectSafe($list, $iterator)`
-- `filter($list, $iterator)`
-- `select($list, $iterator)`
-- `where($list, $properties)`
-- `findWhere($list, $properties)`
-- `findWhereSafe($list, $properties)`
-- `reject($list, $iterator)`
-- `every($list, $iterator = null)`
-- `all($list, $iterator = null)`
-- `some($list, $iterator = null)`
-- `any($list, $iterator = null)`
-- `sum($list)`
-- `product($list)`
-- `contains($list, $target)`
-- `invoke($list, $method)`
-- `pluck($list, $property)`
-- `max($list, $iterator = null)`
-- `min($list, $iterator = null)`
-- `sortBy($list, $value)`
-- `groupBy($list, $value = null)`
-- `countBy($list, $value = null)`
-- `shuffle($list)`
-- `toArray($list, $preserveKeys = null)`
-- `size($list)`
-- `count($list)`
+### Collections
 
-## Arrays
+#### each(*array* $xs, *callable* $f)
+#### map(*array* $xs, *callable* $f)
+#### collect(*array* $xs, *callable* $f)
+#### mapKey(*array* $xs, *callable* $f)
+#### collectKey(*array* $xs, *callable* $f)
+#### parallelMap(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
+#### parallelCollect(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
+#### collectKey(*array* $xs, *callable* $f)
+#### reduce(*array* $xs, *callable* $f, $acc)
+#### inject(*array* $xs, *callable* $f, $acc)
+#### foldl(*array* $xs, *callable* $f, $acc)
+#### reduceRight(*array* $xs, *callable* $f, $acc)
+#### foldr(*array* $xs, *callable* $f, $acc)
+#### find(*array* $xs, *callable* $f)
+#### detect(*array* $xs, *callable* $f)
+#### findSafe(*array* $xs, *callable* $f)
+#### detectSafe(*array* $xs, *callable* $f)
+#### filter(*array* $xs, *callable* $f)
+#### select(*array* $xs, *callable* $f)
+#### where(*array* $xs, *array* $properties)
+#### findWhere(*array* $xs, *array* $properties)
+#### findWhereSafe(*array* $xs, *array* $properties)
+#### reject(*array* $xs, *callable* $f)
+#### every(*array* $xs, *callable* $f = null)
+#### all(*array* $xs, *callable* $f = null)
+#### some(*array* $xs, *callable* $f = null)
+#### any(*array* $xs, *callable* $f = null)
+#### sum(*array* $xs)
+#### product(*array* $xs)
+#### contains(*array* $xs, *mixed* $target)
+#### invoke(*array* $xs, *string* $method)
+#### pluck(*array* $xs, *string* $property)
+#### max(*array* $xs, *callable* $f = null)
+#### min(*array* $xs, *callable* $f = null)
+#### sortBy(*array* $xs, *mixed* $value)
+#### groupBy(*array* $xs, *mixed* $value = null)
+#### countBy(*array* $xs, *mixed* $value = null)
+#### shuffle(*array* $xs)
+#### toArray(*array* $xs, *bool* $preserveKeys = null)
+#### size(*array* $xs)
+#### count(*array* $xs)
 
-- `first($array, $n = null, $guard = null)`
-- `head($array, $n = null, $guard = null)`
-- `take($array, $n = null, $guard = null)`
-- `firstSafe($array, $n = null, $guard = null)`
-- `headSafe($array, $n = null, $guard)`
-- `takeSafe($array, $n = null, $guard)`
-- `takeWhile($array, $iterator)`
-- `initial($array, $n = 1, $guard = null)`
-- `last($array, $n = null, $guard = null)`
-- `lastSafe($array, $n = null, $guard)`
-- `rest($array, $index = 1, $guard = null)`
-- `tail($array, $index = 1, $guard = null)`
-- `drop($array, $index = 1, $guard = null)`
-- `dropWhile($array, $iterator)`
-- `compact($array)`
-- `flatten($array, $shallow = false)`
-- `without($array)`
-- `union()`
-- `intersection()`
-- `difference($array)`
-- `uniq($array, $iterator = null)`
-- `unique($array, $iterator = null)`
-- `zip()`
-- `zipWith()`
-- `object($list, $values = null)`
-- `indexOf($array, $value, $isSorted = 0)`
-- `lastIndexOf($array, $value, $fromIndex = null)`
-- `sortedIndex($list, $value, $iterator = null)`
-- `range($start, $stop = null, $step = 1)`
-- `cycle($array, $n = null)`
-- `repeat($value, $n = -1)`
-- `iterate($memo, $iterator)`
-- `pop($array)`
-- `push($array)`
-- `reverse($array)`
-- `shift($array)`
-- `sort($array)`
-- `splice($array, $index, $n)`
-- `unshift($array)`
-- `concat()`
-- `join($array, $separator = ',')`
-- `slice($array, $begin, $end = -1)`
+### Arrays
 
-## Objects
+#### first(*array* $xs [, *int* $n = null])
+#### head(*array* $xs [, *int* $n = null])
+#### take(*array* $xs [, int $n = null])
+#### firstSafe(*array* $xs [, *int* $n = null])
+#### headSafe(*array* $xs [, *int* $n = null])
+#### takeSafe(*array* $xs [, *int* $n = null])
+#### takeWhile(*array* $xs, callable $f)
+#### initial(*array* $xs [, *int* $n = 1])
+#### last(*array* $xs [, *int* $n = null])
+#### lastSafe(*array* $xs [, *int* $n = null])
+#### rest(*array* $xs [, *int* $n = 0])
+#### tail(*array* $xs [, *int* $n = 0])
+#### drop(*array* $xs [, *int* $n = 0])
+#### dropWhile(*array* $xs, callable $f)
+#### compact(*array* $xs)
+#### flatten(*array* $xs [, *bool* $shallow = false])
+#### without(*array* $xs [, *mixed* $values, ...])
+#### union([*array* $xss, ...])
+#### *int*ersection(*array* $xs [, *array* $rest, ...])
+#### difference(*array* $xs [, *array* $others, ...])
+#### uniq(*array* $xs [, callable $f = null])
+#### unique($xs [, callable $f = null])
+#### zip([*array* $xss, ...])
+#### zipWith(*array* $xss, ..., callable $f)
+#### object(*array* $xs [, *array* $values = null])
+#### indexOf(*array* $xs [, *mixed* $value [, *bool|int* $isSorted = 0]])
+#### lastIndexOf(*array* $xs, *mixed* $value [, *int* $fromIndex = null])
+#### sortedIndex(*array* $xs, *mixed* $value [, callable $f = null])
+#### range(*int* $start [, *int* $stop = null [, *int* $step = 1]])
+#### cycle(*array* $xs [, *int* $n = null])
+#### repeat(*mixed* $value [, *int* $n = -1])
+#### iterate(*mixed* $acc [, callable $f])
+#### pop(*array* $xs)
+#### push(*array* $xs [, *mixed* $values, ...])
+#### reverse(*array* $xs)
+#### shift(*array* $xs)
+#### sort(*array* $xs)
+#### splice(*array* $xs, *int* $index, *int* $n)
+#### unshift(*array* $xs [, *mixed* $values, ...])
+#### concat(*array* $xss, ...)
+#### join(*array* $xs [, *string* $separator = ','])
+#### slice(*array* $xs, *int* $begin [, *int* $end = -1])
 
-- `keys($object)`
-- `values($object)`
-- `pairs($object)`
-- `invert($object)`
-- `extend($destination)`
-- `pick($object)`
-- `omit($object)`
-- `defaults($object)`
-- `tap($object, $interceptor)`
-- `duplicate($object)`
-- `has($object, $key)`
+### Objects
 
-## Functions
+#### keys(*array* $xs)
+#### values(*array* $xs)
+#### pairs(*array* $xs)
+#### invert(*array* $xs)
+#### extend(*array* $destination [, *array* $sources])
+#### pick(*array* $xs [, *array|mixed* $keys])
+#### omit(*array* $xs [, *array|mixed* $keys])
+#### defaults(*array* $xs [, *array* $defaults])
+#### tap(*array* $xs, *callable* $interceptor)
+#### duplicate(*mixed* $value)
+#### has(*array* $xs, *mixed* $key)
 
-- `partial($func)`
-- `memoize($func, $hasher = null)`
-- `once($func)`
-- `after($times, $func)`
-- `wrap($func, $wrapper)`
-- `compose()`
-- `identity($value)`
+### Utilities
 
-## Utilities
-
-- `times($n, $iterator)`
-- `chain($value)`
+#### identity(*mixed* $value)
+#### times(*int* $n, *callable* $f)
+#### chain(*mixed* $value)

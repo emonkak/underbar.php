@@ -12,9 +12,9 @@ class InitialIterator extends \IteratorIterator
 
     private $current;
 
-    public function __construct(\Iterator $array, $n)
+    public function __construct($xs, $n)
     {
-        parent::__construct($array);
+        parent::__construct($xs);
         $this->queue = new \SplQueue();
         $this->n = $n;
     }
@@ -44,7 +44,9 @@ class InitialIterator extends \IteratorIterator
         $n = $this->n;
         while (parent::valid()) {
             $this->queue->enqueue(parent::current());
-            if ($n-- <= 0) break;
+            if (--$n < 0) {
+                break;
+            }
             parent::next();
         }
 

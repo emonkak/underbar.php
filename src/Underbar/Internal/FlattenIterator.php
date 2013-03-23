@@ -4,10 +4,10 @@ namespace Underbar\Internal;
 
 class FlattenIterator extends \RecursiveIteratorIterator
 {
-    public function __construct(\Iterator $array, $shallow)
+    public function __construct($xs, $shallow)
     {
         parent::__construct(
-            new FlattenInnerIterator($array),
+            new FlattenInnerIterator($xs),
             $shallow ? self::SELF_FIRST : self::LEAVES_ONLY
         );
         $this->setMaxDepth($shallow ? 1 : -1);

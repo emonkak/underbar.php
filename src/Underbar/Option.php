@@ -14,8 +14,8 @@ abstract class Option implements \IteratorAggregate, \Countable
     final public static function fromValue($value, $none = null)
     {
         return $value === $none
-            ? Option\None::instance()
-            : new Option\Some($value);
+             ? Option\None::instance()
+             : new Option\Some($value);
     }
 
     /**

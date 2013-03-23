@@ -33,10 +33,10 @@ class ObjectsTest extends Underbar_TestCase
         $obj = array('first' => 'Moe', 'second' => 'Larry', 'third' => 'Curly');
 
         $result = $_::chain($obj)->invert()->keys()->value();
-        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $result, 'can invert an object');
+        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $_::toArray($result), 'can invert an object');
 
         $result = $_::chain($obj)->invert()->invert()->value();
-        $this->assertEquals($obj, $result, 'two inverts gets you back where you started');
+        $this->assertEquals($obj, $_::toArray($result), 'two inverts gets you back where you started');
     }
 
     /**

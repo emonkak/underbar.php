@@ -16,8 +16,8 @@ final class None extends Option
     public static function instance()
     {
         return static::$instance === null
-            ? new static()
-            : static::$instance;
+             ? new static()
+             : static::$instance;
     }
 
     private function __construct()

@@ -5,219 +5,206 @@ namespace Underbar;
 abstract class LazyUnsafeGenerator extends Strict
 {
     /**
-     * Produces a new array of values by mapping each value in list through a
-     * transformation function (iterator).
-     *
-     * Alias: collect
-     *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
-     * @return    Iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @return    Generator
      */
-    public static function map($list, $iterator)
+    public static function map($xs, $f)
     {
-        foreach ($list as $index => $value)
-            yield $index => call_user_func($iterator, $value, $index, $list);
-    }
-
-    /**
-     * Alias: collectKey
-     *
-     * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
-     * @return    Iterator
-     */
-    public static function mapKey($list, $iterator)
-    {
-        foreach ($list as $index => $value) {
-            yield call_user_func($iterator, $value, $index, $list) => $value;
+        foreach ($xs as $i => $x) {
+            yield $i => call_user_func($f, $x, $i, $xs);
         }
     }
 
     /**
-     * Looks through each value in the list, returning an array of all the values
-     * that pass a truth test (iterator).
-     *
-     * Alias: select
-     *
      * @category  Collections
-     * @param     array|Traversable  $list
-     * @param     callable           $iterator
-     * @return    Iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @return    Generator
      */
-    public static function filter($list, $iterator)
+    public static function mapKey($xs, $f)
     {
-        foreach ($list as $index => $value) {
-            if (call_user_func($iterator, $value, $index, $list))
-                yield $index => $value;
+        foreach ($xs as $i => $x) {
+            yield call_user_func($f, $x, $i, $xs) => $x;
         }
     }
 
     /**
-     * Returns the first element of an array.
-     * Passing n will return the first n elements of the array.
-     *
-     * Alias: head, take
-     *
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @return    Generator
+     */
+    public static function filter($xs, $f)
+    {
+        foreach ($xs as $i => $x) {
+            if (call_user_func($f, $x, $i, $xs)) {
+                yield $i => $x;
+            }
+        }
+    }
+
+    /**
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    mixed|Iterator
+     * @return    mixed|Generator
      */
-    public static function first($array, $n = null, $guard = null)
+    public static function first($xs, $n = null, $guard = null)
     {
-        if ($n !== null && $guard === null)
-            return static::_first($array, $n);
-        else
-            foreach ($array as $value) return $value;
+        if ($n !== null && $guard === null) {
+            return static::_first($xs, $n);
+        }
+        foreach ($xs as $x) {
+            return $x;
+        }
     }
 
-    protected static function _first($array, $n = null)
+    protected static function _first($xs, $n = null)
     {
-        foreach ($array as $index => $value) {
-            if ($n-- > 0)
-                yield $index => $value;
-            else
+        foreach ($xs as $i => $x) {
+            if (--$n < 0) {
                 break;
+            }
+            yield $i => $x;
         }
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
-     * @return    Iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @return    Generator
      */
-    public static function takeWhile($array, $iterator)
+    public static function takeWhile($xs, $f)
     {
-        foreach ($array as $index => $value) {
-            if (!call_user_func($iterator, $value, $index, $array)) break;
-            yield $index => $value;
+        foreach ($xs as $i => $x) {
+            if (!call_user_func($f, $x, $i, $xs)) {
+                break;
+            }
+            yield $i => $x;
         }
     }
 
     /**
-     * Returns everything but the last entry of the array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    Iterator
+     * @return    Generator
      */
-    public static function initial($array, $n = 1, $guard = null)
+    public static function initial($xs, $n = 1, $guard = null)
     {
         $queue = new \SplQueue();
-
-        if ($guard !== null) $n = 1;
-        foreach ($array as $value) {
-            $queue->enqueue($value);
-            if (count($queue) > $n) yield $queue->dequeue();
+        if ($guard !== null) {
+            $n = 1;
+        }
+        foreach ($xs as $x) {
+            $queue->enqueue($x);
+            if ($n > 0) {
+                $n--;
+            } else {
+                yield $queue->dequeue();
+            }
         }
     }
 
     /**
-     * Returns the rest of the elements in an array.
-     *
-     * Alias: tail, drop
-     *
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     int                $index
-     * @return    Iterator
+     * @param     array|Traversable  $xs
+     * @param     int                $n
+     * @return    Generator
      */
-    public static function rest($array, $n = 1, $guard = null)
+    public static function rest($xs, $n = 1, $guard = null)
     {
-        if ($guard !== null) $n = 1;
-        foreach ($array as $index => $value) {
-            if (--$n < 0)
-                yield $index => $value;
+        if ($guard !== null) {
+            $n = 1;
+        }
+        foreach ($xs as $i => $v) {
+            if ($n > 0) {
+                $n--;
+            } else {
+                yield $i => $v;
+            }
         }
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     callable           $iterator
-     * @return    mixed|Iterator
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @return    mixed|Generator
      */
-    public static function dropWhile($array, $iterator)
+    public static function dropWhile($xs, $f)
     {
         $accepted = false;
-        foreach ($array as $index => $value) {
-            if ($accepted
-                || ($accepted = !call_user_func($iterator, $value, $index, $array)))
-                yield $index => $value;
+        foreach ($xs as $i => $x) {
+            if ($accepted || ($accepted = !call_user_func($f, $x, $i, $xs))) {
+                yield $i => $x;
+            }
         }
     }
 
     /**
-     * Merges together the values of each of the arrays with the values at the
-     * corresponding position.
-     *
      * @category  Arrays
-     * @param     array|Traversable  *$array
-     * @return    Iterator
+     * @param     array|Traversable  *$xss
+     * @return    Generator
      */
     public static function zip()
     {
-        $arrays = $zipped = array();
+        $yss = $zss = array();
         $loop = false;
 
-        foreach (func_get_args() as $array) {
-            $arrays[] = $wrapped = static::_wrapIterator($array);
-            $wrapped->rewind();
-            $loop = $loop || $wrapped->valid();
-            $zipped[] = $wrapped->current();
+        foreach (func_get_args() as $xs) {
+            $yss[] = $ys = static::_wrapIterator($xs);
+            $ys->rewind();
+            $loop = $loop || $ys->valid();
+            $zss[] = $ys->current();
         }
 
         while ($loop) {
-            yield $zipped;
-            $zipped = array();
+            yield $zss;
+            $zss = array();
             $loop = false;
-            foreach ($arrays as $array) {
-                $array->next();
-                $zipped[] = $array->current();
-                $loop = $loop || $array->valid();
+            foreach ($yss as $ys) {
+                $ys->next();
+                $zss[] = $ys->current();
+                $loop = $loop || $ys->valid();
             }
         }
     }
 
     /**
-     * Flattens a nested array (the nesting can be to any depth).
-     *
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array|Traversable  $xss
      * @param     boolean            $shallow
-     * @return    Iterator
+     * @return    Generator
      */
-    public static function flatten($array, $shallow = false)
+    public static function flatten($xss, $shallow = false)
     {
-        foreach ($array as $key => $value) {
-            if (is_array($value) || $value instanceof \Traversable) {
+        foreach ($xss as $xs) {
+            if (static::_isTraversable($xs)) {
                 if ($shallow) {
-                    foreach ($value as $childKey => $childValue)
-                        yield $childKey => $childValue;
+                    foreach ($xs as $x) {
+                        yield $x;
+                    }
                 } else {
-                    foreach (static::flatten($value, $shallow) as $childKey => $childValue)
-                        yield $childKey => $childValue;
+                    foreach (static::flatten($xs, $shallow) as $x) {
+                        yield $x;
+                    }
                 }
             } else {
-                yield $key => $value;
+                yield $xs;
             }
         }
     }
 
     /**
-     * A function to create flexibly-numbered lists of integers,
-     * handy for each and map loops.
-     *
      * @category  Arrays
      * @param     int       $start
      * @param     int       $stop
      * @param     int       $step
-     * @return    Iterator
+     * @return    Generator
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -236,55 +223,64 @@ abstract class LazyUnsafeGenerator extends Strict
     /**
      * @category  Arrays
      * @param     array|Traversable  $array
-     * @return    Iterator
+     * @return    Generator
      */
     public static function cycle($array, $n = null)
     {
         if ($n === null) {
-            while (true) foreach ($array as $value) yield $value;
+            while (true) {
+                foreach ($array as $value) {
+                    yield $value;
+                }
+            }
         } else {
-            while ($n-- > 0) foreach ($array as $value) yield $value;
+            while ($n-- > 0) {
+                foreach ($array as $value) {
+                    yield $value;
+                }
+            }
         }
     }
 
     /**
-     * @param   mixed     $value
-     * @param   int       $n
-     * @return  Iterator
+     * @category  Arrays
+     * @param     mixed     $value
+     * @param     int       $n
+     * @return    Generator
      */
     public static function repeat($value, $n = -1)
     {
-        while ($n--) yield $value;
-    }
-
-    /**
-     * @category  Arrays
-     * @param     mixed           $memo
-     * @param     callable        $iterator
-     * @return    array|Iterator
-     * @throws    OverflowException
-     */
-    public static function iterate($memo, $iterator)
-    {
-        while (true) {
-            yield $memo;
-            $memo = call_user_func($iterator, $memo);
+        while ($n--) {
+            yield $value;
         }
     }
 
     /**
-     * Returns a new array comprised of this array joined with other array(s)
-     * and/or value(s).
-     *
      * @category  Arrays
-     * @param     array|Traversable  *$arrays
-     * @return    Iterator
+     * @param     mixed              $acc
+     * @param     callable           $f
+     * @return    Generator
+     * @throws    OverflowException
+     */
+    public static function iterate($acc, $f)
+    {
+        while (true) {
+            yield $acc;
+            $acc = call_user_func($f, $acc);
+        }
+    }
+
+    /**
+     * @category  Arrays
+     * @param     array|Traversable  *$xss
+     * @return    Generator
      */
     public static function concat()
     {
-        foreach (func_get_args() as $array) {
-            foreach ($array as $key => $value)
-                yield $key => $value;
+        foreach (func_get_args() as $xs) {
+            foreach ($xs as $i => $x) {
+                yield $i => $x;
+            }
         }
     }
 }

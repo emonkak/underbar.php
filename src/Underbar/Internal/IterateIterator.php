@@ -4,23 +4,23 @@ namespace Underbar\Internal;
 
 class IterateIterator implements \Iterator
 {
-    private $memo;
+    private $default;
 
-    private $iterator;
+    private $f;
 
-    private $current;
+    private $acc;
 
     private $index;
 
-    public function __construct($memo, $iterator)
+    public function __construct($default, $f)
     {
-        $this->memo = $memo;
-        $this->iterator = $iterator;
+        $this->default = $default;
+        $this->f = $f;
     }
 
     public function current()
     {
-        return $this->current;
+        return $this->acc;
     }
 
     public function key()
@@ -31,13 +31,13 @@ class IterateIterator implements \Iterator
     public function next()
     {
         $this->index++;
-        $this->current = call_user_func($this->iterator, $this->current);
+        $this->acc = call_user_func($this->iterator, $this->acc);
     }
 
     public function rewind()
     {
         $this->index = 0;
-        $this->current = $this->memo;
+        $this->acc = $this->default;
     }
 
     public function valid()
