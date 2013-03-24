@@ -2,8 +2,13 @@
 
 namespace Underbar;
 
-abstract class Strict
+class Strict
 {
+    final private function __construct()
+    {
+        // Not allow to create an instance
+    }
+
     /**
      * Iterates over a list of elements, yielding each in turn to an iterator
      * function.
@@ -29,7 +34,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    array|Iterator
+     * @return    array
      */
     public static function map($xs, $f)
     {
@@ -51,7 +56,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    array|Iterator
+     * @return    array
      */
     public static function mapKey($xs, $f)
     {
@@ -194,7 +199,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    array|Iterator
+     * @return    array
      */
     public static function filter($xs, $f)
     {
@@ -268,7 +273,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    array|Iterator
+     * @return    array
      */
     public static function reject($xs, $f)
     {
@@ -386,7 +391,7 @@ abstract class Strict
      * @param     array|Traversable  $xs
      * @param     string             $method
      * @param     miexed             *$arguments
-     * @return    array|Iterator
+     * @return    array
      */
     public static function invoke($xs, $method)
     {
@@ -403,7 +408,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     string             $property
-     * @return    array|Iterator
+     * @return    array
      */
     public static function pluck($xs, $property)
     {
@@ -629,7 +634,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    mixed|Iterator
+     * @return    array|mixed
      */
     public static function first($xs, $n = null, $guard = null)
     {
@@ -679,7 +684,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator
+     * @return    array
      */
     public static function takeWhile($xs, $f)
     {
@@ -699,7 +704,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    array|Iterator
+     * @return    array
      */
     public static function initial($xs, $n = 1, $guard = null)
     {
@@ -739,7 +744,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    array|Iterator
+     * @return    array
      */
     public static function rest($xs, $n = 1, $guard = null)
     {
@@ -782,7 +787,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @return    array|Iterator
+     * @return    array
      */
     public static function compact($xs)
     {
@@ -795,7 +800,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     boolean            $shallow
-     * @return    array|Iterator
+     * @return    array
      */
     public static function flatten($xs, $shallow = false)
     {
@@ -826,7 +831,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     mixed              *$values
-     * @return    array|Iterator
+     * @return    array
      */
     public static function without($xs)
     {
@@ -839,7 +844,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    array|Iterator
+     * @return    array
      */
     public static function union()
     {
@@ -869,7 +874,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     array              *$others
-     * @return    array|Iterator
+     * @return    array
      */
     public static function difference($xs)
     {
@@ -892,7 +897,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    array|iterator
+     * @return    array
      */
     public static function uniq($xs, $f = null)
     {
@@ -937,7 +942,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    array|Iterator
+     * @return    array
      */
     public static function zip()
     {
@@ -969,7 +974,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  *$xss
      * @param     callable           $f
-     * @return    array|Iterator
+     * @return    array
      */
     public static function zipWith()
     {
@@ -989,7 +994,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     array|Traversable  $values
-     * @return    array|Iterator
+     * @return    array
      */
     public static function object($xs, $values = null)
     {
@@ -1107,7 +1112,7 @@ abstract class Strict
      * @param     int             $start
      * @param     int             $stop
      * @param     int             $step
-     * @return    array|Iterator
+     * @return    array
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -1131,7 +1136,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    array|Iterator
+     * @return    array
      * @throws    OverflowException
      */
     public static function cycle($xs, $n = null)
@@ -1152,7 +1157,7 @@ abstract class Strict
      * @category  Arrays
      * @param     mixed              $x
      * @param     int                $n
-     * @return    array|Iterator
+     * @return    array
      * @throws    OverflowException
      */
     public static function repeat($x, $n = -1)
@@ -1167,7 +1172,7 @@ abstract class Strict
      * @category  Arrays
      * @param     mixed           $acc
      * @param     callable        $f
-     * @return    array|Iterator
+     * @return    array
      * @throws    OverflowException
      */
     public static function iterate($acc, $f)
@@ -1180,7 +1185,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @return    array|Iterator
+     * @return    array
      */
     public static function pop($xs)
     {
@@ -1220,7 +1225,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @return    array|Iterator
+     * @return    array
      */
     public static function shift($xs)
     {
@@ -1289,7 +1294,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    array|Iterator
+     * @return    array
      */
     public static function concat()
     {
@@ -1434,7 +1439,7 @@ abstract class Strict
      * @category  Objects
      * @param     array|Traversable         $xs
      * @param     array|string|Traversable  *$keys
-     * @return    array|Iterator
+     * @return    array
      */
     public static function pick($xs)
     {
@@ -1463,7 +1468,7 @@ abstract class Strict
      * @category  Objects
      * @param     array|Traversable         $xs
      * @param     array|string|Traversable  *$keys
-     * @return    array|Iterator
+     * @return    array
      */
     public static function omit($xs)
     {
@@ -1492,7 +1497,7 @@ abstract class Strict
      * @category  Objects
      * @param     array|Traversable  $xs
      * @param     array|Traversable  *$defaults
-     * @return    array|object
+     * @return    array
      */
     public static function defaults($xs)
     {
@@ -1609,7 +1614,7 @@ abstract class Strict
      * @category  Utility
      * @param     array|callable  $f
      * @param     mixed           *$args
-     * @return    float|Iterator
+     * @return    float
      */
     public static function bench($f)
     {

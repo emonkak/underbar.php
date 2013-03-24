@@ -2,13 +2,13 @@
 
 namespace Underbar;
 
-abstract class LazyGenerator extends LazyUnsafeGenerator
+class LazyGenerator extends LazyUnsafeGenerator
 {
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function map($xs, $f)
     {
@@ -19,7 +19,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function mapKey($xs, $f)
     {
@@ -30,7 +30,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function filter($xs, $f)
     {
@@ -39,9 +39,9 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
-     * @param     int                $n
-     * @return    mixed|Iterator
+     * @param     array|Traversable        $array
+     * @param     int                      $n
+     * @return    mixed|IteratorAggregate
      */
     public static function first($xs, $n = null, $guard = null)
     {
@@ -57,7 +57,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function takeWhile($xs, $f)
     {
@@ -68,7 +68,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function initial($xs, $n = 1, $guard = null)
     {
@@ -79,7 +79,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function rest($xs, $n = 1, $guard = null)
     {
@@ -90,7 +90,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    mixed|Iterator
+     * @return    IteratorAggregate
      */
     public static function dropWhile($xs, $f)
     {
@@ -100,7 +100,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function zip()
     {
@@ -113,7 +113,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     boolean            $shallow
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function flatten($xs, $shallow = false)
     {
@@ -122,10 +122,10 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
 
     /**
      * @category  Arrays
-     * @param     int       $start
-     * @param     int       $stop
-     * @param     int       $step
-     * @return    Iterator
+     * @param     int                $start
+     * @param     int                $stop
+     * @param     int                $step
+     * @return    IteratorAggregate
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -135,7 +135,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function cycle($xs, $n = null)
     {
@@ -154,9 +154,9 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
 
     /**
      * @category  Arrays
-     * @param     mixed     $acc
-     * @param     callable  $f
-     * @return    Iterator
+     * @param     mixed              $acc
+     * @param     callable           $f
+     * @return    IteratorAggregate
      */
     public static function iterate($acc, $f)
     {
@@ -166,7 +166,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    Iterator
+     * @return    IteratorAggregate
      */
     public static function concat()
     {
