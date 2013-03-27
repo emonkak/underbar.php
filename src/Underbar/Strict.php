@@ -354,8 +354,9 @@ class Strict
     }
 
     /**
-     * @param   array|Traversable  $xs
-     * @return  int
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @return    int
      */
     public static function product($xs)
     {
@@ -522,12 +523,12 @@ class Strict
      *
      * @category  Collections
      * @param     array|Traversable  $xs
-     * @param     callable|string    $x
+     * @param     callable|string    $f
      * @return    array
      */
-    public static function groupBy($xs, $x = null)
+    public static function groupBy($xs, $f = null)
     {
-        $f = static::_lookupIterator($x);
+        $f = static::_lookupIterator($f);
         $result = array();
 
         foreach ($xs as $i => $x) {
@@ -548,9 +549,9 @@ class Strict
      * @param     callable|string    $x
      * @return    int
      */
-    public static function countBy($xs, $x = null)
+    public static function countBy($xs, $f = null)
     {
-        $f = static::_lookupIterator($x);
+        $f = static::_lookupIterator($f);
         $result = array();
 
         foreach ($xs as $i => $x) {
@@ -1109,9 +1110,9 @@ class Strict
      * handy for each and map loops.
      *
      * @category  Arrays
-     * @param     int             $start
-     * @param     int             $stop
-     * @param     int             $step
+     * @param     int     $start
+     * @param     int     $stop
+     * @param     int     $step
      * @return    array
      */
     public static function range($start, $stop = null, $step = 1)
@@ -1155,8 +1156,8 @@ class Strict
 
     /**
      * @category  Arrays
-     * @param     mixed              $x
-     * @param     int                $n
+     * @param     mixed   $x
+     * @param     int     $n
      * @return    array
      * @throws    OverflowException
      */
@@ -1170,8 +1171,8 @@ class Strict
 
     /**
      * @category  Arrays
-     * @param     mixed           $acc
-     * @param     callable        $f
+     * @param     mixed     $acc
+     * @param     callable  $f
      * @return    array
      * @throws    OverflowException
      */
@@ -1546,7 +1547,7 @@ class Strict
      * will be copied by reference, not duplicated.
      *
      * @category  Objects
-     * @param     mixed    $xs
+     * @param     mixed  $xs
      * @return    mixed
      */
     public static function duplicate($xs)
@@ -1584,7 +1585,7 @@ class Strict
      * Returns the same value that is used as the argument.
      *
      * @category  Utility
-     * @param     mixed    $value
+     * @param     mixed  $value
      * @return    mixed
      */
     public static function identity($value)

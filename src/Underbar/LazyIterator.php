@@ -179,8 +179,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     mixed              $acc
-     * @param     callable           $f
+     * @param     mixed           $acc
+     * @param     callable        $f
      * @return    array|Iterator
      * @throws    OverflowException
      */
