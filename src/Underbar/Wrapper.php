@@ -1,6 +1,6 @@
 <?php
 
-namespace Underbar\Internal;
+namespace Underbar;
 
 final class Wrapper implements \Countable, \IteratorAggregate
 {
@@ -17,7 +17,7 @@ final class Wrapper implements \Countable, \IteratorAggregate
     public function __call($name, $aruguments)
     {
         array_unshift($aruguments, $this->value);
-        $value = call_user_func_array($this->class.'::'.$name, $aruguments);
+        $value = call_user_func_array(array($this->class, $name), $aruguments);
         return new static($value, $this->class);
     }
 
@@ -33,10 +33,11 @@ final class Wrapper implements \Countable, \IteratorAggregate
 
     public function getIterator()
     {
-        if ($this->value instanceof \Traversable)
+        if ($this->value instanceof \Traversable) {
             return $this->value;
-        else
+        } else {
             return new \ArrayIterator((array) $this->value);
+        }
     }
 }
 

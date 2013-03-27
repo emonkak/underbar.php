@@ -1630,12 +1630,12 @@ class Strict
      * return wrapped objects until value is used.
      *
      * @category  Chaining
-     * @param     mixed             $value
-     * @return    Internal\Wrapper
+     * @param     mixed    $value
+     * @return    Wrapper
      */
     public static function chain($value)
     {
-        return new Internal\Wrapper($value, get_called_class());
+        return new Wrapper($value, get_called_class());
     }
 
     protected static function _lookupIterator($value)
