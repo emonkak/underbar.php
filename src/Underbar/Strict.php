@@ -627,6 +627,28 @@ class Strict
     }
 
     /**
+     * @category  Collections
+     * @param     mixed     $xs
+     * @param     callable  $f
+     * @return    array
+     */
+    public static function span($xs, $f)
+    {
+        $ys = array(array(), array());
+        $inPrefix = true;
+
+        foreach ($xs as $i => $x) {
+            if ($inPrefix = $inPrefix && call_user_func($f, $x, $i, $xs)) {
+                $ys[0][] = $x;
+            } else {
+                $ys[1][] = $x;
+            }
+        }
+
+        return $ys;
+    }
+
+    /**
      * Returns the first element of an array.
      * Passing n will return the first n elements of the array.
      *
