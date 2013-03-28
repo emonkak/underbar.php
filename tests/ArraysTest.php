@@ -55,6 +55,32 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testTakeWhile($_)
+    {
+        $result = $_::takeWhile(array(1, 2, 3, 4, 5, 1, 2, 3), function($x) {
+            return $x < 3;
+        });
+        $this->assertEquals(array(1, 2), $_::toArray($result, false));
+
+        $result = $_::takeWhile(array(1, 2, 3), function($x) {
+            return $x < 9;
+        });
+        $this->assertEquals(array(1, 2, 3), $_::toArray($result));
+
+        $result = $_::takeWhile(array(1, 2, 3), function($x) {
+            return $x < 0;
+        });
+        $this->assertEquals(array(), $_::toArray($result, false));
+
+        $result = $_::takeWhile(array(), function($x) {
+            return $x > 0;
+        });
+        $this->assertEquals(array(), $_::toArray($result, false));
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testDropWhile($_)
     {
         $result = $_::dropWhile(array(1, 2, 3, 4, 5, 1, 2, 3), function($x) {

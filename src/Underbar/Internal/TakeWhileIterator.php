@@ -14,7 +14,7 @@ class TakeWhileIterator extends \IteratorIterator
 
     public function valid()
     {
-        return call_user_func(
+        return parent::valid() && call_user_func(
             $this->f,
             parent::current(),
             parent::key(),
