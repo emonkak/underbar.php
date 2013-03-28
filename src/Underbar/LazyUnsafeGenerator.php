@@ -49,18 +49,8 @@ class LazyUnsafeGenerator extends Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    mixed|Generator
+     * @return    Generator
      */
-    public static function first($xs, $n = null, $guard = null)
-    {
-        if ($n !== null && $guard === null) {
-            return static::_first($xs, $n);
-        }
-        foreach ($xs as $x) {
-            return $x;
-        }
-    }
-
     protected static function _first($xs, $n = null)
     {
         foreach ($xs as $i => $x) {

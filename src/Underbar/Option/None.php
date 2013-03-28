@@ -28,12 +28,12 @@ final class None extends Option
     /**
      * Returns the option's value.
      *
-     * @throws  RuntimeException
+     * @throws  OutOfRangeException
      * @return  mixed
      */
     public function get()
     {
-        throw new \RuntimeException();
+        throw new \OutOfRangeException();
     }
 
     /**

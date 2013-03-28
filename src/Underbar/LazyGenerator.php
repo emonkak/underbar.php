@@ -41,16 +41,11 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable        $array
      * @param     int                      $n
-     * @return    mixed|IteratorAggregate
+     * @return    IteratorAggregate
      */
-    public static function first($xs, $n = null, $guard = null)
+    protected static function _first($xs, $n = null)
     {
-        if ($n !== null && $guard === null) {
-            return new Internal\RewindableGenerator(parent::_first($xs, $n));
-        }
-        foreach ($xs as $x) {
-            return $x;
-        }
+        return new Internal\RewindableGenerator(parent::_first($xs, $n));
     }
 
     /**

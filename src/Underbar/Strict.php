@@ -182,12 +182,18 @@ class Strict
      */
     public static function findSafe($xs, $f)
     {
-        return Option::fromValue(static::find($xs, $f));
+        foreach ($xs as $i => $x) {
+            if (call_user_func($f, $x, $i, $xs)) {
+                return new Option\Some($x);
+            }
+        }
+
+        return Option\None::instance();
     }
 
     public static function detectSafe($xs, $f)
     {
-        return Option::fromValue(static::find($xs, $f));
+        return static::findSafe($xs, $f);
     }
 
     /**
@@ -263,7 +269,15 @@ class Strict
 
     public static function findWhereSafe($xs, $properties)
     {
-        return Option::fromValue(static::findWhere($xs, $properties));
+        return static::findSafe($xs, function($x) use ($properties) {
+            foreach ($properties as $key => $value) {
+                if (!((isset($x->$key) && $x->$key === $value)
+                      || (isset($x[$key]) && $x[$key] === $value))) {
+                    return false;
+                }
+            }
+            return true;
+        });
     }
 
     /**
@@ -662,7 +676,7 @@ class Strict
     public static function first($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
-            return $n > 0 ? array_slice(static::toArray($xs), 0, $n) : array();
+            return static::_first($xs, $n);
         }
 
         foreach ($xs as $x) {
@@ -690,17 +704,30 @@ class Strict
      */
     public static function firstSafe($xs, $n = null, $guard = null)
     {
-        return Option::fromValue(static::first($xs, $n, $guard));
+        if ($n !== null && $guard === null) {
+            return static::_first($xs, $n);
+        }
+
+        foreach ($xs as $x) {
+            return new Option\Some($x);
+        }
+
+        return Option\None::instance();
     }
 
     public static function headSafe($xs, $n = null, $guard)
     {
-        return Option::fromValue(static::first($xs, $n, $guard));
+        return static::firstSafe($xs, $n, $guard);
     }
 
     public static function takeSafe($xs, $n = null, $guard)
     {
-        return Option::fromValue(static::first($xs, $n, $guard));
+        return static::firstSafe($xs, $n, $guard);
+    }
+
+    protected static function _first($xs, $n = null)
+    {
+        return $n > 0 ? array_slice(static::toArray($xs), 0, $n) : array();
     }
 
     /**
@@ -749,14 +776,23 @@ class Strict
     {
         $xs = static::toArray($xs);
         if ($n !== null && $guard === null) {
-            return $n > 0 ? array_slice($xs, -$n) : array();
+            return static::_last($xs, $n);
         }
         return empty($xs) ? null : end($xs);
     }
 
-    public static function lastSafe($xs, $n = null, $guard)
+    public static function lastSafe($xs, $n = null, $guard = null)
     {
-        return Option::fromValue(static::last($xs, $n, $guard));
+        $xs = static::toArray($xs);
+        if ($n !== null && $guard === null) {
+            return static::_last($xs, $n);
+        }
+        return empty($xs) ? Option\None::instance() : new Option\Some(end($xs));
+    }
+
+    protected static function _last($xs, $n = null)
+    {
+        return $n > 0 ? array_slice($xs, -$n) : array();
     }
 
     /**

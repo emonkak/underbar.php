@@ -43,18 +43,13 @@ class LazyIterator extends Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    mixed|Iterator
+     * @return    Iterator
      */
-    public static function first($xs, $n = null, $guard = null)
+    protected static function _first($xs, $n = null)
     {
-        if ($n !== null && $guard === null) {
-            return $n > 0
-                 ? new \LimitIterator(static::_wrapIterator($xs), 0, $n)
-                 : new \EmptyIterator();
-        }
-        foreach ($xs as $x) {
-            return $x;
-        }
+        return $n > 0
+             ? new \LimitIterator(static::_wrapIterator($xs), 0, $n)
+             : new \EmptyIterator();
     }
 
     /**
