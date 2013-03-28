@@ -91,7 +91,7 @@ class CollectionsTest extends Underbar_TestCase
             }, 10)
             ->sum()
             ->value();
-        $this->assertEquals(4500, $sum, 'aliased as "collectMap"');
+        $this->assertEquals(4500, $sum, 'aliased as "parallelCollect"');
     }
 
     /**
