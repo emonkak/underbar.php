@@ -774,11 +774,12 @@ class Strict
      */
     public static function last($xs, $n = null, $guard = null)
     {
-        $xs = static::toArray($xs);
         if ($n !== null && $guard === null) {
             return static::_last($xs, $n);
         }
-        return empty($xs) ? null : end($xs);
+        $x = null;
+        foreach ($xs as $x);
+        return $x;
     }
 
     public static function lastSafe($xs, $n = null, $guard = null)
@@ -787,12 +788,28 @@ class Strict
         if ($n !== null && $guard === null) {
             return static::_last($xs, $n);
         }
-        return empty($xs) ? Option\None::instance() : new Option\Some(end($xs));
+        foreach ($xs as $x);
+        return isset($x) ? new Option\Some($x) : Option\None::instances();
     }
 
     protected static function _last($xs, $n = null)
     {
-        return $n > 0 ? array_slice($xs, -$n) : array();
+        $queue = new \SplQueue();
+        if ($n <= 0) {
+            return $queue;
+        }
+
+        $i = 0;
+        foreach ($xs as $x) {
+            if ($i === $n) {
+                $queue->dequeue();
+                $i--;
+            }
+            $queue->enqueue($x);
+            $i++;
+        }
+
+        return $queue;
     }
 
     /**

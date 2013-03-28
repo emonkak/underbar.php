@@ -128,13 +128,13 @@ class ArraysTest extends Underbar_TestCase
         $this->assertEquals(3, $result, 'can pull out the last element of an array');
 
         $result = $_::last(array(1, 2, 3), 0);
-        $this->assertEquals(array(), $result, 'can pass an index to last');
+        $this->assertEquals(array(), $_::toArray($result), 'can pass an index to last');
 
         $result = $_::last(array(1, 2, 3), 2);
-        $this->assertEquals(array(2, 3), $result, 'can pass an index to last');
+        $this->assertEquals(array(2, 3), $_::toArray($result), 'can pass an index to last');
 
         $result = $_::last(array(1, 2, 3), 5);
-        $this->assertEquals(array(1, 2, 3), $result, 'can pass an index to last');
+        $this->assertEquals(array(1, 2, 3), $_::toArray($result), 'can pass an index to last');
 
         $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), "$_::last");
         $this->assertEquals(array(3, 3), $_::toArray($result), 'works well with _.map');
