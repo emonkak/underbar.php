@@ -71,6 +71,32 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testParallelMap($_)
+    {
+        $time = $_::bench(function() use ($_) {
+            $sum = $_::chain($_::range(10))
+                ->parallelMap(function($x) {
+                    usleep(100000);
+                    return $x * 100;
+                }, 10)
+                ->sum()
+                ->value();
+            $this->assertEquals(4500, $sum, 'sum numbers');
+        });
+        $this->assertLessThan(1.0, $time, 'work to parallel');
+
+        $sum = $_::chain($_::range(10))
+            ->parallelCollect(function($x) {
+                return $x * 100;
+            }, 10)
+            ->sum()
+            ->value();
+        $this->assertEquals(4500, $sum, 'aliased as "collectMap"');
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testReduce($_)
     {
         $sum = $_::reduce(array(1, 2, 3), function($sum, $num) {
