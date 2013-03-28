@@ -228,6 +228,24 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testSum($_)
+    {
+        $this->assertEquals(45, $_::sum($_::range(10)), 'sum 0..9');
+        $this->assertEquals(0, $_::sum(array()), 'sum empty array');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testProduct($_)
+    {
+        $this->assertEquals(362880, $_::product($_::range(1, 10)), 'product 1..9');
+        $this->assertEquals(1, $_::product(array()), 'product empty array');
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testContains($_)
     {
         $this->assertTrue($_::contains(array(1, 2, 3), 2), 'two is in the array');
