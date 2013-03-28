@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-final class Wrapper implements \Countable, \IteratorAggregate
+class Wrapper implements \Countable, \IteratorAggregate
 {
     private $value;
 
