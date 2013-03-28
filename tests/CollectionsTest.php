@@ -44,6 +44,33 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testMapKey($_)
+    {
+        $xs = array(1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four');
+
+        $result = $_::mapKey($xs, function($x, $i) {
+            return $i * 2;
+        });
+        $shouldBe = array(2 => 'one', 4 => 'two', 6 => 'three', 8 => 'four');
+        $this->assertEquals($shouldBe, $_::toArray($result, true));
+
+        $result = $_::collectKey($xs, function($x, $i) {
+            return $i * 2;
+        });
+        $shouldBe = array(2 => 'one', 4 => 'two', 6 => 'three', 8 => 'four');
+        $this->assertEquals($shouldBe, $_::toArray($result, true));
+
+        $result = $_::mapKey($xs, function($x, $i) {
+            return $i % 2;
+        });
+        $shouldBe = array(0 => 'four', 1 => 'three');
+        $this->assertEquals($shouldBe, $_::toArray($result, true));
+
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testReduce($_)
     {
         $sum = $_::reduce(array(1, 2, 3), function($sum, $num) {
