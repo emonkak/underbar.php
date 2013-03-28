@@ -287,11 +287,11 @@ class CollectionsTest extends Underbar_TestCase
             array('a' => 1, 'b' => 3),
             array('a' => 1, 'b' => 4)
         );
-        $result = $_::chain($list)->where(array('a' => 1))->toArray();
+        $result = $_::chain($list)->where(array('a' => 1))->toArray()->value();
         $this->assertCount(3, $result);
         $this->assertEquals(array('a' => 1, 'b' => 4), $_::last($result));
 
-        $result = $_::chain($list)->where(array('b' => 2))->toArray();
+        $result = $_::chain($list)->where(array('b' => 2))->toArray()->value();
         $this->assertCount(2, $result);
         $this->assertEquals(array('a' => 1, 'b' => 2), $_::first($result));
     }

@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-class Wrapper implements \Countable, \IteratorAggregate
+class Wrapper implements \IteratorAggregate
 {
     private $value;
 
@@ -24,11 +24,6 @@ class Wrapper implements \Countable, \IteratorAggregate
     public function value()
     {
         return $this->value;
-    }
-
-    public function count()
-    {
-        return call_user_func($this->class.'::size', $this->value);
     }
 
     public function getIterator()
