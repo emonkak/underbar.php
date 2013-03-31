@@ -1669,24 +1669,6 @@ class Strict
     }
 
     /**
-     * Invokes the given iterator function n times. Each invocation of iterator
-     * is called with an index argument.
-     *
-     * @category  Utility
-     * @param     int       $n
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function times($n, $f)
-    {
-        $acc = array();
-        while ($n-- > 0) {
-            $acc[] = call_user_func($f, $i);
-        }
-        return $acc;
-    }
-
-    /**
      * @category  Utility
      * @param     array|callable  $f
      * @param     mixed           *$args
