@@ -620,8 +620,6 @@ class Strict
     /**
      * Return the number of values in the list.
      *
-     * Alias: count
-     *
      * @category  Collections
      * @param     mixed  $xs
      * @return    int
