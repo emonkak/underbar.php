@@ -143,23 +143,23 @@ class LazyUnsafeGenerator extends Strict
     public static function zip()
     {
         $yss = $zss = array();
-        $loop = false;
+        $loop = true;
 
         foreach (func_get_args() as $xs) {
             $yss[] = $ys = static::_wrapIterator($xs);
             $ys->rewind();
-            $loop = $loop || $ys->valid();
+            $loop = $loop && $ys->valid();
             $zss[] = $ys->current();
         }
 
         while ($loop) {
             yield $zss;
             $zss = array();
-            $loop = false;
+            $loop = true;
             foreach ($yss as $ys) {
                 $ys->next();
                 $zss[] = $ys->current();
-                $loop = $loop || $ys->valid();
+                $loop = $loop && $ys->valid();
             }
         }
     }

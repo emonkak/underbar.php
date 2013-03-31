@@ -250,12 +250,71 @@ class ArraysTest extends Underbar_TestCase
     public function testZip($_)
     {
         $names = array('moe', 'larry', 'curly');
-        $ages = array(30, 40, 50);
-        $leaders = array(true);
+        $ages = array(30, 40, 50, 60);
+        $leaders = array(true, false);
 
         $stooges = $_::zip($names, $ages, $leaders);
-        $shouldBe = array(array('moe', 30, true), array('larry', 40, null), array('curly', 50, null));
+        $shouldBe = array(array('moe', 30, true), array('larry', 40, false));
         $this->assertEquals($shouldBe, $_::toArray($stooges), 'zipped together arrays of different lengths');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testZipWith($_)
+    {
+        $plus = function($x, $y) {
+            return $x + $y;
+        };
+
+        $result = $_::zipWith(array(1, 2, 3), array(4, 5, 6), $plus);
+        $this->assertEquals(array(5, 7, 9), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2, 3), array(4, 5), $plus);
+        $this->assertEquals(array(5, 7), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2), array(4, 5, 6), $plus);
+        $this->assertEquals(array(5, 7), $_::toArray($result));
+
+        $result = $_::zipWith(array(), array(), $plus);
+        $this->assertEquals(array(), $_::toArray($result));
+
+        if ($_ === 'Underbar\\Strict') {
+            $this->setExpectedException('OverflowException');
+        }
+        $result = $_::zipWith(array(1, 2, 3), $_::cycle(array(1, 0)), $plus);
+        $this->assertEquals(array(2, 2, 4), $_::toArray($result));
+
+        $result = $_::zipWith($_::range(1, INF), $_::cycle(array(1, 0)), $plus);
+        $this->assertEquals(array(2, 2, 4), $_::toArray($_::take($result, 3)));
+
+        $productPlus = function($x, $y, $z) {
+            return $x * $y + $z;
+        };
+
+        $result = $_::zipWith(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9), $productPlus);
+        $this->assertEquals(array(11, 18, 27), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2, 3), array(4, 5, 6), array(7, 8), $productPlus);
+        $this->assertEquals(array(11, 18), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2, 3), array(4, 5), array(7, 8, 9), $productPlus);
+        $this->assertEquals(array(11, 18), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2), array(4, 5, 6), array(7, 8, 9), $productPlus);
+        $this->assertEquals(array(11, 18), $_::toArray($result));
+
+        $result = $_::zipWith(array(), array(), array(), $productPlus);
+        $this->assertEquals(array(), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2, 3), array(4, 5, 6), $_::range(7, INF), $productPlus);
+        $this->assertEquals(array(11, 18, 27), $_::toArray($result));
+
+        $result = $_::zipWith(array(1, 2, 3), $_::range(4, INF), $_::range(7, INF), $productPlus);
+        $this->assertEquals(array(11, 18, 27), $_::toArray($result));
+
+        $result = $_::zipWith($_::range(1, INF), $_::range(4, INF), $_::range(7, INF), $productPlus);
+        $this->assertEquals(array(11, 18, 27), $_::toArray($_::take($result, 3)));
     }
 
     /**

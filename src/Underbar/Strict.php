@@ -1023,23 +1023,23 @@ class Strict
     public static function zip()
     {
         $xss = $zipped = $result = array();;
-        $loop = false;
+        $loop = true;
 
         foreach (func_get_args() as $xs) {
             $xss[] = $wrapped = static::_wrapIterator($xs);
             $wrapped->rewind();
-            $loop = $loop || $wrapped->valid();
+            $loop = $loop && $wrapped->valid();
             $zipped[] = $wrapped->current();
         }
 
         while ($loop) {
             $result[] = $zipped;
             $zipped = array();
-            $loop = false;
+            $loop = true;
             foreach ($xss as $xs) {
                 $xs->next();
                 $zipped[] = $xs->current();
-                $loop = $loop || $xs->valid();
+                $loop = $loop && $xs->valid();
             }
         }
 
@@ -1057,9 +1057,7 @@ class Strict
         $xss = func_get_args();
         $f = array_pop($xss);
         $zipped = call_user_func_array(get_called_class().'::zip', $xss);
-        return static::map($zipped, function($xs, $i, $xs) use ($f) {
-            $xs[] = $i;
-            $xs[] = $xs;
+        return static::map($zipped, function($xs, $i, $xss) use ($f) {
             return call_user_func_array($f, $xs);
         });
     }
@@ -1218,7 +1216,7 @@ class Strict
     public static function cycle($xs, $n = null)
     {
         $result = array();
-        if ($n !== null) {
+        if ($n === null) {
             throw new \OverflowException();
         }
         while ($n-- > 0) {
