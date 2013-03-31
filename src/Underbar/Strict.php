@@ -787,7 +787,7 @@ class Strict
             return static::_last($xs, $n);
         }
         foreach ($xs as $x);
-        return isset($x) ? new Option\Some($x) : Option\None::instances();
+        return isset($x) ? new Option\Some($x) : Option\None::instance();
     }
 
     protected static function _last($xs, $n = null)
