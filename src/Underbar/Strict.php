@@ -947,16 +947,18 @@ class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @param     array              *$others
+     * @param     array|Traversable  *$others
      * @return    array
      */
     public static function difference($xs)
     {
-        $others = array_slice(func_get_args(), 1);
-        return static::filter($xs, function($x) use ($others) {
-            foreach ($others as $other) {
-                if (in_array($x, $other, true)) {
-                    return false;
+        $yss = array_slice(func_get_args(), 1);
+        return static::filter($xs, function($x) use ($yss) {
+            foreach ($yss as $ys) {
+                foreach ($ys as $y) {
+                    if ($x === $y) {
+                        return false;
+                    }
                 }
             }
             return true;
