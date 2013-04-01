@@ -1239,7 +1239,7 @@ class Strict
         if ($n < 0) {
             throw new \OverflowException();
         }
-        return array_fill(0, $n, $x);
+        return $n === 0 ? array() : array_fill(0, $n, $x);
     }
 
     /**

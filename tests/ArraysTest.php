@@ -429,6 +429,27 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::cycle(array(1, 2));
         $this->assertEquals(array(1, 2, 1, 2, 1), $_::toArray($_::take($result, 5)));
     }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testRepeat($_)
+    {
+        $result = $_::repeat(1, 2);
+        $this->assertEquals(array(1, 1), $_::toArray($result));
+
+        $result = $_::repeat(array(1, 2), 2);
+        $this->assertEquals(array(array(1, 2), array(1, 2)), $_::toArray($result));
+
+        $result = $_::repeat(1, 0);
+        $this->assertEmpty($_::toArray($result));
+
+        if ($_ === 'Underbar\\Strict') {
+            $this->setExpectedException('OverflowException');
+        }
+        $result = $_::repeat(1);
+        $this->assertEquals(array(1, 1, 1, 1), $_::toArray($_::take($result, 4)));
+    }
 }
 
 // __END__
