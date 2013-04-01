@@ -450,6 +450,36 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::repeat(1);
         $this->assertEquals(array(1, 1, 1, 1), $_::toArray($_::take($result, 4)));
     }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testIterate($_)
+    {
+        if ($_ === 'Underbar\\Strict') {
+            $this->setExpectedException('OverflowException');
+        }
+
+        $result = $_::iterate(2, function($x) { return $x * $x; });
+        $shouldBe = array(2, 4, 16, 256);
+        $this->assertEquals($shouldBe, $_::toArray($_::take($result, 4)), 'square');
+
+        $result = $_::chain(array())
+            ->iterate(function($xs) { return range(1, count($xs) + 1); })
+            ->map(function($xs) { return array_product($xs); })
+            ->take(10);
+        $shouldBe = array(1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880);
+        $this->assertEquals($shouldBe, $_::toArray($result), 'factorial');
+
+        $result = $_::chain(array(0, 1))
+            ->iterate(function($xs) {
+                return array($xs[1], $xs[0] + $xs[1]);
+            })
+            ->map(array($_, 'first'))
+            ->take(10);
+        $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34);
+        $this->assertEquals($shouldBe, $_::toArray($result), 'fibonacci numbers');
+    }
 }
 
 // __END__

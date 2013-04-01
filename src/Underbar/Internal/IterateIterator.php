@@ -31,7 +31,7 @@ class IterateIterator implements \Iterator
     public function next()
     {
         $this->index++;
-        $this->acc = call_user_func($this->iterator, $this->acc);
+        $this->acc = call_user_func($this->f, $this->acc);
     }
 
     public function rewind()
