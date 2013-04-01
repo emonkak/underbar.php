@@ -211,18 +211,18 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testAny($_)
+    public function testSome($_)
     {
-        $this->assertFalse($_::any(array()), 'the empty set');
-        $this->assertFalse($_::any(array(false, false, false)), 'all false values');
-        $this->assertTrue($_::any(array(false, false, true)), 'one true value');
-        $this->assertTrue($_::any(array(null, 0, 'yes', false)), 'a string');
-        $this->assertFalse($_::any(array(null, 0, '', false)), 'falsy values');
-        $this->assertFalse($_::any(array(1, 11, 29), function($num) { return $num % 2 == 0; }), 'all odd numbers');
-        $this->assertTrue($_::any(array(1, 10, 29), function($num) { return $num % 2 == 0; }), 'an even number');
-        $this->assertTrue($_::any(array(1), "$_::identity") === true, 'cast to boolean - true');
-        $this->assertTrue($_::any(array(0), "$_::identity") === false, 'cast to boolean - false');
-        $this->assertTrue($_::some(array(false, false, true)), 'aliased as "some"');
+        $this->assertFalse($_::some(array()), 'the empty set');
+        $this->assertFalse($_::some(array(false, false, false)), 'all false values');
+        $this->assertTrue($_::some(array(false, false, true)), 'one true value');
+        $this->assertTrue($_::some(array(null, 0, 'yes', false)), 'a string');
+        $this->assertFalse($_::some(array(null, 0, '', false)), 'falsy values');
+        $this->assertFalse($_::some(array(1, 11, 29), function($num) { return $num % 2 == 0; }), 'all odd numbers');
+        $this->assertTrue($_::some(array(1, 10, 29), function($num) { return $num % 2 == 0; }), 'an even number');
+        $this->assertTrue($_::some(array(1), "$_::identity") === true, 'cast to boolean - true');
+        $this->assertTrue($_::some(array(0), "$_::identity") === false, 'cast to boolean - false');
+        $this->assertTrue($_::any(array(false, false, true)), 'aliased as "any"');
     }
 
     /**
