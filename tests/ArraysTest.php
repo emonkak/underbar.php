@@ -405,6 +405,30 @@ class ArraysTest extends Underbar_TestCase
         $shouldBe = array(0, -1, -2, -3, -4, -5, -6, -7, -8, -9);
         $this->assertEquals($shouldBe, $_::toArray($result), 'final example in the Python docs');
     }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testCycle($_)
+    {
+        $result = $_::cycle(array(1, 2), 2);
+        $this->assertEquals(array(1, 2, 1, 2), $_::toArray($result));
+
+        $result = $_::cycle(array(1, 2), 1);
+        $this->assertEquals(array(1, 2), $_::toArray($result));
+
+        $result = $_::cycle(array(1, 2), 0);
+        $this->assertEmpty($_::toArray($result));
+
+        $result = $_::cycle(array(), 2);
+        $this->assertEmpty($_::toArray($result));
+
+        if ($_ === 'Underbar\\Strict') {
+            $this->setExpectedException('OverflowException');
+        }
+        $result = $_::cycle(array(1, 2));
+        $this->assertEquals(array(1, 2, 1, 2, 1), $_::toArray($_::take($result, 5)));
+    }
 }
 
 // __END__
