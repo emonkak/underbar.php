@@ -1668,8 +1668,8 @@ class Strict
 
     /**
      * @category  Utility
-     * @param     array|callable  $f
-     * @param     mixed           *$args
+     * @param     callable  $f
+     * @param     mixed     *$args
      * @return    float
      */
     public static function bench($f)
