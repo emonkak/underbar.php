@@ -1742,7 +1742,7 @@ class Strict
 
     protected static function _toTraversable($xs)
     {
-        return static::isTraversable($xs) ? $xs : (array) $xs;
+        return static::isTraversable($xs) ? $xs : array($xs);
     }
 }
 
