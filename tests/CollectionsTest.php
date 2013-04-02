@@ -174,6 +174,26 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testFindWhere($_)
+    {
+        $list = array(
+            array('a' => 1, 'b' => 2),
+            array('a' => 2, 'b' => 2),
+            array('a' => 1, 'b' => 3),
+            array('a' => 1, 'b' => 4),
+            array('a' => 2, 'b' => 4)
+        );
+
+        $result = $_::findWhere($list, array('a' => 1));
+        $this->assertEquals($list[0], $result);
+
+        $result = $_::findWhere($list, array('b' => 4));
+        $this->assertEquals($list[3], $result);
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testFilter($_)
     {
         $evens = $_::filter(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
