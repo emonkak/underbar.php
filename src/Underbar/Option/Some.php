@@ -16,7 +16,7 @@ final class Some extends Option
     /**
      * Returns the option's value.
      *
-     * @throws  RuntimeException
+     * @throws  OutOfRangeException
      * @return  mixed
      */
     public function get()

@@ -21,7 +21,7 @@ abstract class Option implements \IteratorAggregate, \Countable
     /**
      * Returns the option's value.
      *
-     * @throws  RuntimeException
+     * @throws  OutOfRangeException
      * @return  mixed
      */
     abstract public function get();
