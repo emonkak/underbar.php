@@ -26,6 +26,18 @@ class Wrapper implements \IteratorAggregate
         return $this->value;
     }
 
+    public function strict()
+    {
+        $this->class = __NAMESPACE__ . '\\Strict';
+        return $this;
+    }
+
+    public function lazy()
+    {
+        $this->class = __NAMESPACE__ . '\\Lazy';
+        return $this;
+    }
+
     public function getIterator()
     {
         if ($this->value instanceof \Traversable) {
