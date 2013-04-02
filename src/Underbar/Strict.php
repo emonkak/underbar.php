@@ -640,6 +640,64 @@ class Strict
 
     /**
      * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     string|int         $index
+     * @return    array
+     */
+    public static function index($xs, $index)
+    {
+        if (static::isArray($xs)) {
+            return isset($xs[$index]) ? $xs[$index] : null;
+        }
+
+        if (is_int($index)) {
+            foreach ($xs as $x) {
+                if ($index-- <= 0) {
+                    return $x;
+                }
+            }
+        } else {
+            foreach ($xs as $i => $x) {
+                if ($i == $index) {
+                    return $x;
+                }
+            }
+        }
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     string|int         $index
+     * @return    array
+     */
+    public static function indexSafe($xs, $index)
+    {
+        if (static::isArray($xs)) {
+            return isset($xs[$index])
+                ? new Option\Some($xs[$index])
+                : Option\None::instance();
+        }
+
+        if (is_int($index)) {
+            foreach ($xs as $x) {
+                if ($index-- <= 0) {
+                    return new Option\Some($x);
+                }
+            }
+        } else {
+            foreach ($xs as $i => $x) {
+                if ($i == $index) {
+                    return new Option\Some($x);
+                }
+            }
+        }
+
+        return Option\None::instance();
+    }
+
+    /**
+     * @category  Collections
      * @param     mixed     $xs
      * @param     callable  $f
      * @return    array
