@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-class LazyIterator extends Strict
+abstract class LazyIterator extends Strict
 {
     /**
      * @category  Collections
@@ -48,7 +48,7 @@ class LazyIterator extends Strict
     protected static function _first($xs, $n = null)
     {
         return $n > 0
-             ? new \LimitIterator(static::_wrapIterator($xs), 0, $n)
+             ? new Internal\LimitIterator(static::_wrapIterator($xs), 0, $n)
              : new \EmptyIterator();
     }
 
@@ -88,7 +88,7 @@ class LazyIterator extends Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return new \LimitIterator(static::_wrapIterator($xs), $n);
+        return new Internal\LimitIterator(static::_wrapIterator($xs), $n);
     }
 
     /**

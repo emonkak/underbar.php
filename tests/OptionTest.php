@@ -92,4 +92,10 @@ class OptionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, Option::fromValue(null)->orElse(Option::fromValue(2))->orNull());
         $this->assertTrue(Option::fromValue(null)->orElse(Option::fromValue(null))->isEmpty());
     }
+
+    public function testCount()
+    {
+        $this->assertEquals(1, count(Option::fromValue(1)));
+        $this->assertEquals(0, count(Option::fromValue(null)));
+    }
 }

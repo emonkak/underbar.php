@@ -18,6 +18,9 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::first(array(1, 2, 3), 0);
         $this->assertEquals(array(), $_::toArray($result), 'can pass an index to first');
 
+        $result = $_::firstSafe(array(1, 2, 3), 0);
+        $this->assertEquals(array(), $_::toArray($result), 'works well safe method');
+
         $result = $_::first(array(1, 2, 3), 2);
         $this->assertEquals(array(1, 2), $_::toArray($result), 'can pass an index to first');
 
@@ -29,6 +32,15 @@ class ArraysTest extends Underbar_TestCase
 
         $result = $_::take(array(1, 2, 3), 2);
         $this->assertEquals(array(1, 2), $_::toArray($result), 'aliased as take');
+
+        $result = $_::head(array(1, 2, 3), 2);
+        $this->assertEquals(array(1, 2), $_::toArray($result), 'aliased as head');
+
+        $result = $_::takeSafe(array(1, 2, 3))->get();
+        $this->assertEquals(1, $result, 'aliased as takeSafe');
+
+        $result = $_::headSafe(array(1, 2, 3))->get();
+        $this->assertEquals(1, $result, 'aliased as headSafe');
     }
 
     /**
@@ -140,6 +152,9 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::last(array(1, 2, 3), 0);
         $this->assertEquals(array(), $_::toArray($result), 'can pass an index to last');
 
+        $result = $_::lastSafe(array(1, 2, 3), 0);
+        $this->assertEquals(array(), $_::toArray($result), 'works well safe method');
+
         $result = $_::last(array(1, 2, 3), 2);
         $this->assertEquals(array(2, 3), $_::toArray($result), 'can pass an index to last');
 
@@ -213,6 +228,13 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::uniq($list, function($value) { return $value + 1; });
         $shouldBe = array(1, 2, 3, 4);
         $this->assertEquals($shouldBe, $_::toArray($result, false), 'iterator works');
+
+        $obj1 = new StdClass();
+        $obj2 = new StdClass();
+        $obj3 = new StdClass();
+        $result = $_::uniq(array($obj1, $obj2, $obj2, $obj3));
+        $shouldBe = array($obj1, $obj2, $obj3);
+        $this->assertEquals($shouldBe, $_::toArray($result, false), 'works well objects');
     }
 
     /**
@@ -336,11 +358,15 @@ class ArraysTest extends Underbar_TestCase
         $shouldBe = array('moe' => 30, 'larry' => '40', 'curly' => 50);
         $this->assertEquals($shouldBe, $_::toArray($result, true), 'two arrays zipped together into an object');
 
+        $result = $_::object(array('moe', 'larry', 'curly'), array(30, 40));
+        $shouldBe = array('moe' => 30, 'larry' => '40');
+        $this->assertEquals($shouldBe, $_::toArray($result, true), 'different length arrays');
+
         $result = $_::object(array(array('one', 1), array('two', 2), array('three', 3)));
-        $shouldBe = array('one' =>  1, 'two' =>  2, 'three' =>  3);
+        $shouldBe = array('one' => 1, 'two' =>  2, 'three' =>  3);
         $this->assertEquals($shouldBe, $_::toArray($result, true), 'an array of pairs zipped together into an object');
 
-        $stooges = array('moe' =>  30, 'larry' => 40, 'curly' =>  50);
+        $stooges = array('moe' => 30, 'larry' => 40, 'curly' =>  50);
         $result = $_::object($_::pairs($stooges));
         $this->assertEquals($stooges, $_::toArray($result, true), 'an object converted to pairs and back to an object');
     }
@@ -352,6 +378,9 @@ class ArraysTest extends Underbar_TestCase
     {
         $numbers = array(1, 2, 3);
         $this->assertEquals(1, $_::indexOf($numbers, 2), 'can compute indexOf');
+
+        $numbers = array(1, 2, 3);
+        $this->assertEquals(-1, $_::indexOf($numbers, 4), '4 is not in the list');
 
         $numbers = array(10, 20, 30, 40, 50);
         $this->assertEquals(-1, $_::indexOf($numbers, 35, true), '35 is not in the list');
@@ -371,6 +400,7 @@ class ArraysTest extends Underbar_TestCase
     {
         $numbers = array(1, 0, 1);
         $this->assertEquals(2, $_::lastIndexOf($numbers, 1));
+        $this->assertEquals(-1, $_::lastIndexOf($numbers, 2));
 
         $numbers = array(1, 0, 1, 0, 0, 1, 0, 0, 0);
         $this->assertEquals(5, $_::lastIndexOf($numbers, 1), 'can compute lastIndexOf');
@@ -489,6 +519,113 @@ class ArraysTest extends Underbar_TestCase
             ->take(10);
         $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34);
         $this->assertEquals($shouldBe, $_::toArray($result), 'fibonacci numbers');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testPop($_)
+    {
+        $result = $_::pop(array(1, 2, 3));
+        $this->assertEquals(array(1, 2), $_::toArray($result));
+
+        $result = $_::pop(array());
+        $this->assertEmpty($_::toArray($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testPush($_)
+    {
+        $result = $_::push(array(1, 2), 3);
+        $this->assertEquals(array(1, 2, 3), $_::toArray($result));
+
+        $result = $_::push(array(), 1 , 2);
+        $this->assertEquals(array(1, 2), $_::toArray($result));
+
+        $result = $_::push(array());
+        $this->assertEmpty($_::toArray($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testReverse($_)
+    {
+        $result = $_::reverse(array(1, 2, 3));
+        $this->assertEquals(array(3, 2, 1), $_::toArray($result));
+
+        $result = $_::reverse($_::range(3));
+        $this->assertEquals(array(2, 1, 0), $_::toArray($result));
+
+        $result = $_::reverse(array());
+        $this->assertEmpty($_::toArray($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testShift($_)
+    {
+        $result = $_::shift(array(1, 2, 3));
+        $this->assertEquals(array(2, 3), $_::toArray($result));
+
+        $result = $_::shift($_::range(3));
+        $this->assertEquals(array(1, 2), $_::toArray($result));
+
+        $result = $_::shift(array());
+        $this->assertEmpty($_::toArray($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testSplice($_)
+    {
+        $myFish = array('angel', 'clown', 'mandarin', 'surgeon');
+
+        $myFish = $_::splice($myFish, 2, 0, 'drum');
+        $shouldBe = array('angel', 'clown', 'drum', 'mandarin', 'surgeon');
+        $this->assertEquals($shouldBe, $myFish);
+
+        $myFish = $_::splice($myFish, 3, 1);
+        $shouldBe = array('angel', 'clown', 'drum', 'surgeon');
+        $this->assertEquals($shouldBe, $myFish);
+
+        $myFish = $_::splice($myFish, 2, 1, 'trumpet');
+        $shouldBe = array('angel', 'clown', 'trumpet', 'surgeon');
+        $this->assertEquals($shouldBe, $myFish);
+
+        $myFish = $_::splice($myFish, 0, 2, 'parrot', 'anemone', 'blue');
+        $shouldBe = array('parrot', 'anemone', 'blue', 'trumpet', 'surgeon');
+        $this->assertEquals($shouldBe, $myFish);
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testJoin($_)
+    {
+        $xs = array('Wind', 'Rain', 'Fire');
+        $this->assertEquals('Wind,Rain,Fire', $_::join($xs));
+        $this->assertEquals('Wind, Rain, Fire', $_::join($xs, ', '));
+        $this->assertEquals('Wind + Rain + Fire', $_::join($xs, ' + '));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testSlice($_)
+    {
+        $xs = $_::range(1, 6);
+        $this->assertEquals(array(1, 2, 3, 4, 5), $_::slice($xs, 0));
+        $this->assertEquals(array(3, 4, 5), $_::slice($xs, 2));
+        $this->assertEquals(array(3, 4), $_::slice($xs, 2, 4));
+        $this->assertEmpty($_::slice($xs, 1, 1));
+        $this->assertEquals(array(5), $_::slice($xs, -1));
+        $this->assertEquals(array(4, 5), $_::slice($xs, -2));
+        $this->assertEquals(array(1, 2), $_::slice($xs, 0, -3));
     }
 }
 

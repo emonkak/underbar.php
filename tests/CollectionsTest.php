@@ -99,15 +99,18 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testReduce($_)
     {
-        $sum = $_::reduce(array(1, 2, 3), function($sum, $num) {
-            return $sum + $num;
-        }, 0);
-        $this->assertEquals(6, $sum, 'can sum up an array');
+        $sum = function($acc, $n) {
+            return $acc + $n;
+        };
 
-        $sum = $_::inject(array(1, 2, 3), function($sum, $num) {
-            return $sum + $num;
-        }, 0);
-        $this->assertEquals(6, $sum, 'aliased as "inject"');
+        $result = $_::reduce(array(1, 2, 3), $sum, 0);
+        $this->assertEquals(6, $result, 'can sum up an array');
+
+        $result = $_::inject(array(1, 2, 3), $sum, 0);
+        $this->assertEquals(6, $result, 'aliased as "inject"');
+
+        $result = $_::foldl(array(1, 2, 3), $sum, 0);
+        $this->assertEquals(6, $result, 'aliased as "foldl"');
     }
 
     /**
@@ -115,17 +118,17 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testReduceRight($_)
     {
-        $list = $_::reduceRight(array('foo', 'bar', 'baz'), function($memo, $str) {
+        $list = $_::reduceRight(array('foo', 'bar', 'baz'), function($str, $memo) {
             return $memo . $str;
         }, '');
         $this->assertEquals($list, 'bazbarfoo', 'can perform right folds');
 
-        $list = $_::foldr(array("foo", "bar", "baz"), function($memo, $str) {
+        $list = $_::foldr(array("foo", "bar", "baz"), function($str, $memo) {
             return $memo . $str;
         }, '');
         $this->assertEquals($list, 'bazbarfoo', 'aliased as "foldr"');
 
-        $sum = $_::reduceRight(array('a' => 1, 'b' => 2, 'c' => 3), function($sum, $num) {
+        $sum = $_::reduceRight(array('a' => 1, 'b' => 2, 'c' => 3), function($num, $sum) {
             return $sum + $num;
         }, 0);
         $this->assertEquals(6, $sum, 'on object');
@@ -135,7 +138,7 @@ class CollectionsTest extends Underbar_TestCase
         $memo = array();
         $object = array('a' => 1, 'b' => 2);
         $lastKey = $_::last($_::keys($object));
-        $expected = array($memo, 2, 'b', $object);
+        $expected = array(2, $memo, 'b', $object);
 
         $_::reduceRight($object, function() use (&$args) {
             $args || ($args = func_get_args());
@@ -147,12 +150,17 @@ class CollectionsTest extends Underbar_TestCase
         $memo = array();
         $object = array('2' => 1, '1' => 2);
         $lastKey = $_::last($_::keys($object));
-        $expected = array($memo, 2, '1', $object);
+        $expected = array(2, $memo, '1', $object);
 
         $_::reduceRight($object, function() use (&$args) {
             $args || ($args = func_get_args());
         }, $memo);
         $this->assertEquals($args, $expected);
+
+        $expected = $_::reduceRight($_::range(10), function($x, $y) {
+            return $x - $y;
+        }, 0);
+        $this->assertEquals(-5, $expected);
     }
 
     /**
@@ -165,6 +173,7 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertNull($_::find($array, function() { return false; }), 'should return `undefined` if `value` is not found');
 
         $this->assertEquals(3, $_::findSafe($array, function($n) { return $n > 2; })->get(), 'safe method');
+        $this->assertEquals(3, $_::detectSafe($array, function($n) { return $n > 2; })->get(), 'safe method');
         $this->assertTrue($_::findSafe($array, function() { return false; })->isEmpty(), 'safe method');
 
         $result = $_::find(array(1, 2, 3), function($num) { return $num * 2 == 4; });
@@ -302,6 +311,13 @@ class CollectionsTest extends Underbar_TestCase
         $people = array(
             array('name' => 'moe', 'age' => 30),
             array('name' => 'curly', 'age' => 50)
+        );
+        $result = $_::pluck($people, 'name');
+        $this->assertEquals(array('moe', 'curly'), $_::toArray($result), 'pulls names out of arrays');
+
+        $people = array(
+            (object) array('name' => 'moe', 'age' => 30),
+            (object) array('name' => 'curly', 'age' => 50)
         );
         $result = $_::pluck($people, 'name');
         $this->assertEquals(array('moe', 'curly'), $_::toArray($result), 'pulls names out of objects');
@@ -512,6 +528,10 @@ class CollectionsTest extends Underbar_TestCase
         $numbers = $_::toArray(array('one' => 1, 'two' => 2, 'three' => 3));
         $this->assertEquals($numbers, $_::toArray($numbers, true), 'object flattened into array');
         $this->assertEquals(array(1, 2, 3), $_::toArray($numbers, false), 'object flattened into array');
+
+        $this->assertEquals(array('a', 'b', 'c', 'd'), $_::toArray('abcd'), 'works with string');
+
+        $this->assertEquals(array(1), $_::toArray(1), 'works with scalar');
     }
 
     /**
@@ -523,6 +543,8 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals(3, $_::size($_::range(3)), 'can compute the size of an array');
         $this->assertEquals(5, $_::size('hello'), 'can compute the size of a string');
         $this->assertEquals(0, $_::size(null), 'handles nulls');
+
+        $this->assertEquals(3, $_::size(new ArrayObject(array(1, 2, 3))), 'works with Countable');
     }
 
     /**

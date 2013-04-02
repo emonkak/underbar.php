@@ -50,8 +50,10 @@ class InitialIterator extends \IteratorIterator
             parent::next();
         }
 
-        $this->index = 0;
-        $this->current = $this->queue->dequeue();
+        if (!$this->queue->isEmpty()) {
+            $this->index = 0;
+            $this->current = $this->queue->dequeue();
+        }
     }
 }
 

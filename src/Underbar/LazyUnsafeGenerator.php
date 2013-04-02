@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-class LazyUnsafeGenerator extends Strict
+abstract class LazyUnsafeGenerator extends Strict
 {
     /**
      * @category  Collections

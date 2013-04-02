@@ -2,13 +2,8 @@
 
 namespace Underbar;
 
-class Strict
+abstract class Strict
 {
-    final private function __construct()
-    {
-        // Not allow to create an instance
-    }
-
     /**
      * Iterates over a list of elements, yielding each in turn to an iterator
      * function.
@@ -136,8 +131,14 @@ class Strict
      */
     public static function reduceRight($xs, $f, $acc)
     {
-        foreach (static::reverse($xs) as $i => $x) {
-            $acc = call_user_func($f, $acc, $x, $i, $xs);
+        if (is_array($xs)) {
+            for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
+                $acc = call_user_func($f, $x, $acc, key($xs), $xs);
+            }
+        } else {
+            foreach (static::reverse($xs, true) as $i => $x) {
+                $acc = call_user_func($f, $x, $acc, $i, $xs);
+            }
         }
         return $acc;
     }
@@ -650,17 +651,9 @@ class Strict
             return isset($xs[$index]) ? $xs[$index] : null;
         }
 
-        if (is_int($index)) {
-            foreach ($xs as $x) {
-                if ($index-- <= 0) {
-                    return $x;
-                }
-            }
-        } else {
-            foreach ($xs as $i => $x) {
-                if ($i == $index) {
-                    return $x;
-                }
+        foreach ($xs as $i => $x) {
+            if ($i == $index) {
+                return $x;
             }
         }
     }
@@ -679,17 +672,9 @@ class Strict
                 : Option\None::instance();
         }
 
-        if (is_int($index)) {
-            foreach ($xs as $x) {
-                if ($index-- <= 0) {
-                    return new Option\Some($x);
-                }
-            }
-        } else {
-            foreach ($xs as $i => $x) {
-                if ($i == $index) {
-                    return new Option\Some($x);
-                }
+        foreach ($xs as $i => $x) {
+            if ($i == $index) {
+                return new Option\Some($x);
             }
         }
 
@@ -771,12 +756,12 @@ class Strict
         return Option\None::instance();
     }
 
-    public static function headSafe($xs, $n = null, $guard)
+    public static function headSafe($xs, $n = null, $guard = null)
     {
         return static::firstSafe($xs, $n, $guard);
     }
 
-    public static function takeSafe($xs, $n = null, $guard)
+    public static function takeSafe($xs, $n = null, $guard = null)
     {
         return static::firstSafe($xs, $n, $guard);
     }
@@ -1035,8 +1020,8 @@ class Strict
      */
     public static function uniq($xs, $f = null)
     {
-        $seenScalar = $seenObjects = $seenOthers = array();
         $f = static::_lookupIterator($f);
+        $seenScalar = $seenObjects = $seenOthers = array();
         return static::filter($xs, function($x, $i, $xs) use (
             $f,
             &$seenScalar,
@@ -1135,12 +1120,12 @@ class Strict
         if ($values !== null) {
             $values->rewind();
             foreach ($xs as $key) {
-                if ($values->valid()) {
-                    $result[$key] = $values->current();
-                    $values->next();
-                } else {
-                    $result[$key] = null;
+                if (!$values->valid()) {
+                    break;
                 }
+
+                $result[$key] = $values->current();
+                $values->next();
             }
         } else {
             foreach ($xs as $x) {
@@ -1347,9 +1332,9 @@ class Strict
      * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function reverse($xs)
+    public static function reverse($xs, $preserveKeys = false)
     {
-        return array_reverse(static::toArray($xs, true), true);
+        return array_reverse(static::toArray($xs, true), $preserveKeys);
     }
 
     /**
@@ -1378,19 +1363,6 @@ class Strict
     }
 
     /**
-     * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $compare
-     * @return    array
-     */
-    public static function sortByKey($xs, $compare = null)
-    {
-        $xs = static::toArray($xs);
-        is_callable($compare) ? uksort($xs, $compare) : ksort($xs);
-        return $xs;
-    }
-
-    /**
      * Removes the first element from an array and returns that element.
      *
      * @category  Arrays
@@ -1402,7 +1374,9 @@ class Strict
     public static function splice($xs, $index, $n)
     {
         $rest = array_slice(func_get_args(), 3);
-        return array_splice(static::toArray($xs), $index, $n, $rest);
+        $xs = static::toArray($xs);
+        array_splice($xs, $index, $n, $rest);
+        return $xs;
     }
 
     /**
@@ -1462,8 +1436,11 @@ class Strict
      * @param     int                $end
      * @return    array
      */
-    public static function slice($xs, $begin, $end = -1)
+    public static function slice($xs, $begin, $end = null)
     {
+        if ($end > 0) {
+            $end = max(0, $end - $begin);
+        }
         return array_slice(static::toArray($xs), $begin, $end);
     }
 
@@ -1479,9 +1456,9 @@ class Strict
         if (is_array($xs)) {
             return array_keys($xs);
         }
-        return static::map($xs, function($x, $k) {
+        return static::values(static::map($xs, function($x, $k) {
             return $k;
-        });
+        }));
     }
 
     /**
@@ -1538,23 +1515,21 @@ class Strict
      * object, and return the destination object.
      *
      * @category  Objects
-     * @param     array|Traversable  $destination
+     * @param     array|Object       $destination
      * @param     array|Traversable  *$sources
      * @return    array
      */
     public static function extend($destination)
     {
-        if ($destination instanceof \Traversable) {
-            $destination = iterator_to_array($destination, true);
-        }
-
         $sources = array_slice(func_get_args(), 1);
-        foreach ($sources as $xs) {
-            if (is_array($destination)) {
+        if (static::isArray($destination)) {
+            foreach ($sources as $xs) {
                 foreach ($xs as $k => $x) {
                     $destination[$k] = $x;
                 }
-            } else {
+            }
+        } else {
+            foreach ($sources as $xs) {
                 foreach ($xs as $k => $x) {
                     $destination->$k = $x;
                 }
@@ -1796,11 +1771,6 @@ class Strict
             return new \IteratorIterator($xs);
         }
         return $xs;
-    }
-
-    protected static function _toTraversable($xs)
-    {
-        return static::isTraversable($xs) ? $xs : array($xs);
     }
 }
 

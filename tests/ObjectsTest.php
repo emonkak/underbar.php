@@ -7,12 +7,16 @@ class ObjectsTest extends Underbar_TestCase
      */
     public function testKeys($_)
     {
-        $result = $_::keys(array('one' => 1, 'two' => 2));
-        $this->assertEquals(array('one', 'two'), $result, 'can extract the keys from an object');
+        $xs = array('one' => 1, 'two' => 2);
 
-        // the test above is not safe because it relies on for-in enumeration order
-        $result = $_::keys(array('1' => 0));
-        $this->assertEquals(array(1), $result, 'is not fooled by sparse arrays; see issue #95');
+        $result = $_::keys($xs);
+        $this->assertEquals(array('one', 'two'), $_::toArray($result), 'can extract the keys from an object');
+
+        $result = $_::keys(new ArrayIterator($xs));
+        $this->assertEquals(array('one', 'two'), $_::toArray($result), 'works well Iterator');
+
+        $result = $_::keys(array(1 => 0));
+        $this->assertEquals(array(1), $_::toArray($result), 'is not fooled by sparse arrays');
 
     }
 
@@ -21,8 +25,13 @@ class ObjectsTest extends Underbar_TestCase
      */
     public function testValues($_)
     {
-        $result = $_::values(array('one' => 1, 'two' => 2));
-        $this->assertEquals(array(1, 2), $result, 'can extract the values from an object');
+        $xs = array('one' => 1, 'two' => 2);
+
+        $result = $_::values($xs);
+        $this->assertEquals(array(1, 2), $_::toArray($result), 'can extract the values from an object');
+
+        $result = $_::values(new ArrayIterator($xs));
+        $this->assertEquals(array(1, 2), $_::toArray($result), 'works well Iterator');
     }
 
     /**
@@ -45,7 +54,11 @@ class ObjectsTest extends Underbar_TestCase
     public function testExtend($_)
     {
         $result = $_::extend(array(), array('a' => 'b'));
-        $this->assertEquals('b', $result['a'], 'can extend an object with the attributes of another');
+        $this->assertEquals('b', $result['a'], 'can extend an array');
+
+        $obj = new StdClass();
+        $result = $_::extend($obj, array('a' => 'b'));
+        $this->assertEquals('b', $obj->a, 'can extend an object');
 
         $result = $_::extend(array('a' => 'x'), array('a' => 'b'));
         $this->assertEquals('b', $result['a'], 'properties in source override destination');
@@ -123,6 +136,16 @@ class ObjectsTest extends Underbar_TestCase
         );
         $this->assertEquals('', $result['empty'], 'value exists');
         $this->assertEquals('word', $result['word'], 'new value is added, first one wins');
+
+        $result = $_::defaults(new IteratorIterator(new ArrayIterator($options)), array('zero' => 1, 'one' => 10, 'twenty' => 20));
+        $this->assertEquals(0, $result['zero'], 'value exists');
+        $this->assertEquals(1, $result['one'], 'value exists');
+        $this->assertEquals(20, $result['twenty'], 'value exists');
+
+        $result = $_::defaults((object) $options, array('zero' => 1, 'one' => 10, 'twenty' => 20));
+        $this->assertEquals(0, $result->zero, 'value exists');
+        $this->assertEquals(1, $result->one, 'value exists');
+        $this->assertEquals(20, $result->twenty, 'default applied');
     }
 
     /**
@@ -139,6 +162,71 @@ class ObjectsTest extends Underbar_TestCase
 
         $this->assertEquals(1, $_::duplicate(1), 'non objects should not be changed by clone');
         $this->assertEquals(null, $_::duplicate(null), 'non objects should not be changed by clone');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testTap($_)
+    {
+        $intercepted = null;
+        $interceptor = function($obj) use (&$intercepted) { $intercepted = $obj; };
+        $returned = $_::tap(1, $interceptor);
+        $this->assertEquals(1, $intercepted, 'passes tapped object to interceptor');
+        $this->assertEquals(1, $returned, 'returns tapped object');
+
+        $returned = $_::chain(array(1, 2, 3))
+            ->map(function($n) { return $n * 2; })
+            ->max()
+            ->tap($interceptor)
+            ->value();
+        $this->assertTrue(6 === $intercepted && 6 === $returned, 'can use tapped objects in a chain');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testHas($_)
+    {
+        $obj = array('foo' => 'bar', 'func' => function() {});
+        $this->assertTrue($_::has($obj, 'foo'), 'has() checks that the object has a property.');
+        $this->assertFalse($_::has($obj, 'baz'), "has() returns false if the object doesn't have the property.");
+        $this->assertTrue($_::has($obj, 'func'), 'has() works for functions too.');
+
+        $obj = new IteratorIterator(new ArrayIterator($obj));
+        $this->assertTrue($_::has($obj, 'foo'));
+        $this->assertFalse($_::has($obj, 'baz'));
+
+        $obj = new StdClass;
+        $obj->foo = 'bar';
+        $this->assertTrue($_::has($obj, 'foo'));
+        $this->assertFalse($_::has($obj, 'baz'));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testIsArray($_)
+    {
+        $this->assertTrue($_::isArray(array()));
+        $this->assertTrue($_::isArray(new ArrayObject()));
+        $this->assertFalse($_::isArray(new EmptyIterator()));
+        $this->assertFalse($_::isArray(new StdClass()));
+        $this->assertFalse($_::isArray(0));
+        $this->assertFalse($_::isArray(null));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testIsTraversable($_)
+    {
+        $this->assertTrue($_::isTraversable(array()));
+        $this->assertTrue($_::isTraversable(new ArrayObject()));
+        $this->assertTrue($_::isTraversable(new EmptyIterator()));
+        $this->assertFalse($_::isTraversable(new StdClass()));
+        $this->assertFalse($_::isTraversable(0));
+        $this->assertFalse($_::isTraversable(null));
     }
 }
 
