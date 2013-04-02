@@ -884,7 +884,7 @@ class Strict
     private static function _flatten($xss, $shallow, &$output = array())
     {
         foreach ($xss as $xs) {
-            if (static::_isTraversable($xs)) {
+            if (static::isTraversable($xs)) {
                 if ($shallow) {
                     foreach ($xs as $x) {
                         $output[] = $x;
@@ -1521,7 +1521,7 @@ class Strict
         $keys = array_slice(func_get_args(), 1);
 
         foreach ($keys as $key) {
-            if (static::_isTraversable($key)) {
+            if (static::isTraversable($key)) {
                 foreach ($key as $k) {
                     $whitelist[$k] = 0;
                 }
@@ -1550,7 +1550,7 @@ class Strict
         $keys = array_slice(func_get_args(), 1);
 
         foreach ($keys as $key) {
-            if (static::_isTraversable($key)) {
+            if (static::isTraversable($key)) {
                 foreach ($key as $k) {
                     $blacklist[$k] = 0;
                 }
@@ -1580,7 +1580,7 @@ class Strict
         }
 
         $defaults = array_slice(func_get_args(), 1);
-        if (is_array($xs)) {
+        if (static::isArray($xs)) {
             foreach ($defaults as $default) {
                 foreach ($default as $k => $x) {
                     if (!isset($xs[$k])) {
@@ -1638,7 +1638,7 @@ class Strict
      */
     public static function has($xs, $key)
     {
-        if (is_array($xs)) {
+        if (static::isArray($xs)) {
             return isset($xs[$key]);
         }
         if ($xs instanceof \Traversable) {
@@ -1652,6 +1652,26 @@ class Strict
 
         // given a object
         return isset($xs->$key);
+    }
+
+    /**
+     * @category  Objects
+     * @param     mixed    $xs
+     * @return    boolean
+     */
+    public static function isArray($xs)
+    {
+        return is_array($xs) || $xs instanceof \ArrayAccess;
+    }
+
+    /**
+     * @category  Objects
+     * @param     mixed    $xs
+     * @return    boolean
+     */
+    public static function isTraversable($xs)
+    {
+        return is_array($xs) || $xs instanceof \Traversable;
     }
 
     /**
@@ -1720,14 +1740,9 @@ class Strict
         return $xs;
     }
 
-    protected static function _isTraversable($xs)
-    {
-        return is_array($xs) || $xs instanceof \Traversable;
-    }
-
     protected static function _toTraversable($xs)
     {
-        return static::_isTraversable($xs) ? $xs : (array) $xs;
+        return static::isTraversable($xs) ? $xs : (array) $xs;
     }
 }
 

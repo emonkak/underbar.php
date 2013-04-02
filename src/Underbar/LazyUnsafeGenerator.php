@@ -173,7 +173,7 @@ class LazyUnsafeGenerator extends Strict
     public static function flatten($xss, $shallow = false)
     {
         foreach ($xss as $xs) {
-            if (static::_isTraversable($xs)) {
+            if (static::isTraversable($xs)) {
                 if ($shallow) {
                     foreach ($xs as $x) {
                         yield $x;
