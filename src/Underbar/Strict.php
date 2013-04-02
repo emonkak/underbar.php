@@ -1768,7 +1768,7 @@ class Strict
      */
     public static function chain($value)
     {
-        return new Wrapper($value, get_called_class());
+        return new Internal\Wrapper($value, get_called_class());
     }
 
     protected static function _lookupIterator($value)

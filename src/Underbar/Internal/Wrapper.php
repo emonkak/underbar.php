@@ -1,8 +1,8 @@
 <?php
 
-namespace Underbar;
+namespace Underbar\Internal;
 
-class Wrapper implements \IteratorAggregate
+class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     private $value;
 
@@ -28,14 +28,19 @@ class Wrapper implements \IteratorAggregate
 
     public function strict()
     {
-        $this->class = __NAMESPACE__ . '\\Strict';
+        $this->class = 'Underbar\\Strict';
         return $this;
     }
 
     public function lazy()
     {
-        $this->class = __NAMESPACE__ . '\\Lazy';
+        $this->class = 'Underbar\\Lazy';
         return $this;
+    }
+
+    public function count()
+    {
+        return call_user_func(array($this->class, 'size'), $this->value);
     }
 
     public function getIterator()
@@ -45,6 +50,27 @@ class Wrapper implements \IteratorAggregate
         } else {
             return new \ArrayIterator((array) $this->value);
         }
+    }
+
+    public function offsetExists($offset)
+    {
+        $value = call_user_func(array($this->class, 'indexSafe'), $this->value, $offset);
+        return $value->isDefined();
+    }
+
+    public function offsetGet($offset)
+    {
+        return call_user_func(array($this->class, 'index'), $this->value, $offset);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        throw new \BadMethodCallException('Not implemented');
+    }
+
+    public function offsetUnset($offset)
+    {
+        throw new \BadMethodCallException('Not implemented');
     }
 }
 
