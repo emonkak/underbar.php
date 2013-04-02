@@ -51,7 +51,7 @@ class LazyUnsafeGenerator extends Strict
      * @param     int                $n
      * @return    Generator
      */
-    protected static function _first($xs, $n = null)
+    protected static function _first($xs, $n)
     {
         foreach ($xs as $i => $x) {
             if (--$n < 0) {

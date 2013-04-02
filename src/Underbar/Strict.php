@@ -723,7 +723,7 @@ class Strict
         return static::firstSafe($xs, $n, $guard);
     }
 
-    protected static function _first($xs, $n = null)
+    protected static function _first($xs, $n)
     {
         return $n > 0 ? array_slice(static::toArray($xs), 0, $n) : array();
     }
