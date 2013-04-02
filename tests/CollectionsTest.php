@@ -164,6 +164,9 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals(3, $_::find($array, function($n) { return $n > 2; }), 'should return first found `value`');
         $this->assertNull($_::find($array, function() { return false; }), 'should return `undefined` if `value` is not found');
 
+        $this->assertEquals(3, $_::findSafe($array, function($n) { return $n > 2; })->get(), 'safe method');
+        $this->assertTrue($_::findSafe($array, function() { return false; })->isEmpty(), 'safe method');
+
         $result = $_::find(array(1, 2, 3), function($num) { return $num * 2 == 4; });
         $this->assertEquals(2, $result, 'found the first "2" and broke the loop');
 
@@ -186,9 +189,17 @@ class CollectionsTest extends Underbar_TestCase
 
         $result = $_::findWhere($list, array('a' => 1));
         $this->assertEquals($list[0], $result);
-
         $result = $_::findWhere($list, array('b' => 4));
         $this->assertEquals($list[3], $result);
+        $result = $_::findWhere($list, array('c' => 0));
+        $this->assertNull($result);
+
+        $result = $_::findWhereSafe($list, array('a' => 1))->get();
+        $this->assertEquals($list[0], $result);
+        $result = $_::findWhereSafe($list, array('b' => 4))->get();
+        $this->assertEquals($list[3], $result);
+        $result = $_::findWhereSafe($list, array('c' => 0))->isEmpty();
+        $this->assertTrue($result);
     }
 
     /**
