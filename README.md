@@ -1,4 +1,5 @@
-# underbar.php
+# underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/[YOUR_GITHUB_USERNAME]/[YOUR_PROJECT_NAME])
+
 
 underbar.php is a underscore.js like library.
 
