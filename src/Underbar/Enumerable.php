@@ -79,7 +79,6 @@ public function push(){$args=func_get_args();array_unshift($args,$this);return c
 public function reverse(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::reverse',$args);}
 public function shift(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::shift',$args);}
 public function sort(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::sort',$args);}
-public function sortByKey(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::sortByKey',$args);}
 public function splice(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::splice',$args);}
 public function unshift(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::unshift',$args);}
 public function concat(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::concat',$args);}
