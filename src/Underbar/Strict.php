@@ -819,7 +819,8 @@ abstract class Strict
             return static::_last($xs, $n);
         }
         $x = null;
-        foreach ($xs as $x);
+        foreach ($xs as $x) {
+        }
         return $x;
     }
 
@@ -829,7 +830,8 @@ abstract class Strict
         if ($n !== null && $guard === null) {
             return static::_last($xs, $n);
         }
-        foreach ($xs as $x);
+        foreach ($xs as $x) {
+        }
         return isset($x) ? new Option\Some($x) : Option\None::instance();
     }
 
@@ -1065,7 +1067,7 @@ abstract class Strict
      */
     public static function zip()
     {
-        $xss = $zipped = $result = array();;
+        $xss = $zipped = $result = array();
         $loop = true;
 
         foreach (func_get_args() as $xs) {

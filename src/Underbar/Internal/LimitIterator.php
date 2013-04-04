@@ -9,7 +9,8 @@ class LimitIterator extends \LimitIterator
         try {
             // Ignore OutOfBoundsException
             parent::rewind();
-        } catch (\OutOfBoundsException $e) {}
+        } catch (\OutOfBoundsException $e) {
+        }
     }
 }
 

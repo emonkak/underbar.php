@@ -2,6 +2,8 @@
 
 namespace Underbar\Internal;
 
+use Underbar\Strict as _;
+
 class FlattenIterator extends \RecursiveIteratorIterator
 {
     public function __construct($xs, $shallow)
@@ -17,9 +19,10 @@ class FlattenIterator extends \RecursiveIteratorIterator
     {
         parent::next();
         if (($maxDepth = $this->getMaxDepth()) > 0) {
-            while ((is_array($current = $this->current()) || $current instanceof \Traversable)
-                   && $this->getDepth() < $maxDepth)
+            while (_::isTraversable($this->current())
+                   && $this->getDepth() < $maxDepth) {
                 parent::next();
+            }
         }
     }
 
@@ -27,27 +30,10 @@ class FlattenIterator extends \RecursiveIteratorIterator
     {
         parent::rewind();
         if (($maxDepth = $this->getMaxDepth()) > 0) {
-            while ((is_array($current = $this->current()) || $current instanceof \Traversable)
-                   && $this->getDepth() < $maxDepth)
+            while (_::isTraversable($this->current())
+                   && $this->getDepth() < $maxDepth) {
                 parent::next();
+            }
         }
     }
 }
-
-class FlattenInnerIterator extends \IteratorIterator implements \RecursiveIterator
-{
-    public function getChildren()
-    {
-        $current = $this->current();
-        return new static(is_array($current) ? new \ArrayObject($current) : $current);
-    }
-
-    public function hasChildren()
-    {
-        $current = $this->current();
-        return is_array($current) || $current instanceof \Traversable;
-    }
-}
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

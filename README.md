@@ -21,7 +21,6 @@ MIT Licence
 - Implement strict and lazy version functions on the same interface
 - Use `Generator` when running on PHP 5.5
 - Provide `Enumerable` trait
-- PSR-2 compliance
 
 # Getting Started
 

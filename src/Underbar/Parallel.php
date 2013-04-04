@@ -146,7 +146,9 @@ class Parallel implements \Iterator, \Countable
         $this->procedure = $procedure;
         $this->timeout = $timeout;
 
-        for ($n = $n > 0 ? $n : static::processors(); $n-- > 0; $this->fork());
+        for ($n = $n > 0 ? $n : static::processors(); $n-- > 0;) {
+            $this->fork();
+        }
     }
 
     /**
@@ -227,7 +229,9 @@ class Parallel implements \Iterator, \Countable
         foreach ($values as $value) {
             $this->queue->enqueue($value);
         }
-        for ($i = count($this->queue); $i-- && !$this->queue->isEmpty(); $this->flush());
+        for ($i = count($this->queue); $i-- && !$this->queue->isEmpty();) {
+            $this->flush();
+        }
     }
 
     /**
@@ -366,7 +370,7 @@ class Parallel implements \Iterator, \Countable
      */
     protected function loop($socket)
     {
-        for (;;) {
+        while (true) {
             // is blocking
             if (($result = static::read($socket)) !== false) {
                 static::write($socket, call_user_func($this->procedure, $result));
