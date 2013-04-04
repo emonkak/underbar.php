@@ -37,7 +37,11 @@ foreach ($ref->getMethods() as $method) {
         $args[] = '$_' . $i . '=NULL';
     }
 
-    echo "function {$method->getName()}(";
+    if ($method->returnsReference()) {
+        echo "function &{$method->getName()}(";
+    } else {
+        echo "function {$method->getName()}(";
+    }
     echo implode(',', $args);
     echo '){';
     echo "return Lazy::{$method->getName()}(\$this,\$_1,\$_2,\$_3,\$_4,\$_5,\$_6,\$_7,\$_8,\$_9);";
