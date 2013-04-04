@@ -1,101 +1,101 @@
 <?php
 namespace Underbar;
-trait Enumerable {
-public function each(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::each',$args);}
-public function map(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::map',$args);}
-public function collect(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::collect',$args);}
-public function mapKey(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::mapKey',$args);}
-public function collectKey(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::collectKey',$args);}
-public function parallelMap(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::parallelMap',$args);}
-public function parallelCollect(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::parallelCollect',$args);}
-public function reduce(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::reduce',$args);}
-public function inject(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::inject',$args);}
-public function foldl(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::foldl',$args);}
-public function reduceRight(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::reduceRight',$args);}
-public function foldr(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::foldr',$args);}
-public function find(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::find',$args);}
-public function detect(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::detect',$args);}
-public function findSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::findSafe',$args);}
-public function detectSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::detectSafe',$args);}
-public function filter(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::filter',$args);}
-public function select(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::select',$args);}
-public function where(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::where',$args);}
-public function findWhere(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::findWhere',$args);}
-public function findWhereSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::findWhereSafe',$args);}
-public function reject(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::reject',$args);}
-public function every(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::every',$args);}
-public function all(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::all',$args);}
-public function some(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::some',$args);}
-public function any(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::any',$args);}
-public function sum(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::sum',$args);}
-public function product(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::product',$args);}
-public function contains(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::contains',$args);}
-public function invoke(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::invoke',$args);}
-public function pluck(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::pluck',$args);}
-public function max(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::max',$args);}
-public function min(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::min',$args);}
-public function sortBy(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::sortBy',$args);}
-public function groupBy(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::groupBy',$args);}
-public function countBy(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::countBy',$args);}
-public function shuffle(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::shuffle',$args);}
-public function toArray(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::toArray',$args);}
-public function size(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::size',$args);}
-public function index(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::index',$args);}
-public function indexSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::indexSafe',$args);}
-public function span(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::span',$args);}
-public function first(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::first',$args);}
-public function head(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::head',$args);}
-public function take(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::take',$args);}
-public function firstSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::firstSafe',$args);}
-public function headSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::headSafe',$args);}
-public function takeSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::takeSafe',$args);}
-public function takeWhile(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::takeWhile',$args);}
-public function initial(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::initial',$args);}
-public function last(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::last',$args);}
-public function lastSafe(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::lastSafe',$args);}
-public function rest(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::rest',$args);}
-public function tail(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::tail',$args);}
-public function drop(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::drop',$args);}
-public function dropWhile(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::dropWhile',$args);}
-public function compact(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::compact',$args);}
-public function flatten(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::flatten',$args);}
-public function without(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::without',$args);}
-public function union(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::union',$args);}
-public function difference(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::difference',$args);}
-public function uniq(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::uniq',$args);}
-public function unique(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::unique',$args);}
-public function zip(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::zip',$args);}
-public function zipWith(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::zipWith',$args);}
-public function object(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::object',$args);}
-public function indexOf(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::indexOf',$args);}
-public function lastIndexOf(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::lastIndexOf',$args);}
-public function sortedIndex(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::sortedIndex',$args);}
-public function range(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::range',$args);}
-public function cycle(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::cycle',$args);}
-public function repeat(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::repeat',$args);}
-public function iterate(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::iterate',$args);}
-public function pop(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::pop',$args);}
-public function push(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::push',$args);}
-public function reverse(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::reverse',$args);}
-public function shift(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::shift',$args);}
-public function sort(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::sort',$args);}
-public function splice(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::splice',$args);}
-public function unshift(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::unshift',$args);}
-public function concat(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::concat',$args);}
-public function join(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::join',$args);}
-public function slice(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::slice',$args);}
-public function keys(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::keys',$args);}
-public function values(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::values',$args);}
-public function pairs(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::pairs',$args);}
-public function invert(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::invert',$args);}
-public function extend(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::extend',$args);}
-public function pick(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::pick',$args);}
-public function omit(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::omit',$args);}
-public function defaults(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::defaults',$args);}
-public function tap(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::tap',$args);}
-public function duplicate(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::duplicate',$args);}
-public function has(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::has',$args);}
-public function isArray(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::isArray',$args);}
-public function isTraversable(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::isTraversable',$args);}
-public function chain(){$args=func_get_args();array_unshift($args,$this);return call_user_func_array('Underbar\Lazy::chain',$args);}
+trait Enumerable{
+function each($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::each($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function map($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::map($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function collect($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::collect($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function mapKey($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::mapKey($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function collectKey($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::collectKey($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function parallelMap($_1,$_2=1,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::parallelMap($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function parallelCollect($_1,$_2=1,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::parallelCollect($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function reduce($_1,$_2,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::reduce($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function inject($_1,$_2,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::inject($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function foldl($_1,$_2,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::foldl($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function reduceRight($_1,$_2,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::reduceRight($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function foldr($_1,$_2,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::foldr($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function find($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::find($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function detect($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::detect($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function findSafe($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::findSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function detectSafe($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::detectSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function filter($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::filter($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function select($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::select($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function where($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::where($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function findWhere($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::findWhere($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function findWhereSafe($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::findWhereSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function reject($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::reject($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function every($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::every($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function all($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::all($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function some($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::some($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function any($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::any($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function sum($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::sum($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function product($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::product($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function contains($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::contains($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function invoke($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::invoke($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function pluck($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::pluck($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function max($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::max($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function min($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::min($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function sortBy($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::sortBy($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function groupBy($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::groupBy($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function countBy($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::countBy($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function shuffle($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::shuffle($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function toArray($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::toArray($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function size($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::size($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function index($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::index($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function indexSafe($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::indexSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function span($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::span($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function first($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::first($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function head($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::head($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function take($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::take($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function firstSafe($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::firstSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function headSafe($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::headSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function takeSafe($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::takeSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function takeWhile($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::takeWhile($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function initial($_1=1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::initial($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function last($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::last($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function lastSafe($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::lastSafe($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function rest($_1=1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::rest($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function tail($_1=1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::tail($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function drop($_1=1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::drop($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function dropWhile($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::dropWhile($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function compact($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::compact($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function flatten($_1=false,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::flatten($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function without($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::without($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function union($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::union($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function difference($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::difference($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function uniq($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::uniq($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function unique($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::unique($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function zip($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::zip($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function zipWith($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::zipWith($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function object($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::object($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function indexOf($_1,$_2=0,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::indexOf($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function lastIndexOf($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::lastIndexOf($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function sortedIndex($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::sortedIndex($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function range($_1=NULL,$_2=1,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::range($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function cycle($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::cycle($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function repeat($_1=-1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::repeat($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function iterate($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::iterate($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function pop($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::pop($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function push($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::push($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function reverse($_1=false,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::reverse($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function shift($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::shift($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function sort($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::sort($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function splice($_1,$_2,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::splice($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function unshift($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::unshift($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function concat($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::concat($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function join($_1=',',$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::join($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function slice($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::slice($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function keys($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::keys($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function values($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::values($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function pairs($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::pairs($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function invert($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::invert($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function extend($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::extend($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function pick($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::pick($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function omit($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::omit($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function defaults($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::defaults($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function tap($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::tap($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function duplicate($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::duplicate($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function has($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::has($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function isArray($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::isArray($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function isTraversable($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::isTraversable($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function chain($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::chain($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 }
