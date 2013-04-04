@@ -231,7 +231,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     array|Traversable  $properties
-     * @return    boolean
+     * @return    bool
      */
     public static function where($xs, $properties)
     {
@@ -306,7 +306,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    boolean
+     * @return    bool
      */
     public static function every($xs, $f = null)
     {
@@ -334,7 +334,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    boolean
+     * @return    bool
      */
     public static function some($xs, $f = null)
     {
@@ -388,7 +388,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     mixed              $target
-     * @return    boolean
+     * @return    bool
      */
     public static function contains($xs, $target)
     {
@@ -600,8 +600,8 @@ abstract class Strict
      * Array.
      *
      * @category  Collections
-     * @param     mixed    $xs
-     * @param     boolean  $preserveKeys
+     * @param     mixed  $xs
+     * @param     bool   $preserveKeys
      * @return    array
      */
     public static function toArray($xs, $preserveKeys = null)
@@ -916,7 +916,7 @@ abstract class Strict
      *
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @param     boolean            $shallow
+     * @param     bool               $shallow
      * @return    array
      */
     public static function flatten($xs, $shallow = false)
@@ -1142,7 +1142,7 @@ abstract class Strict
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     mixed              $value
-     * @param     boolean|int        $isSorted
+     * @param     bool|int           $isSorted
      * @return    int
      */
     public static function indexOf($xs, $value, $isSorted = 0)
@@ -1667,7 +1667,7 @@ abstract class Strict
      * @category  Objects
      * @param     array|object|Traversable  $xs
      * @param     int|string                $key
-     * @return    boolean
+     * @return    bool
      */
     public static function has($xs, $key)
     {
@@ -1690,21 +1690,21 @@ abstract class Strict
     /**
      * @category  Objects
      * @param     mixed    $xs
-     * @return    boolean
+     * @return    bool
      */
-    public static function isArray($xs)
+    public static function isArray($value)
     {
-        return is_array($xs) || $xs instanceof \ArrayAccess;
+        return is_array($value) || $value instanceof \ArrayAccess;
     }
 
     /**
      * @category  Objects
      * @param     mixed    $xs
-     * @return    boolean
+     * @return    bool
      */
-    public static function isTraversable($xs)
+    public static function isTraversable($value)
     {
-        return is_array($xs) || $xs instanceof \Traversable;
+        return is_array($value) || $value instanceof \Traversable;
     }
 
     /**
@@ -1720,6 +1720,19 @@ abstract class Strict
     }
 
     /**
+     * Returns a wrapped object. Calling methods on this object will continue to
+     * return wrapped objects until value is used.
+     *
+     * @category  Chaining
+     * @param     mixed    $value
+     * @return    Internal\Wrapper
+     */
+    public static function chain($value)
+    {
+        return new Internal\Wrapper($value, get_called_class());
+    }
+
+    /**
      * @category  Utility
      * @param     callable  $f
      * @param     mixed     *$args
@@ -1731,19 +1744,6 @@ abstract class Strict
         $start = microtime(true);
         call_user_func_array($f, $args);
         return microtime(true) - $start;
-    }
-
-    /**
-     * Returns a wrapped object. Calling methods on this object will continue to
-     * return wrapped objects until value is used.
-     *
-     * @category  Chaining
-     * @param     mixed    $value
-     * @return    Wrapper
-     */
-    public static function chain($value)
-    {
-        return new Internal\Wrapper($value, get_called_class());
     }
 
     protected static function _lookupIterator($value)

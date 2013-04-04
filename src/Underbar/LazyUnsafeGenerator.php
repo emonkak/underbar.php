@@ -167,7 +167,7 @@ abstract class LazyUnsafeGenerator extends Strict
     /**
      * @category  Arrays
      * @param     array|Traversable  $xss
-     * @param     boolean            $shallow
+     * @param     bool               $shallow
      * @return    Generator
      */
     public static function flatten($xss, $shallow = false)

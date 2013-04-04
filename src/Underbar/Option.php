@@ -38,14 +38,14 @@ abstract class Option implements \IteratorAggregate, \Countable
     /**
      * Returns true if the option is None, false otherwise.
      *
-     * @return  boolean
+     * @return  bool
      */
     abstract public function isEmpty();
 
     /**
      * Returns true if the option is an instance of Some, false otherwise.
      *
-     * @return  boolean
+     * @return  bool
      */
     public function isDefined()
     {
@@ -66,7 +66,7 @@ abstract class Option implements \IteratorAggregate, \Countable
      * when applied to this Option's value. Otherwise, returns false.
      *
      * @param   callable  $iterator
-     * @return  boolean
+     * @return  bool
      */
     abstract public function exists($iterator);
 

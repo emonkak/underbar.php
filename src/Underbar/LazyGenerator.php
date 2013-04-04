@@ -107,7 +107,7 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @param     boolean            $shallow
+     * @param     bool               $shallow
      * @return    IteratorAggregate
      */
     public static function flatten($xs, $shallow = false)

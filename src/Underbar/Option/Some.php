@@ -48,7 +48,7 @@ final class Some extends Option
     /**
      * Returns true if the option is None, false otherwise.
      *
-     * @return  boolean
+     * @return  bool
      */
     public function isEmpty()
     {
@@ -73,7 +73,7 @@ final class Some extends Option
      * when applied to this Option's value. Otherwise, returns false.
      *
      * @param   callable  $iterator
-     * @return  boolean
+     * @return  bool
      */
     public function exists($iterator)
     {

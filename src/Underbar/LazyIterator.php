@@ -105,7 +105,7 @@ abstract class LazyIterator extends Strict
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @param     boolean            $shallow
+     * @param     bool               $shallow
      * @return    Iterator
      */
     public static function flatten($xs, $shallow = false)

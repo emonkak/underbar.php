@@ -285,7 +285,7 @@ class Parallel implements \Iterator, \Countable
 
     /**
      * @see     Iterator
-     * @return  boolean
+     * @return  bool
      */
     public function valid()
     {

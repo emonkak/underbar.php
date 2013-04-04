@@ -1,5 +1,4 @@
-# underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/[YOUR_GITHUB_USERNAME]/[YOUR_PROJECT_NAME])
-
+# underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/emonkak/underbar.php)
 
 underbar.php is a underscore.js like library.
 
@@ -106,202 +105,120 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 
 ### Collections
 
-**each**(*array* $xs, *callable* $f)
-
-**map**(*array* $xs, *callable* $f)
-
-**collect**(*array* $xs, *callable* $f)
-
-**mapKey**(*array* $xs, *callable* $f)
-
-**collectKey**(*array* $xs, *callable* $f)
-
-**parallelMap**(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
-
-**parallelCollect**(*array* $xs, *callable* $f [, int $n = 1 [, int $timeout = null]])
-
-**collectKey**(*array* $xs, *callable* $f)
-
-**reduce**(*array* $xs, *callable* $f, $acc)
-
-**inject**(*array* $xs, *callable* $f, $acc)
-
-**foldl**(*array* $xs, *callable* $f, $acc)
-
-**reduceRight**(*array* $xs, *callable* $f, $acc)
-
-**foldr**(*array* $xs, *callable* $f, $acc)
-
-**find**(*array* $xs, *callable* $f)
-
-**detect**(*array* $xs, *callable* $f)
-
-**findSafe**(*array* $xs, *callable* $f)
-
-**detectSafe**(*array* $xs, *callable* $f)
-
-**filter**(*array* $xs, *callable* $f)
-
-**select**(*array* $xs, *callable* $f)
-
-**where**(*array* $xs, *array* $properties)
-
-**findWhere**(*array* $xs, *array* $properties)
-
-**findWhereSafe**(*array* $xs, *array* $properties)
-
-**reject**(*array* $xs, *callable* $f)
-
-**every**(*array* $xs, *callable* $f = null)
-
-**all**(*array* $xs, *callable* $f = null)
-
-**some**(*array* $xs, *callable* $f = null)
-
-**any**(*array* $xs, *callable* $f = null)
-
-**sum**(*array* $xs)
-
-**product**(*array* $xs)
-
-**contains**(*array* $xs, *mixed* $target)
-
-**invoke**(*array* $xs, *string* $method)
-
-**pluck**(*array* $xs, *string* $property)
-
-**max**(*array* $xs, *callable* $f = null)
-
-**min**(*array* $xs, *callable* $f = null)
-
-**sortBy**(*array* $xs, *mixed* $value)
-
-**groupBy**(*array* $xs, *mixed* $value = null)
-
-**countBy**(*array* $xs, *mixed* $value = null)
-
-**shuffle**(*array* $xs)
-
-**toArray**(*array* $xs, *bool* $preserveKeys = null)
-
-**size**(*array* $xs)
-
-**count**(*array* $xs)
+| Function        | Return   | Arguments                                                     |
+| --------------- | ------   | ------------------------------------------------------------- |
+| each            | void     | array $xs, callable $f                                        |
+| map             | array    | array $xs, callable $f                                        |
+| collect         | array    | array $xs, callable $f                                        |
+| mapKey          | array    | array $xs, callable $f                                        |
+| collectKey      | array    | array $xs, callable $f                                        |
+| parallelMap     | Parallel | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
+| parallelCollect | Parallel | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
+| reduce          | mixed    | array $xs, callable $f, $acc                                  |
+| inject          | mixed    | array $xs, callable $f, $acc                                  |
+| foldl           | mixed    | array $xs, callable $f, $acc                                  |
+| reduceRight     | mixed    | array $xs, callable $f, $acc                                  |
+| foldr           | mixed    | array $xs, callable $f, $acc                                  |
+| find            | mixed    | array $xs, callable $f                                        |
+| detect          | mixed    | array $xs, callable $f                                        |
+| findSafe        | Option   | array $xs, callable $f                                        |
+| detectSafe      | Option   | array $xs, callable $f                                        |
+| filter          | array    | array $xs, callable $f                                        |
+| select          | array    | array $xs, callable $f                                        |
+| where           | array    | array $xs, array $properties                                  |
+| findWhere       | mixed    | array $xs, array $properties                                  |
+| findWhereSafe   | Option   | array $xs, array $properties                                  |
+| reject          | array    | array $xs, callable $f                                        |
+| every           | bool     | array $xs, callable $f = null                                 |
+| all             | bool     | array $xs, callable $f = null                                 |
+| some            | bool     | array $xs, callable $f = null                                 |
+| any             | bool     | array $xs, callable $f = null                                 |
+| sum             | int      | array $xs                                                     |
+| product         | int      | array $xs                                                     |
+| contains        | bool     | array $xs, mixed $target                                      |
+| invoke          | array    | array $xs, string $method                                     |
+| pluck           | array    | array $xs, string $property                                   |
+| max             | mixed    | array $xs, callable $f = null                                 |
+| min             | mixed    | array $xs, callable $f = null                                 |
+| sortBy          | array    | array $xs, mixed $value                                       |
+| groupBy         | array    | array $xs, mixed $value = null                                |
+| countBy         | array    | array $xs, mixed $value = null                                |
+| shuffle         | array    | array $xs                                                     |
+| toArray         | array    | array $xs, bool $preserveKeys = null                          |
+| size            | int      | array $xs                                                     |
+| index           | mixed    | array $xs, int $index                                         |
+| indexSafe       | Option   | array $xs, int $index                                         |
+| span            | array    | array $xs, callable $f                                        |
 
 ### Arrays
 
-**first**(*array* $xs [, *int* $n = null])
-
-**head**(*array* $xs [, *int* $n = null])
-
-**take**(*array* $xs [, int $n = null])
-
-**firstSafe**(*array* $xs [, *int* $n = null])
-
-**headSafe**(*array* $xs [, *int* $n = null])
-
-**takeSafe**(*array* $xs [, *int* $n = null])
-
-**takeWhile**(*array* $xs, callable $f)
-
-**initial**(*array* $xs [, *int* $n = 1])
-
-**last**(*array* $xs [, *int* $n = null])
-
-**lastSafe**(*array* $xs [, *int* $n = null])
-
-**rest**(*array* $xs [, *int* $n = 0])
-
-**tail**(*array* $xs [, *int* $n = 0])
-
-**drop**(*array* $xs [, *int* $n = 0])
-
-**dropWhile**(*array* $xs, callable $f)
-
-**compact**(*array* $xs)
-
-**flatten**(*array* $xs [, *bool* $shallow = false])
-
-**without**(*array* $xs [, *mixed* $values, ...])
-
-**union**([*array* $xss, ...])
-
-**intersection**(*array* $xs [, *array* $rest, ...])
-
-**difference**(*array* $xs [, *array* $others, ...])
-
-**uniq**(*array* $xs [, callable $f = null])
-
-**unique**($xs [, callable $f = null])
-
-**zip**([*array* $xss, ...])
-
-**zipWith**(*array* $xss, ..., callable $f)
-
-**object**(*array* $xs [, *array* $values = null])
-
-**indexOf**(*array* $xs [, *mixed* $value [, *bool|int* $isSorted = 0]])
-
-**lastIndexOf**(*array* $xs, *mixed* $value [, *int* $fromIndex = null])
-
-**sortedIndex**(*array* $xs, *mixed* $value [, callable $f = null])
-
-**range**(*int* $start [, *int* $stop = null [, *int* $step = 1]])
-
-**cycle**(*array* $xs [, *int* $n = null])
-
-**repeat**(*mixed* $value [, *int* $n = -1])
-
-**iterate**(*mixed* $acc [, callable $f])
-
-**pop**(*array* $xs)
-
-**push**(*array* $xs [, *mixed* $values, ...])
-
-**reverse**(*array* $xs)
-
-**shift**(*array* $xs)
-
-**sort**(*array* $xs)
-
-**splice**(*array* $xs, *int* $index, *int* $n)
-
-**unshift**(*array* $xs [, *mixed* $values, ...])
-
-**concat**(*array* $xss, ...)
-
-**join**(*array* $xs [, *string* $separator = ','])
-
-**slice**(*array* $xs, *int* $begin [, *int* $end = -1])
+| Function     | Return            | Arguments                                                  |
+| ------------ | -------------     | ---------------------------------------------------------- |
+| first        | array&#x7c;mixed  | array $xs [, int $n = null]                                |
+| head         | array&#x7c;mixed  | array $xs [, int $n = null]                                |
+| take         | array&#x7c;mixed  | array $xs [, int $n = null]                                |
+| firstSafe    | array&#x7c;Option | array $xs [, int $n = null]                                |
+| headSafe     | array&#x7c;Option | array $xs [, int $n = null]                                |
+| takeSafe     | array&#x7c;Option | array $xs [, int $n = null]                                |
+| takeWhile    | array             | array $xs, callable $f                                     |
+| initial      | array             | array $xs [, int $n = 1]                                   |
+| last         | array&#x7c;mixed  | array $xs [, int $n = null]                                |
+| lastSafe     | array&#x7c;Option | array $xs [, int $n = null]                                |
+| rest         | array             | array $xs [, int $n = 0]                                   |
+| tail         | array             | array $xs [, int $n = 0]                                   |
+| drop         | array             | array $xs [, int $n = 0]                                   |
+| dropWhile    | array             | array $xs, callable $f                                     |
+| compact      | array             | array $xs                                                  |
+| flatten      | array             | array $xs [, bool $shallow = false]                        |
+| without      | array             | array $xs [, mixed $values, ...]                           |
+| union        | array             | array $xs, [array $yss, ...]                                          |
+| intersection | array             | array $xs [, array $rest, ...]                             |
+| difference   | array             | array $xs [, array $others, ...]                           |
+| uniq         | array             | array $xs [, callable $f = null]                           |
+| unique       | array             | $xs [, callable $f = null]                                 |
+| zip          | array             | array $xs, [array $yss, ...]                                          |
+| zipWith      | array             | array $xss, ..., callable $f                               |
+| object       | array             | array $xs [, array $values = null]                         |
+| indexOf      | int               | array $xs [, mixed $value [, bool&#x7c;int $isSorted = 0]] |
+| lastIndexOf  | int               | array $xs, mixed $value [, int $fromIndex = null]          |
+| sortedIndex  | int               | array $xs, mixed $value [, callable $f = null]             |
+| range        | array             | int $start [, int $stop = null [, int $step = 1]]          |
+| cycle        | array             | array $xs [, int $n = null]                                |
+| repeat       | array             | mixed $value [, int $n = -1]                               |
+| iterate      | mixed             | mixed $acc [, callable $f]                                 |
+| pop          | array             | array $xs                                                  |
+| push         | array             | array $xs [, mixed $values, ...]                           |
+| reverse      | array             | array $xs                                                  |
+| shift        | array             | array $xs                                                  |
+| sort         | array             | array $xs                                                  |
+| splice       | array             | array $xs, int $index, int $n                              |
+| unshift      | array             | array $xs [, mixed $values, ...]                           |
+| concat       | array             | array $xss, ...                                            |
+| join         | string            | array $xs [, string $separator = ',']                      |
+| slice        | array             | array $xs, int $begin [, int $end = -1]                    |
 
 ### Objects
 
-**keys**(*array* $xs)
-
-**values**(*array* $xs)
-
-**pairs**(*array* $xs)
-
-**invert**(*array* $xs)
-
-**extend**(*array* $destination [, *array* $sources])
-
-**pick**(*array* $xs [, *array|mixed* $keys])
-
-**omit**(*array* $xs [, *array|mixed* $keys])
-
-**defaults**(*array* $xs [, *array* $defaults])
-
-**tap**(*mixed* $value, *callable* $interceptor)
-
-**duplicate**(*mixed* $value)
-
-**has**(*array* $xs, *mixed* $key)
+| Function      | Return | Arguments                             |
+| ------------- | ------ | ------------------------------------- |
+| keys          | array  | array $xs                             |
+| values        | array  | array $xs                             |
+| pairs         | array  | array $xs                             |
+| invert        | array  | array $xs                             |
+| extend        | array  | array $destination [, array $sources] |
+| pick          | array  | array $xs [, array&#x7c;mixed $keys]  |
+| omit          | array  | array $xs [, array&#x7c;mixed $keys]  |
+| defaults      | array  | array $xs [, array $defaults]         |
+| tap           | mixed  | mixed $value, callable $interceptor   |
+| duplicate     | mixed  | mixed $value                          |
+| has           | bool   | array $xs, mixed $key                 |
+| isArray       | bool   | mixed $value                          |
+| isTraversable | bool   | mixed $value                          |
 
 ### Utilities
 
-**identity**(*mixed* $value)
-
-**times**(*int* $n, *callable* $f)
-
-**chain**(*mixed* $value)
+| Function  | Return           | Arguments     |
+| --------- | ---------------- | ------------- |
+| identity  | mixed            | mixed $value  |
+| chain     | Internal\Wrapper | mixed $value  |
+| bench     | float            | callable $f   |
