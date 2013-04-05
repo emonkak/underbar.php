@@ -85,7 +85,7 @@ class CollectionsTest extends Underbar_TestCase
                 }, 10)
                 ->sum()
                 ->value();
-            $this->assertEquals(4500, $sum, 'sum numbers');
+            PHPUnit_Framework_Assert::assertEquals(4500, $sum, 'sum numbers');
         });
         $this->assertLessThan(1.0, $time, 'work to parallel');
 
