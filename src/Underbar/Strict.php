@@ -76,14 +76,14 @@ abstract class Strict
      * @param     int                $timeout
      * @return    Parallel
      */
-    public static function parallelMap($xs, $f, $n = 1, $timeout = null)
+    public static function parallelMap($xs, $f, $n = null, $timeout = null)
     {
         $concurrent = new Parallel($f, $n, $timeout);
         $concurrent->pushAll($xs);
         return $concurrent;
     }
 
-    public static function parallelCollect($xs, $f, $n = 1, $timeout = null)
+    public static function parallelCollect($xs, $f, $n = null, $timeout = null)
     {
         return static::parallelMap($xs, $f, $n, $timeout);
     }
@@ -403,6 +403,7 @@ abstract class Strict
     /**
      * Calls the method named by methodName on each value in the list.
      *
+     * @varargs
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     string             $method
@@ -947,6 +948,7 @@ abstract class Strict
     /**
      * Returns a copy of the array with all instances of the values removed.
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     mixed              *$values
@@ -961,6 +963,7 @@ abstract class Strict
      * Computes the union of the passed-in arrays: the list of unique items,
      * in order, that are present in one or more of the arrays.
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  *$xss
      * @return    array
@@ -990,6 +993,7 @@ abstract class Strict
      * Similar to without, but returns the values from array that are not present
      * in the other arrays.
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     array|Traversable  *$others
@@ -1061,6 +1065,7 @@ abstract class Strict
      * Merges together the values of each of the arrays with the values at the
      * corresponding position.
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  *$xss
      * @return    array
@@ -1092,6 +1097,7 @@ abstract class Strict
     }
 
     /**
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  *$xss
      * @param     callable           $f
@@ -1315,6 +1321,7 @@ abstract class Strict
      * Adds one or more elements to the end of an array and returns the new
      * length of the array.
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     mixed              *$values
@@ -1385,6 +1392,7 @@ abstract class Strict
      * Adds one or more elements to the front of an array and returns the new
      * length of the array.
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     mixed              *$values
@@ -1400,6 +1408,7 @@ abstract class Strict
      * Returns a new array comprised of this array joined with other array(s)
      * and/or value(s).
      *
+     * @varargs
      * @category  Arrays
      * @param     array|Traversable  *$xss
      * @return    array
@@ -1516,6 +1525,7 @@ abstract class Strict
      * Copy all of the properties in the source objects over to the destination
      * object, and return the destination object.
      *
+     * @varargs
      * @category  Objects
      * @param     array|Object       $destination
      * @param     array|Traversable  *$sources
@@ -1545,6 +1555,7 @@ abstract class Strict
      * Return a copy of the object, filtered to only have values for the
      * whitelisted keys (or array of valid keys).
      *
+     * @varargs
      * @category  Objects
      * @param     array|Traversable         $xs
      * @param     array|string|Traversable  *$keys
@@ -1574,6 +1585,7 @@ abstract class Strict
      * Return a copy of the object, filtered to omit the blacklisted keys
      * (or array of keys).
      *
+     * @varargs
      * @category  Objects
      * @param     array|Traversable         $xs
      * @param     array|string|Traversable  *$keys
@@ -1603,6 +1615,7 @@ abstract class Strict
      * Copy all of the properties in the source objects over to the destination
      * object, and return the destination object.
      *
+     * @varargs
      * @category  Objects
      * @param     array|Traversable  $xs
      * @param     array|Traversable  *$defaults
@@ -1735,6 +1748,7 @@ abstract class Strict
     }
 
     /**
+     * @varargs
      * @category  Utility
      * @param     callable  $f
      * @param     mixed     *$args

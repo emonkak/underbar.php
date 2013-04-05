@@ -73,6 +73,10 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testParallelMap($_)
     {
+        if (!function_exists('pcntl_fork')) {
+            return;
+        }
+
         $time = $_::bench(function() use ($_) {
             $sum = $_::chain($_::range(10))
                 ->parallelMap(function($x) {

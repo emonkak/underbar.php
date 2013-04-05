@@ -4,14 +4,18 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $ref = new ReflectionClass('Underbar\\Strict');
 $categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Objects|Chaining)|^$/';
+$varargsPattern = '/\*\s+@varargs/';
 
 echo '<?php', PHP_EOL;
 echo "namespace {$ref->getNamespaceName()};", PHP_EOL;
 echo 'trait Enumerable{', PHP_EOL;
 
 foreach ($ref->getMethods() as $method) {
-    if (!$method->isPublic()
-        || !preg_match($categoryPattern, $method->getDocComment())) {
+    $docComment = $method->getDocComment();
+    $isMatchedCategory = preg_match($categoryPattern, $docComment);
+    $isVarargs = preg_match($varargsPattern, $docComment);
+
+    if (!$method->isPublic() || !$isMatchedCategory) {
         continue;
     }
 
@@ -30,11 +34,13 @@ foreach ($ref->getMethods() as $method) {
             $arg .= '=';
             $arg .= var_export($param->getDefaultValue(), true);
         }
-        $args[] = $arg;
+        $args['$_' . $i] = $arg;
     }
 
-    for ($i = max($method->getNumberOfParameters(), 1); $i < 10; $i++) {
-        $args[] = '$_' . $i . '=NULL';
+    if ($isVarargs) {
+        for ($i = max($method->getNumberOfParameters(), 1); $i < 10; $i++) {
+            $args['$_' . $i] = '$_' . $i . '=NULL';
+        }
     }
 
     if ($method->returnsReference()) {
@@ -44,7 +50,11 @@ foreach ($ref->getMethods() as $method) {
     }
     echo implode(',', $args);
     echo '){';
-    echo "return Lazy::{$method->getName()}(\$this,\$_1,\$_2,\$_3,\$_4,\$_5,\$_6,\$_7,\$_8,\$_9);";
+    echo "return Lazy::{$method->getName()}(";
+    echo '$this';
+    echo empty($args) ? '' : ',';
+    echo implode(',', array_keys($args));
+    echo ');';
     echo '}', PHP_EOL;
 }
 
