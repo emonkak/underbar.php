@@ -69,7 +69,10 @@ class Parallel implements \Iterator, \Countable
             case 'FreeBSD':
             case 'NetBSD':
             case 'OpenBSD':
-                $cmd = "sysctl -a | grep 'hw.ncpu' | cut -d ':' -f2";
+                $cmd = "sysctl -a | grep 'hw.ncpu:' | cut -d ':' -f2";
+                break;
+            case 'Darwin':
+                $cmd = "/usr/sbin/sysctl -a | grep 'hw.ncpu:' | cut -d ':' -f2";
                 break;
             default:
                 return $processors = 4;
