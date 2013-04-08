@@ -644,9 +644,10 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     string|int         $index
+     * @param     mixed              $default
      * @return    array
      */
-    public static function index($xs, $index)
+    public static function get($xs, $index)
     {
         if (static::isArray($xs)) {
             return isset($xs[$index]) ? $xs[$index] : null;
@@ -665,7 +666,7 @@ abstract class Strict
      * @param     string|int         $index
      * @return    array
      */
-    public static function indexSafe($xs, $index)
+    public static function getSafe($xs, $index)
     {
         if (static::isArray($xs)) {
             return isset($xs[$index])

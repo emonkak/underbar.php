@@ -554,33 +554,27 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testIndex($_)
+    public function testGet($_)
     {
         $xs = $_::range(0, 10, 2);
         foreach ($xs as $i => $x) {
-            $this->assertEquals($x, $_::indexSafe($xs, $i)->get(), 'number index');
+            $this->assertEquals($x, $_::get($xs, $i), 'number index');
         }
-        $this->assertNull($_::index($xs, 999), 'undefined index');
-
-        $xs = $_::range(0, 10, 2);
-        foreach ($xs as $i => $x) {
-            $this->assertEquals($x, $_::indexSafe($xs, $i)->get(), 'safe method');
-        }
-        $this->assertTrue($_::indexSafe($xs, 999)->isEmpty());
+        $this->assertNull($_::get($xs, 999), 'undefined index');
 
         $xs = array('foo' => 'bar', 'piyo' => 'poyo');
-        $this->assertEquals('bar', $_::index($xs, 'foo'), 'string index');
-        $this->assertEquals('poyo', $_::index($xs, 'piyo'), 'string index');
-        $this->assertNull($_::index($xs, 'baz'), 'undefined index');
-        $this->assertNull($_::index($xs, 999), 'undefined index');
+        $this->assertEquals('bar', $_::get($xs, 'foo'), 'string index');
+        $this->assertEquals('poyo', $_::get($xs, 'piyo'), 'string index');
+        $this->assertNull($_::get($xs, 'baz'), 'undefined index');
+        $this->assertNull($_::get($xs, 999), 'undefined index');
 
         $xs = $_::mapKey(array('foo' => 'bar', 'piyo' => 'poyo'), function($x) {
             return $x;
         });
-        $this->assertEquals('bar', $_::index($xs, 'bar'), 'string index');
-        $this->assertEquals('poyo', $_::index($xs, 'poyo'), 'string index');
-        $this->assertNull($_::index($xs, 'baz'), 'undefined index');
-        $this->assertNull($_::index($xs, 999), 'undefined index');
+        $this->assertEquals('bar', $_::get($xs, 'bar'), 'string index');
+        $this->assertEquals('poyo', $_::get($xs, 'poyo'), 'string index');
+        $this->assertNull($_::get($xs, 'baz'), 'undefined index');
+        $this->assertNull($_::get($xs, 999), 'undefined index');
     }
 
     /**

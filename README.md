@@ -145,8 +145,8 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | shuffle         | array    | array $xs                                                     |
 | toArray         | array    | array $xs, bool $preserveKeys = null                          |
 | size            | int      | array $xs                                                     |
-| index           | mixed    | array $xs, int $index                                         |
-| indexSafe       | Option   | array $xs, int $index                                         |
+| get             | mixed    | array $xs, int $index                                         |
+| getSafe         | Option   | array $xs, int $index                                         |
 | span            | array    | array $xs, callable $f                                        |
 
 ### Arrays
