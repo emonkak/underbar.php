@@ -565,7 +565,7 @@ abstract class Strict
      * @param     callable|string    $x
      * @return    int
      */
-    public static function countBy($xs, $f = null)
+    public static function countBy($xs, $f = null, $isSorted = false)
     {
         $f = static::_lookupIterator($f);
         $result = array();

@@ -40,6 +40,38 @@ abstract class LazyIterator extends Strict
     }
 
     /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $f
+     * @param     bool               $isSorted
+     * @return    Generator
+     */
+    public static function groupBy($xs, $f = null, $isSorted = false)
+    {
+        if ($isSorted) {
+            $f = static::_lookupIterator($f);
+            return new Internal\GroupByIterator(static::_wrapIterator($xs), $f);
+        }
+        return parent::groupBy($xs, $f, $isSorted);
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $f
+     * @param     bool               $isSorted
+     * @return    int
+     */
+    public static function countBy($xs, $f = null, $isSorted = false)
+    {
+        if ($isSorted) {
+            $f = static::_lookupIterator($f);
+            return new Internal\CountByIterator(static::_wrapIterator($xs), $f);
+        }
+        return parent::countBy($xs, $f, $isSorted);
+    }
+
+    /**
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n

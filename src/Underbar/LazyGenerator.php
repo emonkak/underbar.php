@@ -38,6 +38,30 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
     }
 
     /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $f
+     * @param     bool               $isSorted
+     * @return    Generator
+     */
+    protected static function _groupBy($xs, $f = null)
+    {
+        return new Internal\RewindableGenerator(parent::_groupBy($xs, $f));
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $f
+     * @param     bool               $isSorted
+     * @return    Generator
+     */
+    protected static function _countBy($xs, $f = null)
+    {
+        return new Internal\RewindableGenerator(parent::_countBy($xs, $f));
+    }
+
+    /**
      * @category  Arrays
      * @param     array|Traversable        $array
      * @param     int                      $n

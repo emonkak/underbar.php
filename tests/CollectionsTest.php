@@ -455,6 +455,19 @@ class CollectionsTest extends Underbar_TestCase
         $grouped = $_::groupBy($array);
         $this->assertCount(2, $grouped['1']);
         $this->assertCount(1, $grouped['3']);
+
+        $dict = array(
+            array('key' => 'foo', 'value' => 1),
+            array('key' => 'foo', 'value' => 2),
+            array('key' => 'foo', 'value' => 3),
+            array('key' => 'bar', 'value' => 4),
+            array('key' => 'bar', 'value' => 5),
+        );
+        $grouped = $_::chain($dict)
+            ->groupBy('key', true)
+            ->map(function($xs) use ($_) { return $_::toArray($_::pluck($xs, 'value')); });
+        $this->assertEquals(array(1, 2, 3), $grouped['foo']);
+        $this->assertEquals(array(4, 5), $grouped['bar']);
     }
 
     /**
@@ -482,6 +495,17 @@ class CollectionsTest extends Underbar_TestCase
         $grouped = $_::countBy($array);
         $this->assertEquals(2, $grouped['1']);
         $this->assertEquals(1, $grouped['3']);
+
+        $dict = array(
+            array('key' => 'foo', 'value' => 1),
+            array('key' => 'foo', 'value' => 2),
+            array('key' => 'foo', 'value' => 3),
+            array('key' => 'bar', 'value' => 4),
+            array('key' => 'bar', 'value' => 5),
+        );
+        $grouped = $_::chain($dict)->countBy('key', true);
+        $this->assertEquals(3, $grouped['foo']);
+        $this->assertEquals(2, $grouped['bar']);
     }
 
     /**

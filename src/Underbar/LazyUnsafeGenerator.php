@@ -46,6 +46,73 @@ abstract class LazyUnsafeGenerator extends Strict
     }
 
     /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $f
+     * @param     bool               $isSorted
+     * @return    Generator
+     */
+    public static function groupBy($xs, $f = null, $isSorted = false)
+    {
+        return $isSorted ? static::_groupBy($xs, $f) : parent::groupBy($xs, $f);
+    }
+
+    protected static function _groupBy($xs, $f = null)
+    {
+        $f = static::_lookupIterator($f);
+        $acc = array();
+        $lastKey = null;
+
+        foreach ($xs as $i => $x) {
+            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
+                if (!empty($acc)) {
+                    yield $lastKey => $acc;
+                    $acc = array();
+                }
+                $lastKey = $key;
+            }
+            $acc[] = $x;
+        }
+
+        if (!empty($acc)) {
+            yield $lastKey => $acc;
+        }
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable|string    $f
+     * @return    int
+     */
+    public static function countBy($xs, $f = null, $isSorted = false)
+    {
+        return $isSorted ? static::_countBy($xs, $f) : parent::countBy($xs, $f);
+    }
+
+    protected static function _countBy($xs, $f = null)
+    {
+        $f = static::_lookupIterator($f);
+        $acc = 0;
+        $lastKey = null;
+
+        foreach ($xs as $i => $x) {
+            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
+                if ($acc !== 0) {
+                    yield $lastKey => $acc;
+                    $acc = 0;
+                }
+                $lastKey = $key;
+            }
+            $acc++;
+        }
+
+        if ($acc !== 0) {
+            yield $lastKey => $acc;
+        }
+    }
+
+    /**
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
