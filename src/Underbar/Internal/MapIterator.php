@@ -6,6 +6,8 @@ class MapIterator extends \IteratorIterator
 {
     private $f;
 
+    private $current;
+
     public function __construct($xs, $f)
     {
         parent::__construct($xs);
@@ -14,12 +16,33 @@ class MapIterator extends \IteratorIterator
 
     public function current()
     {
-        return call_user_func(
-            $this->f,
-            parent::current(),
-            parent::key(),
-            $this
-        );
+        return $this->current;
+    }
+
+    public function next()
+    {
+        parent::next();
+        if (parent::valid()) {
+            $this->current = call_user_func(
+                $this->f,
+                parent::current(),
+                parent::key(),
+                $this
+            );
+        }
+    }
+
+    public function rewind()
+    {
+        parent::rewind();
+        if (parent::valid()) {
+            $this->current = call_user_func(
+                $this->f,
+                parent::current(),
+                parent::key(),
+                $this
+            );
+        }
     }
 }
 
