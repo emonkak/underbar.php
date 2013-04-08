@@ -1765,13 +1765,13 @@ abstract class Strict
 
     protected static function _lookupIterator($value)
     {
-        if (is_callable($value)) {
-            return $value;
-        }
-        if (is_scalar($value)) {
+        if (is_scalar($value) && strpos($value, '::') === false) {
             return function($xs) use ($value) {
                 return is_array($xs) ? $xs[$value] : $xs->$value;
             };
+        }
+        if (is_callable($value)) {
+            return $value;
         }
         return get_called_class().'::identity';
     }
