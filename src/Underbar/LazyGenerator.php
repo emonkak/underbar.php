@@ -21,17 +21,6 @@ abstract class LazyGenerator extends LazyUnsafeGenerator
      * @param     callable           $f
      * @return    IteratorAggregate
      */
-    public static function mapKey($xs, $f)
-    {
-        return new Internal\RewindableGenerator(parent::mapKey($xs, $f));
-    }
-
-    /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    IteratorAggregate
-     */
     public static function filter($xs, $f)
     {
         return new Internal\RewindableGenerator(parent::filter($xs, $f));

@@ -46,28 +46,6 @@ abstract class Strict
     }
 
     /**
-     * Alias: collectKey
-     *
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    array
-     */
-    public static function mapKey($xs, $f)
-    {
-        $ys = array();
-        foreach ($xs as $i => $x) {
-            $ys[call_user_func($f, $x, $i, $xs)] = $x;
-        }
-        return $ys;
-    }
-
-    public static function collectKey($xs, $f)
-    {
-        return static::mapKey($xs, $f);
-    }
-
-    /**
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
@@ -1360,12 +1338,7 @@ abstract class Strict
      */
     public static function keys($xs)
     {
-        if (is_array($xs)) {
-            return array_keys($xs);
-        }
-        return static::values(static::map($xs, function($x, $k) {
-            return $k;
-        }));
+        return array_keys(static::toArray($xs, true));
     }
 
     /**
@@ -1377,13 +1350,7 @@ abstract class Strict
      */
     public static function values($xs)
     {
-        if (is_array($xs)) {
-            return array_values($xs);
-        }
-        $i = 0;
-        return static::mapKey($xs, function() use (&$i) {
-            return $i++;
-        });
+        return static::toArray($xs, false);
     }
 
     /**

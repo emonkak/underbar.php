@@ -23,19 +23,6 @@ abstract class LazyUnsafeGenerator extends Strict
      * @param     callable           $f
      * @return    Generator
      */
-    public static function mapKey($xs, $f)
-    {
-        foreach ($xs as $i => $x) {
-            yield call_user_func($f, $x, $i, $xs) => $x;
-        }
-    }
-
-    /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    Generator
-     */
     public static function filter($xs, $f)
     {
         foreach ($xs as $i => $x) {

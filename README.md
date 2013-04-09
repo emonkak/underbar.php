@@ -104,8 +104,6 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | each        | void     | array $xs, callable $f                                        |
 | map         | array    | array $xs, callable $f                                        |
 | collect     | array    | array $xs, callable $f                                        |
-| mapKey      | array    | array $xs, callable $f                                        |
-| collectKey  | array    | array $xs, callable $f                                        |
 | parMap      | Parallel | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
 | reduce      | mixed    | array $xs, callable $f, $acc                                  |
 | inject      | mixed    | array $xs, callable $f, $acc                                  |

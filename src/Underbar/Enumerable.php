@@ -4,8 +4,6 @@ trait Enumerable{
 function each($_1){return Lazy::each($this,$_1);}
 function map($_1){return Lazy::map($this,$_1);}
 function collect($_1){return Lazy::collect($this,$_1);}
-function mapKey($_1){return Lazy::mapKey($this,$_1);}
-function collectKey($_1){return Lazy::collectKey($this,$_1);}
 function parallelMap($_1,$_2=NULL,$_3=NULL){return Lazy::parallelMap($this,$_1,$_2,$_3);}
 function parallelCollect($_1,$_2=NULL,$_3=NULL){return Lazy::parallelCollect($this,$_1,$_2,$_3);}
 function reduce($_1,$_2){return Lazy::reduce($this,$_1,$_2);}

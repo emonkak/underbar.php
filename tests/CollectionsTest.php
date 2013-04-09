@@ -44,33 +44,6 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testMapKey($_)
-    {
-        $xs = array(1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four');
-
-        $result = $_::mapKey($xs, function($x, $i) {
-            return $i * 2;
-        });
-        $shouldBe = array(2 => 'one', 4 => 'two', 6 => 'three', 8 => 'four');
-        $this->assertEquals($shouldBe, $_::toArray($result, true));
-
-        $result = $_::collectKey($xs, function($x, $i) {
-            return $i * 2;
-        });
-        $shouldBe = array(2 => 'one', 4 => 'two', 6 => 'three', 8 => 'four');
-        $this->assertEquals($shouldBe, $_::toArray($result, true));
-
-        $result = $_::mapKey($xs, function($x, $i) {
-            return $i % 2;
-        });
-        $shouldBe = array(0 => 'four', 1 => 'three');
-        $this->assertEquals($shouldBe, $_::toArray($result, true));
-
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testParMap($_)
     {
         if (!function_exists('pcntl_fork')) {
@@ -573,11 +546,9 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertNull($_::get($xs, 'baz'), 'undefined index');
         $this->assertNull($_::get($xs, 999), 'undefined index');
 
-        $xs = $_::mapKey(array('foo' => 'bar', 'piyo' => 'poyo'), function($x) {
-            return $x;
-        });
-        $this->assertEquals('bar', $_::get($xs, 'bar'), 'string index');
-        $this->assertEquals('poyo', $_::get($xs, 'poyo'), 'string index');
+        $xs = new IteratorIterator(new ArrayIterator($xs));
+        $this->assertEquals('bar', $_::get($xs, 'foo'), 'string index');
+        $this->assertEquals('poyo', $_::get($xs, 'piyo'), 'string index');
         $this->assertNull($_::get($xs, 'baz'), 'undefined index');
         $this->assertNull($_::get($xs, 999), 'undefined index');
     }

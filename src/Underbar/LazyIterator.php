@@ -21,17 +21,6 @@ abstract class LazyIterator extends Strict
      * @param     callable           $f
      * @return    Iterator
      */
-    public static function mapKey($xs, $f)
-    {
-        return new Internal\MapKeyIterator(static::_wrapIterator($xs), $f);
-    }
-
-    /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    Iterator
-     */
     public static function filter($xs, $f)
     {
         return class_exists('CallbackFilterIterator', false)
