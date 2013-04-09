@@ -621,6 +621,19 @@ abstract class Strict
     }
 
     /**
+     * @category  Collections
+     * @param     array|Iterator   $xs
+     * @return    CachingIterator
+     */
+    public static function memorize($xs)
+    {
+        if (static::isArray($xs)) {
+            return $xs;
+        }
+        return new Internal\MemorizeIterator(static::_wrapIterator($xs));
+    }
+
+    /**
      * Returns the first element of an array.
      * Passing n will return the first n elements of the array.
      *
