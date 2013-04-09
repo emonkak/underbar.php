@@ -174,30 +174,6 @@ abstract class Strict
     }
 
     /**
-     * Alias: detectSafe
-     *
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    Option
-     */
-    public static function findSafe($xs, $f)
-    {
-        foreach ($xs as $i => $x) {
-            if (call_user_func($f, $x, $i, $xs)) {
-                return new Option\Some($x);
-            }
-        }
-
-        return Option\None::instance();
-    }
-
-    public static function detectSafe($xs, $f)
-    {
-        return static::findSafe($xs, $f);
-    }
-
-    /**
      * Looks through each value in the list, returning an array of all the
      * values that pass a truth test (iterator).
      *
@@ -258,19 +234,6 @@ abstract class Strict
     public static function findWhere($xs, $properties)
     {
         return static::find($xs, function($x) use ($properties) {
-            foreach ($properties as $key => $value) {
-                if (!((isset($x->$key) && $x->$key === $value)
-                      || (isset($x[$key]) && $x[$key] === $value))) {
-                    return false;
-                }
-            }
-            return true;
-        });
-    }
-
-    public static function findWhereSafe($xs, $properties)
-    {
-        return static::findSafe($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
                 if (!((isset($x->$key) && $x->$key === $value)
                       || (isset($x[$key]) && $x[$key] === $value))) {
@@ -649,10 +612,10 @@ abstract class Strict
      * @param     mixed              $default
      * @return    array
      */
-    public static function get($xs, $index)
+    public static function get($xs, $index, $default = null)
     {
         if (static::isArray($xs)) {
-            return isset($xs[$index]) ? $xs[$index] : null;
+            return isset($xs[$index]) ? $xs[$index] : $default;
         }
 
         foreach ($xs as $i => $x) {
@@ -660,29 +623,8 @@ abstract class Strict
                 return $x;
             }
         }
-    }
 
-    /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     string|int         $index
-     * @return    array
-     */
-    public static function getSafe($xs, $index)
-    {
-        if (static::isArray($xs)) {
-            return isset($xs[$index])
-                ? new Option\Some($xs[$index])
-                : Option\None::instance();
-        }
-
-        foreach ($xs as $i => $x) {
-            if ($i == $index) {
-                return new Option\Some($x);
-            }
-        }
-
-        return Option\None::instance();
+        return $default;
     }
 
     /**
@@ -737,37 +679,6 @@ abstract class Strict
     public static function take($xs, $n = null, $guard = null)
     {
         return static::first($xs, $n, $guard);
-    }
-
-    /**
-     * Alias: headSafe, takeSafe
-     *
-     * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
-     * @return    Option
-     */
-    public static function firstSafe($xs, $n = null, $guard = null)
-    {
-        if ($n !== null && $guard === null) {
-            return static::_first($xs, $n);
-        }
-
-        foreach ($xs as $x) {
-            return new Option\Some($x);
-        }
-
-        return Option\None::instance();
-    }
-
-    public static function headSafe($xs, $n = null, $guard = null)
-    {
-        return static::firstSafe($xs, $n, $guard);
-    }
-
-    public static function takeSafe($xs, $n = null, $guard = null)
-    {
-        return static::firstSafe($xs, $n, $guard);
     }
 
     protected static function _first($xs, $n)
@@ -826,17 +737,6 @@ abstract class Strict
         foreach ($xs as $x) {
         }
         return $x;
-    }
-
-    public static function lastSafe($xs, $n = null, $guard = null)
-    {
-        $xs = static::toArray($xs);
-        if ($n !== null && $guard === null) {
-            return static::_last($xs, $n);
-        }
-        foreach ($xs as $x) {
-        }
-        return isset($x) ? new Option\Some($x) : Option\None::instance();
     }
 
     protected static function _last($xs, $n = null)

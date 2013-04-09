@@ -17,7 +17,7 @@ class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
     public function __call($name, $aruguments)
     {
         array_unshift($aruguments, $this->value);
-        $value = call_user_func_array(array($this->class, $name), $aruguments);
+        $value = call_user_func_array($this->class.'::'.$name, $aruguments);
         return new static($value, $this->class);
     }
 
@@ -40,7 +40,7 @@ class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function count()
     {
-        return call_user_func(array($this->class, 'size'), $this->value);
+        return call_user_func($this->class.'::size', $this->value);
     }
 
     public function getIterator()
@@ -54,13 +54,20 @@ class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function offsetExists($offset)
     {
-        $value = call_user_func(array($this->class, 'getSafe'), $this->value, $offset);
-        return $value->isDefined();
+        return call_user_func(
+            $this->class.'::get',
+            $this->value,
+            $offset
+        ) !== null;
     }
 
     public function offsetGet($offset)
     {
-        return call_user_func(array($this->class, 'get'), $this->value, $offset);
+        return call_user_func(
+            $this->class.'::get',
+            $this->value,
+            $offset
+        );
     }
 
     public function offsetSet($offset, $value)

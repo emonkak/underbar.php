@@ -17,7 +17,6 @@ MIT Licence
 
 - undersocre.js like API
 - Available some functions like a functional language (e.g `takeWhile()`, `dropWhile()`, `cycle()`, `repeat()`, `iterate()`)
-- Available `Option` (also known as `Maybe`) class and null safe functions (e.g. `headSafe()`, `findSafe()`)
 - Implement strict and lazy version functions on the same interface
 - Use `Generator` when running on PHP 5.5
 - Provide `Enumerable` trait
@@ -60,10 +59,6 @@ _::chain(0)
 // Get a first element
 echo _::first(array(100)), PHP_EOL;
 // => 100
-
-// Get a first element when empty array
-echo _::firstSafe(array())->getOrElse('empty'), PHP_EOL;
-// => 'empty'
 
 // Declare enumerable collection class
 class Collection implements \IteratorAggregate
@@ -120,13 +115,10 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | foldr           | mixed    | array $xs, callable $f, $acc                                  |
 | find            | mixed    | array $xs, callable $f                                        |
 | detect          | mixed    | array $xs, callable $f                                        |
-| findSafe        | Option   | array $xs, callable $f                                        |
-| detectSafe      | Option   | array $xs, callable $f                                        |
 | filter          | array    | array $xs, callable $f                                        |
 | select          | array    | array $xs, callable $f                                        |
 | where           | array    | array $xs, array $properties                                  |
 | findWhere       | mixed    | array $xs, array $properties                                  |
-| findWhereSafe   | Option   | array $xs, array $properties                                  |
 | reject          | array    | array $xs, callable $f                                        |
 | every           | bool     | array $xs, callable $f = null                                 |
 | all             | bool     | array $xs, callable $f = null                                 |
@@ -146,7 +138,6 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | toArray         | array    | array $xs, bool $preserveKeys = null                          |
 | size            | int      | array $xs                                                     |
 | get             | mixed    | array $xs, int $index                                         |
-| getSafe         | Option   | array $xs, int $index                                         |
 | span            | array    | array $xs, callable $f                                        |
 
 ### Arrays
@@ -156,13 +147,9 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | first        | array&#x7c;mixed  | array $xs [, int $n = null]                                |
 | head         | array&#x7c;mixed  | array $xs [, int $n = null]                                |
 | take         | array&#x7c;mixed  | array $xs [, int $n = null]                                |
-| firstSafe    | array&#x7c;Option | array $xs [, int $n = null]                                |
-| headSafe     | array&#x7c;Option | array $xs [, int $n = null]                                |
-| takeSafe     | array&#x7c;Option | array $xs [, int $n = null]                                |
 | takeWhile    | array             | array $xs, callable $f                                     |
 | initial      | array             | array $xs [, int $n = 1]                                   |
 | last         | array&#x7c;mixed  | array $xs [, int $n = null]                                |
-| lastSafe     | array&#x7c;Option | array $xs [, int $n = null]                                |
 | rest         | array             | array $xs [, int $n = 0]                                   |
 | tail         | array             | array $xs [, int $n = 0]                                   |
 | drop         | array             | array $xs [, int $n = 0]                                   |

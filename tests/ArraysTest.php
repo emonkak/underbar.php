@@ -11,15 +11,8 @@ class ArraysTest extends Underbar_TestCase
         $this->assertEquals(1, $result, 'can pull out the first element of an array');
         $this->assertNull($_::first(array()), $result, 'works well with empty array');
 
-        $result = $_::firstSafe(array(1, 2, 3))->get();
-        $this->assertEquals(1, $result, 'works well safe method');
-        $this->assertTrue($_::firstSafe(array())->isEmpty(), 'works well safe method');
-
         $result = $_::first(array(1, 2, 3), 0);
         $this->assertEquals(array(), $_::toArray($result), 'can pass an index to first');
-
-        $result = $_::firstSafe(array(1, 2, 3), 0);
-        $this->assertEquals(array(), $_::toArray($result), 'works well safe method');
 
         $result = $_::first(array(1, 2, 3), 2);
         $this->assertEquals(array(1, 2), $_::toArray($result), 'can pass an index to first');
@@ -35,12 +28,6 @@ class ArraysTest extends Underbar_TestCase
 
         $result = $_::head(array(1, 2, 3), 2);
         $this->assertEquals(array(1, 2), $_::toArray($result), 'aliased as head');
-
-        $result = $_::takeSafe(array(1, 2, 3))->get();
-        $this->assertEquals(1, $result, 'aliased as takeSafe');
-
-        $result = $_::headSafe(array(1, 2, 3))->get();
-        $this->assertEquals(1, $result, 'aliased as headSafe');
     }
 
     /**
@@ -145,15 +132,8 @@ class ArraysTest extends Underbar_TestCase
         $this->assertEquals(3, $result, 'can pull out the last element of an array');
         $this->assertNull($_::last(array()));
 
-        $result = $_::lastSafe(array(1, 2, 3))->get();
-        $this->assertEquals(3, $result, 'works well safe method');
-        $this->assertTrue($_::lastSafe(array())->isEmpty(), 'works well safe method');
-
         $result = $_::last(array(1, 2, 3), 0);
         $this->assertEquals(array(), $_::toArray($result), 'can pass an index to last');
-
-        $result = $_::lastSafe(array(1, 2, 3), 0);
-        $this->assertEquals(array(), $_::toArray($result), 'works well safe method');
 
         $result = $_::last(array(1, 2, 3), 2);
         $this->assertEquals(array(2, 3), $_::toArray($result), 'can pass an index to last');
