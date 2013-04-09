@@ -68,24 +68,17 @@ abstract class Strict
     }
 
     /**
-     * Alias: parallelCollect
-     *
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
      * @param     int                $timeout
      * @return    Parallel
      */
-    public static function parallelMap($xs, $f, $n = null, $timeout = null)
+    public static function parMap($xs, $f, $n = null, $timeout = null)
     {
-        $concurrent = new Parallel($f, $n, $timeout);
-        $concurrent->pushAll($xs);
-        return $concurrent;
-    }
-
-    public static function parallelCollect($xs, $f, $n = null, $timeout = null)
-    {
-        return static::parallelMap($xs, $f, $n, $timeout);
+        $parallel = new Parallel($f, $n, $timeout);
+        $parallel->pushAll($xs);
+        return $parallel;
     }
 
     /**

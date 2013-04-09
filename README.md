@@ -99,46 +99,45 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 
 ### Collections
 
-| Function        | Return   | Arguments                                                     |
-| --------------- | ------   | ------------------------------------------------------------- |
-| each            | void     | array $xs, callable $f                                        |
-| map             | array    | array $xs, callable $f                                        |
-| collect         | array    | array $xs, callable $f                                        |
-| mapKey          | array    | array $xs, callable $f                                        |
-| collectKey      | array    | array $xs, callable $f                                        |
-| parallelMap     | Parallel | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
-| parallelCollect | Parallel | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
-| reduce          | mixed    | array $xs, callable $f, $acc                                  |
-| inject          | mixed    | array $xs, callable $f, $acc                                  |
-| foldl           | mixed    | array $xs, callable $f, $acc                                  |
-| reduceRight     | mixed    | array $xs, callable $f, $acc                                  |
-| foldr           | mixed    | array $xs, callable $f, $acc                                  |
-| find            | mixed    | array $xs, callable $f                                        |
-| detect          | mixed    | array $xs, callable $f                                        |
-| filter          | array    | array $xs, callable $f                                        |
-| select          | array    | array $xs, callable $f                                        |
-| where           | array    | array $xs, array $properties                                  |
-| findWhere       | mixed    | array $xs, array $properties                                  |
-| reject          | array    | array $xs, callable $f                                        |
-| every           | bool     | array $xs, callable $f = null                                 |
-| all             | bool     | array $xs, callable $f = null                                 |
-| some            | bool     | array $xs, callable $f = null                                 |
-| any             | bool     | array $xs, callable $f = null                                 |
-| sum             | int      | array $xs                                                     |
-| product         | int      | array $xs                                                     |
-| contains        | bool     | array $xs, mixed $target                                      |
-| invoke          | array    | array $xs, string $method                                     |
-| pluck           | array    | array $xs, string $property                                   |
-| max             | mixed    | array $xs, callable $f = null                                 |
-| min             | mixed    | array $xs, callable $f = null                                 |
-| sortBy          | array    | array $xs, mixed $value                                       |
-| groupBy         | array    | array $xs, mixed $value = null                                |
-| countBy         | array    | array $xs, mixed $value = null                                |
-| shuffle         | array    | array $xs                                                     |
-| toArray         | array    | array $xs, bool $preserveKeys = null                          |
-| size            | int      | array $xs                                                     |
-| get             | mixed    | array $xs, int $index                                         |
-| span            | array    | array $xs, callable $f                                        |
+| Function    | Return   | Arguments                                                     |
+| ----------- | ------   | ------------------------------------------------------------- |
+| each        | void     | array $xs, callable $f                                        |
+| map         | array    | array $xs, callable $f                                        |
+| collect     | array    | array $xs, callable $f                                        |
+| mapKey      | array    | array $xs, callable $f                                        |
+| collectKey  | array    | array $xs, callable $f                                        |
+| parMap      | Parallel | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
+| reduce      | mixed    | array $xs, callable $f, $acc                                  |
+| inject      | mixed    | array $xs, callable $f, $acc                                  |
+| foldl       | mixed    | array $xs, callable $f, $acc                                  |
+| reduceRight | mixed    | array $xs, callable $f, $acc                                  |
+| foldr       | mixed    | array $xs, callable $f, $acc                                  |
+| find        | mixed    | array $xs, callable $f                                        |
+| detect      | mixed    | array $xs, callable $f                                        |
+| filter      | array    | array $xs, callable $f                                        |
+| select      | array    | array $xs, callable $f                                        |
+| where       | array    | array $xs, array $properties                                  |
+| findWhere   | mixed    | array $xs, array $properties                                  |
+| reject      | array    | array $xs, callable $f                                        |
+| every       | bool     | array $xs, callable $f = null                                 |
+| all         | bool     | array $xs, callable $f = null                                 |
+| some        | bool     | array $xs, callable $f = null                                 |
+| any         | bool     | array $xs, callable $f = null                                 |
+| sum         | int      | array $xs                                                     |
+| product     | int      | array $xs                                                     |
+| contains    | bool     | array $xs, mixed $target                                      |
+| invoke      | array    | array $xs, string $method                                     |
+| pluck       | array    | array $xs, string $property                                   |
+| max         | mixed    | array $xs, callable $f = null                                 |
+| min         | mixed    | array $xs, callable $f = null                                 |
+| sortBy      | array    | array $xs, mixed $value                                       |
+| groupBy     | array    | array $xs, mixed $value = null                                |
+| countBy     | array    | array $xs, mixed $value = null                                |
+| shuffle     | array    | array $xs                                                     |
+| toArray     | array    | array $xs, bool $preserveKeys = null                          |
+| size        | int      | array $xs                                                     |
+| get         | mixed    | array $xs, int $index , mixed $default = null                 |
+| span        | array    | array $xs, callable $f                                        |
 
 ### Arrays
 

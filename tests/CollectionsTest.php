@@ -71,7 +71,7 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testParallelMap($_)
+    public function testParMap($_)
     {
         if (!function_exists('pcntl_fork')) {
             return;
@@ -79,7 +79,7 @@ class CollectionsTest extends Underbar_TestCase
 
         $time = $_::bench(function() use ($_) {
             $sum = $_::chain($_::range(10))
-                ->parallelMap(function($x) {
+                ->parMap(function($x) {
                     usleep(100000);
                     return $x * 100;
                 }, 10)
@@ -88,14 +88,6 @@ class CollectionsTest extends Underbar_TestCase
             PHPUnit_Framework_Assert::assertEquals(4500, $sum, 'sum numbers');
         });
         $this->assertLessThan(1.0, $time, 'work to parallel');
-
-        $sum = $_::chain($_::range(10))
-            ->parallelCollect(function($x) {
-                return $x * 100;
-            }, 10)
-            ->sum()
-            ->value();
-        $this->assertEquals(4500, $sum, 'aliased as "parallelCollect"');
     }
 
     /**
