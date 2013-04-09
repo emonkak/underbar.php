@@ -174,7 +174,7 @@ class Parallel implements \Iterator, \Countable
 
         $pid = pcntl_fork();
         if ($pid < 0) {  // Failed fork
-            exit(1);
+            throw new \RuntimeException('Failed to fork child process.');
         } elseif ($pid === 0) {  // is worker process
             fclose($pair[0]);
             foreach ($this->sockets as $socket) {
