@@ -540,9 +540,10 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable|string    $f
+     * @param     bool               $isSorted
      * @return    array
      */
-    public static function groupBy($xs, $f = null)
+    public static function groupBy($xs, $f = null, $isSorted = false)
     {
         $f = static::_lookupIterator($f);
         $result = array();
@@ -563,6 +564,7 @@ abstract class Strict
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable|string    $x
+     * @param     bool               $isSorted
      * @return    int
      */
     public static function countBy($xs, $f = null, $isSorted = false)

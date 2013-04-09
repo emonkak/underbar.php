@@ -35,13 +35,13 @@ function pluck($_1){return Lazy::pluck($this,$_1);}
 function max($_1=NULL){return Lazy::max($this,$_1);}
 function min($_1=NULL){return Lazy::min($this,$_1);}
 function sortBy($_1){return Lazy::sortBy($this,$_1);}
-function groupBy($_1=NULL){return Lazy::groupBy($this,$_1);}
-function countBy($_1=NULL){return Lazy::countBy($this,$_1);}
+function groupBy($_1=NULL,$_2=false){return Lazy::groupBy($this,$_1,$_2);}
+function countBy($_1=NULL,$_2=false){return Lazy::countBy($this,$_1,$_2);}
 function shuffle(){return Lazy::shuffle($this);}
 function toArray($_1=NULL){return Lazy::toArray($this,$_1);}
 function size(){return Lazy::size($this);}
-function index($_1){return Lazy::index($this,$_1);}
-function indexSafe($_1){return Lazy::indexSafe($this,$_1);}
+function get($_1){return Lazy::get($this,$_1);}
+function getSafe($_1){return Lazy::getSafe($this,$_1);}
 function span($_1){return Lazy::span($this,$_1);}
 function first($_1=NULL,$_2=NULL){return Lazy::first($this,$_1,$_2);}
 function head($_1=NULL,$_2=NULL){return Lazy::head($this,$_1,$_2);}
