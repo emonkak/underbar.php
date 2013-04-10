@@ -66,7 +66,7 @@ abstract class LazyIterator extends Strict
      * @param     int                $n
      * @return    Iterator
      */
-    protected static function _first($xs, $n = null)
+    public static function _first($xs, $n = null)
     {
         return $n > 0
              ? new Internal\LimitIterator(static::_wrapIterator($xs), 0, $n)

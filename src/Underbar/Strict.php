@@ -665,7 +665,7 @@ abstract class Strict
         return static::first($xs, $n, $guard);
     }
 
-    protected static function _first($xs, $n)
+    public static function _first($xs, $n)
     {
         return $n > 0 ? array_slice(static::toArray($xs), 0, $n) : array();
     }
@@ -723,7 +723,7 @@ abstract class Strict
         return $x;
     }
 
-    protected static function _last($xs, $n = null)
+    public static function _last($xs, $n = null)
     {
         $queue = new \SplQueue();
         if ($n <= 0) {

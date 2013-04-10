@@ -4,15 +4,18 @@ namespace Underbar\Internal;
 
 class RewindableGenerator implements \IteratorAggregate
 {
-    private $generator;
+    private $func;
 
-    public function __construct(\Generator $generator)
+    private $args;
+
+    public function __construct($func, $args)
     {
-        $this->generator = $generator;
+        $this->func = $func;
+        $this->args = $args;
     }
 
     public function getIterator()
     {
-        return clone $this->generator;
+        return call_user_func_array($this->func, $this->args);
     }
 }

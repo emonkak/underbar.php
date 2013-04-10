@@ -44,7 +44,7 @@ abstract class LazyUnsafeGenerator extends Strict
         return $isSorted ? static::_groupBy($xs, $f) : parent::groupBy($xs, $f);
     }
 
-    protected static function _groupBy($xs, $f = null)
+    public static function _groupBy($xs, $f = null)
     {
         $f = static::_lookupIterator($f);
         $acc = array();
@@ -77,7 +77,7 @@ abstract class LazyUnsafeGenerator extends Strict
         return $isSorted ? static::_countBy($xs, $f) : parent::countBy($xs, $f);
     }
 
-    protected static function _countBy($xs, $f = null)
+    public static function _countBy($xs, $f = null)
     {
         $f = static::_lookupIterator($f);
         $acc = 0;
@@ -105,7 +105,7 @@ abstract class LazyUnsafeGenerator extends Strict
      * @param     int                $n
      * @return    Generator
      */
-    protected static function _first($xs, $n)
+    public static function _first($xs, $n)
     {
         foreach ($xs as $i => $x) {
             if (--$n < 0) {
