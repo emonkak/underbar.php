@@ -194,6 +194,7 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | omit          | array  | array $xs [, array&#x7c;mixed $keys]  |
 | defaults      | array  | array $xs [, array $defaults]         |
 | tap           | mixed  | mixed $value, callable $interceptor   |
+| duplicate     | mixed  | mixed $value                          |
 | has           | bool   | array $xs, mixed $key                 |
 | isArray       | bool   | mixed $value                          |
 | isTraversable | bool   | mixed $value                          |

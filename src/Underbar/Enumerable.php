@@ -83,6 +83,7 @@ function pick($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8
 function omit($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::omit($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function defaults($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::defaults($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function tap($_1){return Lazy::tap($this,$_1);}
+function duplicate(){return Lazy::duplicate($this);}
 function has($_1){return Lazy::has($this,$_1);}
 function isArray(){return Lazy::isArray($this);}
 function isTraversable(){return Lazy::isTraversable($this);}
