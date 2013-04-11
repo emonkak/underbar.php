@@ -110,15 +110,16 @@ class Parallel implements \Iterator, \Countable
      * Read data with unserialize from a socket.
      *
      * @param   resource  $socket
-     * @return  mixed
+     * @return  void
+     * @throws  RuntimeException
      */
     protected static function read($socket)
     {
-        if (($result = fgets($socket)) !== false) {
-            $result = @unserialize($result);
+        $result = fgets($socket);
+        if ($result === false) {
+            throw new \RuntimeException();
         }
-
-        return $result;
+        return static::unserialize($result);
     }
 
     /**
@@ -126,11 +127,48 @@ class Parallel implements \Iterator, \Countable
      *
      * @param   resource  $socket
      * @param   mixed     $value
-     * @return  mixed
+     * @return  bool
      */
     protected static function write($socket, $value)
     {
-        return fwrite($socket, serialize($value) . PHP_EOL);
+        $value = static::serialize($value) . PHP_EOL;
+        $written = 0;
+        while ($written < strlen($value)) {
+            $bytes = fwrite($socket, substr($value, $written));
+            if ($bytes === false) {
+                return false;
+            }
+            $written += $bytes;
+        }
+        return true;
+    }
+
+    /**
+     * Serialize data
+     *
+     * @param   mixed  $source
+     * @return  string
+     */
+    protected static function serialize($source)
+    {
+        return base64_encode(serialize($source));
+    }
+
+    /**
+     * Unserialize data
+     *
+     * @param   mixed   $source
+     * @return  string
+     * @throws  UnexpectedValueException
+     */
+    protected static function unserialize($source)
+    {
+        $source = base64_decode($source);
+        $result = @unserialize($source);
+        if ($result === false && $source !== serialize(false)) {
+            throw new \UnexpectedValueException();
+        }
+        return $result;
     }
 
     /**
@@ -243,9 +281,7 @@ class Parallel implements \Iterator, \Countable
     public function result()
     {
         $this->fill();
-        return $this->results->isEmpty()
-            ? null
-            : $this->results->dequeue();
+        return $this->results->isEmpty() ? null : $this->results->dequeue();
     }
 
     /**
@@ -327,9 +363,12 @@ class Parallel implements \Iterator, \Countable
 
         if (stream_select($read, $write, $except, $time) > 0) {
             foreach ($read as $socket) {
-                if (($result = static::read($socket)) !== false) {
-                    $this->results->enqueue($result);
+                try {
+                    $result = static::read($socket);
+                } catch (\RuntimeException $e) {
+                    continue;
                 }
+                $this->results->enqueue($result);
                 $this->remain--;
             }
         }
@@ -372,12 +411,12 @@ class Parallel implements \Iterator, \Countable
     protected function loop($socket)
     {
         while (true) {
-            // is blocking
-            if (($result = static::read($socket)) !== false) {
-                static::write($socket, call_user_func($this->procedure, $result));
-            } else {
+            try {
+                $result = static::read($socket);  // is blocking
+            } catch (\RuntimeException $e) {
                 break;
             }
+            static::write($socket, call_user_func($this->procedure, $result));
         }
     }
 }
