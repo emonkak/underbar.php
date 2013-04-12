@@ -15,7 +15,9 @@ foreach ($ref->getMethods() as $method) {
     $isMatchedCategory = preg_match($categoryPattern, $docComment);
     $isVarargs = preg_match($varargsPattern, $docComment);
 
-    if (!$method->isPublic() || !$isMatchedCategory) {
+    if (!$method->isPublic()
+        || !$isMatchedCategory
+        || strpos($method->getName(), '_') === 0) {
         continue;
     }
 

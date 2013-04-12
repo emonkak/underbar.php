@@ -51,6 +51,7 @@ function compact(){return Lazy::compact($this);}
 function flatten($_1=false){return Lazy::flatten($this,$_1);}
 function without($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::without($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function union($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::union($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
+function intersection($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::intersection($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function difference($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::difference($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function uniq($_1=NULL){return Lazy::uniq($this,$_1);}
 function unique($_1=NULL){return Lazy::unique($this,$_1);}

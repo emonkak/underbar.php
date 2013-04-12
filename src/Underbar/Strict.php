@@ -866,9 +866,11 @@ abstract class Strict
     /**
      * Computes the list of values that are the intersection of all the arrays.
      *
-     * @param   array|Traversable  $xs
-     * @param   array|Traversable  *$rest
-     * @return  array
+     * @varargs
+     * @category  Arrays
+     * @param     array|Traversable  $xs
+     * @param     array|Traversable  *$rest
+     * @return    array
      */
     public static function intersection()
     {
