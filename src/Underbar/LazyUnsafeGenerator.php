@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-abstract class LazyUnsafeGenerator extends Strict
+class LazyUnsafeGenerator extends Strict
 {
     /**
      * @category  Collections
@@ -46,7 +46,7 @@ abstract class LazyUnsafeGenerator extends Strict
 
     public static function _groupBy($xs, $f = null)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
         $acc = array();
         $lastKey = null;
 
@@ -79,7 +79,7 @@ abstract class LazyUnsafeGenerator extends Strict
 
     public static function _countBy($xs, $f = null)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
         $acc = 0;
         $lastKey = null;
 
@@ -200,7 +200,7 @@ abstract class LazyUnsafeGenerator extends Strict
         $loop = true;
 
         foreach (func_get_args() as $xs) {
-            $yss[] = $ys = static::_wrapIterator($xs);
+            $yss[] = $ys = static::wrapIterator($xs);
             $ys->rewind();
             $loop = $loop && $ys->valid();
             $zss[] = $ys->current();

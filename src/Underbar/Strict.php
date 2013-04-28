@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-abstract class Strict
+class Strict
 {
     /**
      * Iterates over a list of elements, yielding each in turn to an iterator
@@ -244,7 +244,7 @@ abstract class Strict
      */
     public static function every($xs, $f = null)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
 
         foreach ($xs as $i => $x) {
             if (!call_user_func($f, $x, $i, $xs)) {
@@ -272,7 +272,7 @@ abstract class Strict
      */
     public static function some($xs, $f = null)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
 
         foreach ($xs as $i => $x) {
             if (call_user_func($f, $x, $i, $xs)) {
@@ -443,7 +443,7 @@ abstract class Strict
      */
     public static function sortBy($xs, $x)
     {
-        $f = static::_lookupIterator($x);
+        $f = static::lookupIterator($x);
         $result = array();
 
         foreach ($xs as $i => $x) {
@@ -479,7 +479,7 @@ abstract class Strict
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
         $result = array();
 
         foreach ($xs as $i => $x) {
@@ -503,7 +503,7 @@ abstract class Strict
      */
     public static function countBy($xs, $f = null, $isSorted = false)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
         $result = array();
 
         foreach ($xs as $i => $x) {
@@ -630,7 +630,7 @@ abstract class Strict
         if (static::isArray($xs)) {
             return $xs;
         }
-        return new Internal\MemorizeIterator(static::_wrapIterator($xs));
+        return new Internal\MemorizeIterator(static::wrapIterator($xs));
     }
 
     /**
@@ -915,7 +915,7 @@ abstract class Strict
      */
     public static function uniq($xs, $f = null)
     {
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
         $seenScalar = $seenObjects = $seenOthers = array();
         return static::filter($xs, function($x, $i, $xs) use (
             $f,
@@ -965,7 +965,7 @@ abstract class Strict
         $loop = true;
 
         foreach (func_get_args() as $xs) {
-            $xss[] = $wrapped = static::_wrapIterator($xs);
+            $xss[] = $wrapped = static::wrapIterator($xs);
             $wrapped->rewind();
             $loop = $loop && $wrapped->valid();
             $zipped[] = $wrapped->current();
@@ -1013,7 +1013,7 @@ abstract class Strict
     public static function object($xs, $values = null)
     {
         $result = array();
-        $values = static::_wrapIterator($values);
+        $values = static::wrapIterator($values);
         if ($values !== null) {
             $values->rewind();
             foreach ($xs as $key) {
@@ -1100,7 +1100,7 @@ abstract class Strict
     public static function sortedIndex($xs, $x, $f = null)
     {
         $xs = static::toArray($xs);
-        $f = static::_lookupIterator($f);
+        $f = static::lookupIterator($f);
         $x = call_user_func($f, $x);
 
         $low = 0;
@@ -1640,7 +1640,7 @@ abstract class Strict
         return microtime(true) - $start;
     }
 
-    protected static function _lookupIterator($value)
+    protected static function lookupIterator($value)
     {
         if (is_scalar($value) && strpos($value, '::') === false) {
             return function($xs) use ($value) {
@@ -1653,7 +1653,7 @@ abstract class Strict
         return get_called_class().'::identity';
     }
 
-    protected static function _wrapIterator($xs)
+    protected static function wrapIterator($xs)
     {
         if (is_array($xs)) {
             return new \ArrayIterator($xs);

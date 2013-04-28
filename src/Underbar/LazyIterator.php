@@ -2,7 +2,7 @@
 
 namespace Underbar;
 
-abstract class LazyIterator extends Strict
+class LazyIterator extends Strict
 {
     /**
      * @category  Collections
@@ -12,7 +12,7 @@ abstract class LazyIterator extends Strict
      */
     public static function map($xs, $f)
     {
-        return new Internal\MapIterator(static::_wrapIterator($xs), $f);
+        return new Internal\MapIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -24,8 +24,8 @@ abstract class LazyIterator extends Strict
     public static function filter($xs, $f)
     {
         return class_exists('CallbackFilterIterator', false)
-             ? new \CallbackFilterIterator(static::_wrapIterator($xs), $f)
-             : new Internal\FilterIterator(static::_wrapIterator($xs), $f);
+             ? new \CallbackFilterIterator(static::wrapIterator($xs), $f)
+             : new Internal\FilterIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -38,8 +38,8 @@ abstract class LazyIterator extends Strict
     public static function groupBy($xs, $f = null, $isSorted = false)
     {
         if ($isSorted) {
-            $f = static::_lookupIterator($f);
-            return new Internal\GroupByIterator(static::_wrapIterator($xs), $f);
+            $f = static::lookupIterator($f);
+            return new Internal\GroupByIterator(static::wrapIterator($xs), $f);
         }
         return parent::groupBy($xs, $f, $isSorted);
     }
@@ -54,8 +54,8 @@ abstract class LazyIterator extends Strict
     public static function countBy($xs, $f = null, $isSorted = false)
     {
         if ($isSorted) {
-            $f = static::_lookupIterator($f);
-            return new Internal\CountByIterator(static::_wrapIterator($xs), $f);
+            $f = static::lookupIterator($f);
+            return new Internal\CountByIterator(static::wrapIterator($xs), $f);
         }
         return parent::countBy($xs, $f, $isSorted);
     }
@@ -69,7 +69,7 @@ abstract class LazyIterator extends Strict
     public static function _first($xs, $n = null)
     {
         return $n > 0
-             ? new Internal\LimitIterator(static::_wrapIterator($xs), 0, $n)
+             ? new Internal\LimitIterator(static::wrapIterator($xs), 0, $n)
              : new \EmptyIterator();
     }
 
@@ -81,7 +81,7 @@ abstract class LazyIterator extends Strict
      */
     public static function takeWhile($xs, $f)
     {
-        return new Internal\TakeWhileIterator(static::_wrapIterator($xs), $f);
+        return new Internal\TakeWhileIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -95,7 +95,7 @@ abstract class LazyIterator extends Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return new Internal\InitialIterator(static::_wrapIterator($xs), $n);
+        return new Internal\InitialIterator(static::wrapIterator($xs), $n);
     }
 
     /**
@@ -109,7 +109,7 @@ abstract class LazyIterator extends Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return new Internal\LimitIterator(static::_wrapIterator($xs), $n);
+        return new Internal\LimitIterator(static::wrapIterator($xs), $n);
     }
 
     /**
@@ -120,7 +120,7 @@ abstract class LazyIterator extends Strict
      */
     public static function dropWhile($xs, $f)
     {
-        return new Internal\DropWhileIterator(static::_wrapIterator($xs), $f);
+        return new Internal\DropWhileIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -131,7 +131,7 @@ abstract class LazyIterator extends Strict
      */
     public static function flatten($xs, $shallow = false)
     {
-        return new Internal\FlattenIterator(static::_wrapIterator($xs), $shallow);
+        return new Internal\FlattenIterator(static::wrapIterator($xs), $shallow);
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class LazyIterator extends Strict
     {
         $it = new Internal\ZipIterator();
         foreach (func_get_args() as $xs) {
-            $it->attachIterator(static::_wrapIterator($xs));
+            $it->attachIterator(static::wrapIterator($xs));
         }
         return $it;
     }
@@ -171,7 +171,7 @@ abstract class LazyIterator extends Strict
      */
     public static function cycle($xs, $n = null)
     {
-        $wrapped = static::_wrapIterator($xs);
+        $wrapped = static::wrapIterator($xs);
         if ($n === null) {
             return new \InfiniteIterator($wrapped);
         }
@@ -214,7 +214,7 @@ abstract class LazyIterator extends Strict
     {
         $it = new \AppendIterator();
         foreach (func_get_args() as $array) {
-            $it->append(static::_wrapIterator($array));
+            $it->append(static::wrapIterator($array));
         }
         return $it;
     }
