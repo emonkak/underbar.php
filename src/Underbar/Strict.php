@@ -1614,6 +1614,16 @@ class Strict
     }
 
     /**
+     * @category  Utility
+     * @param     string    $method
+     * @return    callable
+     */
+    public static function ref($method)
+    {
+        return get_called_class().'::'.$method;
+    }
+
+    /**
      * Returns a wrapped object. Calling methods on this object will continue to
      * return wrapped objects until value is used.
      *

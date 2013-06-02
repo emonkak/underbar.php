@@ -20,7 +20,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::first(array(1, 2, 3), 5);
         $this->assertEquals(array(1, 2, 3), $_::toArray($result), 'can pass an index to first');
 
-        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), "$_::first");
+        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), $_::ref('first'));
         $this->assertEquals(array(1, 1), $_::toArray($result), 'works well with _.map');
 
         $result = $_::take(array(1, 2, 3), 2);
@@ -49,7 +49,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::tail($numbers);
         $this->assertEquals(array(2, 3, 4), $_::toArray($result), 'aliased as tail');
 
-        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), "$_::rest");
+        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), $_::ref('rest'));
         $this->assertEquals(array(2, 3, 2, 3), $_::toArray($_::flatten($result)), 'works well with _.map');
 
         $result = $_::drop($numbers);
@@ -119,7 +119,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::initial(array(1, 2, 3, 4), 2);
         $this->assertEquals(array(1, 2), $_::toArray($result), 'initial can take an index');
 
-        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), "$_::initial");
+        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), $_::ref('initial'));
         $this->assertEquals(array(1, 2, 1, 2), $_::toArray($_::flatten($result)), 'initial works with _.map');
     }
 
@@ -141,7 +141,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::last(array(1, 2, 3), 5);
         $this->assertEquals(array(1, 2, 3), $_::toArray($result), 'can pass an index to last');
 
-        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), "$_::last");
+        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), $_::ref('last'));
         $this->assertEquals(array(3, 3), $_::toArray($result), 'works well with _.map');
     }
 
