@@ -50,16 +50,17 @@ class CollectionsTest extends Underbar_TestCase
             return;
         }
 
-        $time = $_::bench(function() use ($_) {
-            $sum = $_::chain($_::range(10))
-                ->parMap(function($x) {
-                    usleep(100000);
-                    return $x * 100;
-                }, 10)
-                ->sum()
-                ->value();
-            PHPUnit_Framework_Assert::assertEquals(4500, $sum, 'sum numbers');
-        });
+        $time = microtime(true);
+        $sum = $_::chain($_::range(10))
+            ->parMap(function($x) {
+                usleep(100000);
+                return $x * 100;
+            }, 10)
+            ->sum()
+            ->value();
+        $this->assertEquals(4500, $sum, 'sum numbers');
+
+        $time = microtime(true) - $time;
         $this->assertLessThan(1.0, $time, 'work to parallel');
     }
 

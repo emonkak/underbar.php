@@ -4,12 +4,12 @@ trait Enumerable{
 function each($_1){return Lazy::each($this,$_1);}
 function map($_1){return Lazy::map($this,$_1);}
 function collect($_1){return Lazy::collect($this,$_1);}
-function parMap($_1,$_2=NULL,$_3=NULL){return Lazy::parMap($this,$_1,$_2,$_3);}
 function reduce($_1,$_2){return Lazy::reduce($this,$_1,$_2);}
 function inject($_1,$_2){return Lazy::inject($this,$_1,$_2);}
 function foldl($_1,$_2){return Lazy::foldl($this,$_1,$_2);}
 function reduceRight($_1,$_2){return Lazy::reduceRight($this,$_1,$_2);}
 function foldr($_1,$_2){return Lazy::foldr($this,$_1,$_2);}
+function get($_1,$_2=NULL){return Lazy::get($this,$_1,$_2);}
 function find($_1){return Lazy::find($this,$_1);}
 function detect($_1){return Lazy::detect($this,$_1);}
 function filter($_1){return Lazy::filter($this,$_1);}
@@ -26,6 +26,7 @@ function product(){return Lazy::product($this);}
 function contains($_1){return Lazy::contains($this,$_1);}
 function invoke($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::invoke($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function pluck($_1){return Lazy::pluck($this,$_1);}
+function span($_1){return Lazy::span($this,$_1);}
 function max($_1=NULL){return Lazy::max($this,$_1);}
 function min($_1=NULL){return Lazy::min($this,$_1);}
 function sortBy($_1){return Lazy::sortBy($this,$_1);}
@@ -34,9 +35,7 @@ function countBy($_1=NULL,$_2=false){return Lazy::countBy($this,$_1,$_2);}
 function shuffle(){return Lazy::shuffle($this);}
 function toArray($_1=NULL){return Lazy::toArray($this,$_1);}
 function size(){return Lazy::size($this);}
-function get($_1,$_2=NULL){return Lazy::get($this,$_1,$_2);}
-function span($_1){return Lazy::span($this,$_1);}
-function memorize(){return Lazy::memorize($this);}
+function memoize(){return Lazy::memoize($this);}
 function first($_1=NULL,$_2=NULL){return Lazy::first($this,$_1,$_2);}
 function head($_1=NULL,$_2=NULL){return Lazy::head($this,$_1,$_2);}
 function take($_1=NULL,$_2=NULL){return Lazy::take($this,$_1,$_2);}
@@ -65,6 +64,7 @@ function range($_1=NULL,$_2=1){return Lazy::range($this,$_1,$_2);}
 function cycle($_1=NULL){return Lazy::cycle($this,$_1);}
 function repeat($_1=-1){return Lazy::repeat($this,$_1);}
 function iterate($_1){return Lazy::iterate($this,$_1);}
+function parMap($_1,$_2=NULL,$_3=NULL){return Lazy::parMap($this,$_1,$_2,$_3);}
 function pop(){return Lazy::pop($this);}
 function push($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::push($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function reverse($_1=false){return Lazy::reverse($this,$_1);}

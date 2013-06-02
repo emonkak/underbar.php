@@ -104,7 +104,6 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | each        | void            | array $xs, callable $f                                        |
 | map         | array           | array $xs, callable $f                                        |
 | collect     | array           | array $xs, callable $f                                        |
-| parMap      | Parallel        | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
 | reduce      | mixed           | array $xs, callable $f, $acc                                  |
 | inject      | mixed           | array $xs, callable $f, $acc                                  |
 | foldl       | mixed           | array $xs, callable $f, $acc                                  |
@@ -170,6 +169,7 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | cycle        | array             | array $xs [, int $n = null]                                |
 | repeat       | array             | mixed $value [, int $n = -1]                               |
 | iterate      | mixed             | mixed $acc [, callable $f]                                 |
+| parMap       | Parallel          | array $xs, callable $f [, int $n = 1 [, int $timeout = null]] |
 | pop          | array             | array $xs                                                  |
 | push         | array             | array $xs [, mixed $values, ...]                           |
 | reverse      | array             | array $xs                                                  |
@@ -201,8 +201,8 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 
 ### Utilities
 
-| Function  | Return           | Arguments     |
-| --------- | ---------------- | ------------- |
-| identity  | mixed            | mixed $value  |
-| chain     | Internal\Wrapper | mixed $value  |
-| bench     | float            | callable $f   |
+| Function  | Return           | Arguments      |
+| --------- | ---------------- | -------------- |
+| identity  | mixed            | mixed $value   |
+| ref       | callable         | string $method |
+| chain     | Internal\Wrapper | mixed $value   |

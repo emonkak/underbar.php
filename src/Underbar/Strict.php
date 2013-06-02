@@ -46,20 +46,6 @@ class Strict
     }
 
     /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     int                $timeout
-     * @return    Parallel
-     */
-    public static function parMap($xs, $f, $n = null, $timeout = null)
-    {
-        $parallel = new Parallel($f, $n, $timeout);
-        $parallel->pushAll($xs);
-        return $parallel;
-    }
-
-    /**
      * Also known as inject and foldl, reduce boils down a list of values into a
      * single value.
      *
@@ -117,6 +103,28 @@ class Strict
     public static function foldr($xs, $f, $acc)
     {
         return static::reduceRight($xs, $f, $acc);
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     string|int         $index
+     * @param     mixed              $default
+     * @return    array
+     */
+    public static function get($xs, $index, $default = null)
+    {
+        if (static::isArray($xs)) {
+            return isset($xs[$index]) ? $xs[$index] : $default;
+        }
+
+        foreach ($xs as $i => $x) {
+            if ($i == $index) {
+                return $x;
+            }
+        }
+
+        return $default;
     }
 
     /**
@@ -375,6 +383,28 @@ class Strict
     }
 
     /**
+     * @category  Collections
+     * @param     mixed     $xs
+     * @param     callable  $f
+     * @return    array
+     */
+    public static function span($xs, $f)
+    {
+        $ys = array(array(), array());
+        $inPrefix = true;
+
+        foreach ($xs as $i => $x) {
+            if ($inPrefix = $inPrefix && call_user_func($f, $x, $i, $xs)) {
+                $ys[0][] = $x;
+            } else {
+                $ys[1][] = $x;
+            }
+        }
+
+        return $ys;
+    }
+
+    /**
      * Returns the maximum value in list. If iterator is passed, it will be used
      * on each value to generate the criterion by which the value is ranked.
      *
@@ -578,59 +608,15 @@ class Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     string|int         $index
-     * @param     mixed              $default
-     * @return    array
-     */
-    public static function get($xs, $index, $default = null)
-    {
-        if (static::isArray($xs)) {
-            return isset($xs[$index]) ? $xs[$index] : $default;
-        }
-
-        foreach ($xs as $i => $x) {
-            if ($i == $index) {
-                return $x;
-            }
-        }
-
-        return $default;
-    }
-
-    /**
-     * @category  Collections
-     * @param     mixed     $xs
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function span($xs, $f)
-    {
-        $ys = array(array(), array());
-        $inPrefix = true;
-
-        foreach ($xs as $i => $x) {
-            if ($inPrefix = $inPrefix && call_user_func($f, $x, $i, $xs)) {
-                $ys[0][] = $x;
-            } else {
-                $ys[1][] = $x;
-            }
-        }
-
-        return $ys;
-    }
-
-    /**
-     * @category  Collections
      * @param     array|Iterator   $xs
      * @return    CachingIterator
      */
-    public static function memorize($xs)
+    public static function memoize($xs)
     {
         if (static::isArray($xs)) {
             return $xs;
         }
-        return new Internal\MemorizeIterator(static::wrapIterator($xs));
+        return new Internal\MemoizeIterator(static::wrapIterator($xs));
     }
 
     /**
@@ -1195,6 +1181,21 @@ class Strict
     }
 
     /**
+     * @category  Arrays
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     int                $n
+     * @param     int                $timeout
+     * @return    Parallel
+     */
+    public static function parMap($xs, $f, $n = null, $timeout = null)
+    {
+        $parallel = new Parallel($f, $n, $timeout);
+        $parallel->pushAll($xs);
+        return $parallel;
+    }
+
+    /**
      * Removes the last element from an array and returns that element.
      *
      * @category  Arrays
@@ -1623,21 +1624,6 @@ class Strict
     public static function chain($value)
     {
         return new Internal\Wrapper($value, get_called_class());
-    }
-
-    /**
-     * @varargs
-     * @category  Utility
-     * @param     callable  $f
-     * @param     mixed     *$args
-     * @return    float
-     */
-    public static function bench($f)
-    {
-        $args = array_slice(func_get_args(), 1);
-        $start = microtime(true);
-        call_user_func_array($f, $args);
-        return microtime(true) - $start;
     }
 
     protected static function lookupIterator($value)

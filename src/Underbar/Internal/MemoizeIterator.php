@@ -2,7 +2,7 @@
 
 namespace Underbar\Internal;
 
-class MemorizeIterator extends \CachingIterator
+class MemoizeIterator extends \CachingIterator
 {
     public function __construct($xs)
     {
