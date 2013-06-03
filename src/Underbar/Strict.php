@@ -15,8 +15,8 @@ class Strict
      */
     public static function each($xs, $f)
     {
-        foreach ($xs as $i => $x) {
-            call_user_func($f, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            call_user_func($f, $x, $k, $xs);
         }
     }
 
@@ -34,8 +34,8 @@ class Strict
     public static function map($xs, $f)
     {
         $ys = array();
-        foreach ($xs as $i => $x) {
-            $ys[$i] = call_user_func($f, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            $ys[$k] = call_user_func($f, $x, $k, $xs);
         }
         return $ys;
     }
@@ -59,8 +59,8 @@ class Strict
      */
     public static function reduce($xs, $f, $acc)
     {
-        foreach ($xs as $i => $x) {
-            $acc = call_user_func($f, $acc, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            $acc = call_user_func($f, $acc, $x, $k, $xs);
         }
         return $acc;
     }
@@ -90,11 +90,11 @@ class Strict
     {
         if (is_array($xs)) {
             for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
-                $acc = call_user_func($f, $x, $acc, key($xs), $xs);
+                $acc = call_user_func($f, $acc, $x, key($xs), $xs);
             }
         } else {
-            foreach (static::reverse($xs, true) as $i => $x) {
-                $acc = call_user_func($f, $x, $acc, $i, $xs);
+            foreach (static::reverse($xs, true) as $k => $x) {
+                $acc = call_user_func($f, $acc, $x, $k, $xs);
             }
         }
         return $acc;
@@ -112,14 +112,14 @@ class Strict
      * @param     mixed              $default
      * @return    array
      */
-    public static function get($xs, $index, $default = null)
+    public static function get($xs, $key, $default = null)
     {
         if (static::isArray($xs)) {
-            return isset($xs[$index]) ? $xs[$index] : $default;
+            return isset($xs[$key]) ? $xs[$key] : $default;
         }
 
-        foreach ($xs as $i => $x) {
-            if ($i == $index) {
+        foreach ($xs as $k => $x) {
+            if ($k == $key) {
                 return $x;
             }
         }
@@ -140,8 +140,8 @@ class Strict
      */
     public static function find($xs, $f)
     {
-        foreach ($xs as $i => $x) {
-            if (call_user_func($f, $x, $i, $xs)) {
+        foreach ($xs as $k => $x) {
+            if (call_user_func($f, $x, $k, $xs)) {
                 return $x;
             }
         }
@@ -166,9 +166,9 @@ class Strict
     public static function filter($xs, $f)
     {
         $ys = array();
-        foreach ($xs as $i => $x) {
-            if (call_user_func($f, $x, $i, $xs)) {
-                $ys[$i] = $x;
+        foreach ($xs as $k => $x) {
+            if (call_user_func($f, $x, $k, $xs)) {
+                $ys[$k] = $x;
             }
         }
         return $ys;
@@ -234,8 +234,8 @@ class Strict
      */
     public static function reject($xs, $f)
     {
-        return static::filter($xs, function($x, $i, $xs) use ($f) {
-            return !call_user_func($f, $x, $i, $xs);
+        return static::filter($xs, function($x, $k, $xs) use ($f) {
+            return !call_user_func($f, $x, $k, $xs);
         });
     }
 
@@ -254,8 +254,8 @@ class Strict
     {
         $f = static::lookupIterator($f);
 
-        foreach ($xs as $i => $x) {
-            if (!call_user_func($f, $x, $i, $xs)) {
+        foreach ($xs as $k => $x) {
+            if (!call_user_func($f, $x, $k, $xs)) {
                 return false;
             }
         }
@@ -282,8 +282,8 @@ class Strict
     {
         $f = static::lookupIterator($f);
 
-        foreach ($xs as $i => $x) {
-            if (call_user_func($f, $x, $i, $xs)) {
+        foreach ($xs as $k => $x) {
+            if (call_user_func($f, $x, $k, $xs)) {
                 return true;
             }
         }
@@ -393,8 +393,8 @@ class Strict
         $ys = array(array(), array());
         $inPrefix = true;
 
-        foreach ($xs as $i => $x) {
-            if ($inPrefix = $inPrefix && call_user_func($f, $x, $i, $xs)) {
+        foreach ($xs as $k => $x) {
+            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
                 $ys[0][] = $x;
             } else {
                 $ys[1][] = $x;
@@ -422,8 +422,8 @@ class Strict
 
         $computed = -INF;
         $result = -INF;
-        foreach ($xs as $i => $x) {
-            $current = call_user_func($f, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            $current = call_user_func($f, $x, $k, $xs);
             if ($current > $computed) {
                 $computed = $current;
                 $result = $x;
@@ -451,8 +451,8 @@ class Strict
 
         $computed = INF;
         $result = INF;
-        foreach ($xs as $i => $x) {
-            $current = call_user_func($f, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            $current = call_user_func($f, $x, $k, $xs);
             if ($current < $computed) {
                 $computed = $current;
                 $result = $x;
@@ -476,11 +476,11 @@ class Strict
         $f = static::lookupIterator($x);
         $result = array();
 
-        foreach ($xs as $i => $x) {
+        foreach ($xs as $k => $x) {
             $result[] = array(
                 'value' => $x,
-                'index' => $i,
-                'criteria' => call_user_func($f, $x, $i, $xs),
+                'key' => $k,
+                'criteria' => call_user_func($f, $x, $k, $xs),
             );
         }
 
@@ -490,7 +490,7 @@ class Strict
             if ($a !== $b) {
                 return $a < $b ? -1 : 1;
             } else {
-                return $left['index'] < $right['index'] ? -1 : 1;
+                return $left['key'] < $right['key'] ? -1 : 1;
             }
         });
 
@@ -512,8 +512,8 @@ class Strict
         $f = static::lookupIterator($f);
         $result = array();
 
-        foreach ($xs as $i => $x) {
-            $key = call_user_func($f, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            $key = call_user_func($f, $x, $k, $xs);
             $result[$key][] = $x;
         }
 
@@ -536,8 +536,8 @@ class Strict
         $f = static::lookupIterator($f);
         $result = array();
 
-        foreach ($xs as $i => $x) {
-            $key = call_user_func($f, $x, $i, $xs);
+        foreach ($xs as $k => $x) {
+            $key = call_user_func($f, $x, $k, $xs);
             if (isset($result[$key])) {
                 $result[$key]++;
             } else {

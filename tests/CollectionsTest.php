@@ -88,17 +88,17 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testReduceRight($_)
     {
-        $list = $_::reduceRight(array('foo', 'bar', 'baz'), function($str, $memo) {
+        $list = $_::reduceRight(array('foo', 'bar', 'baz'), function($memo, $str) {
             return $memo . $str;
         }, '');
         $this->assertEquals($list, 'bazbarfoo', 'can perform right folds');
 
-        $list = $_::foldr(array("foo", "bar", "baz"), function($str, $memo) {
+        $list = $_::foldr(array("foo", "bar", "baz"), function($memo, $str) {
             return $memo . $str;
         }, '');
         $this->assertEquals($list, 'bazbarfoo', 'aliased as "foldr"');
 
-        $sum = $_::reduceRight(array('a' => 1, 'b' => 2, 'c' => 3), function($num, $sum) {
+        $sum = $_::reduceRight(array('a' => 1, 'b' => 2, 'c' => 3), function($sum, $num) {
             return $sum + $num;
         }, 0);
         $this->assertEquals(6, $sum, 'on object');
@@ -107,8 +107,7 @@ class CollectionsTest extends Underbar_TestCase
         $args = null;
         $memo = array();
         $object = array('a' => 1, 'b' => 2);
-        $lastKey = $_::last($_::keys($object));
-        $expected = array(2, $memo, 'b', $object);
+        $expected = array($memo, 2, 'b', $object);
 
         $_::reduceRight($object, function() use (&$args) {
             $args || ($args = func_get_args());
@@ -119,8 +118,7 @@ class CollectionsTest extends Underbar_TestCase
         $args = null;
         $memo = array();
         $object = array('2' => 1, '1' => 2);
-        $lastKey = $_::last($_::keys($object));
-        $expected = array(2, $memo, '1', $object);
+        $expected = array($memo, 2, '1', $object);
 
         $_::reduceRight($object, function() use (&$args) {
             $args || ($args = func_get_args());
@@ -130,7 +128,7 @@ class CollectionsTest extends Underbar_TestCase
         $expected = $_::reduceRight($_::range(10), function($x, $y) {
             return $x - $y;
         }, 0);
-        $this->assertEquals(-5, $expected);
+        $this->assertEquals(-45, $expected);
     }
 
     /**
