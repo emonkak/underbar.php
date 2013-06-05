@@ -152,7 +152,7 @@ class Parallel implements \Iterator, \Countable
         $this->procedure = $procedure;
         $this->timeout = $timeout;
 
-        for ($n = $n > 0 ? $n : static::processors(); $n-- > 0;) {
+        while ($n-- > 0) {
             $this->fork();
         }
     }
