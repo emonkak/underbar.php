@@ -47,39 +47,6 @@ class Parallel implements \Iterator, \Countable
     protected $timeout;
 
     /**
-     * Get the number of processors.
-     *
-     * @return  int
-     */
-    protected static function processors()
-    {
-        static $processors;
-
-        if (isset($processors)) {
-            return $processors;
-        }
-
-        switch (PHP_OS) {
-            case 'Linux':
-                $cmd = 'cat /proc/cpuinfo | grep processor | wc -l';
-                break;
-            case 'BSD':
-            case 'FreeBSD':
-            case 'NetBSD':
-            case 'OpenBSD':
-                $cmd = "sysctl -a | grep 'hw.ncpu:' | cut -d ':' -f2";
-                break;
-            case 'Darwin':
-                $cmd = "/usr/sbin/sysctl -a | grep 'hw.ncpu:' | cut -d ':' -f2";
-                break;
-            default:
-                return $processors = 4;
-        }
-
-        return $processors = (int) trim(shell_exec($cmd));
-    }
-
-    /**
      * Send the signal.
      *
      * @param   int   $pid     Process ID
@@ -178,7 +145,7 @@ class Parallel implements \Iterator, \Countable
      * @param  int       $n          Number of process
      * @param  int       $timeout    Timeout of a IO wait
      */
-    public function __construct($procedure, $n = null, $timeout = null)
+    public function __construct($procedure, $n = 4, $timeout = null)
     {
         $this->queue = new \SplQueue();
         $this->results = new \SplQueue();
