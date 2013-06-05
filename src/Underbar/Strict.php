@@ -1190,7 +1190,7 @@ class Strict
      */
     public static function parMap($xs, $f, $n = null, $timeout = null)
     {
-        $parallel = new Parallel($f, $n, $timeout);
+        $parallel = new Internal\Parallel($f, $n, $timeout);
         $parallel->pushAll($xs);
         return $parallel;
     }

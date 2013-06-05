@@ -1,6 +1,6 @@
 <?php
 
-namespace Underbar;
+namespace Underbar\Internal;
 
 class Parallel implements \Iterator, \Countable
 {
