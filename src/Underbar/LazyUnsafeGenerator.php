@@ -35,6 +35,20 @@ class LazyUnsafeGenerator extends Strict
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
+     * @return    Iterator
+     */
+    public static function scanl($xs, $f, $acc)
+    {
+        foreach ($xs as $k => $x) {
+            yield $acc = call_user_func($f, $acc, $x, $k, $xs);
+        }
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
      * @param     callable|string    $f
      * @param     bool               $isSorted
      * @return    Generator

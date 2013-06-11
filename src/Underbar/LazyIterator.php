@@ -31,6 +31,18 @@ class LazyIterator extends Strict
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
+     * @return    Iterator
+     */
+    public static function scanl($xs, $f, $acc)
+    {
+        return new Iterator\ScanLeftIterator(static::wrapIterator($xs), $f, $acc);
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
      * @param     callable|string    $f
      * @param     bool               $isSorted
      * @return    Generator

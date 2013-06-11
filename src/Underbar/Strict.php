@@ -92,17 +92,51 @@ class Strict
             for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
                 $acc = call_user_func($f, $acc, $x, key($xs), $xs);
             }
+            return $acc;
         } else {
-            foreach (static::reverse($xs) as $k => $x) {
-                $acc = call_user_func($f, $acc, $x, $k, $xs);
-            }
+            return static::reduce(static::reverse($xs), $f, $acc);
         }
-        return $acc;
     }
 
     public static function foldr($xs, $f, $acc)
     {
         return static::reduceRight($xs, $f, $acc);
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
+     * @return    array
+     */
+    public static function scanl($xs, $f, $acc)
+    {
+        $result = array();
+        foreach ($xs as $k => $x) {
+            $result[] = $acc = call_user_func($f, $acc, $x, $k, $xs);
+        }
+        return $result;
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
+     * @return    array
+     */
+    public static function scanr($xs, $f, $acc)
+    {
+        if (is_array($xs)) {
+            $result = array();
+            for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
+                $result[] = $acc = call_user_func($f, $acc, $x, key($xs), $xs);
+            }
+            return $result;
+        } else {
+            return static::scanl(static::reverse($xs), $f, $acc);
+        }
     }
 
     /**

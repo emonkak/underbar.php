@@ -35,6 +35,21 @@ class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
+     * @param     callable           $f
+     * @param     mixed              $acc
+     * @return    Iterator
+     */
+    public static function scanl($xs, $f, $acc)
+    {
+        return new Iterator\RewindableGenerator(
+            get_parent_class().'::'.__FUNCTION__,
+            array($xs, $f, $acc)
+        );
+    }
+
+    /**
+     * @category  Collections
+     * @param     array|Traversable  $xs
      * @param     callable|string    $f
      * @param     bool               $isSorted
      * @return    Iterator\RewindableGenerator
