@@ -530,30 +530,6 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testGet($_)
-    {
-        $xs = $_::range(0, 10, 2);
-        foreach ($xs as $i => $x) {
-            $this->assertEquals($x, $_::get($xs, $i), 'number index');
-        }
-        $this->assertNull($_::get($xs, 999), 'undefined index');
-
-        $xs = array('foo' => 'bar', 'piyo' => 'poyo');
-        $this->assertEquals('bar', $_::get($xs, 'foo'), 'string index');
-        $this->assertEquals('poyo', $_::get($xs, 'piyo'), 'string index');
-        $this->assertNull($_::get($xs, 'baz'), 'undefined index');
-        $this->assertNull($_::get($xs, 999), 'undefined index');
-
-        $xs = new IteratorIterator(new ArrayIterator($xs));
-        $this->assertEquals('bar', $_::get($xs, 'foo'), 'string index');
-        $this->assertEquals('poyo', $_::get($xs, 'piyo'), 'string index');
-        $this->assertNull($_::get($xs, 'baz'), 'undefined index');
-        $this->assertNull($_::get($xs, 999), 'undefined index');
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testSpan($_)
     {
         $result = $_::span(array(1, 2, 3, 4, 1, 2, 3, 4), function($x) {

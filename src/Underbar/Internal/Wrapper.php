@@ -54,20 +54,22 @@ class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function offsetExists($offset)
     {
-        return call_user_func(
-            $this->class.'::get',
-            $this->value,
-            $offset
-        ) !== null;
+        foreach ($this->value as $k => $x) {
+            if ($k === $offset) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function offsetGet($offset)
     {
-        return call_user_func(
-            $this->class.'::get',
-            $this->value,
-            $offset
-        );
+        foreach ($this->value as $k => $x) {
+            if ($k === $offset) {
+                return $x;
+            }
+        }
     }
 
     public function offsetSet($offset, $value)

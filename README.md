@@ -133,7 +133,6 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | shuffle     | array           | array $xs                                                     |
 | toArray     | array           | array $xs, bool $preserveKeys = null                          |
 | size        | int             | array $xs                                                     |
-| get         | mixed           | array $xs, int $index , mixed $default = null                 |
 | span        | array           | array $xs, callable $f                                        |
 | memorize    | CachingIterator | array $xs, callable $f                                        |
 

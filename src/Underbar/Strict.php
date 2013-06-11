@@ -106,28 +106,6 @@ class Strict
     }
 
     /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     string|int         $index
-     * @param     mixed              $default
-     * @return    array
-     */
-    public static function get($xs, $key, $default = null)
-    {
-        if (static::isArray($xs)) {
-            return isset($xs[$key]) ? $xs[$key] : $default;
-        }
-
-        foreach ($xs as $k => $x) {
-            if ($k == $key) {
-                return $x;
-            }
-        }
-
-        return $default;
-    }
-
-    /**
      * Looks through each value in the list, returning the first one that passes
      * a truth test (iterator).
      *
