@@ -10,8 +10,6 @@ class IterateIterator implements \Iterator
 
     private $acc;
 
-    private $index;
-
     public function __construct($default, $f)
     {
         $this->default = $default;
@@ -25,18 +23,15 @@ class IterateIterator implements \Iterator
 
     public function key()
     {
-        return $this->index;
     }
 
     public function next()
     {
-        $this->index++;
         $this->acc = call_user_func($this->f, $this->acc);
     }
 
     public function rewind()
     {
-        $this->index = 0;
         $this->acc = $this->default;
     }
 

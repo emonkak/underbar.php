@@ -8,8 +8,6 @@ class InitialIterator extends \IteratorIterator
 
     private $n;
 
-    private $index;
-
     private $current;
 
     public function __construct($xs, $n)
@@ -24,16 +22,10 @@ class InitialIterator extends \IteratorIterator
         return $this->current;
     }
 
-    public function key()
-    {
-        return $this->index;
-    }
-
     public function next()
     {
         parent::next();
         $this->queue->enqueue(parent::current());
-        $this->index++;
         $this->current = $this->queue->dequeue();
     }
 
@@ -51,7 +43,6 @@ class InitialIterator extends \IteratorIterator
         }
 
         if (!$this->queue->isEmpty()) {
-            $this->index = 0;
             $this->current = $this->queue->dequeue();
         }
     }

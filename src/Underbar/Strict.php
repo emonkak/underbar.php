@@ -394,7 +394,7 @@ class Strict
     public static function max($xs, $f = null)
     {
         if ($f === null) {
-            $xs = static::toArray($xs);
+            $xs = static::toList($xs);
             return empty($xs) ? -INF : max($xs);
         }
 
@@ -423,7 +423,7 @@ class Strict
     public static function min($xs, $f = null)
     {
         if ($f === null) {
-            $xs = static::toArray($xs);
+            $xs = static::toList($xs);
             return empty($xs) ? INF : min($xs);
         }
 
@@ -535,7 +535,7 @@ class Strict
      */
     public static function shuffle($xs)
     {
-        $xs = static::toArray($xs);
+        $xs = static::toList($xs);
         shuffle($xs);
         return $xs;
     }

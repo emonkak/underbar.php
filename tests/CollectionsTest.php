@@ -493,8 +493,8 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testShuffle($_)
     {
-        $numbers = $_::toArray($_::range(10));
-        $shuffled = $_::chain($numbers)->shuffle()->sort()->toArray()->value();
+        $numbers = $_::toList($_::range(10));
+        $shuffled = $_::chain($numbers)->shuffle()->sort()->toList()->value();
         $this->assertEquals($numbers, $shuffled, 'contains the same members before and after shuffle');
     }
 

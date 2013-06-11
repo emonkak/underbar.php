@@ -6,19 +6,17 @@ class RangeIterator implements \Iterator
 {
     private $start;
 
+    private $stop;
+
     private $step;
-
-    private $len;
-
-    private $index;
 
     private $current;
 
     public function __construct($start, $stop, $step)
     {
         $this->start = $start;
+        $this->stop = $stop;
         $this->step = $step;
-        $this->len = max(ceil(($stop - $start) / $step), 0);
     }
 
     public function current()
@@ -28,24 +26,23 @@ class RangeIterator implements \Iterator
 
     public function key()
     {
-        return $this->index;
     }
 
     public function next()
     {
-        $this->index++;
         $this->current += $this->step;
     }
 
     public function rewind()
     {
-        $this->index = 0;
         $this->current = $this->start;
     }
 
     public function valid()
     {
-        return $this->index < $this->len;
+        return $this->step > 0
+            ? $this->current < $this->stop
+            : $this->current > $this->stop;
     }
 }
 
