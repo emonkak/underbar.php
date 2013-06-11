@@ -151,22 +151,6 @@ class ObjectsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testDuplicate($_)
-    {
-        $moe = (object) array('name' => 'moe', 'lucky' => array(13, 27, 34));
-        $clone = $_::duplicate($moe);
-        $this->assertEquals('moe', $clone->name, 'the clone as the attributes of the original');
-
-        $clone->name = 'curly';
-        $this->assertNotEquals($clone->name, $moe->name, 'clones can change shallow attributes without affecting the original');
-
-        $this->assertEquals(1, $_::duplicate(1), 'non objects should not be changed by clone');
-        $this->assertEquals(null, $_::duplicate(null), 'non objects should not be changed by clone');
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testTap($_)
     {
         $intercepted = null;
