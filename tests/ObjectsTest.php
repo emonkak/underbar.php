@@ -84,13 +84,13 @@ class ObjectsTest extends Underbar_TestCase
         $obj = array('a' => 1, 'b' => 2, 'c' => 3);
 
         $result = $_::pick($obj, 'a', 'c');
-        $this->assertEquals(array('a' => 1, 'c' => 3), $_::toArray($result, true), 'can restrict properties to those named');
+        $this->assertEquals(array('a' => 1, 'c' => 3), $_::toArray($result), 'can restrict properties to those named');
 
         $result = $_::pick($obj, array('b', 'c'));
-        $this->assertEquals(array('b' => 2, 'c' => 3), $_::toArray($result, true), 'can restrict properties to those named in an array');
+        $this->assertEquals(array('b' => 2, 'c' => 3), $_::toArray($result), 'can restrict properties to those named in an array');
 
         $result = $_::pick($obj, array('a'), 'b');
-        $this->assertEquals(array('a' => 1, 'b' => 2), $_::toArray($result, true), 'can restrict properties to those named in mixed args');
+        $this->assertEquals(array('a' => 1, 'b' => 2), $_::toArray($result), 'can restrict properties to those named in mixed args');
     }
 
     /**
@@ -101,13 +101,13 @@ class ObjectsTest extends Underbar_TestCase
         $obj = array('a' => 1, 'b' => 2, 'c' => 3);
 
         $result = $_::omit($obj, 'b');
-        $this->assertEquals(array('a' => 1, 'c' => 3), $_::toArray($result, true), 'can omit a single named property');
+        $this->assertEquals(array('a' => 1, 'c' => 3), $_::toArray($result), 'can omit a single named property');
 
         $result = $_::omit($obj, 'a', 'c');
-        $this->assertEquals(array('b' => 2), $_::toArray($result, true), 'can omit several named properties');
+        $this->assertEquals(array('b' => 2), $_::toArray($result), 'can omit several named properties');
 
         $result = $_::omit($obj, array('b', 'c'));
-        $this->assertEquals(array('a' => 1), $_::toArray($result, true), 'can omit properties named in an array');
+        $this->assertEquals(array('a' => 1), $_::toArray($result), 'can omit properties named in an array');
     }
 
     /**

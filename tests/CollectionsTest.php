@@ -174,10 +174,10 @@ class CollectionsTest extends Underbar_TestCase
     public function testFilter($_)
     {
         $evens = $_::filter(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(2, 4, 6), $_::toArray($evens, false), 'selected each even number');
+        $this->assertEquals(array(2, 4, 6), $_::values($evens), 'selected each even number');
 
         $evens = $_::select(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(2, 4, 6), $_::toArray($evens, false), 'aliased as "select"');
+        $this->assertEquals(array(2, 4, 6), $_::values($evens), 'aliased as "select"');
     }
 
     /**
@@ -186,7 +186,7 @@ class CollectionsTest extends Underbar_TestCase
     public function testReject($_)
     {
         $odds = $_::reject(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(1, 3, 5), $_::toArray($odds, false), 'rejected each even number');
+        $this->assertEquals(array(1, 3, 5), $_::values($odds), 'rejected each even number');
     }
 
     /**
@@ -195,14 +195,14 @@ class CollectionsTest extends Underbar_TestCase
     public function testAll($_)
     {
         $this->assertTrue($_::all(array(), "$_::identity"), 'the empty set');
-        $this->assertTrue($_::all(array(true, true, true), "$_::identity"), 'all true values');
-        $this->assertFalse($_::all(array(true, false, true), "$_::identity"), 'one false value');
+        $this->assertTrue($_::all(array(true, true, true), array($_, 'identity')), 'all true values');
+        $this->assertFalse($_::all(array(true, false, true), array($_, 'identity')), 'one false value');
         $this->assertTrue($_::all(array(0, 10, 28), function($num) { return $num % 2 == 0; }), 'even numbers');
         $this->assertFalse($_::all(array(0, 11, 28), function($num) { return $num % 2 == 0; }), 'an odd number');
-        $this->assertTrue($_::all(array(1), "$_::identity") === true, 'cast to boolean - true');
-        $this->assertTrue($_::all(array(0), "$_::identity") === false, 'cast to boolean - false');
-        $this->assertTrue($_::every(array(true, true, true), "$_::identity"), 'aliased as "every"');
-        $this->assertFalse($_::all(array(null, null, null), "$_::identity"), 'works with arrays of null');
+        $this->assertTrue($_::all(array(1), array($_, 'identity')) === true, 'cast to boolean - true');
+        $this->assertTrue($_::all(array(0), array($_, 'identity')) === false, 'cast to boolean - false');
+        $this->assertTrue($_::every(array(true, true, true), array($_, 'identity')), 'aliased as "every"');
+        $this->assertFalse($_::all(array(null, null, null), array($_, 'identity')), 'works with arrays of null');
     }
 
     /**
@@ -217,8 +217,8 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertFalse($_::some(array(null, 0, '', false)), 'falsy values');
         $this->assertFalse($_::some(array(1, 11, 29), function($num) { return $num % 2 == 0; }), 'all odd numbers');
         $this->assertTrue($_::some(array(1, 10, 29), function($num) { return $num % 2 == 0; }), 'an even number');
-        $this->assertTrue($_::some(array(1), "$_::identity") === true, 'cast to boolean - true');
-        $this->assertTrue($_::some(array(0), "$_::identity") === false, 'cast to boolean - false');
+        $this->assertTrue($_::some(array(1), array($_, 'identity')) === true, 'cast to boolean - true');
+        $this->assertTrue($_::some(array(0), array($_, 'identity')) === false, 'cast to boolean - false');
         $this->assertTrue($_::any(array(false, false, true)), 'aliased as "any"');
     }
 
@@ -353,7 +353,7 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals(array('moe', 'curly'), $_::toArray($result), 'stooges sorted by age');
 
         $list = array(null, 4, 1, null, 3, 2);
-        $sorted = $_::sortBy($list, "$_::identity");
+        $sorted = $_::sortBy($list, array($_, 'identity'));
         $this->assertEquals(array(null, null, 1, 2, 3, 4), $_::toArray($sorted), 'sortBy with undefined values');
 
         $list = array('one', 'two', 'three', 'four', 'five');
@@ -507,8 +507,7 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals($array, $_::toArray($array), 'cloned array contains same elements');
 
         $numbers = $_::toArray(array('one' => 1, 'two' => 2, 'three' => 3));
-        $this->assertEquals($numbers, $_::toArray($numbers, true), 'object flattened into array');
-        $this->assertEquals(array(1, 2, 3), $_::toArray($numbers, false), 'object flattened into array');
+        $this->assertEquals($numbers, $_::toArray($numbers), 'object flattened into array');
 
         $this->assertEquals(array('a', 'b', 'c', 'd'), $_::toArray('abcd'), 'works with string');
 

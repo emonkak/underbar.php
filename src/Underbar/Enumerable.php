@@ -33,7 +33,8 @@ function sortBy($_1){return Lazy::sortBy($this,$_1);}
 function groupBy($_1=NULL,$_2=false){return Lazy::groupBy($this,$_1,$_2);}
 function countBy($_1=NULL,$_2=false){return Lazy::countBy($this,$_1,$_2);}
 function shuffle(){return Lazy::shuffle($this);}
-function toArray($_1=NULL){return Lazy::toArray($this,$_1);}
+function toArray(){return Lazy::toArray($this);}
+function toList(){return Lazy::toList($this);}
 function size(){return Lazy::size($this);}
 function memoize(){return Lazy::memoize($this);}
 function first($_1=NULL,$_2=NULL){return Lazy::first($this,$_1,$_2);}
@@ -67,7 +68,7 @@ function iterate($_1){return Lazy::iterate($this,$_1);}
 function parMap($_1,$_2=NULL,$_3=NULL){return Lazy::parMap($this,$_1,$_2,$_3);}
 function pop(){return Lazy::pop($this);}
 function push($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::push($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
-function reverse($_1=false){return Lazy::reverse($this,$_1);}
+function reverse(){return Lazy::reverse($this);}
 function shift(){return Lazy::shift($this);}
 function sort($_1=NULL){return Lazy::sort($this,$_1);}
 function splice($_1,$_2){return Lazy::splice($this,$_1,$_2);}

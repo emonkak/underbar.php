@@ -93,7 +93,7 @@ class Strict
                 $acc = call_user_func($f, $acc, $x, key($xs), $xs);
             }
         } else {
-            foreach (static::reverse($xs, true) as $k => $x) {
+            foreach (static::reverse($xs) as $k => $x) {
                 $acc = call_user_func($f, $acc, $x, $k, $xs);
             }
         }
@@ -563,21 +563,36 @@ class Strict
     }
 
     /**
-     * Converts the list (anything that can be iterated over), into a real
-     * Array.
-     *
      * @category  Collections
      * @param     mixed  $xs
-     * @param     bool   $preserveKeys
      * @return    array
      */
-    public static function toArray($xs, $preserveKeys = null)
+    public static function toArray($xs)
     {
         if (is_array($xs)) {
-            return $preserveKeys === false ? array_values($xs) : $xs;
+            return $xs;
         }
         if ($xs instanceof \Traversable) {
-            return iterator_to_array($xs, $preserveKeys);
+            return iterator_to_array($xs, true);
+        }
+        if (is_string($xs)) {
+            return str_split($xs);
+        }
+        return (array) $xs;
+    }
+
+    /**
+     * @category  Collections
+     * @param     mixed  $xs
+     * @return    array
+     */
+    public static function toList($xs)
+    {
+        if (is_array($xs)) {
+            return $xs;
+        }
+        if ($xs instanceof \Traversable) {
+            return iterator_to_array($xs, false);
         }
         if (is_string($xs)) {
             return str_split($xs);
@@ -653,7 +668,7 @@ class Strict
 
     public static function _first($xs, $n)
     {
-        return $n > 0 ? array_slice(static::toArray($xs), 0, $n) : array();
+        return $n > 0 ? array_slice(static::toList($xs), 0, $n) : array();
     }
 
     /**
@@ -669,7 +684,7 @@ class Strict
             if (!call_user_func($f, $x, $i, $xs)) {
                 break;
             }
-            $result[$i] = $x;
+            $result[] = $x;
         }
         return $result;
     }
@@ -687,7 +702,7 @@ class Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return $n > 0 ? array_slice(static::toArray($xs), 0, -$n) : array();
+        return $n > 0 ? array_slice(static::toList($xs), 0, -$n) : array();
     }
 
     /**
@@ -744,7 +759,7 @@ class Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return array_slice(static::toArray($xs), $n);
+        return array_slice(static::toList($xs), $n);
     }
 
     public static function tail($xs, $n = 1, $guard = null)
@@ -769,7 +784,7 @@ class Strict
         $accepted = false;
         foreach ($xs as $i => $x) {
             if ($accepted || ($accepted = !call_user_func($f, $x, $i, $xs))) {
-                $result[$i] = $x;
+                $result[] = $x;
             }
         }
         return $result;
@@ -860,7 +875,10 @@ class Strict
      */
     public static function intersection()
     {
-        $xss = array_map(get_called_class().'::toArray', func_get_args());
+        $xss = array();
+        foreach (func_get_args() as $xs) {
+            $xss[] = static::toList($xs);
+        }
         return call_user_func_array('array_intersect', $xss);
     }
 
@@ -1030,7 +1048,7 @@ class Strict
      */
     public static function indexOf($xs, $value, $isSorted = 0)
     {
-        $xs = static::toArray($xs);
+        $xs = static::toList($xs);
 
         if ($isSorted === true) {
             $i = static::sortedIndex($xs, $value);
@@ -1060,7 +1078,7 @@ class Strict
      */
     public static function lastIndexOf($xs, $x, $fromIndex = null)
     {
-        $xs = static::toArray($xs);
+        $xs = static::toList($xs);
         $l = count($xs);
         $i = $fromIndex !== null ? min($l, $fromIndex) : $l;
 
@@ -1085,7 +1103,7 @@ class Strict
      */
     public static function sortedIndex($xs, $x, $f = null)
     {
-        $xs = static::toArray($xs);
+        $xs = static::toList($xs);
         $f = static::lookupIterator($f);
         $x = call_user_func($f, $x);
 
@@ -1220,7 +1238,7 @@ class Strict
     public static function push($xs)
     {
         $values = array_slice(func_get_args(), 1);
-        return array_merge(static::toArray($xs), $values);
+        return static::concat($xs, $values);
     }
 
     /**
@@ -1231,9 +1249,9 @@ class Strict
      * @param     array|Traversable  $xs
      * @return    array
      */
-    public static function reverse($xs, $preserveKeys = false)
+    public static function reverse($xs)
     {
-        return array_reverse(static::toArray($xs, true), $preserveKeys);
+        return array_reverse(static::toList($xs));
     }
 
     /**
@@ -1256,7 +1274,7 @@ class Strict
      */
     public static function sort($xs, $compare = null)
     {
-        $xs = static::toArray($xs);
+        $xs = static::toList($xs);
         is_callable($compare) ? usort($xs, $compare) : sort($xs);
         return $xs;
     }
@@ -1273,7 +1291,7 @@ class Strict
     public static function splice($xs, $index, $n)
     {
         $rest = array_slice(func_get_args(), 3);
-        $xs = static::toArray($xs);
+        $xs = static::toList($xs);
         array_splice($xs, $index, $n, $rest);
         return $xs;
     }
@@ -1291,7 +1309,7 @@ class Strict
     public static function unshift($xs)
     {
         $values = array_slice(func_get_args(), 1);
-        return array_merge($values, static::toArray($xs));
+        return static::concat($values, $xs);
     }
 
     /**
@@ -1305,10 +1323,11 @@ class Strict
      */
     public static function concat()
     {
-        return call_user_func_array(
-            'array_merge',
-            array_map(get_called_class().'::toArray', func_get_args())
-        );
+        $result = array();
+        foreach (func_get_args() as $xs) {
+            $result = array_merge($result, static::toList($xs));
+        }
+        return $result;
     }
 
     /**
@@ -1342,7 +1361,7 @@ class Strict
         if ($end > 0) {
             $end = max(0, $end - $begin);
         }
-        return array_slice(static::toArray($xs), $begin, $end);
+        return array_slice(static::toList($xs), $begin, $end);
     }
 
     /**
@@ -1354,7 +1373,7 @@ class Strict
      */
     public static function keys($xs)
     {
-        return array_keys(static::toArray($xs, true));
+        return array_keys(static::toArray($xs));
     }
 
     /**
@@ -1366,7 +1385,9 @@ class Strict
      */
     public static function values($xs)
     {
-        return static::toArray($xs, false);
+        return $xs instanceof \Traversable
+            ? iterator_to_array($xs, false)
+            : array_values($xs);
     }
 
     /**
