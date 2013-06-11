@@ -141,9 +141,7 @@ class LazyIterator extends Strict
      */
     public static function zip()
     {
-        $it = new \MultipleIterator(
-            \MultipleIterator::MIT_NEED_ALL | \MultipleIterator::MIT_KEYS_NUMERIC
-        );
+        $it = new Iterator\ZipIterator();
         foreach (func_get_args() as $xs) {
             $it->attachIterator(static::wrapIterator($xs));
         }
