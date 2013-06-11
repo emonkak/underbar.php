@@ -1638,7 +1638,7 @@ class Strict
 
     protected static function lookupIterator($value)
     {
-        if (is_scalar($value) && strpos($value, '::') === false) {
+        if (is_scalar($value)) {
             return function($xs) use ($value) {
                 return is_array($xs) ? $xs[$value] : $xs->$value;
             };
