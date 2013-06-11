@@ -203,5 +203,4 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 | Function  | Return           | Arguments      |
 | --------- | ---------------- | -------------- |
 | identity  | mixed            | mixed $value   |
-| ref       | callable         | string $method |
 | chain     | Internal\Wrapper | mixed $value   |

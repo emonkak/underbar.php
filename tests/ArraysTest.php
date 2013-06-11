@@ -20,7 +20,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::first(array(1, 2, 3), 5);
         $this->assertEquals(array(1, 2, 3), $_::toList($result), 'can pass an index to first');
 
-        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), $_::ref('first'));
+        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), array($_, 'first'));
         $this->assertEquals(array(1, 1), $_::toList($result), 'works well with _.map');
 
         $result = $_::take(array(1, 2, 3), 2);
@@ -141,7 +141,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::last(array(1, 2, 3), 5);
         $this->assertEquals(array(1, 2, 3), $_::toList($result), 'can pass an index to last');
 
-        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), $_::ref('last'));
+        $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), array($_, 'last'));
         $this->assertEquals(array(3, 3), $_::toList($result), 'works well with _.map');
     }
 
