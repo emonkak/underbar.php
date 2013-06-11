@@ -8,7 +8,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function map($xs, $f)
     {
@@ -22,7 +22,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function filter($xs, $f)
     {
@@ -37,7 +37,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @param     array|Traversable  $xs
      * @param     callable|string    $f
      * @param     bool               $isSorted
-     * @return    Generator
+     * @return    Iterator\RewindableGenerator
      */
     public static function _groupBy($xs, $f = null)
     {
@@ -52,7 +52,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @param     array|Traversable  $xs
      * @param     callable|string    $f
      * @param     bool               $isSorted
-     * @return    Generator
+     * @return    Iterator\RewindableGenerator
      */
     public static function _countBy($xs, $f = null)
     {
@@ -66,7 +66,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable        $array
      * @param     int                      $n
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function _first($xs, $n = null)
     {
@@ -80,7 +80,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function takeWhile($xs, $f)
     {
@@ -94,7 +94,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function initial($xs, $n = 1, $guard = null)
     {
@@ -108,7 +108,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function rest($xs, $n = 1, $guard = null)
     {
@@ -122,7 +122,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function dropWhile($xs, $f)
     {
@@ -135,7 +135,7 @@ class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function zip()
     {
@@ -149,7 +149,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     bool               $shallow
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function flatten($xs, $shallow = false)
     {
@@ -164,7 +164,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @param     int                $start
      * @param     int                $stop
      * @param     int                $step
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -177,7 +177,7 @@ class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function cycle($xs, $n = null)
     {
@@ -190,7 +190,7 @@ class LazyGenerator extends LazyUnsafeGenerator
     /**
      * @param   mixed     $value
      * @param   int       $n
-     * @return  Iterator
+     * @return  Iterator\RewindableGenerator
      */
     public static function repeat($value, $n = -1)
     {
@@ -204,20 +204,34 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @category  Arrays
      * @param     mixed              $acc
      * @param     callable           $f
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
-    public static function iterate($acc, $f)
+    public static function iterate($f, $acc)
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($acc, $f)
+            array($f, $acc)
+        );
+    }
+
+    /**
+     * @category  Arrays
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    Iterator\RewindableGenerator
+     */
+    public static function unfoldr($f, $acc)
+    {
+        return new Iterator\RewindableGenerator(
+            get_parent_class().'::'.__FUNCTION__,
+            array($f, $acc)
         );
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    IteratorAggregate
+     * @return    Iterator\RewindableGenerator
      */
     public static function concat()
     {

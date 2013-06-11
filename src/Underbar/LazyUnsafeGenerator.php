@@ -306,11 +306,25 @@ class LazyUnsafeGenerator extends Strict
      * @return    Generator
      * @throws    OverflowException
      */
-    public static function iterate($acc, $f)
+    public static function iterate($f, $acc)
     {
         while (true) {
             yield $acc;
             $acc = call_user_func($f, $acc);
+        }
+    }
+
+    /**
+     * @category  Arrays
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    IteratorAggregate
+     */
+    public static function unfoldr($f, $acc)
+    {
+        while (is_array($result = call_user_func($f, $acc))) {
+            list ($x, $acc) = $result;
+            yield $x;
         }
     }
 

@@ -4,16 +4,16 @@ namespace Underbar\Iterator;
 
 class IterateIterator implements \Iterator
 {
-    private $default;
-
     private $f;
+
+    private $initial;
 
     private $acc;
 
-    public function __construct($default, $f)
+    public function __construct($f, $initial)
     {
-        $this->default = $default;
         $this->f = $f;
+        $this->initial = $initial;
     }
 
     public function current()
@@ -32,7 +32,7 @@ class IterateIterator implements \Iterator
 
     public function rewind()
     {
-        $this->acc = $this->default;
+        $this->acc = $this->initial;
     }
 
     public function valid()

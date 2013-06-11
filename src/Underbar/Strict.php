@@ -1166,14 +1166,29 @@ class Strict
 
     /**
      * @category  Arrays
-     * @param     mixed     $acc
      * @param     callable  $f
+     * @param     mixed     $acc
      * @return    array
      * @throws    OverflowException
      */
-    public static function iterate($acc, $f)
+    public static function iterate($f, $acc)
     {
         throw new \OverflowException();
+    }
+
+    /**
+     * @category  Arrays
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    array
+     */
+    public static function unfoldr($f, $acc)
+    {
+        $xs = array();
+        while (is_array($result = call_user_func($f, $acc))) {
+            list ($xs[], $acc) = $result;
+        }
+        return $xs;
     }
 
     /**

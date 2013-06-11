@@ -202,9 +202,20 @@ class LazyIterator extends Strict
      * @return    array|Iterator
      * @throws    OverflowException
      */
-    public static function iterate($acc, $f)
+    public static function iterate($f, $acc)
     {
-        return new Iterator\IterateIterator($acc, $f);
+        return new Iterator\IterateIterator($f, $acc);
+    }
+
+    /**
+     * @category  Collections
+     * @param     callable     $f
+     * @param     mixed        $acc
+     * @return    Iterator\RewindableGenerator
+     */
+    public static function unfoldr($f, $acc)
+    {
+        return new Iterator\UnfoldRightIterator($f, $acc);
     }
 
     /**
