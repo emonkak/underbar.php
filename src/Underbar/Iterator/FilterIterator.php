@@ -1,8 +1,8 @@
 <?php
 
-namespace Underbar\Internal;
+namespace Underbar\Iterator;
 
-class TakeWhileIterator extends \IteratorIterator
+class FilterIterator extends \FilterIterator
 {
     private $f;
 
@@ -12,12 +12,12 @@ class TakeWhileIterator extends \IteratorIterator
         $this->f = $f;
     }
 
-    public function valid()
+    public function accept()
     {
-        return parent::valid() && call_user_func(
+        return call_user_func(
             $this->f,
-            parent::current(),
-            parent::key(),
+            $this->current(),
+            $this->key(),
             $this
         );
     }

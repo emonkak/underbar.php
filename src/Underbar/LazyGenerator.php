@@ -12,7 +12,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function map($xs, $f)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $f)
         );
@@ -26,7 +26,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function filter($xs, $f)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $f)
         );
@@ -41,7 +41,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function _groupBy($xs, $f = null)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $f)
         );
@@ -56,7 +56,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function _countBy($xs, $f = null)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $f)
         );
@@ -70,7 +70,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function _first($xs, $n = null)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $n)
         );
@@ -84,7 +84,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function takeWhile($xs, $f)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $f)
         );
@@ -98,7 +98,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function initial($xs, $n = 1, $guard = null)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $n, $guard)
         );
@@ -112,7 +112,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function rest($xs, $n = 1, $guard = null)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $n, $guard)
         );
@@ -126,7 +126,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function dropWhile($xs, $f)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $f)
         );
@@ -139,7 +139,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function zip()
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             func_get_args()
         );
@@ -153,7 +153,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function flatten($xs, $shallow = false)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $shallow)
         );
@@ -168,7 +168,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function range($start, $stop = null, $step = 1)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($start, $stop, $step)
         );
@@ -181,7 +181,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function cycle($xs, $n = null)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $n)
         );
@@ -194,7 +194,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function repeat($value, $n = -1)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($value, $n)
         );
@@ -208,7 +208,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function iterate($acc, $f)
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($acc, $f)
         );
@@ -221,7 +221,7 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function concat()
     {
-        return new Internal\RewindableGenerator(
+        return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             func_get_args()
         );

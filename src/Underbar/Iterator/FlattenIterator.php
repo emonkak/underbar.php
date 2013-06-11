@@ -1,6 +1,6 @@
 <?php
 
-namespace Underbar\Internal;
+namespace Underbar\Iterator;
 
 use Underbar\Strict as _;
 

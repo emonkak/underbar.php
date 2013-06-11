@@ -12,7 +12,7 @@ class LazyIterator extends Strict
      */
     public static function map($xs, $f)
     {
-        return new Internal\MapIterator(static::wrapIterator($xs), $f);
+        return new Iterator\MapIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -25,7 +25,7 @@ class LazyIterator extends Strict
     {
         return class_exists('CallbackFilterIterator', false)
              ? new \CallbackFilterIterator(static::wrapIterator($xs), $f)
-             : new Internal\FilterIterator(static::wrapIterator($xs), $f);
+             : new Iterator\FilterIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -39,7 +39,7 @@ class LazyIterator extends Strict
     {
         if ($isSorted) {
             $f = static::lookupIterator($f);
-            return new Internal\GroupByIterator(static::wrapIterator($xs), $f);
+            return new Iterator\GroupByIterator(static::wrapIterator($xs), $f);
         }
         return parent::groupBy($xs, $f, $isSorted);
     }
@@ -55,7 +55,7 @@ class LazyIterator extends Strict
     {
         if ($isSorted) {
             $f = static::lookupIterator($f);
-            return new Internal\CountByIterator(static::wrapIterator($xs), $f);
+            return new Iterator\CountByIterator(static::wrapIterator($xs), $f);
         }
         return parent::countBy($xs, $f, $isSorted);
     }
@@ -69,7 +69,7 @@ class LazyIterator extends Strict
     public static function _first($xs, $n = null)
     {
         return $n > 0
-             ? new Internal\LimitIterator(static::wrapIterator($xs), 0, $n)
+             ? new Iterator\LimitIterator(static::wrapIterator($xs), 0, $n)
              : new \EmptyIterator();
     }
 
@@ -81,7 +81,7 @@ class LazyIterator extends Strict
      */
     public static function takeWhile($xs, $f)
     {
-        return new Internal\TakeWhileIterator(static::wrapIterator($xs), $f);
+        return new Iterator\TakeWhileIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -95,7 +95,7 @@ class LazyIterator extends Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return new Internal\InitialIterator(static::wrapIterator($xs), $n);
+        return new Iterator\InitialIterator(static::wrapIterator($xs), $n);
     }
 
     /**
@@ -109,7 +109,7 @@ class LazyIterator extends Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return new Internal\LimitIterator(static::wrapIterator($xs), $n);
+        return new Iterator\LimitIterator(static::wrapIterator($xs), $n);
     }
 
     /**
@@ -120,7 +120,7 @@ class LazyIterator extends Strict
      */
     public static function dropWhile($xs, $f)
     {
-        return new Internal\DropWhileIterator(static::wrapIterator($xs), $f);
+        return new Iterator\DropWhileIterator(static::wrapIterator($xs), $f);
     }
 
     /**
@@ -131,7 +131,7 @@ class LazyIterator extends Strict
      */
     public static function flatten($xs, $shallow = false)
     {
-        return new Internal\FlattenIterator(static::wrapIterator($xs), $shallow);
+        return new Iterator\FlattenIterator(static::wrapIterator($xs), $shallow);
     }
 
     /**
@@ -141,7 +141,7 @@ class LazyIterator extends Strict
      */
     public static function zip()
     {
-        $it = new Internal\ZipIterator();
+        $it = new Iterator\ZipIterator();
         foreach (func_get_args() as $xs) {
             $it->attachIterator(static::wrapIterator($xs));
         }
@@ -161,7 +161,7 @@ class LazyIterator extends Strict
             $stop = $start;
             $start = 0;
         }
-        return new Internal\RangeIterator($start, $stop, $step);
+        return new Iterator\RangeIterator($start, $stop, $step);
     }
 
     /**
@@ -190,7 +190,7 @@ class LazyIterator extends Strict
      */
     public static function repeat($value, $n = -1)
     {
-        return new Internal\RepeatIterator($value, $n);
+        return new Iterator\RepeatIterator($value, $n);
     }
 
     /**
@@ -202,7 +202,7 @@ class LazyIterator extends Strict
      */
     public static function iterate($acc, $f)
     {
-        return new Internal\IterateIterator($acc, $f);
+        return new Iterator\IterateIterator($acc, $f);
     }
 
     /**
