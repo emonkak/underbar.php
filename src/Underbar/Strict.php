@@ -189,7 +189,7 @@ class Strict
      * @category  Collections
      * @param     array  $xs
      * @param     array  $properties
-     * @return    bool
+     * @return    array
      */
     public static function where($xs, $properties)
     {
