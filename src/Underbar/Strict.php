@@ -240,8 +240,8 @@ class Strict
      * Alias: all
      *
      * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
+     * @param     array            $xs
+     * @param     callable|string  $f
      * @return    bool
      */
     public static function every($xs, $f = null)
@@ -266,8 +266,8 @@ class Strict
      * Alias: any
      *
      * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
+     * @param     array            $xs
+     * @param     callable|string  $f
      * @return    bool
      */
     public static function some($xs, $f = null)
@@ -858,8 +858,8 @@ class Strict
      * Alias: unique
      *
      * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
+     * @param     array            $xs
+     * @param     callable|string  $f
      * @return    array
      */
     public static function uniq($xs, $f = null)
@@ -1029,9 +1029,9 @@ class Strict
 
     /**
      * @category  Arrays
-     * @param     array     $xs
-     * @param     mixed     $xs
-     * @param     callable  $f
+     * @param     array            $xs
+     * @param     mixed            $xs
+     * @param     callable|string  $f
      * @return    int
      */
     public static function sortedIndex($xs, $x, $f = null)
@@ -1529,8 +1529,8 @@ class Strict
 
     /**
      * @category  Chaining
-     * @param     mixed    $value
-     * @return    Internal\Wrapper
+     * @param     mixed  $value
+     * @return    Wrapper
      */
     public static function chain($value)
     {
