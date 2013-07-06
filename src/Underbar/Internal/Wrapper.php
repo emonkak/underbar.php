@@ -9,7 +9,7 @@
 
 namespace Underbar\Internal;
 
-class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
+class Wrapper implements \IteratorAggregate
 {
     private $value;
 
@@ -45,11 +45,6 @@ class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this;
     }
 
-    public function count()
-    {
-        return call_user_func($this->class.'::size', $this->value);
-    }
-
     public function getIterator()
     {
         if ($this->value instanceof \Traversable) {
@@ -57,35 +52,5 @@ class Wrapper implements \ArrayAccess, \Countable, \IteratorAggregate
         } else {
             return new \ArrayIterator((array) $this->value);
         }
-    }
-
-    public function offsetExists($offset)
-    {
-        foreach ($this->value as $k => $x) {
-            if ($k === $offset) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function offsetGet($offset)
-    {
-        foreach ($this->value as $k => $x) {
-            if ($k === $offset) {
-                return $x;
-            }
-        }
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        throw new \BadMethodCallException('Not implemented');
-    }
-
-    public function offsetUnset($offset)
-    {
-        throw new \BadMethodCallException('Not implemented');
     }
 }
