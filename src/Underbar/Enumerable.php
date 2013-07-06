@@ -9,7 +9,8 @@ function inject($_1,$_2){return Lazy::inject($this,$_1,$_2);}
 function foldl($_1,$_2){return Lazy::foldl($this,$_1,$_2);}
 function reduceRight($_1,$_2){return Lazy::reduceRight($this,$_1,$_2);}
 function foldr($_1,$_2){return Lazy::foldr($this,$_1,$_2);}
-function get($_1,$_2=NULL){return Lazy::get($this,$_1,$_2);}
+function scanl($_1,$_2){return Lazy::scanl($this,$_1,$_2);}
+function scanr($_1,$_2){return Lazy::scanr($this,$_1,$_2);}
 function find($_1){return Lazy::find($this,$_1);}
 function detect($_1){return Lazy::detect($this,$_1);}
 function filter($_1){return Lazy::filter($this,$_1);}
@@ -65,6 +66,7 @@ function range($_1=NULL,$_2=1){return Lazy::range($this,$_1,$_2);}
 function cycle($_1=NULL){return Lazy::cycle($this,$_1);}
 function repeat($_1=-1){return Lazy::repeat($this,$_1);}
 function iterate($_1){return Lazy::iterate($this,$_1);}
+function unfoldr($_1){return Lazy::unfoldr($this,$_1);}
 function parMap($_1,$_2=NULL,$_3=NULL){return Lazy::parMap($this,$_1,$_2,$_3);}
 function pop(){return Lazy::pop($this);}
 function push($_1=NULL,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::push($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}

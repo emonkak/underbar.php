@@ -2,34 +2,34 @@
 
 namespace Underbar;
 
-class LazyGenerator extends LazyUnsafeGenerator
+class LazyGenerator extends Strict
 {
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function map($xs, $f)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
+        foreach ($xs as $i => $x) {
+            yield $i => call_user_func($f, $x, $i, $xs);
+        }
     }
 
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function filter($xs, $f)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
+        foreach ($xs as $i => $x) {
+            if (call_user_func($f, $x, $i, $xs)) {
+                yield $i => $x;
+            }
+        }
     }
 
     /**
@@ -41,10 +41,9 @@ class LazyGenerator extends LazyUnsafeGenerator
      */
     public static function scanl($xs, $f, $acc)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f, $acc)
-        );
+        foreach ($xs as $k => $x) {
+            yield $acc = call_user_func($f, $acc, $x, $k, $xs);
+        }
     }
 
     /**
@@ -52,208 +51,309 @@ class LazyGenerator extends LazyUnsafeGenerator
      * @param     array|Traversable  $xs
      * @param     callable|string    $f
      * @param     bool               $isSorted
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
+    public static function groupBy($xs, $f = null, $isSorted = false)
+    {
+        return $isSorted ? static::_groupBy($xs, $f) : parent::groupBy($xs, $f);
+    }
+
     public static function _groupBy($xs, $f = null)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
+        $f = static::lookupIterator($f);
+        $acc = array();
+        $lastKey = null;
+
+        foreach ($xs as $i => $x) {
+            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
+                if (!empty($acc)) {
+                    yield $lastKey => $acc;
+                    $acc = array();
+                }
+                $lastKey = $key;
+            }
+            $acc[] = $x;
+        }
+
+        if (!empty($acc)) {
+            yield $lastKey => $acc;
+        }
     }
 
     /**
      * @category  Collections
      * @param     array|Traversable  $xs
      * @param     callable|string    $f
-     * @param     bool               $isSorted
-     * @return    Iterator\RewindableGenerator
+     * @return    int
      */
+    public static function countBy($xs, $f = null, $isSorted = false)
+    {
+        return $isSorted ? static::_countBy($xs, $f) : parent::countBy($xs, $f);
+    }
+
     public static function _countBy($xs, $f = null)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
+        $f = static::lookupIterator($f);
+        $acc = 0;
+        $lastKey = null;
+
+        foreach ($xs as $i => $x) {
+            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
+                if ($acc !== 0) {
+                    yield $lastKey => $acc;
+                    $acc = 0;
+                }
+                $lastKey = $key;
+            }
+            $acc++;
+        }
+
+        if ($acc !== 0) {
+            yield $lastKey => $acc;
+        }
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable        $array
-     * @param     int                      $n
-     * @return    Iterator\RewindableGenerator
+     * @param     array|Traversable  $xs
+     * @param     int                $n
+     * @return    Generator
      */
-    public static function _first($xs, $n = null)
+    public static function _first($xs, $n)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n)
-        );
+        foreach ($xs as $i => $x) {
+            if (--$n < 0) {
+                break;
+            }
+            yield $i => $x;
+        }
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function takeWhile($xs, $f)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
+        foreach ($xs as $i => $x) {
+            if (!call_user_func($f, $x, $i, $xs)) {
+                break;
+            }
+            yield $i => $x;
+        }
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function initial($xs, $n = 1, $guard = null)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n, $guard)
-        );
+        $queue = new \SplQueue();
+        if ($guard !== null) {
+            $n = 1;
+        }
+        foreach ($xs as $x) {
+            $queue->enqueue($x);
+            if ($n > 0) {
+                $n--;
+            } else {
+                yield $queue->dequeue();
+            }
+        }
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     int                $n
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function rest($xs, $n = 1, $guard = null)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n, $guard)
-        );
+        if ($guard !== null) {
+            $n = 1;
+        }
+        foreach ($xs as $i => $v) {
+            if ($n > 0) {
+                $n--;
+            } else {
+                yield $i => $v;
+            }
+        }
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  $xs
      * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @return    mixed|Generator
      */
     public static function dropWhile($xs, $f)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
+        $accepted = false;
+        foreach ($xs as $i => $x) {
+            if ($accepted || ($accepted = !call_user_func($f, $x, $i, $xs))) {
+                yield $i => $x;
+            }
+        }
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function zip()
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            func_get_args()
-        );
+        $yss = $zss = array();
+        $loop = true;
+
+        foreach (func_get_args() as $xs) {
+            $yss[] = $ys = static::wrapIterator($xs);
+            $ys->rewind();
+            $loop = $loop && $ys->valid();
+            $zss[] = $ys->current();
+        }
+
+        while ($loop) {
+            yield $zss;
+            $zss = array();
+            $loop = true;
+            foreach ($yss as $ys) {
+                $ys->next();
+                $zss[] = $ys->current();
+                $loop = $loop && $ys->valid();
+            }
+        }
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
+     * @param     array|Traversable  $xss
      * @param     bool               $shallow
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
-    public static function flatten($xs, $shallow = false)
+    public static function flatten($xss, $shallow = false)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $shallow)
-        );
+        foreach ($xss as $xs) {
+            if (static::isTraversable($xs)) {
+                if ($shallow) {
+                    foreach ($xs as $x) {
+                        yield $x;
+                    }
+                } else {
+                    foreach (static::flatten($xs, $shallow) as $x) {
+                        yield $x;
+                    }
+                }
+            } else {
+                yield $xs;
+            }
+        }
     }
 
     /**
      * @category  Arrays
-     * @param     int                $start
-     * @param     int                $stop
-     * @param     int                $step
-     * @return    Iterator\RewindableGenerator
+     * @param     int       $start
+     * @param     int       $stop
+     * @param     int       $step
+     * @return    Generator
      */
     public static function range($start, $stop = null, $step = 1)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($start, $stop, $step)
-        );
+        if ($stop === null) {
+            $stop = $start;
+            $start = 0;
+        }
+
+        $len = max(ceil(($stop - $start) / $step), 0);
+        for ($i = 0; $i < $len; $i++) {
+            yield $start;
+            $start += $step;
+        }
     }
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @return    Iterator\RewindableGenerator
+     * @param     array|Traversable  $array
+     * @return    Generator
      */
-    public static function cycle($xs, $n = null)
+    public static function cycle($array, $n = null)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n)
-        );
+        if ($n === null) {
+            while (true) {
+                foreach ($array as $value) {
+                    yield $value;
+                }
+            }
+        } else {
+            while ($n-- > 0) {
+                foreach ($array as $value) {
+                    yield $value;
+                }
+            }
+        }
     }
 
     /**
-     * @param   mixed     $value
-     * @param   int       $n
-     * @return  Iterator\RewindableGenerator
+     * @category  Arrays
+     * @param     mixed     $value
+     * @param     int       $n
+     * @return    Generator
      */
     public static function repeat($value, $n = -1)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($value, $n)
-        );
+        while ($n--) {
+            yield $value;
+        }
     }
 
     /**
      * @category  Arrays
      * @param     mixed              $acc
      * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
+     * @throws    OverflowException
      */
     public static function iterate($f, $acc)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($f, $acc)
-        );
+        while (true) {
+            yield $acc;
+            $acc = call_user_func($f, $acc);
+        }
     }
 
     /**
      * @category  Arrays
      * @param     callable  $f
      * @param     mixed     $acc
-     * @return    Iterator\RewindableGenerator
+     * @return    IteratorAggregate
      */
     public static function unfoldr($f, $acc)
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($f, $acc)
-        );
+        while (is_array($result = call_user_func($f, $acc))) {
+            list ($x, $acc) = $result;
+            yield $x;
+        }
     }
 
     /**
      * @category  Arrays
      * @param     array|Traversable  *$xss
-     * @return    Iterator\RewindableGenerator
+     * @return    Generator
      */
     public static function concat()
     {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            func_get_args()
-        );
+        foreach (func_get_args() as $xs) {
+            foreach ($xs as $i => $x) {
+                yield $i => $x;
+            }
+        }
     }
 }
 

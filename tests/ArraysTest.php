@@ -610,7 +610,7 @@ class ArraysTest extends Underbar_TestCase
      */
     public function testSlice($_)
     {
-        $xs = $_::range(1, 6);
+        $xs = range(1, 5);
         $this->assertEquals(array(1, 2, 3, 4, 5), $_::slice($xs, 0));
         $this->assertEquals(array(3, 4, 5), $_::slice($xs, 2));
         $this->assertEquals(array(3, 4), $_::slice($xs, 2, 4));

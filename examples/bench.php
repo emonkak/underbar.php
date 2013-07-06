@@ -4,6 +4,21 @@ require(__DIR__ . '/../vendor/autoload.php');
 
 use Underbar\Lazy as _;
 
+function bench($f)
+{
+    $begin = microtime(true);
+    $result = call_user_func_array($f, array_slice(func_get_args(), 1));
+    $end = microtime(true);
+    return array($result, $end - $begin);
+}
+
+function times($f, $n)
+{
+    return function() use ($f, $n) {
+        while ($n-- > 0) call_user_func_array($f, func_get_args());
+    };
+}
+
 $xs = range(0, 100000);
 $f = function($_) use ($xs) {
     return $_::chain($xs)
@@ -14,13 +29,15 @@ $f = function($_) use ($xs) {
         ->each("$_::identity");
 };
 
-foreach (array(
+$classes = array(
     'Underbar\\LazyIterator',
     'Underbar\\LazyGenerator',
-    'Underbar\\LazyUnsafeGenerator',
+    'Underbar\\LazySafeGenerator',
     'Underbar\\Strict',
-) as $_) {
-    echo $_, ': ', _::bench($f, $_), PHP_EOL;
+);
+foreach ($classes as $class) {
+    list (, $time) = bench(times($f, 100), $class);
+    echo $class, "\t", $time, PHP_EOL;
 }
 
 // __END__
