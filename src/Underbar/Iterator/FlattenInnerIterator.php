@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar\Iterator;
 
@@ -16,6 +23,3 @@ class FlattenInnerIterator extends \IteratorIterator implements \RecursiveIterat
         return is_array($current) || $current instanceof \Traversable;
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

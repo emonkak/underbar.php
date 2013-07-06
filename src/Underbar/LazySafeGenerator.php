@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar;
 
@@ -6,9 +13,9 @@ class LazySafeGenerator extends LazyGenerator
 {
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    RewindableGenerator
      */
     public static function map($xs, $f)
     {
@@ -20,8 +27,8 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Iterator\RewindableGenerator
      */
     public static function filter($xs, $f)
@@ -34,10 +41,10 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
-     * @return    Iterator
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    RewindableGenerator
      */
     public static function scanl($xs, $f, $acc)
     {
@@ -49,10 +56,10 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
-     * @param     bool               $isSorted
-     * @return    Iterator\RewindableGenerator
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @param     bool             $isSorted
+     * @return    RewindableGenerator
      */
     public static function _groupBy($xs, $f = null)
     {
@@ -64,10 +71,10 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
-     * @param     bool               $isSorted
-     * @return    Iterator\RewindableGenerator
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @param     bool             $isSorted
+     * @return    RewindableGenerator
      */
     public static function _countBy($xs, $f = null)
     {
@@ -79,9 +86,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable        $array
-     * @param     int                      $n
-     * @return    Iterator\RewindableGenerator
+     * @param     array  $array
+     * @param     int    $n
+     * @return    RewindableGenerator
      */
     public static function _first($xs, $n = null)
     {
@@ -93,9 +100,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    RewindableGenerator
      */
     public static function takeWhile($xs, $f)
     {
@@ -107,9 +114,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
-     * @return    Iterator\RewindableGenerator
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    RewindableGenerator
      */
     public static function initial($xs, $n = 1, $guard = null)
     {
@@ -121,9 +128,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
-     * @return    Iterator\RewindableGenerator
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    RewindableGenerator
      */
     public static function rest($xs, $n = 1, $guard = null)
     {
@@ -135,9 +142,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    RewindableGenerator
      */
     public static function dropWhile($xs, $f)
     {
@@ -148,9 +155,10 @@ class LazySafeGenerator extends LazyGenerator
     }
 
     /**
+     * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
-     * @return    Iterator\RewindableGenerator
+     * @param     array  $xss
+     * @return    RewindableGenerator
      */
     public static function zip()
     {
@@ -162,9 +170,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     bool               $shallow
-     * @return    Iterator\RewindableGenerator
+     * @param     array  $xs
+     * @param     bool   $shallow
+     * @return    RewindableGenerator
      */
     public static function flatten($xs, $shallow = false)
     {
@@ -176,10 +184,10 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     int                $start
-     * @param     int                $stop
-     * @param     int                $step
-     * @return    Iterator\RewindableGenerator
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
+     * @return    RewindableGenerator
      */
     public static function range($start, $stop = null, $step = 1)
     {
@@ -191,8 +199,8 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @return    Iterator\RewindableGenerator
+     * @param     array  $xs
+     * @return    RewindableGenerator
      */
     public static function cycle($xs, $n = null)
     {
@@ -203,9 +211,10 @@ class LazySafeGenerator extends LazyGenerator
     }
 
     /**
-     * @param   mixed     $value
-     * @param   int       $n
-     * @return  Iterator\RewindableGenerator
+     * @category  Arrays
+     * @param     mixed  $value
+     * @param     int    $n
+     * @return    RewindableGenerator
      */
     public static function repeat($value, $n = -1)
     {
@@ -217,9 +226,9 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     mixed              $acc
-     * @param     callable           $f
-     * @return    Iterator\RewindableGenerator
+     * @param     mixed     $acc
+     * @param     callable  $f
+     * @return    RewindableGenerator
      */
     public static function iterate($f, $acc)
     {
@@ -233,7 +242,7 @@ class LazySafeGenerator extends LazyGenerator
      * @category  Arrays
      * @param     callable  $f
      * @param     mixed     $acc
-     * @return    Iterator\RewindableGenerator
+     * @return    RewindableGenerator
      */
     public static function unfoldr($f, $acc)
     {
@@ -244,9 +253,10 @@ class LazySafeGenerator extends LazyGenerator
     }
 
     /**
+     * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
-     * @return    Iterator\RewindableGenerator
+     * @param     array   *$xss
+     * @return    RewindableGenerator
      */
     public static function concat()
     {
@@ -256,6 +266,3 @@ class LazySafeGenerator extends LazyGenerator
         );
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

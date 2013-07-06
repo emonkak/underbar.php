@@ -39,6 +39,3 @@ foreach ($classes as $class) {
     list (, $time) = bench(times($f, 100), $class);
     echo $class, "\t", $time, PHP_EOL;
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

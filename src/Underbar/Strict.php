@@ -1,16 +1,20 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar;
 
 class Strict
 {
     /**
-     * Iterates over a list of elements, yielding each in turn to an iterator
-     * function.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    void
      */
     public static function each($xs, $f)
@@ -21,14 +25,11 @@ class Strict
     }
 
     /**
-     * Produces a new array of values by mapping each value in list through a
-     * transformation function (iterator).
-     *
      * Alias: collect
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    array
      */
     public static function map($xs, $f)
@@ -46,15 +47,12 @@ class Strict
     }
 
     /**
-     * Also known as inject and foldl, reduce boils down a list of values into a
-     * single value.
-     *
      * Alias: inject, foldl
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
      * @return    mixed
      */
     public static function reduce($xs, $f, $acc)
@@ -76,14 +74,12 @@ class Strict
     }
 
     /**
-     * The right-associative version of reduce.
-     *
      * Alias: foldr
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
      * @return    mixed
      */
     public static function reduceRight($xs, $f, $acc)
@@ -104,10 +100,12 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
      * @return    array
      */
     public static function scanl($xs, $f, $acc)
@@ -120,10 +118,12 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
      * @return    array
      */
     public static function scanr($xs, $f, $acc)
@@ -140,14 +140,11 @@ class Strict
     }
 
     /**
-     * Looks through each value in the list, returning the first one that passes
-     * a truth test (iterator).
-     *
      * Alias: detect
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    mixed
      */
     public static function find($xs, $f)
@@ -165,14 +162,11 @@ class Strict
     }
 
     /**
-     * Looks through each value in the list, returning an array of all the
-     * values that pass a truth test (iterator).
-     *
      * Alias: select
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    array
      */
     public static function filter($xs, $f)
@@ -192,12 +186,9 @@ class Strict
     }
 
     /**
-     * Looks through each value in the list, returning an array of all the
-     * values that contain all of the key-value pairs listed in properties.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     array|Traversable  $properties
+     * @param     array  $xs
+     * @param     array  $properties
      * @return    bool
      */
     public static function where($xs, $properties)
@@ -214,12 +205,9 @@ class Strict
     }
 
     /**
-     * Looks through the list and returns the first value that matches all of
-     * the key-value pairs listed in properties.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     array|Traversable  $properties
+     * @param     array  $xs
+     * @param     array  $properties
      * @return    mixed
      */
     public static function findWhere($xs, $properties)
@@ -236,12 +224,9 @@ class Strict
     }
 
     /**
-     * Returns the values in list without the elements that the truth test
-     * (iterator) passes. The opposite of filter.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    array
      */
     public static function reject($xs, $f)
@@ -252,14 +237,11 @@ class Strict
     }
 
     /**
-     * Returns true if all of the values in the list pass the iterator truth
-     * test.
-     *
      * Alias: all
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    bool
      */
     public static function every($xs, $f = null)
@@ -281,13 +263,11 @@ class Strict
     }
 
     /**
-     * Returns true if any of the values in the list pass the iterator truth test.
-     *
      * Alias: any
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    bool
      */
     public static function some($xs, $f = null)
@@ -310,38 +290,8 @@ class Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @return    int
-     */
-    public static function sum($xs)
-    {
-        $acc = 0;
-        foreach ($xs as $x) {
-            $acc += $x;
-        }
-        return $acc;
-    }
-
-    /**
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @return    int
-     */
-    public static function product($xs)
-    {
-        $acc = 1;
-        foreach ($xs as $x) {
-            $acc *= $x;
-        }
-        return $acc;
-    }
-
-    /**
-     * Returns true if the value is present in the list.
-     *
-     * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     mixed              $target
+     * @param     array  $xs
+     * @param     mixed  $target
      * @return    bool
      */
     public static function contains($xs, $target)
@@ -355,13 +305,11 @@ class Strict
     }
 
     /**
-     * Calls the method named by methodName on each value in the list.
-     *
      * @varargs
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     string             $method
-     * @param     miexed             *$arguments
+     * @param     array   $xs
+     * @param     string  $method
+     * @param     miexed  *$arguments
      * @return    array
      */
     public static function invoke($xs, $method)
@@ -373,12 +321,9 @@ class Strict
     }
 
     /**
-     * A convenient version of what is perhaps the most common use-case for map:
-     * extracting a list of property values.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     string             $property
+     * @param     array   $xs
+     * @param     string  $property
      * @return    array
      */
     public static function pluck($xs, $property)
@@ -417,12 +362,9 @@ class Strict
     }
 
     /**
-     * Returns the maximum value in list. If iterator is passed, it will be used
-     * on each value to generate the criterion by which the value is ranked.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    mixed
      */
     public static function max($xs, $f = null)
@@ -446,12 +388,9 @@ class Strict
     }
 
     /**
-     * Returns the minimum value in list. If iterator is passed, it will be used
-     * on each value to generate the criterion by which the value is ranked.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    mixed
      */
     public static function min($xs, $f = null)
@@ -475,12 +414,41 @@ class Strict
     }
 
     /**
-     * Returns a sorted copy of list, ranked in ascending order by the results
-     * of running each value through iterator.
+     * Porting from the Prelude of Haskell.
      *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $x
+     * @param     array  $xs
+     * @return    int
+     */
+    public static function sum($xs)
+    {
+        $acc = 0;
+        foreach ($xs as $x) {
+            $acc += $x;
+        }
+        return $acc;
+    }
+
+    /**
+     * Porting from the Prelude of Haskell.
+     *
+     * @category  Collections
+     * @param     array  $xs
+     * @return    int
+     */
+    public static function product($xs)
+    {
+        $acc = 1;
+        foreach ($xs as $x) {
+            $acc *= $x;
+        }
+        return $acc;
+    }
+
+    /**
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $x
      * @return    array
      */
     public static function sortBy($xs, $x)
@@ -510,13 +478,10 @@ class Strict
     }
 
     /**
-     * Returns a sorted copy of list, ranked in ascending order by the results of
-     * running each value through iterator.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
-     * @param     bool               $isSorted
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @param     bool             $isSorted
      * @return    array
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
@@ -533,14 +498,10 @@ class Strict
     }
 
     /**
-     * Sorts a list into groups and returns a count for the number of objects in
-     * each group. Similar to groupBy, but instead of returning a list of values,
-     * returns a count for the number of values in that group.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $x
-     * @param     bool               $isSorted
+     * @param     array            $xs
+     * @param     callable|string  $x
+     * @param     bool             $isSorted
      * @return    int
      */
     public static function countBy($xs, $f = null, $isSorted = false)
@@ -561,10 +522,8 @@ class Strict
     }
 
     /**
-     * Returns a shuffled copy of the list.
-     *
      * @category  Collections
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function shuffle($xs)
@@ -613,8 +572,6 @@ class Strict
     }
 
     /**
-     * Return the number of values in the list.
-     *
      * @category  Collections
      * @param     mixed  $xs
      * @return    int
@@ -635,26 +592,20 @@ class Strict
 
     /**
      * @category  Collections
-     * @param     array|Iterator   $xs
+     * @param     Iterator  $xs
      * @return    CachingIterator
      */
     public static function memoize($xs)
     {
-        if (static::isArray($xs)) {
-            return $xs;
-        }
         return new Internal\MemoizeIterator(static::wrapIterator($xs));
     }
 
     /**
-     * Returns the first element of an array.
-     * Passing n will return the first n elements of the array.
-     *
      * Alias: head, take
      *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     arra  $xs
+     * @param     int   $n
      * @return    array|mixed
      */
     public static function first($xs, $n = null, $guard = null)
@@ -684,9 +635,11 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    array
      */
     public static function takeWhile($xs, $f)
@@ -702,11 +655,9 @@ class Strict
     }
 
     /**
-     * Returns everything but the last entry of the array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    array
      */
     public static function initial($xs, $n = 1, $guard = null)
@@ -718,11 +669,9 @@ class Strict
     }
 
     /**
-     * Returns the last element of an array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    array|mixed
      */
     public static function last($xs, $n = null, $guard = null)
@@ -757,13 +706,11 @@ class Strict
     }
 
     /**
-     * Returns the rest of the elements in an array.
-     *
      * Alias: tail, drop
      *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    array
      */
     public static function rest($xs, $n = 1, $guard = null)
@@ -785,10 +732,12 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @return    mixed|Iterator
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    array
      */
     public static function dropWhile($xs, $f)
     {
@@ -803,10 +752,8 @@ class Strict
     }
 
     /**
-     * Returns a copy of the array with all falsy values removed.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function compact($xs)
@@ -815,11 +762,9 @@ class Strict
     }
 
     /**
-     * Flattens a nested array (the nesting can be to any depth).
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     bool               $shallow
+     * @param     array  $xs
+     * @param     bool   $shallow
      * @return    array
      */
     public static function flatten($xs, $shallow = false)
@@ -846,12 +791,10 @@ class Strict
     }
 
     /**
-     * Returns a copy of the array with all instances of the values removed.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     mixed              *$values
+     * @param     array  $xs
+     * @param     mixed  *$values
      * @return    array
      */
     public static function without($xs)
@@ -860,12 +803,9 @@ class Strict
     }
 
     /**
-     * Computes the union of the passed-in arrays: the list of unique items,
-     * in order, that are present in one or more of the arrays.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array  *$xss
      * @return    array
      */
     public static function union()
@@ -877,12 +817,10 @@ class Strict
     }
 
     /**
-     * Computes the list of values that are the intersection of all the arrays.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     array|Traversable  *$rest
+     * @param     array  $xs
+     * @param     array  *$rest
      * @return    array
      */
     public static function intersection()
@@ -895,13 +833,10 @@ class Strict
     }
 
     /**
-     * Similar to without, but returns the values from array that are not present
-     * in the other arrays.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     array|Traversable  *$others
+     * @param     array  $xs
+     * @param     array  *$others
      * @return    array
      */
     public static function difference($xs)
@@ -920,13 +855,11 @@ class Strict
     }
 
     /**
-     * Produce a duplicate-free version of the array.
-     *
      * Alias: unique
      *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    array
      */
     public static function uniq($xs, $f = null)
@@ -967,12 +900,9 @@ class Strict
     }
 
     /**
-     * Merges together the values of each of the arrays with the values at the
-     * corresponding position.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array  *$xss
      * @return    array
      */
     public static function zip()
@@ -1002,10 +932,12 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
-     * @param     callable           $f
+     * @param     array     *$xss
+     * @param     callable  $f
      * @return    array
      */
     public static function zipWith()
@@ -1019,11 +951,9 @@ class Strict
     }
 
     /**
-     * Converts arrays into objects.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     array|Traversable  $values
+     * @param     array  $xs
+     * @param     array  $values
      * @return    array
      */
     public static function object($xs, $values = null)
@@ -1049,13 +979,10 @@ class Strict
     }
 
     /**
-     * Returns the index at which value can be found in the array, or -1 if
-     * value is not present in the array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     mixed              $value
-     * @param     bool|int           $isSorted
+     * @param     array     $xs
+     * @param     mixed     $value
+     * @param     bool|int  $isSorted
      * @return    int
      */
     public static function indexOf($xs, $value, $isSorted = 0)
@@ -1079,13 +1006,10 @@ class Strict
     }
 
     /**
-     * Returns the index of the last occurrence of value in the array, or -1 if
-     * value is not present.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     mixed              $x
-     * @param     int                $fromIndex
+     * @param     array  $xs
+     * @param     mixed  $x
+     * @param     int    $fromIndex
      * @return    int
      */
     public static function lastIndexOf($xs, $x, $fromIndex = null)
@@ -1104,13 +1028,10 @@ class Strict
     }
 
     /**
-     * Returns the index at which value can be found in the array, or -1 if
-     * value is not present in the array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     mixed              $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     mixed     $xs
+     * @param     callable  $f
      * @return    int
      */
     public static function sortedIndex($xs, $x, $f = null)
@@ -1135,13 +1056,10 @@ class Strict
     }
 
     /**
-     * A function to create flexibly-numbered lists of integers,
-     * handy for each and map loops.
-     *
      * @category  Arrays
-     * @param     int     $start
-     * @param     int     $stop
-     * @param     int     $step
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
      * @return    array
      */
     public static function range($start, $stop = null, $step = 1)
@@ -1163,9 +1081,11 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    array
      * @throws    OverflowException
      */
@@ -1184,9 +1104,11 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Arrays
-     * @param     mixed   $x
-     * @param     int     $n
+     * @param     mixed  $x
+     * @param     int    $n
      * @return    array
      * @throws    OverflowException
      */
@@ -1199,6 +1121,8 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Arrays
      * @param     callable  $f
      * @param     mixed     $acc
@@ -1211,6 +1135,8 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
      * @category  Arrays
      * @param     callable  $f
      * @param     mixed     $acc
@@ -1226,11 +1152,13 @@ class Strict
     }
 
     /**
+     * Paralell version of map()
+     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     int                $n
-     * @param     int                $timeout
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     int       $n
+     * @param     int       $timeout
      * @return    Parallel
      */
     public static function parMap($xs, $f, $n = null, $timeout = null)
@@ -1241,10 +1169,8 @@ class Strict
     }
 
     /**
-     * Removes the last element from an array and returns that element.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function pop($xs)
@@ -1253,13 +1179,10 @@ class Strict
     }
 
     /**
-     * Adds one or more elements to the end of an array and returns the new
-     * length of the array.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     mixed              *$values
+     * @param     array  $xs
+     * @param     mixed  *$values
      * @return    array
      */
     public static function push($xs)
@@ -1269,11 +1192,8 @@ class Strict
     }
 
     /**
-     * Reverses the order of the elements of an array -- the first becomes the
-     * last, and the last becomes the first.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function reverse($xs)
@@ -1282,10 +1202,8 @@ class Strict
     }
 
     /**
-     * Removes the first element from an array and returns that element.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function shift($xs)
@@ -1295,8 +1213,8 @@ class Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $compare
+     * @param     array     $xs
+     * @param     callable  $compare
      * @return    array
      */
     public static function sort($xs, $compare = null)
@@ -1307,12 +1225,10 @@ class Strict
     }
 
     /**
-     * Removes the first element from an array and returns that element.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $index
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $index
+     * @param     int    $n
      * @return    array
      */
     public static function splice($xs, $index, $n)
@@ -1324,13 +1240,10 @@ class Strict
     }
 
     /**
-     * Adds one or more elements to the front of an array and returns the new
-     * length of the array.
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     mixed              *$values
+     * @param     array  $xs
+     * @param     mixed  *$values
      * @return    array
      */
     public static function unshift($xs)
@@ -1340,12 +1253,9 @@ class Strict
     }
 
     /**
-     * Returns a new array comprised of this array joined with other array(s)
-     * and/or value(s).
-     *
      * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array  *$xss
      * @return    array
      */
     public static function concat()
@@ -1358,11 +1268,9 @@ class Strict
     }
 
     /**
-     * Joins all elements of an array into a string.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     string             $separator
+     * @param     array   $xs
+     * @param     string  $separator
      * @return    string
      */
     public static function join($xs, $separator = ',')
@@ -1375,12 +1283,10 @@ class Strict
     }
 
     /**
-     * Returns a shallow copy of a portion of an array.
-     *
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $begin
-     * @param     int                $end
+     * @param     array  $xs
+     * @param     int    $begin
+     * @param     int    $end
      * @return    array
      */
     public static function slice($xs, $begin, $end = null)
@@ -1392,10 +1298,8 @@ class Strict
     }
 
     /**
-     * Retrieve all the names of the object's properties.
-     *
      * @category  Objects
-     * @param     array|Traversable  $object
+     * @param     array  $object
      * @return    array
      */
     public static function keys($xs)
@@ -1404,10 +1308,8 @@ class Strict
     }
 
     /**
-     * Return all of the values of the object's properties.
-     *
      * @category  Objects
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function values($xs)
@@ -1418,10 +1320,8 @@ class Strict
     }
 
     /**
-     * Convert an object into a list of [key, value] pairs.
-     *
      * @category  Objects
-     * @param     array|Traversable  $xs
+     * @param     array    $xs
      * @return    array
      */
     public static function pairs($xs)
@@ -1432,11 +1332,8 @@ class Strict
     }
 
     /**
-     * Returns a copy of the object where the keys have become the values and the
-     * values the keys.
-     *
      * @category  Objects
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    array
      */
     public static function invert($xs)
@@ -1449,13 +1346,10 @@ class Strict
     }
 
     /**
-     * Copy all of the properties in the source objects over to the destination
-     * object, and return the destination object.
-     *
      * @varargs
      * @category  Objects
-     * @param     array|Object       $destination
-     * @param     array|Traversable  *$sources
+     * @param     array|object  $destination
+     * @param     array         *$sources
      * @return    array
      */
     public static function extend($destination)
@@ -1479,13 +1373,10 @@ class Strict
     }
 
     /**
-     * Return a copy of the object, filtered to only have values for the
-     * whitelisted keys (or array of valid keys).
-     *
      * @varargs
      * @category  Objects
-     * @param     array|Traversable         $xs
-     * @param     array|string|Traversable  *$keys
+     * @param     array         $xs
+     * @param     array|string  *$keys
      * @return    array
      */
     public static function pick($xs)
@@ -1509,13 +1400,10 @@ class Strict
     }
 
     /**
-     * Return a copy of the object, filtered to omit the blacklisted keys
-     * (or array of keys).
-     *
      * @varargs
      * @category  Objects
-     * @param     array|Traversable         $xs
-     * @param     array|string|Traversable  *$keys
+     * @param     array         $xs
+     * @param     array|string  *$keys
      * @return    array
      */
     public static function omit($xs)
@@ -1539,13 +1427,10 @@ class Strict
     }
 
     /**
-     * Copy all of the properties in the source objects over to the destination
-     * object, and return the destination object.
-     *
      * @varargs
      * @category  Objects
-     * @param     array|Traversable  $xs
-     * @param     array|Traversable  *$defaults
+     * @param     array  $xs
+     * @param     array  *$defaults
      * @return    array
      */
     public static function defaults($xs)
@@ -1577,8 +1462,6 @@ class Strict
     }
 
     /**
-     * Invokes interceptor with the object, and then returns object.
-     *
      * @category  Objects
      * @param     mixed     $value
      * @param     callable  $interceptor
@@ -1591,11 +1474,9 @@ class Strict
     }
 
     /**
-     * Does the object contain the given key?
-     *
      * @category  Objects
-     * @param     array|object|Traversable  $xs
-     * @param     int|string                $key
+     * @param     array|object  $xs
+     * @param     int|string    $key
      * @return    bool
      */
     public static function has($xs, $key)
@@ -1618,7 +1499,7 @@ class Strict
 
     /**
      * @category  Objects
-     * @param     mixed    $xs
+     * @param     mixed  $xs
      * @return    bool
      */
     public static function isArray($value)
@@ -1628,7 +1509,7 @@ class Strict
 
     /**
      * @category  Objects
-     * @param     mixed    $xs
+     * @param     mixed  $xs
      * @return    bool
      */
     public static function isTraversable($value)
@@ -1637,8 +1518,6 @@ class Strict
     }
 
     /**
-     * Returns the same value that is used as the argument.
-     *
      * @category  Utility
      * @param     mixed  $value
      * @return    mixed
@@ -1649,9 +1528,6 @@ class Strict
     }
 
     /**
-     * Returns a wrapped object. Calling methods on this object will continue to
-     * return wrapped objects until value is used.
-     *
      * @category  Chaining
      * @param     mixed    $value
      * @return    Internal\Wrapper
@@ -1661,6 +1537,10 @@ class Strict
         return new Internal\Wrapper($value, get_called_class());
     }
 
+    /**
+     * @param   mixed  $value
+     * @return  callable
+     */
     protected static function lookupIterator($value)
     {
         if (is_scalar($value)) {
@@ -1674,6 +1554,10 @@ class Strict
         return get_called_class().'::identity';
     }
 
+    /**
+     * @param   array|Iterator  $xs
+     * @return  Iterator
+     */
     protected static function wrapIterator($xs)
     {
         if (is_array($xs)) {
@@ -1688,6 +1572,3 @@ class Strict
         return $xs;
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

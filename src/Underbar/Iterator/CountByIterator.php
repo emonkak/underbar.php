@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar\Iterator;
 
@@ -75,6 +82,3 @@ class CountByIterator extends \IteratorIterator
         }
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

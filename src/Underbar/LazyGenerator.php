@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar;
 
@@ -6,8 +13,8 @@ class LazyGenerator extends Strict
 {
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Generator
      */
     public static function map($xs, $f)
@@ -19,8 +26,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array      $xs
+     * @param     callable   $f
      * @return    Generator
      */
     public static function filter($xs, $f)
@@ -34,10 +41,10 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
-     * @return    Iterator
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    Generator
      */
     public static function scanl($xs, $f, $acc)
     {
@@ -48,9 +55,9 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
-     * @param     bool               $isSorted
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @param     bool             $isSorted
      * @return    Generator
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
@@ -82,8 +89,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
+     * @param     array            $xs
+     * @param     callable|string  $f
      * @return    int
      */
     public static function countBy($xs, $f = null, $isSorted = false)
@@ -115,8 +122,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Generator
      */
     public static function _first($xs, $n)
@@ -131,8 +138,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Generator
      */
     public static function takeWhile($xs, $f)
@@ -147,8 +154,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Generator
      */
     public static function initial($xs, $n = 1, $guard = null)
@@ -169,8 +176,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Generator
      */
     public static function rest($xs, $n = 1, $guard = null)
@@ -189,8 +196,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    mixed|Generator
      */
     public static function dropWhile($xs, $f)
@@ -204,8 +211,9 @@ class LazyGenerator extends Strict
     }
 
     /**
+     * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array      *$xss
      * @return    Generator
      */
     public static function zip()
@@ -234,8 +242,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xss
-     * @param     bool               $shallow
+     * @param     array  $xss
+     * @param     bool   $shallow
      * @return    Generator
      */
     public static function flatten($xss, $shallow = false)
@@ -259,9 +267,9 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     int       $start
-     * @param     int       $stop
-     * @param     int       $step
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
      * @return    Generator
      */
     public static function range($start, $stop = null, $step = 1)
@@ -280,7 +288,7 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $array
+     * @param     array  $array
      * @return    Generator
      */
     public static function cycle($array, $n = null)
@@ -302,8 +310,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     mixed     $value
-     * @param     int       $n
+     * @param     mixed  $value
+     * @param     int    $n
      * @return    Generator
      */
     public static function repeat($value, $n = -1)
@@ -315,8 +323,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     mixed              $acc
-     * @param     callable           $f
+     * @param     mixed     $acc
+     * @param     callable  $f
      * @return    Generator
      * @throws    OverflowException
      */
@@ -332,7 +340,7 @@ class LazyGenerator extends Strict
      * @category  Arrays
      * @param     callable  $f
      * @param     mixed     $acc
-     * @return    IteratorAggregate
+     * @return    Generator
      */
     public static function unfoldr($f, $acc)
     {
@@ -343,8 +351,9 @@ class LazyGenerator extends Strict
     }
 
     /**
+     * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array  *$xss
      * @return    Generator
      */
     public static function concat()
@@ -356,6 +365,3 @@ class LazyGenerator extends Strict
         }
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

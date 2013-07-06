@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar\Internal;
 
@@ -215,7 +222,7 @@ class Parallel implements \Iterator, \Countable
     /**
      * Push a value to the queue.
      *
-     * @param   mixed  $value  A pushed value
+     * @param   mixed  $value
      * @return  void
      */
     public function push($value)
@@ -227,7 +234,7 @@ class Parallel implements \Iterator, \Countable
     /**
      * Push all values to the queue.
      *
-     * @param   array|Traversable  $values  Array of the pushed value
+     * @param   array  $values
      * @return  void
      */
     public function pushAll($values)
@@ -387,6 +394,3 @@ class Parallel implements \Iterator, \Countable
         }
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

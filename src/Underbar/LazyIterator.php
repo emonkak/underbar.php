@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
 
 namespace Underbar;
 
@@ -6,8 +13,8 @@ class LazyIterator extends Strict
 {
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Iterator
      */
     public static function map($xs, $f)
@@ -17,8 +24,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Iterator
      */
     public static function filter($xs, $f)
@@ -30,9 +37,9 @@ class LazyIterator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
-     * @param     mixed              $acc
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
      * @return    Iterator
      */
     public static function scanl($xs, $f, $acc)
@@ -42,9 +49,9 @@ class LazyIterator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
-     * @param     bool               $isSorted
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @param     bool             $isSorted
      * @return    Generator
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
@@ -58,9 +65,9 @@ class LazyIterator extends Strict
 
     /**
      * @category  Collections
-     * @param     array|Traversable  $xs
-     * @param     callable|string    $f
-     * @param     bool               $isSorted
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @param     bool             $isSorted
      * @return    int
      */
     public static function countBy($xs, $f = null, $isSorted = false)
@@ -74,8 +81,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Iterator
      */
     public static function _first($xs, $n = null)
@@ -87,8 +94,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Iterator
      */
     public static function takeWhile($xs, $f)
@@ -98,8 +105,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Iterator
      */
     public static function initial($xs, $n = 1, $guard = null)
@@ -112,8 +119,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     int                $n
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Iterator
      */
     public static function rest($xs, $n = 1, $guard = null)
@@ -126,8 +133,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     callable           $f
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    Iterator
      */
     public static function dropWhile($xs, $f)
@@ -137,8 +144,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
-     * @param     bool               $shallow
+     * @param     array  $xs
+     * @param     bool   $shallow
      * @return    Iterator
      */
     public static function flatten($xs, $shallow = false)
@@ -147,8 +154,9 @@ class LazyIterator extends Strict
     }
 
     /**
+     * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array  *$xss
      * @return    Iterator
      */
     public static function zip()
@@ -162,9 +170,9 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     int       $start
-     * @param     int       $stop
-     * @param     int       $step
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
      * @return    Iterator
      */
     public static function range($start, $stop = null, $step = 1)
@@ -178,7 +186,7 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array|Traversable  $xs
+     * @param     array  $xs
      * @return    Iterator
      */
     public static function cycle($xs, $n = null)
@@ -196,8 +204,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     mixed     $value
-     * @param     int       $n
+     * @param     mixed  $value
+     * @param     int    $n
      * @return    Iterator
      */
     public static function repeat($value, $n = -1)
@@ -207,9 +215,9 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     mixed           $acc
-     * @param     callable        $f
-     * @return    array|Iterator
+     * @param     mixed     $acc
+     * @param     callable  $f
+     * @return    Iterator
      * @throws    OverflowException
      */
     public static function iterate($f, $acc)
@@ -219,9 +227,9 @@ class LazyIterator extends Strict
 
     /**
      * @category  Collections
-     * @param     callable     $f
-     * @param     mixed        $acc
-     * @return    Iterator\RewindableGenerator
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    Iterator
      */
     public static function unfoldr($f, $acc)
     {
@@ -229,8 +237,9 @@ class LazyIterator extends Strict
     }
 
     /**
+     * @varargs
      * @category  Arrays
-     * @param     array|Traversable  *$xss
+     * @param     array  *$xss
      * @return    Iterator
      */
     public static function concat()
@@ -242,6 +251,3 @@ class LazyIterator extends Strict
         return $it;
     }
 }
-
-// __END__
-// vim: expandtab softtabstop=4 shiftwidth=4

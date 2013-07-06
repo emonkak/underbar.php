@@ -22,14 +22,14 @@ function every($_1=NULL){return Lazy::every($this,$_1);}
 function all($_1=NULL){return Lazy::all($this,$_1);}
 function some($_1=NULL){return Lazy::some($this,$_1);}
 function any($_1=NULL){return Lazy::any($this,$_1);}
-function sum(){return Lazy::sum($this);}
-function product(){return Lazy::product($this);}
 function contains($_1){return Lazy::contains($this,$_1);}
 function invoke($_1,$_2=NULL,$_3=NULL,$_4=NULL,$_5=NULL,$_6=NULL,$_7=NULL,$_8=NULL,$_9=NULL){return Lazy::invoke($this,$_1,$_2,$_3,$_4,$_5,$_6,$_7,$_8,$_9);}
 function pluck($_1){return Lazy::pluck($this,$_1);}
 function span($_1){return Lazy::span($this,$_1);}
 function max($_1=NULL){return Lazy::max($this,$_1);}
 function min($_1=NULL){return Lazy::min($this,$_1);}
+function sum(){return Lazy::sum($this);}
+function product(){return Lazy::product($this);}
 function sortBy($_1){return Lazy::sortBy($this,$_1);}
 function groupBy($_1=NULL,$_2=false){return Lazy::groupBy($this,$_1,$_2);}
 function countBy($_1=NULL,$_2=false){return Lazy::countBy($this,$_1,$_2);}
