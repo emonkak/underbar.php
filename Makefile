@@ -6,7 +6,7 @@ src/Underbar/Enumerable.php: scripts/generate-enumerable-trait.php src/Underbar/
 	php $< > $@
 
 report/index.html: $(SOURCES)
-	@phpunit --coverage-html report .
+	vendor/phpunit/phpunit/composer/bin/phpunit --coverage-html report tests
 
 clean:
 	rm -f src/Underbar/Enumerable.php
@@ -14,6 +14,6 @@ clean:
 report: report/index.html
 
 test:
-	@phpunit .
+	vendor/phpunit/phpunit/composer/bin/phpunit tests
 
 .PHONY: all clean report test

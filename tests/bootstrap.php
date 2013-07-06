@@ -1,5 +1,7 @@
 <?php
 
+require(__DIR__ . '/../vendor/autoload.php');
+
 date_default_timezone_set('UTC');
 
 ini_set('memory_limit', '128M');
@@ -20,5 +22,3 @@ class Underbar_TestCase extends PHPUnit_Framework_TestCase
         return $classes;
     }
 }
-
-require(__DIR__ . '/../vendor/autoload.php');
