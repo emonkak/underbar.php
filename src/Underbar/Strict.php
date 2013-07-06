@@ -297,7 +297,7 @@ class Strict
     public static function contains($xs, $target)
     {
         foreach ($xs as $x) {
-            if ($x === $target) {
+            if ($x == $target) {
                 return true;
             }
         }

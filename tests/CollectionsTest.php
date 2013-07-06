@@ -444,7 +444,9 @@ class CollectionsTest extends Underbar_TestCase
         );
         $grouped = $_::chain($dict)
             ->groupBy('key', true)
-            ->map(function($xs) use ($_) { return $_::toArray($_::pluck($xs, 'value')); });
+            ->map(function($xs) use ($_) { return $_::toArray($_::pluck($xs, 'value')); })
+            ->toArray()
+            ->value();
         $this->assertEquals(array(1, 2, 3), $grouped['foo']);
         $this->assertEquals(array(4, 5), $grouped['bar']);
     }
@@ -482,7 +484,7 @@ class CollectionsTest extends Underbar_TestCase
             array('key' => 'bar', 'value' => 4),
             array('key' => 'bar', 'value' => 5),
         );
-        $grouped = $_::chain($dict)->countBy('key', true);
+        $grouped = $_::toArray($_::countBy($dict, 'key', true));
         $this->assertEquals(3, $grouped['foo']);
         $this->assertEquals(2, $grouped['bar']);
     }
