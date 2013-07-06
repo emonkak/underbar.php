@@ -896,7 +896,7 @@ class Strict
 
     public static function unique($xs, $f = null)
     {
-        return static::uniq($xs);
+        return static::uniq($xs, $f);
     }
 
     /**
