@@ -220,9 +220,9 @@ class LazyIterator extends Strict
      * @return    Iterator
      * @throws    OverflowException
      */
-    public static function iterate($f, $acc)
+    public static function iterate($acc, $f)
     {
-        return new Iterator\IterateIterator($f, $acc);
+        return new Iterator\IterateIterator($acc, $f);
     }
 
     /**

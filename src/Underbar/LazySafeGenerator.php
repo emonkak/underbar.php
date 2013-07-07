@@ -230,7 +230,7 @@ class LazySafeGenerator extends LazyGenerator
      * @param     callable  $f
      * @return    RewindableGenerator
      */
-    public static function iterate($f, $acc)
+    public static function iterate($acc, $f)
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,

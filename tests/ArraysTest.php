@@ -534,21 +534,21 @@ class ArraysTest extends Underbar_TestCase
             $this->setExpectedException('OverflowException');
         }
 
-        $result = $_::iterate(function($x) { return $x * $x; }, 2);
+        $result = $_::iterate(2, function($x) { return $x * $x; });
         $shouldBe = array(2, 4, 16, 256);
         $this->assertEquals($shouldBe, $_::toList($_::take($result, 4)), 'square');
 
-        $result = $_::chain(function($xs) { return range(1, count($xs) + 1); })
-            ->iterate(array())
+        $result = $_::chain(array())
+            ->iterate(function($xs) { return range(1, count($xs) + 1); })
             ->map(function($xs) { return array_product($xs); })
             ->take(10);
         $shouldBe = array(1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880);
         $this->assertEquals($shouldBe, $_::toList($result), 'factorial');
 
-        $result = $_::chain(function($xs) {
+        $result = $_::chain(array(0, 1))
+            ->iterate(function($xs) {
                 return array($xs[1], $xs[0] + $xs[1]);
             })
-            ->iterate(array(0, 1))
             ->map(array($_, 'first'))
             ->take(10);
         $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34);

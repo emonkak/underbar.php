@@ -328,7 +328,7 @@ class LazyGenerator extends Strict
      * @return    Generator
      * @throws    OverflowException
      */
-    public static function iterate($f, $acc)
+    public static function iterate($acc, $f)
     {
         while (true) {
             yield $acc;
