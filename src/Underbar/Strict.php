@@ -341,39 +341,18 @@ class Strict
 
     /**
      * @category  Collections
-     * @param     mixed     $xs
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function span($xs, $f)
-    {
-        $ys = array(array(), array());
-        $inPrefix = true;
-
-        foreach ($xs as $k => $x) {
-            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
-                $ys[0][] = $x;
-            } else {
-                $ys[1][] = $x;
-            }
-        }
-
-        return $ys;
-    }
-
-    /**
-     * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    mixed
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    mixed|int
      */
     public static function max($xs, $f = null)
     {
         if ($f === null) {
-            $xs = static::toList($xs);
+            $xs = static::extractIterator($xs);
             return empty($xs) ? -INF : max($xs);
         }
 
+        $f = static::lookupIterator($f);
         $computed = -INF;
         $result = -INF;
         foreach ($xs as $k => $x) {
@@ -389,17 +368,18 @@ class Strict
 
     /**
      * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    mixed
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    mixed|int
      */
     public static function min($xs, $f = null)
     {
         if ($f === null) {
-            $xs = static::toList($xs);
+            $xs = static::extractIterator($xs);
             return empty($xs) ? INF : min($xs);
         }
 
+        $f = static::lookupIterator($f);
         $computed = INF;
         $result = INF;
         foreach ($xs as $k => $x) {
@@ -528,7 +508,7 @@ class Strict
      */
     public static function shuffle($xs)
     {
-        $xs = static::toList($xs);
+        $xs = static::extractIterator($xs);
         shuffle($xs);
         return $xs;
     }
@@ -540,11 +520,11 @@ class Strict
      */
     public static function toArray($xs)
     {
-        if (is_array($xs)) {
-            return $xs;
-        }
         if ($xs instanceof \Traversable) {
             return iterator_to_array($xs, true);
+        }
+        if (is_array($xs)) {
+            return $xs;
         }
         if (is_string($xs)) {
             return str_split($xs);
@@ -559,16 +539,26 @@ class Strict
      */
     public static function toList($xs)
     {
-        if (is_array($xs)) {
-            return $xs;
-        }
         if ($xs instanceof \Traversable) {
             return iterator_to_array($xs, false);
+        }
+        if (is_array($xs)) {
+            return array_values($xs);
         }
         if (is_string($xs)) {
             return str_split($xs);
         }
         return (array) $xs;
+    }
+
+    /**
+     * @category  Collections
+     * @param     Iterator  $xs
+     * @return    Iterator
+     */
+    public static function memoize($xs)
+    {
+        return new Iterator\MemoizeIterator(static::wrapIterator($xs));
     }
 
     /**
@@ -588,16 +578,6 @@ class Strict
             return mb_strlen($xs);
         }
         return count($xs);
-    }
-
-    /**
-     * @category  Collections
-     * @param     Iterator  $xs
-     * @return    CachingIterator
-     */
-    public static function memoize($xs)
-    {
-        return new Internal\MemoizeIterator(static::wrapIterator($xs));
     }
 
     /**
@@ -631,7 +611,7 @@ class Strict
 
     public static function _first($xs, $n)
     {
-        return $n > 0 ? array_slice(static::toList($xs), 0, $n) : array();
+        return $n > 0 ? array_slice(static::extractIterator($xs), 0, $n) : array();
     }
 
     /**
@@ -665,7 +645,7 @@ class Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return $n > 0 ? array_slice(static::toList($xs), 0, -$n) : array();
+        return $n > 0 ? array_slice(static::extractIterator($xs), 0, -$n) : array();
     }
 
     /**
@@ -718,7 +698,7 @@ class Strict
         if ($guard !== null) {
             $n = 1;
         }
-        return array_slice(static::toList($xs), $n);
+        return array_slice(static::extractIterator($xs), $n);
     }
 
     public static function tail($xs, $n = 1, $guard = null)
@@ -749,6 +729,30 @@ class Strict
             }
         }
         return $result;
+    }
+
+    /**
+     * Porting from the Prelude of Haskell.
+     *
+     * @category  Arrays
+     * @param     mixed     $xs
+     * @param     callable  $f
+     * @return    array
+     */
+    public static function span($xs, $f)
+    {
+        $ys = array(array(), array());
+        $inPrefix = true;
+
+        foreach ($xs as $k => $x) {
+            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
+                $ys[0][] = $x;
+            } else {
+                $ys[1][] = $x;
+            }
+        }
+
+        return $ys;
     }
 
     /**
@@ -827,7 +831,7 @@ class Strict
     {
         $xss = array();
         foreach (func_get_args() as $xs) {
-            $xss[] = static::toList($xs);
+            $xss[] = static::extractIterator($xs);
         }
         return call_user_func_array('array_intersect', $xss);
     }
@@ -987,7 +991,7 @@ class Strict
      */
     public static function indexOf($xs, $value, $isSorted = 0)
     {
-        $xs = static::toList($xs);
+        $xs = static::extractIterator($xs);
 
         if ($isSorted === true) {
             $i = static::sortedIndex($xs, $value);
@@ -1014,7 +1018,7 @@ class Strict
      */
     public static function lastIndexOf($xs, $x, $fromIndex = null)
     {
-        $xs = static::toList($xs);
+        $xs = static::extractIterator($xs);
         $l = count($xs);
         $i = $fromIndex !== null ? min($l, $fromIndex) : $l;
 
@@ -1036,7 +1040,7 @@ class Strict
      */
     public static function sortedIndex($xs, $x, $f = null)
     {
-        $xs = static::toList($xs);
+        $xs = static::extractIterator($xs);
         $f = static::lookupIterator($f);
         $x = call_user_func($f, $x);
 
@@ -1198,7 +1202,7 @@ class Strict
      */
     public static function reverse($xs)
     {
-        return array_reverse(static::toList($xs));
+        return array_reverse(static::extractIterator($xs));
     }
 
     /**
@@ -1219,7 +1223,7 @@ class Strict
      */
     public static function sort($xs, $compare = null)
     {
-        $xs = static::toList($xs);
+        $xs = static::extractIterator($xs);
         is_callable($compare) ? usort($xs, $compare) : sort($xs);
         return $xs;
     }
@@ -1234,7 +1238,7 @@ class Strict
     public static function splice($xs, $index, $n)
     {
         $rest = array_slice(func_get_args(), 3);
-        $xs = static::toList($xs);
+        $xs = static::extractIterator($xs);
         array_splice($xs, $index, $n, $rest);
         return $xs;
     }
@@ -1262,7 +1266,7 @@ class Strict
     {
         $result = array();
         foreach (func_get_args() as $xs) {
-            $result = array_merge($result, static::toList($xs));
+            $result = array_merge($result, static::extractIterator($xs));
         }
         return $result;
     }
@@ -1294,7 +1298,7 @@ class Strict
         if ($end > 0) {
             $end = max(0, $end - $begin);
         }
-        return array_slice(static::toList($xs), $begin, $end);
+        return array_slice(static::extractIterator($xs), $begin, $end);
     }
 
     /**
@@ -1304,19 +1308,19 @@ class Strict
      */
     public static function keys($xs)
     {
-        return array_keys(static::toArray($xs));
+        return static::map($xs, function($x, $k) {
+            return $k;
+        });
     }
 
     /**
      * @category  Objects
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
     public static function values($xs)
     {
-        return $xs instanceof \Traversable
-            ? iterator_to_array($xs, false)
-            : array_values($xs);
+        return $xs instanceof \Traversable ? $xs : array_values($xs);
     }
 
     /**
@@ -1570,5 +1574,16 @@ class Strict
             return new \IteratorIterator($xs);
         }
         return $xs;
+    }
+
+    /**
+     * @param   array|Iterator  $xs
+     * @return  array
+     */
+    protected static function extractIterator($xs)
+    {
+        return $xs instanceof \Traversable
+            ? iterator_to_array($xs, false)
+            : $xs;
     }
 }

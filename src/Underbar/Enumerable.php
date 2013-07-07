@@ -26,7 +26,6 @@ function any($a=NULL){return _::any($this,$a);}
 function contains($a){return _::contains($this,$a);}
 function invoke($a,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::invoke($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function pluck($a){return _::pluck($this,$a);}
-function span($a){return _::span($this,$a);}
 function max($a=NULL){return _::max($this,$a);}
 function min($a=NULL){return _::min($this,$a);}
 function sum(){return _::sum($this);}
@@ -37,8 +36,8 @@ function countBy($a=NULL,$b=false){return _::countBy($this,$a,$b);}
 function shuffle(){return _::shuffle($this);}
 function toArray(){return _::toArray($this);}
 function toList(){return _::toList($this);}
-function size(){return _::size($this);}
 function memoize(){return _::memoize($this);}
+function size(){return _::size($this);}
 function first($a=NULL,$b=NULL){return _::first($this,$a,$b);}
 function head($a=NULL,$b=NULL){return _::head($this,$a,$b);}
 function take($a=NULL,$b=NULL){return _::take($this,$a,$b);}
@@ -49,6 +48,7 @@ function rest($a=1,$b=NULL){return _::rest($this,$a,$b);}
 function tail($a=1,$b=NULL){return _::tail($this,$a,$b);}
 function drop($a=1,$b=NULL){return _::drop($this,$a,$b);}
 function dropWhile($a){return _::dropWhile($this,$a);}
+function span($a){return _::span($this,$a);}
 function compact(){return _::compact($this);}
 function flatten($a=false){return _::flatten($this,$a);}
 function without($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::without($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}

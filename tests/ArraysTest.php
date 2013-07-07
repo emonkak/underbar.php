@@ -111,6 +111,33 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testSpan($_)
+    {
+        $result = $_::span(array(1, 2, 3, 4, 1, 2, 3, 4), function($x) {
+            return $x < 3;
+        });
+        $shouldBe = array(array(1, 2), array(3, 4, 1, 2, 3, 4));
+        $this->assertEquals($shouldBe, $result);
+
+        $result = $_::span(array(1, 2, 3), function($x) {
+            return $x < 9;
+        });
+        $shouldBe = array(array(1, 2, 3), array());
+        $this->assertEquals($shouldBe, $result);
+
+        $result = $_::span(array(1, 2, 3), function($x) {
+            return $x < 0;
+        });
+        $shouldBe = array(array(), array(1, 2, 3));
+        $this->assertEquals($shouldBe, $result);
+
+        $result = $_::span(array(), function($x) { return $x < 3; });
+        $this->assertEquals(array(array(), array()), $result, 'empty array');
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testInitial($_)
     {
         $result = $_::initial(array(1, 2, 3, 4, 5));
@@ -178,14 +205,14 @@ class ArraysTest extends Underbar_TestCase
         $list = array(1, 2, 1, 0, 3, 1, 4);
         $result = $_::without($list, 0, 1);
         $shouldBe = array(2, 3, 4);
-        $this->assertEquals($shouldBe, $_::values($result), 'can remove all instances of an object');
+        $this->assertEquals($shouldBe, $_::toList($result), 'can remove all instances of an object');
 
         $list = array(array('one' => 1), array('two' => 2));
         $result = $_::without($list, array('one' => 1), 1);
-        $this->assertCount(1, $_::values($result), 'uses real object identity for comparisons.');
+        $this->assertCount(1, $_::toList($result), 'uses real object identity for comparisons.');
 
         $result = $_::without($list, $list[0]);
-        $this->assertCount(1, $_::values($result), 'ditto.');
+        $this->assertCount(1, $_::toList($result), 'ditto.');
     }
 
     /**
@@ -195,26 +222,26 @@ class ArraysTest extends Underbar_TestCase
     {
         $list = array(1, 2, 1, 3, 1, 4);
         $shouldBe = array(1, 2, 3, 4);
-        $this->assertEquals($shouldBe, $_::values($_::uniq($list)), 'can find the unique values');
-        $this->assertEquals($shouldBe, $_::values($_::unique($list)), 'alias as unique');
+        $this->assertEquals($shouldBe, $_::toList($_::uniq($list)), 'can find the unique values');
+        $this->assertEquals($shouldBe, $_::toList($_::unique($list)), 'alias as unique');
 
         $list = array(array('name' => 'moe'), array('name' => 'curly'), array('name' => 'larry'), array('name' => 'curly'));
         $iterator = function($value) { return $value['name']; };
         $result = $_::map($_::uniq($list, $iterator), $iterator);
         $shouldBe = array('moe', 'curly', 'larry');
-        $this->assertEquals($shouldBe, $_::values($result), 'can find the unique values of an array using a custom iterator');
+        $this->assertEquals($shouldBe, $_::toList($result), 'can find the unique values of an array using a custom iterator');
 
         $list = array(1, 2, 2, 3, 4, 4);
         $result = $_::uniq($list, function($value) { return $value + 1; });
         $shouldBe = array(1, 2, 3, 4);
-        $this->assertEquals($shouldBe, $_::values($result), 'iterator works');
+        $this->assertEquals($shouldBe, $_::toList($result), 'iterator works');
 
         $obj1 = new StdClass();
         $obj2 = new StdClass();
         $obj3 = new StdClass();
         $result = $_::uniq(array($obj1, $obj2, $obj2, $obj3));
         $shouldBe = array($obj1, $obj2, $obj3);
-        $this->assertEquals($shouldBe, $_::values($result), 'works well objects');
+        $this->assertEquals($shouldBe, $_::toList($result), 'works well objects');
     }
 
     /**
@@ -235,11 +262,11 @@ class ArraysTest extends Underbar_TestCase
     {
         $result = $_::union(array(1, 2, 3), array(2, 30, 1), array(1, 40));
         $shouldBe = array(1, 2, 3, 30, 40);
-        $this->assertEquals($shouldBe, $_::values($result), 'takes the union of a list of arrays');
+        $this->assertEquals($shouldBe, $_::toList($result), 'takes the union of a list of arrays');
 
         $result = $_::union(array(1, 2, 3), array(2, 30, 1), array(1, 40, array(1)));
         $shouldBe = array(1, 2, 3, 30, 40, array(1));
-        $this->assertEquals($shouldBe, $_::values($result), 'takes the union of a list of nested arrays');
+        $this->assertEquals($shouldBe, $_::toList($result), 'takes the union of a list of nested arrays');
     }
 
     /**
@@ -249,11 +276,11 @@ class ArraysTest extends Underbar_TestCase
     {
         $result = $_::difference(array(1, 2, 3), array(2, 30, 40));
         $shouldBe = array(1, 3);
-        $this->assertEquals($shouldBe, $_::values($result), 'takes the difference of two arrays');
+        $this->assertEquals($shouldBe, $_::toList($result), 'takes the difference of two arrays');
 
         $result = $_::difference(array(1, 2, 3, 4), array(2, 30, 40), array(1, 11, 111));
         $shouldBe = array(3, 4);
-        $this->assertEquals($shouldBe, $_::values($result), 'takes the difference of three arrays');
+        $this->assertEquals($shouldBe, $_::toList($result), 'takes the difference of three arrays');
     }
 
     /**
@@ -388,6 +415,33 @@ class ArraysTest extends Underbar_TestCase
 
         $numbers = array(1, 2, 3, 1, 2, 3, 1, 2, 3);
         $this->assertEquals(1, $_::lastIndexOf($numbers, 2, 2), 'supports the fromIndex argument');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testSortedIndex($_)
+    {
+        $numbers = array(10, 20, 30, 40, 50);
+        $indexForNum = $_::sortedIndex($numbers, 35);
+        $this->assertEquals(3, $indexForNum, '35 should be inserted at index 3');
+
+        $indexFor30 = $_::sortedIndex($numbers, 30);
+        $this->assertEquals(2, $indexFor30, '30 should be inserted at index 2');
+
+        $objects = array(
+            array('x' => 10),
+            array('x' => 20),
+            array('x' => 30),
+            array('x' => 40),
+        );
+        $iterator = function($obj) { return $obj['x']; };
+        $this->assertEquals(2, $_::sortedIndex($objects, array('x' => 25), $iterator));
+        $this->assertEquals(3, $_::sortedIndex($objects, array('x' => 35), 'x'));
+
+        $context = array(1 => 2, 2 => 3, 3 => 4);
+        $iterator = function($i) use ($context) { return $context[$i]; };
+        $this->assertEquals(1, $_::sortedIndex(array(1, 3), 2, $iterator));
     }
 
     /**

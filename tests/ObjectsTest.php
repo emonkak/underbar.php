@@ -10,13 +10,13 @@ class ObjectsTest extends Underbar_TestCase
         $xs = array('one' => 1, 'two' => 2);
 
         $result = $_::keys($xs);
-        $this->assertEquals(array('one', 'two'), $_::toArray($result), 'can extract the keys from an object');
+        $this->assertEquals(array('one', 'two'), $_::toList($result), 'can extract the keys from an object');
 
         $result = $_::keys(new ArrayIterator($xs));
-        $this->assertEquals(array('one', 'two'), $_::toArray($result), 'works well Iterator');
+        $this->assertEquals(array('one', 'two'), $_::toList($result), 'works well Iterator');
 
         $result = $_::keys(array(1 => 0));
-        $this->assertEquals(array(1), $_::toArray($result), 'is not fooled by sparse arrays');
+        $this->assertEquals(array(1), $_::toList($result), 'is not fooled by sparse arrays');
 
     }
 
@@ -28,10 +28,10 @@ class ObjectsTest extends Underbar_TestCase
         $xs = array('one' => 1, 'two' => 2);
 
         $result = $_::values($xs);
-        $this->assertEquals(array(1, 2), $_::toArray($result), 'can extract the values from an object');
+        $this->assertEquals(array(1, 2), $_::toList($result), 'can extract the values from an object');
 
         $result = $_::values(new ArrayIterator($xs));
-        $this->assertEquals(array(1, 2), $_::toArray($result), 'works well Iterator');
+        $this->assertEquals(array(1, 2), $_::toList($result), 'works well Iterator');
     }
 
     /**
@@ -42,7 +42,7 @@ class ObjectsTest extends Underbar_TestCase
         $obj = array('first' => 'Moe', 'second' => 'Larry', 'third' => 'Curly');
 
         $result = $_::chain($obj)->invert()->keys()->value();
-        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $_::toArray($result), 'can invert an object');
+        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $_::toList($result), 'can invert an object');
 
         $result = $_::chain($obj)->invert()->invert()->value();
         $this->assertEquals($obj, $_::toArray($result), 'two inverts gets you back where you started');

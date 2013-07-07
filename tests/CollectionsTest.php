@@ -176,6 +176,38 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testFilter($_)
+    {
+        $evens = $_::filter(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
+        $this->assertEquals(array(2, 4, 6), $_::toList($evens), 'selected each even number');
+
+        $evens = $_::select(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
+        $this->assertEquals(array(2, 4, 6), $_::toList($evens), 'aliased as "select"');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testWhere($_)
+    {
+        $list = array(
+            array('a' => 1, 'b' => 2),
+            array('a' => 2, 'b' => 2),
+            array('a' => 1, 'b' => 3),
+            array('a' => 1, 'b' => 4)
+        );
+        $result = $_::chain($list)->where(array('a' => 1))->toArray()->value();
+        $this->assertCount(3, $result);
+        $this->assertEquals(array('a' => 1, 'b' => 4), $_::last($result));
+
+        $result = $_::chain($list)->where(array('b' => 2))->toArray()->value();
+        $this->assertCount(2, $result);
+        $this->assertEquals(array('a' => 1, 'b' => 2), $_::first($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testFindWhere($_)
     {
         $list = array(
@@ -197,38 +229,26 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testFilter($_)
-    {
-        $evens = $_::filter(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(2, 4, 6), $_::values($evens), 'selected each even number');
-
-        $evens = $_::select(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(2, 4, 6), $_::values($evens), 'aliased as "select"');
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testReject($_)
     {
         $odds = $_::reject(array(1, 2, 3, 4, 5, 6), function($num) { return $num % 2 == 0; });
-        $this->assertEquals(array(1, 3, 5), $_::values($odds), 'rejected each even number');
+        $this->assertEquals(array(1, 3, 5), $_::toList($odds), 'rejected each even number');
     }
 
     /**
      * @dataProvider provider
      */
-    public function testAll($_)
+    public function testEvery($_)
     {
-        $this->assertTrue($_::all(array(), "$_::identity"), 'the empty set');
-        $this->assertTrue($_::all(array(true, true, true), array($_, 'identity')), 'all true values');
-        $this->assertFalse($_::all(array(true, false, true), array($_, 'identity')), 'one false value');
-        $this->assertTrue($_::all(array(0, 10, 28), function($num) { return $num % 2 == 0; }), 'even numbers');
-        $this->assertFalse($_::all(array(0, 11, 28), function($num) { return $num % 2 == 0; }), 'an odd number');
-        $this->assertTrue($_::all(array(1), array($_, 'identity')) === true, 'cast to boolean - true');
-        $this->assertTrue($_::all(array(0), array($_, 'identity')) === false, 'cast to boolean - false');
-        $this->assertTrue($_::every(array(true, true, true), array($_, 'identity')), 'aliased as "every"');
-        $this->assertFalse($_::all(array(null, null, null), array($_, 'identity')), 'works with arrays of null');
+        $this->assertTrue($_::every(array(), "$_::identity"), 'the empty set');
+        $this->assertTrue($_::every(array(true, true, true), array($_, 'identity')), 'all true values');
+        $this->assertFalse($_::every(array(true, false, true), array($_, 'identity')), 'one false value');
+        $this->assertTrue($_::every(array(0, 10, 28), function($num) { return $num % 2 == 0; }), 'even numbers');
+        $this->assertFalse($_::every(array(0, 11, 28), function($num) { return $num % 2 == 0; }), 'an odd number');
+        $this->assertTrue($_::every(array(1), array($_, 'identity')) === true, 'cast to boolean - true');
+        $this->assertTrue($_::every(array(0), array($_, 'identity')) === false, 'cast to boolean - false');
+        $this->assertTrue($_::all(array(true, true, true), array($_, 'identity')), 'aliased as "all"');
+        $this->assertFalse($_::every(array(null, null, null), array($_, 'identity')), 'works with arrays of null');
     }
 
     /**
@@ -246,24 +266,6 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertTrue($_::some(array(1), array($_, 'identity')) === true, 'cast to boolean - true');
         $this->assertTrue($_::some(array(0), array($_, 'identity')) === false, 'cast to boolean - false');
         $this->assertTrue($_::any(array(false, false, true)), 'aliased as "any"');
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testSum($_)
-    {
-        $this->assertEquals(45, $_::sum($_::range(10)), 'sum 0..9');
-        $this->assertEquals(0, $_::sum(array()), 'sum empty array');
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testProduct($_)
-    {
-        $this->assertEquals(362880, $_::product($_::range(1, 10)), 'product 1..9');
-        $this->assertEquals(1, $_::product(array()), 'product empty array');
     }
 
     /**
@@ -309,26 +311,6 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testWhere($_)
-    {
-        $list = array(
-            array('a' => 1, 'b' => 2),
-            array('a' => 2, 'b' => 2),
-            array('a' => 1, 'b' => 3),
-            array('a' => 1, 'b' => 4)
-        );
-        $result = $_::chain($list)->where(array('a' => 1))->toArray()->value();
-        $this->assertCount(3, $result);
-        $this->assertEquals(array('a' => 1, 'b' => 4), $_::last($result));
-
-        $result = $_::chain($list)->where(array('b' => 2))->toArray()->value();
-        $this->assertCount(2, $result);
-        $this->assertEquals(array('a' => 1, 'b' => 2), $_::first($result));
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testMax($_)
     {
         $this->assertEquals(3, $_::max(array(1, 2, 3)), 'can perform a regular max()');
@@ -363,6 +345,24 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals($then, $_::min(array($then, $now)));
 
         $this->assertEquals(1, $_::min($_::range(1, 300000)), 'Minimum value of a too-big array');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testSum($_)
+    {
+        $this->assertEquals(45, $_::sum($_::range(10)), 'sum 0..9');
+        $this->assertEquals(0, $_::sum(array()), 'sum empty array');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testProduct($_)
+    {
+        $this->assertEquals(362880, $_::product($_::range(1, 10)), 'product 1..9');
+        $this->assertEquals(1, $_::product(array()), 'product empty array');
     }
 
     /**
@@ -492,33 +492,6 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testSortedIndex($_)
-    {
-        $numbers = array(10, 20, 30, 40, 50);
-        $indexForNum = $_::sortedIndex($numbers, 35);
-        $this->assertEquals(3, $indexForNum, '35 should be inserted at index 3');
-
-        $indexFor30 = $_::sortedIndex($numbers, 30);
-        $this->assertEquals(2, $indexFor30, '30 should be inserted at index 2');
-
-        $objects = array(
-            array('x' => 10),
-            array('x' => 20),
-            array('x' => 30),
-            array('x' => 40),
-        );
-        $iterator = function($obj) { return $obj['x']; };
-        $this->assertEquals(2, $_::sortedIndex($objects, array('x' => 25), $iterator));
-        $this->assertEquals(3, $_::sortedIndex($objects, array('x' => 35), 'x'));
-
-        $context = array(1 => 2, 2 => 3, 3 => 4);
-        $iterator = function($i) use ($context) { return $context[$i]; };
-        $this->assertEquals(1, $_::sortedIndex(array(1, 3), 2, $iterator));
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testShuffle($_)
     {
         $numbers = $_::toList($_::range(10));
@@ -534,12 +507,28 @@ class CollectionsTest extends Underbar_TestCase
         $array = array(1, 2, 3);
         $this->assertEquals($array, $_::toArray($array), 'cloned array contains same elements');
 
-        $numbers = $_::toArray(array('one' => 1, 'two' => 2, 'three' => 3));
+        $numbers = array('one' => 1, 'two' => 2, 'three' => 3);
         $this->assertEquals($numbers, $_::toArray($numbers), 'object flattened into array');
 
         $this->assertEquals(array('a', 'b', 'c', 'd'), $_::toArray('abcd'), 'works with string');
 
         $this->assertEquals(array(1), $_::toArray(1), 'works with scalar');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testToList($_)
+    {
+        $array = array(1, 2, 3);
+        $this->assertEquals($array, $_::toList($array), 'cloned array contains same elements');
+
+        $numbers = array('one' => 1, 'two' => 2, 'three' => 3);
+        $this->assertEquals($array, $_::toList($numbers), 'object flattened into array');
+
+        $this->assertEquals(array('a', 'b', 'c', 'd'), $_::toList('abcd'), 'works with string');
+
+        $this->assertEquals(array(1), $_::toList(1), 'works with scalar');
     }
 
     /**
@@ -553,32 +542,5 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals(0, $_::size(null), 'handles nulls');
 
         $this->assertEquals(3, $_::size(new ArrayObject(array(1, 2, 3))), 'works with Countable');
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testSpan($_)
-    {
-        $result = $_::span(array(1, 2, 3, 4, 1, 2, 3, 4), function($x) {
-            return $x < 3;
-        });
-        $shouldBe = array(array(1, 2), array(3, 4, 1, 2, 3, 4));
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::span(array(1, 2, 3), function($x) {
-            return $x < 9;
-        });
-        $shouldBe = array(array(1, 2, 3), array());
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::span(array(1, 2, 3), function($x) {
-            return $x < 0;
-        });
-        $shouldBe = array(array(), array(1, 2, 3));
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::span(array(), function($x) { return $x < 3; });
-        $this->assertEquals(array(array(), array()), $result, 'empty array');
     }
 }
