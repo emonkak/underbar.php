@@ -234,7 +234,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($f, $acc)
+            array($acc, $f)
         );
     }
 
