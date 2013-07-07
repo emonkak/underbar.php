@@ -17,6 +17,7 @@ class Underbar_TestCase extends PHPUnit_Framework_TestCase
 
         if (class_exists('Generator', false)) {
             $classes[] = array('Underbar\\LazyGenerator');
+            $classes[] = array('Underbar\\LazySafeGenerator');
         }
 
         return $classes;
