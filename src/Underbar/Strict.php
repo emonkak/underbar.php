@@ -1240,10 +1240,12 @@ class Strict
     }
 
     /**
+     * @varargs
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $index
      * @param     int    $n
+     * @param     mixed  $rest
      * @return    array
      */
     public static function splice($xs, $index, $n)

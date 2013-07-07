@@ -59,6 +59,7 @@ function uniq($a=NULL){return _::uniq($this,$a);}
 function unique($a=NULL){return _::unique($this,$a);}
 function zip($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::zip($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function zipWith($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::zipWith($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function unzip($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::unzip($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function object($a=NULL){return _::object($this,$a);}
 function indexOf($a,$b=0){return _::indexOf($this,$a,$b);}
 function lastIndexOf($a,$b=NULL){return _::lastIndexOf($this,$a,$b);}
@@ -74,7 +75,7 @@ function push($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i
 function reverse(){return _::reverse($this);}
 function shift(){return _::shift($this);}
 function sort($a=NULL){return _::sort($this,$a);}
-function splice($a,$b){return _::splice($this,$a,$b);}
+function splice($a,$b,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::splice($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function unshift($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::unshift($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function concat($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::concat($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function join($a=','){return _::join($this,$a);}
