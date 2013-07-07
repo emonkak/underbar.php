@@ -21,7 +21,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
+            func_get_args()
         );
     }
 
@@ -35,7 +35,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
+            func_get_args()
         );
     }
 
@@ -50,7 +50,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f, $acc)
+            func_get_args()
         );
     }
 
@@ -65,7 +65,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
+            func_get_args()
         );
     }
 
@@ -80,7 +80,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
+            func_get_args()
         );
     }
 
@@ -94,7 +94,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n)
+            func_get_args()
         );
     }
 
@@ -108,7 +108,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
+            func_get_args()
         );
     }
 
@@ -122,7 +122,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n, $guard)
+            func_get_args()
         );
     }
 
@@ -136,7 +136,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n, $guard)
+            func_get_args()
         );
     }
 
@@ -150,7 +150,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
+            func_get_args()
         );
     }
 
@@ -178,7 +178,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $shallow)
+            func_get_args()
         );
     }
 
@@ -193,7 +193,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($start, $stop, $step)
+            func_get_args()
         );
     }
 
@@ -206,7 +206,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($xs, $n)
+            func_get_args()
         );
     }
 
@@ -220,7 +220,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($value, $n)
+            func_get_args()
         );
     }
 
@@ -234,7 +234,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($f, $acc)
+            func_get_args()
         );
     }
 
@@ -248,7 +248,7 @@ class LazySafeGenerator extends LazyGenerator
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
-            array($f, $acc)
+            func_get_args()
         );
     }
 
