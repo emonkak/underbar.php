@@ -156,13 +156,13 @@ class LazyIterator extends Strict
     /**
      * @varargs
      * @category  Arrays
-     * @param     array  *$xss
+     * @param     array  $xss
      * @return    Iterator
      */
-    public static function zip()
+    public static function unzip($xss)
     {
         $it = new Iterator\ZipIterator();
-        foreach (func_get_args() as $xs) {
+        foreach ($xss as $xs) {
             $it->attachIterator(static::wrapIterator($xs));
         }
         return $it;

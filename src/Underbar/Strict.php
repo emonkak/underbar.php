@@ -911,28 +911,7 @@ class Strict
      */
     public static function zip()
     {
-        $xss = $zipped = $result = array();
-        $loop = true;
-
-        foreach (func_get_args() as $xs) {
-            $xss[] = $wrapped = static::wrapIterator($xs);
-            $wrapped->rewind();
-            $loop = $loop && $wrapped->valid();
-            $zipped[] = $wrapped->current();
-        }
-
-        while ($loop) {
-            $result[] = $zipped;
-            $zipped = array();
-            $loop = true;
-            foreach ($xss as $xs) {
-                $xs->next();
-                $zipped[] = $xs->current();
-                $loop = $loop && $xs->valid();
-            }
-        }
-
-        return $result;
+        return static::unzip(func_get_args());
     }
 
     /**
@@ -948,10 +927,42 @@ class Strict
     {
         $xss = func_get_args();
         $f = array_pop($xss);
-        $zipped = call_user_func_array(get_called_class().'::zip', $xss);
+        $zipped = static::unzip($xss);
         return static::map($zipped, function($xs, $i, $xss) use ($f) {
             return call_user_func_array($f, $xs);
         });
+    }
+
+    /**
+     * @varargs
+     * @category  Arrays
+     * @param     array  $xss
+     * @return    array
+     */
+    public static function unzip($xss)
+    {
+        $yss = $zss = $result = array();
+        $loop = true;
+
+        foreach ($xss as $xs) {
+            $yss[] = $wrapped = static::wrapIterator($xs);
+            $wrapped->rewind();
+            $loop = $loop && $wrapped->valid();
+            $zss[] = $wrapped->current();
+        }
+
+        if (!empty($zss)) while ($loop) {
+            $result[] = $zss;
+            $zss = array();
+            $loop = true;
+            foreach ($yss as $ys) {
+                $ys->next();
+                $zss[] = $ys->current();
+                $loop = $loop && $ys->valid();
+            }
+        }
+
+        return $result;
     }
 
     /**

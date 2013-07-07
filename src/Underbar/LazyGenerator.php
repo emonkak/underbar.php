@@ -213,22 +213,22 @@ class LazyGenerator extends Strict
     /**
      * @varargs
      * @category  Arrays
-     * @param     array      *$xss
+     * @param     array  $xss
      * @return    Generator
      */
-    public static function zip()
+    public static function unzip($xss)
     {
         $yss = $zss = array();
         $loop = true;
 
-        foreach (func_get_args() as $xs) {
+        foreach ($xss as $xs) {
             $yss[] = $ys = static::wrapIterator($xs);
             $ys->rewind();
             $loop = $loop && $ys->valid();
             $zss[] = $ys->current();
         }
 
-        while ($loop) {
+        if (!empty($zss)) while ($loop) {
             yield $zss;
             $zss = array();
             $loop = true;

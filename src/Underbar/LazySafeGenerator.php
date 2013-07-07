@@ -160,7 +160,7 @@ class LazySafeGenerator extends LazyGenerator
      * @param     array  $xss
      * @return    RewindableGenerator
      */
-    public static function zip()
+    public static function unzip($xss)
     {
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,

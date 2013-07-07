@@ -289,11 +289,14 @@ class ArraysTest extends Underbar_TestCase
     public function testZip($_)
     {
         $names = array('moe', 'larry', 'curly');
-        $ages = array(30, 40, 50, 60);
+        $ages = array(30, 40, 50);
         $leaders = array(true, false);
 
         $stooges = $_::zip($names, $ages, $leaders);
-        $shouldBe = array(array('moe', 30, true), array('larry', 40, false));
+        $shouldBe = array(
+            array('moe', 30, true),
+            array('larry', 40, false)
+        );
         $this->assertEquals($shouldBe, $_::toList($stooges), 'zipped together arrays of different lengths');
     }
 
@@ -354,6 +357,40 @@ class ArraysTest extends Underbar_TestCase
 
         $result = $_::zipWith($_::range(1, INF), $_::range(4, INF), $_::range(7, INF), $productPlus);
         $this->assertEquals(array(11, 18, 27), $_::toList($_::take($result, 3)));
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testUnzip($_)
+    {
+        $stoogesUnzipped = $_::unzip(array(
+            array('moe', 30, 'stooge 1'),
+            array('larry', 40, 'stooge 2'),
+            array('curly', 50, 'stooge 3')
+        ));
+        $shouldBe = array(
+            array('moe', 'larry', 'curly'),
+            array(30, 40, 50),
+            array('stooge 1', 'stooge 2', 'stooge 3')
+        );
+        $this->assertEquals($shouldBe, $_::toList($stoogesUnzipped), 'unzipped pairs');
+
+        // In the case of difference lengths of the tuples undefineds
+        // should be used as placeholder
+        $stoogesUnzipped = $_::unzip(array(
+            array('moe', 30),
+            array('larry', 40),
+            array('curly', 50, 'extra data')
+        ));
+        $shouldBe = array(
+            array('moe', 'larry', 'curly'),
+            array(30, 40, 50)
+        );
+        $this->assertEquals($shouldBe, $_::toList($stoogesUnzipped),  'unzipped pairs');
+
+        $emptyUnzipped = $_::unzip(array());
+        $this->assertEmpty($_::toList($emptyUnzipped));
     }
 
     /**
