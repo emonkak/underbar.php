@@ -1308,9 +1308,12 @@ class Strict
      */
     public static function keys($xs)
     {
-        return static::map($xs, function($x, $k) {
-            return $k;
-        });
+        if ($xs instanceof \Traversable) {
+            return static::map($xs, function($x, $k) {
+                return $k;
+            });
+        }
+        return array_keys($xs);
     }
 
     /**
@@ -1320,7 +1323,10 @@ class Strict
      */
     public static function values($xs)
     {
-        return $xs instanceof \Traversable ? $xs : array_values($xs);
+        if ($xs instanceof \Traversable) {
+            return $xs;
+        }
+        return array_values($xs);
     }
 
     /**
