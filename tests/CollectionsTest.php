@@ -534,6 +534,34 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testMemoize($_)
+    {
+        if ($_ === 'Underbar\\Strict') {
+            $this->setExpectedException('OverflowException');
+        }
+
+        $counter = 0;
+        $fibs = $_::chain(array(0, 1))
+            ->iterate(function($pair) use (&$counter) {
+                $counter++;
+                return array($pair[1], $pair[0] + $pair[1]);
+            })
+            ->map(function($pair) { return $pair[0]; })
+            ->memoize()
+            ->value();
+
+        $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597);
+        $result = $_::toList($_::take($fibs, count($shouldBe)));
+        $this->assertEquals($shouldBe, $result);
+        $this->assertEquals(count($shouldBe) + 1, $counter);
+
+        $this->assertEquals(6765, $fibs[20]);
+        $this->assertEquals(20 + 1, $counter);
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testSize($_)
     {
         $this->assertEquals(3, $_::size(array('one' => 1, 'two' => 2, 'three' => 3)), 'can compute the size of an object');
