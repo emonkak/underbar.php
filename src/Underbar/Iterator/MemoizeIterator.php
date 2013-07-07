@@ -11,10 +11,53 @@ namespace Underbar\Iterator;
 
 class MemoizeIterator extends \CachingIterator
 {
+    private $cache;
+
     public function __construct($xs)
     {
         parent::__construct($xs, self::TOSTRING_USE_KEY | self::FULL_CACHE);
-        $this->rewind();
+        parent::rewind();
+    }
+
+    public function rewind()
+    {
+        $this->cache = $this->getCache();
+        if (empty($this->cache)) {
+            parent::rewind();
+        }
+    }
+
+    public function valid()
+    {
+        return !empty($this->cache) || parent::valid();
+    }
+
+    public function current()
+    {
+        return empty($this->cache)
+            ? parent::current()
+            : current($this->cache);
+    }
+
+    public function key()
+    {
+        return empty($this->cache)
+            ? parent::key()
+            : key($this->cache);
+    }
+
+    public function next()
+    {
+        if (empty($this->cache)) {
+            parent::next();
+            return;
+        }
+
+        next($this->cache);
+        if (key($this->cache) === null) {
+            $this->cache = null;
+            parent::next();
+        }
     }
 
     public function offsetExists($offset)
