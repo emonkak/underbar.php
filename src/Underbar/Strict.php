@@ -682,7 +682,7 @@ class Strict
             $i++;
         }
 
-        return $queue;
+        return iterator_to_array($queue, false);
     }
 
     /**
