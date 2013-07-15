@@ -862,12 +862,34 @@ class Strict
      *
      * @category  Arrays
      * @param     array            $xs
+     * @param     bool             $isSorted
      * @param     callable|string  $f
      * @return    array
      */
-    public static function uniq($xs, $f = null)
+    public static function uniq($xs, $isSorted = false, $f = null)
     {
-        $f = static::lookupIterator($f);
+        if (!is_bool($isSorted)) {
+            $f = static::lookupIterator($isSorted);
+            $isSorted = false;
+        } else {
+            $f = static::lookupIterator($f);
+        }
+
+        if ($isSorted) {
+            $lastValue = null;
+            return static::filter($xs, function($x, $i, $xs) use (
+                $f,
+                &$lastValue
+            ) {
+                $x = call_user_func($f, $x, $i, $xs);
+                if ($lastValue !== $x) {
+                    $lastValue = $x;
+                    return false;
+                }
+                return true;
+            });
+        }
+
         $seenScalar = $seenObjects = $seenOthers = array();
         return static::filter($xs, function($x, $i, $xs) use (
             $f,
@@ -878,26 +900,28 @@ class Strict
             $x = call_user_func($f, $x, $i, $xs);
 
             if (is_scalar($x)) {
-                if (!isset($seenScalar[$x])) {
-                    $seenScalar[$x] = 0;
-                    return true;
+                if (isset($seenScalar[$x])) {
+                    return false;
                 }
+                $seenScalar[$x] = 0;
             } elseif (is_object($x)) {
                 $hash = spl_object_hash($x);
-                if (!isset($seenObjects[$hash])) {
-                    $seenObjects[$hash] = 0;
-                    return true;
+                if (isset($seenObjects[$hash])) {
+                    return false;
                 }
-            } elseif (!in_array($x, $seenOthers, true)) {
+                $seenObjects[$hash] = 0;
+            } else {
+                if (in_array($x, $seenOthers, true)) {
+                    return false;
+                }
                 $seenOthers[] = $x;
-                return true;
             }
 
-            return false;
+            return true;
         });
     }
 
-    public static function unique($xs, $f = null)
+    public static function unique($xs, $isSorted = false, $f = null)
     {
         return static::uniq($xs, $f);
     }
