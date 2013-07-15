@@ -615,26 +615,6 @@ class Strict
     }
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function takeWhile($xs, $f)
-    {
-        $result = array();
-        foreach ($xs as $i => $x) {
-            if (!call_user_func($f, $x, $i, $xs)) {
-                break;
-            }
-            $result[] = $x;
-        }
-        return $result;
-    }
-
-    /**
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -709,6 +689,26 @@ class Strict
     public static function drop($xs, $n = 1, $guard = null)
     {
         return self::rest($xs, $n, $guard);
+    }
+
+    /**
+     * Porting from the Prelude of Haskell.
+     *
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    array
+     */
+    public static function takeWhile($xs, $f)
+    {
+        $result = array();
+        foreach ($xs as $i => $x) {
+            if (!call_user_func($f, $x, $i, $xs)) {
+                break;
+            }
+            $result[] = $x;
+        }
+        return $result;
     }
 
     /**
@@ -823,8 +823,7 @@ class Strict
     /**
      * @varargs
      * @category  Arrays
-     * @param     array  $xs
-     * @param     array  *$rest
+     * @param     array  *$xs
      * @return    array
      */
     public static function intersection()

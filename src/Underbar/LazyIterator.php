@@ -94,17 +94,6 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    Iterator
-     */
-    public static function takeWhile($xs, $f)
-    {
-        return new Iterator\TakeWhileIterator(static::wrapIterator($xs), $f);
-    }
-
-    /**
-     * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    Iterator
@@ -129,6 +118,17 @@ class LazyIterator extends Strict
             $n = 1;
         }
         return new Iterator\LimitIterator(static::wrapIterator($xs), $n);
+    }
+
+    /**
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    Iterator
+     */
+    public static function takeWhile($xs, $f)
+    {
+        return new Iterator\TakeWhileIterator(static::wrapIterator($xs), $f);
     }
 
     /**

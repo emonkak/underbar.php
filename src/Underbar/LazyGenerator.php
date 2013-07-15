@@ -138,22 +138,6 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    Generator
-     */
-    public static function takeWhile($xs, $f)
-    {
-        foreach ($xs as $i => $x) {
-            if (!call_user_func($f, $x, $i, $xs)) {
-                break;
-            }
-            yield $i => $x;
-        }
-    }
-
-    /**
-     * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    Generator
@@ -191,6 +175,22 @@ class LazyGenerator extends Strict
             } else {
                 yield $i => $v;
             }
+        }
+    }
+
+    /**
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    Generator
+     */
+    public static function takeWhile($xs, $f)
+    {
+        foreach ($xs as $i => $x) {
+            if (!call_user_func($f, $x, $i, $xs)) {
+                break;
+            }
+            yield $i => $x;
         }
     }
 

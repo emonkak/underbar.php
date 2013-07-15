@@ -100,20 +100,6 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    RewindableGenerator
-     */
-    public static function takeWhile($xs, $f)
-    {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f)
-        );
-    }
-
-    /**
-     * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    RewindableGenerator
@@ -137,6 +123,20 @@ class LazySafeGenerator extends LazyGenerator
         return new Iterator\RewindableGenerator(
             get_parent_class().'::'.__FUNCTION__,
             array($xs, $n, $guard)
+        );
+    }
+
+    /**
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    RewindableGenerator
+     */
+    public static function takeWhile($xs, $f)
+    {
+        return new Iterator\RewindableGenerator(
+            get_parent_class().'::'.__FUNCTION__,
+            array($xs, $f)
         );
     }
 
