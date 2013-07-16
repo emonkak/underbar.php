@@ -732,30 +732,6 @@ class Strict
     }
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Arrays
-     * @param     mixed     $xs
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function span($xs, $f)
-    {
-        $ys = array(array(), array());
-        $inPrefix = true;
-
-        foreach ($xs as $k => $x) {
-            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
-                $ys[0][] = $x;
-            } else {
-                $ys[1][] = $x;
-            }
-        }
-
-        return $ys;
-    }
-
-    /**
      * @category  Arrays
      * @param     array  $xs
      * @return    array
@@ -989,6 +965,30 @@ class Strict
     }
 
     /**
+     * Porting from the Prelude of Haskell.
+     *
+     * @category  Arrays
+     * @param     mixed     $xs
+     * @param     callable  $f
+     * @return    array
+     */
+    public static function span($xs, $f)
+    {
+        $ys = array(array(), array());
+        $inPrefix = true;
+
+        foreach ($xs as $k => $x) {
+            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
+                $ys[0][] = $x;
+            } else {
+                $ys[1][] = $x;
+            }
+        }
+
+        return $ys;
+    }
+
+    /**
      * @category  Arrays
      * @param     array  $xs
      * @param     array  $values
@@ -1068,22 +1068,22 @@ class Strict
     /**
      * @category  Arrays
      * @param     array            $xs
-     * @param     mixed            $xs
+     * @param     mixed            $value
      * @param     callable|string  $f
      * @return    int
      */
-    public static function sortedIndex($xs, $x, $f = null)
+    public static function sortedIndex($xs, $value, $f = null)
     {
         $xs = static::extractIterator($xs);
         $f = static::lookupIterator($f);
-        $x = call_user_func($f, $x);
+        $value = call_user_func($f, $value);
 
         $low = 0;
         $high = count($xs);
 
         while ($low < $high) {
             $mid = ($low + $high) >> 1;
-            if (call_user_func($f, $xs[$mid]) < $x) {
+            if (call_user_func($f, $xs[$mid]) < $value) {
                 $low = $mid + 1;
             } else {
                 $high = $mid;
