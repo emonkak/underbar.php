@@ -1213,7 +1213,9 @@ class Strict
      */
     public static function pop($xs)
     {
-        return static::initial($xs);
+        $xs = static::extractIterator($xs);
+        array_pop($xs);
+        return $xs;
     }
 
     /**
@@ -1225,8 +1227,11 @@ class Strict
      */
     public static function push($xs)
     {
-        $values = array_slice(func_get_args(), 1);
-        return static::concat($xs, $values);
+        $xs = static::extractIterator($xs);
+        foreach (array_slice(func_get_args(), 1) as $value) {
+            $xs[] = $value;
+        }
+        return $xs;
     }
 
     /**
@@ -1246,7 +1251,9 @@ class Strict
      */
     public static function shift($xs)
     {
-        return static::rest($xs);
+        $xs = static::extractIterator($xs);
+        array_shift($xs);
+        return $xs;
     }
 
     /**
@@ -1273,8 +1280,8 @@ class Strict
      */
     public static function splice($xs, $index, $n)
     {
-        $rest = array_slice(func_get_args(), 3);
         $xs = static::extractIterator($xs);
+        $rest = array_slice(func_get_args(), 3);
         array_splice($xs, $index, $n, $rest);
         return $xs;
     }
@@ -1288,8 +1295,9 @@ class Strict
      */
     public static function unshift($xs)
     {
+        $xs = static::extractIterator($xs);
         $values = array_slice(func_get_args(), 1);
-        return static::concat($values, $xs);
+        return array_merge($values, $xs);
     }
 
     /**
