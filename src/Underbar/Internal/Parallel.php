@@ -58,7 +58,7 @@ class Parallel implements \Iterator, \Countable
      *
      * @param   int   $pid     Process ID
      * @param   int   $signal  Signal to sent
-     * @return  bool
+     * @return  boolean
      */
     protected static function signal($pid, $signal)
     {
@@ -101,7 +101,7 @@ class Parallel implements \Iterator, \Countable
      *
      * @param   resource  $socket
      * @param   mixed     $value
-     * @return  bool
+     * @return  boolean
      */
     protected static function write($socket, $value)
     {
@@ -150,7 +150,7 @@ class Parallel implements \Iterator, \Countable
      *
      * @param  callable  $procedure  Procedure to execute in child processes
      * @param  int       $n          Number of process
-     * @param  int       $timeout    Timeout of a IO wait
+     * @param  int       $timeout    Timeout of IO wait
      */
     public function __construct($procedure, $n = 4, $timeout = null)
     {
@@ -300,7 +300,7 @@ class Parallel implements \Iterator, \Countable
 
     /**
      * @see     Iterator
-     * @return  bool
+     * @return  boolean
      */
     public function valid()
     {

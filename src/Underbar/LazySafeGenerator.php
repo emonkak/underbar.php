@@ -58,7 +58,7 @@ class LazySafeGenerator extends LazyGenerator
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     bool             $isSorted
+     * @param     boolean             $isSorted
      * @return    RewindableGenerator
      */
     public static function _groupBy($xs, $f = null)
@@ -73,7 +73,7 @@ class LazySafeGenerator extends LazyGenerator
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     bool             $isSorted
+     * @param     boolean             $isSorted
      * @return    RewindableGenerator
      */
     public static function _countBy($xs, $f = null)
@@ -170,8 +170,8 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Arrays
-     * @param     array  $xs
-     * @param     bool   $shallow
+     * @param     array    $xs
+     * @param     boolean  $shallow
      * @return    RewindableGenerator
      */
     public static function flatten($xs, $shallow = false)

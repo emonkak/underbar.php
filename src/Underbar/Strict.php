@@ -242,7 +242,7 @@ class Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @return    bool
+     * @return    boolean
      */
     public static function every($xs, $f = null)
     {
@@ -268,7 +268,7 @@ class Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @return    bool
+     * @return    boolean
      */
     public static function some($xs, $f = null)
     {
@@ -292,7 +292,7 @@ class Strict
      * @category  Collections
      * @param     array  $xs
      * @param     mixed  $target
-     * @return    bool
+     * @return    boolean
      */
     public static function contains($xs, $target)
     {
@@ -461,7 +461,7 @@ class Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     bool             $isSorted
+     * @param     boolean             $isSorted
      * @return    array
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
@@ -481,7 +481,7 @@ class Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
-     * @param     bool             $isSorted
+     * @param     boolean             $isSorted
      * @return    int
      */
     public static function countBy($xs, $f = null, $isSorted = false)
@@ -744,7 +744,7 @@ class Strict
     /**
      * @category  Arrays
      * @param     array  $xs
-     * @param     bool   $shallow
+     * @param     boolean   $shallow
      * @return    array
      */
     public static function flatten($xs, $shallow = false)
@@ -838,7 +838,7 @@ class Strict
      *
      * @category  Arrays
      * @param     array            $xs
-     * @param     bool             $isSorted
+     * @param     boolean             $isSorted
      * @param     callable|string  $f
      * @return    array
      */
@@ -1020,7 +1020,7 @@ class Strict
      * @category  Arrays
      * @param     array     $xs
      * @param     mixed     $value
-     * @param     bool|int  $isSorted
+     * @param     boolean|int  $isSorted
      * @return    int
      */
     public static function indexOf($xs, $value, $isSorted = 0)
@@ -1145,29 +1145,29 @@ class Strict
      * Porting from the Prelude of Haskell.
      *
      * @category  Arrays
-     * @param     mixed  $x
+     * @param     mixed  $value
      * @param     int    $n
      * @return    array
      * @throws    OverflowException
      */
-    public static function repeat($x, $n = -1)
+    public static function repeat($value, $n = -1)
     {
         if ($n < 0) {
             throw new \OverflowException();
         }
-        return $n === 0 ? array() : array_fill(0, $n, $x);
+        return $n === 0 ? array() : array_fill(0, $n, $value);
     }
 
     /**
      * Porting from the Prelude of Haskell.
      *
      * @category  Arrays
-     * @param     callable  $f
      * @param     mixed     $acc
+     * @param     callable  $f
      * @return    array
      * @throws    OverflowException
      */
-    public static function iterate($f, $acc)
+    public static function iterate($acc, $f)
     {
         throw new \OverflowException();
     }
@@ -1275,14 +1275,14 @@ class Strict
      * @param     array  $xs
      * @param     int    $index
      * @param     int    $n
-     * @param     mixed  $rest
+     * @param     mixed  *$values
      * @return    array
      */
     public static function splice($xs, $index, $n)
     {
         $xs = static::extractIterator($xs);
-        $rest = array_slice(func_get_args(), 3);
-        array_splice($xs, $index, $n, $rest);
+        $values = array_slice(func_get_args(), 3);
+        array_splice($xs, $index, $n, $values);
         return $xs;
     }
 
@@ -1347,7 +1347,7 @@ class Strict
 
     /**
      * @category  Objects
-     * @param     array  $object
+     * @param     array  $xs
      * @return    array
      */
     public static function keys($xs)
@@ -1531,7 +1531,7 @@ class Strict
      * @category  Objects
      * @param     array|object  $xs
      * @param     int|string    $key
-     * @return    bool
+     * @return    boolean
      */
     public static function has($xs, $key)
     {
@@ -1554,7 +1554,7 @@ class Strict
     /**
      * @category  Objects
      * @param     mixed  $xs
-     * @return    bool
+     * @return    boolean
      */
     public static function isArray($value)
     {
@@ -1564,7 +1564,7 @@ class Strict
     /**
      * @category  Objects
      * @param     mixed  $xs
-     * @return    bool
+     * @return    boolean
      */
     public static function isTraversable($value)
     {

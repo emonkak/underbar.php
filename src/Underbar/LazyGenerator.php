@@ -57,7 +57,7 @@ class LazyGenerator extends Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     bool             $isSorted
+     * @param     boolean          $isSorted
      * @return    Generator
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
@@ -242,8 +242,8 @@ class LazyGenerator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array  $xss
-     * @param     bool   $shallow
+     * @param     array    $xss
+     * @param     boolean  $shallow
      * @return    Generator
      */
     public static function flatten($xss, $shallow = false)

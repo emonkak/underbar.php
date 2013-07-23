@@ -51,7 +51,7 @@ class LazyIterator extends Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     bool             $isSorted
+     * @param     boolean          $isSorted
      * @return    Generator
      */
     public static function groupBy($xs, $f = null, $isSorted = false)
@@ -67,7 +67,7 @@ class LazyIterator extends Strict
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     bool             $isSorted
+     * @param     boolean          $isSorted
      * @return    int
      */
     public static function countBy($xs, $f = null, $isSorted = false)
@@ -144,8 +144,8 @@ class LazyIterator extends Strict
 
     /**
      * @category  Arrays
-     * @param     array  $xs
-     * @param     bool   $shallow
+     * @param     array    $xs
+     * @param     boolean  $shallow
      * @return    Iterator
      */
     public static function flatten($xs, $shallow = false)
