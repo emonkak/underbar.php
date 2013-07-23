@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-class LazyIterator extends Strict
+class LazyIterator extends Eager
 {
     /**
      * @category  Collections

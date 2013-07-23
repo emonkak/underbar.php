@@ -9,7 +9,7 @@
 
 namespace Underbar\Iterator;
 
-use Underbar\Strict as _;
+use Underbar\Eager as _;
 
 class FlattenIterator extends \RecursiveIteratorIterator
 {

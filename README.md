@@ -95,7 +95,7 @@ echo _::join($twiceCycle, ', '), PHP_EOL;
 
 # API
 
-## Underbar\Strict and Underbar\Lazy
+## Underbar\Eager and Underbar\Lazy
 
 ### Collections
 

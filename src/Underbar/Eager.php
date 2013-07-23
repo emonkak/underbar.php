@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-class Strict
+class Eager
 {
     /**
      * @category  Collections

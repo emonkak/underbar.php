@@ -513,7 +513,7 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testMemoize($_)
     {
-        if ($_ === 'Underbar\\Strict') {
+        if ($_ === 'Underbar\\Eager') {
             $this->setExpectedException('OverflowException');
         }
 

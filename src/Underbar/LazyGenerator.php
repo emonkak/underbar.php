@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-class LazyGenerator extends Strict
+class LazyGenerator extends Eager
 {
     /**
      * @category  Collections

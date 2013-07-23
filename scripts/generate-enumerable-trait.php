@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$ref = new ReflectionClass('Underbar\\Strict');
+$ref = new ReflectionClass('Underbar\\Eager');
 $categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Parallel|Objects|Chaining)|^$/';
 $varargsPattern = '/\*\s+@varargs/';
 

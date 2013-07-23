@@ -33,9 +33,9 @@ class Wrapper implements \IteratorAggregate
         return $this->value;
     }
 
-    public function strict()
+    public function eager()
     {
-        $this->class = 'Underbar\\Strict';
+        $this->class = 'Underbar\\Eager';
         return $this;
     }
 

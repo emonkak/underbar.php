@@ -11,7 +11,7 @@ class Underbar_TestCase extends PHPUnit_Framework_TestCase
     public function provider()
     {
         $classes = array(
-            array('Underbar\\Strict'),
+            array('Underbar\\Eager'),
             array('Underbar\\LazyIterator'),
         );
 

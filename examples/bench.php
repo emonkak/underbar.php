@@ -33,7 +33,7 @@ $classes = array(
     'Underbar\\LazyIterator',
     'Underbar\\LazyGenerator',
     'Underbar\\LazySafeGenerator',
-    'Underbar\\Strict',
+    'Underbar\\Eager',
 );
 foreach ($classes as $class) {
     list (, $time) = bench(times($f, 100), $class);
