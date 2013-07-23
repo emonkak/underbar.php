@@ -1190,23 +1190,6 @@ class Strict
     }
 
     /**
-     * Paralell version of map()
-     *
-     * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     int       $n
-     * @param     int       $timeout
-     * @return    Parallel
-     */
-    public static function parMap($xs, $f, $n = null, $timeout = null)
-    {
-        $parallel = new Internal\Parallel($f, $n, $timeout);
-        $parallel->pushAll($xs);
-        return $parallel;
-    }
-
-    /**
      * @category  Arrays
      * @param     array  $xs
      * @return    array
@@ -1579,6 +1562,23 @@ class Strict
     public static function identity($value)
     {
         return $value;
+    }
+
+    /**
+     * Parallel version of map()
+     *
+     * @category  Parallel
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     int       $n
+     * @param     int       $timeout
+     * @return    Parallel
+     */
+    public static function parMap($xs, $f, $n = null, $timeout = null)
+    {
+        $parallel = new Internal\Parallel($f, $n, $timeout);
+        $parallel->pushAll($xs);
+        return $parallel;
     }
 
     /**

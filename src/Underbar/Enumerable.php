@@ -69,7 +69,6 @@ function cycle($a=NULL){return _::cycle($this,$a);}
 function repeat($a=-1){return _::repeat($this,$a);}
 function iterate($a){return _::iterate($this,$a);}
 function unfoldr($a){return _::unfoldr($this,$a);}
-function parMap($a,$b=NULL,$c=NULL){return _::parMap($this,$a,$b,$c);}
 function pop(){return _::pop($this);}
 function push($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::push($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function reverse(){return _::reverse($this);}
@@ -92,5 +91,6 @@ function tap($a){return _::tap($this,$a);}
 function has($a){return _::has($this,$a);}
 function isArray(){return _::isArray($this);}
 function isTraversable(){return _::isTraversable($this);}
+function parMap($a,$b=NULL,$c=NULL){return _::parMap($this,$a,$b,$c);}
 function chain(){return _::chain($this);}
 }

@@ -3,7 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 $ref = new ReflectionClass('Underbar\\Strict');
-$categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Objects|Chaining)|^$/';
+$categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Parallel|Objects|Chaining)|^$/';
 $varargsPattern = '/\*\s+@varargs/';
 
 echo '<?php', PHP_EOL;
