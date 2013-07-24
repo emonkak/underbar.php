@@ -56,10 +56,6 @@ class ObjectsTest extends Underbar_TestCase
         $result = $_::extend(array(), array('a' => 'b'));
         $this->assertEquals('b', $result['a'], 'can extend an array');
 
-        $obj = new StdClass();
-        $result = $_::extend($obj, array('a' => 'b'));
-        $this->assertEquals('b', $obj->a, 'can extend an object');
-
         $result = $_::extend(array('a' => 'x'), array('a' => 'b'));
         $this->assertEquals('b', $result['a'], 'properties in source override destination');
 
@@ -141,11 +137,6 @@ class ObjectsTest extends Underbar_TestCase
         $this->assertEquals(0, $result['zero'], 'value exists');
         $this->assertEquals(1, $result['one'], 'value exists');
         $this->assertEquals(20, $result['twenty'], 'value exists');
-
-        $result = $_::defaults((object) $options, array('zero' => 1, 'one' => 10, 'twenty' => 20));
-        $this->assertEquals(0, $result->zero, 'value exists');
-        $this->assertEquals(1, $result->one, 'value exists');
-        $this->assertEquals(20, $result->twenty, 'default applied');
     }
 
     /**

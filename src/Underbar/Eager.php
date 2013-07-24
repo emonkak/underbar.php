@@ -1368,27 +1368,19 @@ class Eager
     /**
      * @varargs
      * @category  Objects
-     * @param     array|object  $destination
-     * @param     array         *$sources
+     * @param     array  $destination
+     * @param     array  *$sources
      * @return    array
      */
     public static function extend($destination)
     {
+        $destination = static::toArray($destination);
         $sources = array_slice(func_get_args(), 1);
-        if (static::isArray($destination)) {
-            foreach ($sources as $xs) {
-                foreach ($xs as $k => $x) {
-                    $destination[$k] = $x;
-                }
-            }
-        } else {
-            foreach ($sources as $xs) {
-                foreach ($xs as $k => $x) {
-                    $destination->$k = $x;
-                }
+        foreach ($sources as $xs) {
+            foreach ($xs as $k => $x) {
+                $destination[$k] = $x;
             }
         }
-
         return $destination;
     }
 
@@ -1455,25 +1447,12 @@ class Eager
      */
     public static function defaults($xs)
     {
-        if ($xs instanceof \Traversable) {
-            $xs = iterator_to_array($xs, true);
-        }
-
+        $xs = static::toArray($xs);
         $defaults = array_slice(func_get_args(), 1);
-        if (static::isArray($xs)) {
-            foreach ($defaults as $default) {
-                foreach ($default as $k => $x) {
-                    if (!isset($xs[$k])) {
-                        $xs[$k] = $x;
-                    }
-                }
-            }
-        } else {
-            foreach ($defaults as $default) {
-                foreach ($default as $k => $x) {
-                    if (!isset($xs->$k)) {
-                        $xs->$k = $x;
-                    }
+        foreach ($defaults as $default) {
+            foreach ($default as $k => $x) {
+                if (!isset($xs[$k])) {
+                    $xs[$k] = $x;
                 }
             }
         }
