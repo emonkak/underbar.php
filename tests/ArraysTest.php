@@ -652,6 +652,24 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testSort($_)
+    {
+        $result = $_::sort(array(2, 3, 1));
+        $this->assertEquals(array(1, 2, 3), $result);
+
+        $result = $_::sort(array(2, 3, 1), function($x, $y) {
+            if ($x === $y) return 0;
+            return $x < $y ? 1 : -1;
+        });
+        $this->assertEquals(array(3, 2, 1), $_::toList($result));
+
+        $result = $_::sort(array());
+        $this->assertEmpty($_::toList($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testSplice($_)
     {
         $myFish = array('angel', 'clown', 'mandarin', 'surgeon');
