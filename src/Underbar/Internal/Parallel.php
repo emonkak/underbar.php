@@ -220,6 +220,16 @@ class Parallel implements \Iterator, \Countable
     }
 
     /**
+     * Return the number of processes.
+     *
+     * @return  int
+     */
+    public function processes()
+    {
+        return count($this->sockets);
+    }
+
+    /**
      * Push a value to the queue.
      *
      * @param   mixed  $value
