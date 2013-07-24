@@ -1,7 +1,7 @@
 {
     "name": "emonkak/underbar.php",
     "description": "An array and iterator utility, like Underscore.js",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "type": "library",
     "keywords": ["array", "collection", "generator", "iterator", "lazy", "parallel"],
     "homepage": "https://github.com/emonkak/underbar.php",
