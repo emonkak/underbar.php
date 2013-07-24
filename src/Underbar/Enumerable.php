@@ -68,7 +68,6 @@ function range($a=NULL,$b=1){return _::range($this,$a,$b);}
 function cycle($a=NULL){return _::cycle($this,$a);}
 function repeat($a=-1){return _::repeat($this,$a);}
 function iterate($a){return _::iterate($this,$a);}
-function unfoldr($a){return _::unfoldr($this,$a);}
 function pop(){return _::pop($this);}
 function push($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::push($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function reverse(){return _::reverse($this);}

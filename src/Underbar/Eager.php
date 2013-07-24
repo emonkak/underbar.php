@@ -1173,23 +1173,6 @@ class Eager
     }
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Arrays
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    array
-     */
-    public static function unfoldr($f, $acc)
-    {
-        $xs = array();
-        while (is_array($result = call_user_func($f, $acc))) {
-            list ($xs[], $acc) = $result;
-        }
-        return $xs;
-    }
-
-    /**
      * @category  Arrays
      * @param     array  $xs
      * @return    array

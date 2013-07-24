@@ -239,20 +239,6 @@ class LazySafeGenerator extends LazyGenerator
     }
 
     /**
-     * @category  Arrays
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    RewindableGenerator
-     */
-    public static function unfoldr($f, $acc)
-    {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($f, $acc)
-        );
-    }
-
-    /**
      * @varargs
      * @category  Arrays
      * @param     array   *$xss

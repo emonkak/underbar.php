@@ -595,18 +595,6 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testUnfoldr($_)
-    {
-        $result = $_::unfoldr(function($x) {
-            return $x === 0 ? null : array($x, $x - 1);
-        }, 10);
-        $shouldBe = array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
-        $this->assertEquals($shouldBe, $_::toList($result));
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testPop($_)
     {
         $result = $_::pop(array(1, 2, 3));

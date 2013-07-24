@@ -226,17 +226,6 @@ class LazyIterator extends Eager
     }
 
     /**
-     * @category  Collections
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    Iterator
-     */
-    public static function unfoldr($f, $acc)
-    {
-        return new Iterator\UnfoldRightIterator($f, $acc);
-    }
-
-    /**
      * @varargs
      * @category  Arrays
      * @param     array  *$xss

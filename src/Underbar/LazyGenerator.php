@@ -337,20 +337,6 @@ class LazyGenerator extends Eager
     }
 
     /**
-     * @category  Arrays
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    Generator
-     */
-    public static function unfoldr($f, $acc)
-    {
-        while (is_array($result = call_user_func($f, $acc))) {
-            list ($x, $acc) = $result;
-            yield $x;
-        }
-    }
-
-    /**
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
