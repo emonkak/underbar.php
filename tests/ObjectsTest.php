@@ -170,26 +170,6 @@ class ObjectsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testHas($_)
-    {
-        $obj = array('foo' => 'bar', 'func' => function() {});
-        $this->assertTrue($_::has($obj, 'foo'), 'has() checks that the object has a property.');
-        $this->assertFalse($_::has($obj, 'baz'), "has() returns false if the object doesn't have the property.");
-        $this->assertTrue($_::has($obj, 'func'), 'has() works for functions too.');
-
-        $obj = new IteratorIterator(new ArrayIterator($obj));
-        $this->assertTrue($_::has($obj, 'foo'));
-        $this->assertFalse($_::has($obj, 'baz'));
-
-        $obj = new StdClass;
-        $obj->foo = 'bar';
-        $this->assertTrue($_::has($obj, 'foo'));
-        $this->assertFalse($_::has($obj, 'baz'));
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testIsArray($_)
     {
         $this->assertTrue($_::isArray(array()));

@@ -87,7 +87,6 @@ function pick($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i
 function omit($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::omit($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function defaults($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return _::defaults($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
 function tap($a){return _::tap($this,$a);}
-function has($a){return _::has($this,$a);}
 function isArray(){return _::isArray($this);}
 function isTraversable(){return _::isTraversable($this);}
 function parMap($a,$b=NULL,$c=NULL){return _::parMap($this,$a,$b,$c);}

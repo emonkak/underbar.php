@@ -1495,30 +1495,6 @@ class Eager
 
     /**
      * @category  Objects
-     * @param     array|object  $xs
-     * @param     int|string    $key
-     * @return    boolean
-     */
-    public static function has($xs, $key)
-    {
-        if (static::isArray($xs)) {
-            return isset($xs[$key]);
-        }
-        if ($xs instanceof \Traversable) {
-            foreach ($xs as $k => $_) {
-                if ($k === $key) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // given a object
-        return isset($xs->$key);
-    }
-
-    /**
-     * @category  Objects
      * @param     mixed  $xs
      * @return    boolean
      */
