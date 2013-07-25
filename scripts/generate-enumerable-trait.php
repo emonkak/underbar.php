@@ -7,7 +7,6 @@ $categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Parallel|Objects|Chain
 $varargsPattern = '/\*\s+@varargs/';
 
 echo '<?php', PHP_EOL;
-echo 'use Underbar\Lazy as _;', PHP_EOL;
 echo "namespace {$ref->getNamespaceName()};", PHP_EOL;
 echo 'trait Enumerable{', PHP_EOL;
 
@@ -55,7 +54,7 @@ foreach ($ref->getMethods() as $method) {
     }
     echo implode(',', $args);
     echo '){';
-    echo "return _::{$method->getName()}(";
+    echo "return Eager::{$method->getName()}(";
     echo '$this';
     echo empty($args) ? '' : ',';
     echo implode(',', array_keys($args));
@@ -63,4 +62,7 @@ foreach ($ref->getMethods() as $method) {
     echo '}', PHP_EOL;
 }
 
-echo '}';
+echo <<<EOF
+function lazy(){return Lazy::chain(\$this);}
+}
+EOF;
