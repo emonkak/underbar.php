@@ -2,13 +2,17 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$ref = new ReflectionClass('Underbar\\Eager');
+$ref = new ReflectionClass('Underbar\\ArrayImpl');
 $categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Parallel|Objects|Chaining)|^$/';
 $varargsPattern = '/\*\s+@varargs/';
 
-echo '<?php', PHP_EOL;
-echo "namespace {$ref->getNamespaceName()};", PHP_EOL;
-echo 'trait Enumerable{', PHP_EOL;
+echo <<<EOF
+<?php
+namespace {$ref->getNamespaceName()};
+trait Enumerable{
+abstract function getUnderbarImpl();
+
+EOF;
 
 foreach ($ref->getMethods() as $method) {
     $docComment = $method->getDocComment();
@@ -21,23 +25,25 @@ foreach ($ref->getMethods() as $method) {
         continue;
     }
 
-    $args = array('$this' => '$this');
+    $defineArgs = array();
+    $callArgs = array('$this');
     foreach ($method->getParameters() as $i => $param) {
         if ($i === 0) {
             continue;
         }
 
-        $arg = '';
+        $defineArg = '';
         if ($param->isPassedByReference()) {
-            $arg .= '&';
+            $defineArg .= '&';
         }
-        $variable = '$' . chr(ord('a') + $i - 1);
-        $arg .= $variable;
+        $callArg = '$' . chr(ord('a') + $i - 1);
+        $defineArg .= $callArg;
         if ($param->isOptional()) {
-            $arg .= '=';
-            $arg .= var_export($param->getDefaultValue(), true);
+            $defineArg .= '=';
+            $defineArg .= var_export($param->getDefaultValue(), true);
         }
-        $args[$variable] = $arg;
+        $defineArgs[] = $defineArg;
+        $callArgs[] = $callArg;
     }
 
     if ($method->returnsReference()) {
@@ -45,21 +51,21 @@ foreach ($ref->getMethods() as $method) {
     } else {
         echo "function {$method->getName()}(";
     }
-    echo implode(',', array_slice($args, 1));
-    echo '){';
+    echo implode(',', $defineArgs) . '){';
 
     if ($isVarargs) {
-        echo "return call_user_func_array('{$ref->getName()}::{$method->getName()}', array_merge(array(\$this), func_get_args()));";
+        echo <<<EOF
+return call_user_func_array(array(\$this->getUnderbarImpl(),'{$method->getName()}'), array_merge(array(\$this),func_get_args()));
+
+EOF;
     } else {
-        echo "return Eager::{$method->getName()}(";
-        echo implode(',', array_keys($args));
-        echo ');';
+        echo <<<EOF
+return call_user_func(array(\$this->getUnderbarImpl(),'{$method->getName()}'),
+EOF;
+        echo implode(',', $callArgs) . ');';
     }
 
     echo '}', PHP_EOL;
 }
 
-echo <<<EOF
-function lazy(){return Lazy::chain(\$this);}
-}
-EOF;
+echo '}', PHP_EOL;

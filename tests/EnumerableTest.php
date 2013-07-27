@@ -11,13 +11,7 @@ class EnumerableTest extends PHPUnit_Framework_TestCase
         $twice = function($x) { return $x * 2; };
         $shouldBe = array(2, 4, 6);
 
-        $result = $xs->map($twice);
-        $this->assertEquals($shouldBe, $result);
-
         $result = $xs->chain()->map($twice)->toList()->value();
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $xs->lazy()->map($twice)->toList()->value();
         $this->assertEquals($shouldBe, $result);
     }
 
@@ -25,10 +19,10 @@ class EnumerableTest extends PHPUnit_Framework_TestCase
     {
         $xs = new MyArray(array(1, 2));
 
-        $result = $xs->concat(array(3));
+        $result = $xs->chain($xs)->concat(array(3))->toList()->value();
         $this->assertEquals(array(1, 2, 3), $result);
 
-        $result = $xs->concat(array(3, 4));
+        $result = $xs->chain(array(3, 4))->concat(array(3, 4))->toList()->value();
         $this->assertEquals(array(1, 2, 3, 4), $result);
     }
 }
@@ -38,6 +32,11 @@ if (function_exists('trait_exists')) {
 class MyArray extends ArrayObject
 {
     use Underbar\Enumerable;
+
+    public function getUnderbarImpl()
+    {
+        return 'Underbar\\IteratorImpl';
+    }
 }
 EOF
 );

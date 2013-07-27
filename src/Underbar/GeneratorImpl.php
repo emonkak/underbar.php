@@ -9,9 +9,10 @@
 
 namespace Underbar;
 
-class LazyGenerator extends Eager
+class GeneratorImpl extends AbstractImpl
 {
     /**
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -25,6 +26,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array      $xs
      * @param     callable   $f
@@ -40,79 +42,13 @@ class LazyGenerator extends Eager
     }
 
     /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @param     boolean          $isSorted
-     * @return    Generator
-     */
-    public static function groupBy($xs, $f = null, $isSorted = false)
-    {
-        return $isSorted ? static::_groupBy($xs, $f) : parent::groupBy($xs, $f);
-    }
-
-    public static function _groupBy($xs, $f = null)
-    {
-        $f = static::lookupIterator($f);
-        $acc = array();
-        $lastKey = null;
-
-        foreach ($xs as $i => $x) {
-            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
-                if (!empty($acc)) {
-                    yield $lastKey => $acc;
-                    $acc = array();
-                }
-                $lastKey = $key;
-            }
-            $acc[] = $x;
-        }
-
-        if (!empty($acc)) {
-            yield $lastKey => $acc;
-        }
-    }
-
-    /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @return    int
-     */
-    public static function countBy($xs, $f = null, $isSorted = false)
-    {
-        return $isSorted ? static::_countBy($xs, $f) : parent::countBy($xs, $f);
-    }
-
-    public static function _countBy($xs, $f = null)
-    {
-        $f = static::lookupIterator($f);
-        $acc = 0;
-        $lastKey = null;
-
-        foreach ($xs as $i => $x) {
-            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
-                if ($acc !== 0) {
-                    yield $lastKey => $acc;
-                    $acc = 0;
-                }
-                $lastKey = $key;
-            }
-            $acc++;
-        }
-
-        if ($acc !== 0) {
-            yield $lastKey => $acc;
-        }
-    }
-
-    /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    Generator
      */
-    public static function _first($xs, $n)
+    public static function firstN($xs, $n)
     {
         foreach ($xs as $i => $x) {
             if (--$n < 0) {
@@ -123,6 +59,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -145,6 +82,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -165,6 +103,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -181,10 +120,11 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
-     * @return    mixed|Generator
+     * @return    Generator
      */
     public static function dropWhile($xs, $f)
     {
@@ -198,6 +138,7 @@ class LazyGenerator extends Eager
 
     /**
      * @varargs
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xss
      * @return    Generator
@@ -227,6 +168,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xss
      * @param     boolean  $shallow
@@ -252,6 +194,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -273,6 +216,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $array
      * @return    Generator
@@ -295,6 +239,7 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -308,11 +253,11 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
      * @return    Generator
-     * @throws    OverflowException
      */
     public static function iterate($acc, $f)
     {
@@ -324,6 +269,7 @@ class LazyGenerator extends Eager
 
     /**
      * @varargs
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  *$xss
      * @return    Generator

@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-class Eager
+abstract class AbstractImpl implements Internal\ImplementorInterface
 {
     /**
      * @category  Collections
@@ -32,14 +32,7 @@ class Eager
      * @param     callable  $f
      * @return    array
      */
-    public static function map($xs, $f)
-    {
-        $ys = array();
-        foreach ($xs as $k => $x) {
-            $ys[$k] = call_user_func($f, $x, $k, $xs);
-        }
-        return $ys;
-    }
+    // abstract public static function map($xs, $f);
 
     public static function collect($xs, $f)
     {
@@ -84,14 +77,7 @@ class Eager
      */
     public static function reduceRight($xs, $f, $acc)
     {
-        if (is_array($xs)) {
-            for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
-                $acc = call_user_func($f, $acc, $x, key($xs), $xs);
-            }
-            return $acc;
-        } else {
-            return static::reduce(static::reverse($xs), $f, $acc);
-        }
+        return static::reduce(static::reverse($xs), $f, $acc);
     }
 
     public static function foldr($xs, $f, $acc)
@@ -206,7 +192,7 @@ class Eager
      */
     public static function every($xs, $f = null)
     {
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
 
         foreach ($xs as $k => $x) {
             if (!call_user_func($f, $x, $k, $xs)) {
@@ -232,7 +218,7 @@ class Eager
      */
     public static function some($xs, $f = null)
     {
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
 
         foreach ($xs as $k => $x) {
             if (call_user_func($f, $x, $k, $xs)) {
@@ -312,7 +298,7 @@ class Eager
             return empty($xs) ? -INF : max($xs);
         }
 
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $computed = -INF;
         $result = -INF;
         foreach ($xs as $k => $x) {
@@ -339,7 +325,7 @@ class Eager
             return empty($xs) ? INF : min($xs);
         }
 
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $computed = INF;
         $result = INF;
         foreach ($xs as $k => $x) {
@@ -393,7 +379,7 @@ class Eager
      */
     public static function sortBy($xs, $x)
     {
-        $f = static::lookupIterator($x);
+        $f = static::createCallback($x);
         $result = array();
 
         foreach ($xs as $k => $x) {
@@ -414,19 +400,18 @@ class Eager
             }
         });
 
-        return self::pluck($result, 'value');
+        return static::pluck($result, 'value');
     }
 
     /**
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     boolean             $isSorted
      * @return    array
      */
-    public static function groupBy($xs, $f = null, $isSorted = false)
+    public static function groupBy($xs, $f = null)
     {
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $result = array();
 
         foreach ($xs as $k => $x) {
@@ -441,12 +426,11 @@ class Eager
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
-     * @param     boolean             $isSorted
      * @return    int
      */
-    public static function countBy($xs, $f = null, $isSorted = false)
+    public static function countBy($xs, $f = null)
     {
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $result = array();
 
         foreach ($xs as $k => $x) {
@@ -551,7 +535,7 @@ class Eager
     public static function first($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
-            return static::_first($xs, $n);
+            return static::firstN($xs, $n);
         }
 
         foreach ($xs as $x) {
@@ -569,10 +553,7 @@ class Eager
         return static::first($xs, $n, $guard);
     }
 
-    public static function _first($xs, $n)
-    {
-        return $n > 0 ? array_slice(static::extractIterator($xs), 0, $n) : array();
-    }
+    // abstract public static function firstN($xs, $n = null);
 
     /**
      * @category  Arrays
@@ -580,13 +561,7 @@ class Eager
      * @param     int    $n
      * @return    array
      */
-    public static function initial($xs, $n = 1, $guard = null)
-    {
-        if ($guard !== null) {
-            $n = 1;
-        }
-        return $n > 0 ? array_slice(static::extractIterator($xs), 0, -$n) : array();
-    }
+    // abstract public static function initial($xs, $n = 1, $guard = null);
 
     /**
      * @category  Arrays
@@ -597,15 +572,16 @@ class Eager
     public static function last($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
-            return static::_last($xs, $n);
+            return static::lastN($xs, $n);
         }
+
         $x = null;
         foreach ($xs as $x) {
         }
         return $x;
     }
 
-    public static function _last($xs, $n = null)
+    public static function lastN($xs, $n = null)
     {
         $queue = new \SplQueue();
         if ($n <= 0) {
@@ -633,22 +609,16 @@ class Eager
      * @param     int    $n
      * @return    array
      */
-    public static function rest($xs, $n = 1, $guard = null)
-    {
-        if ($guard !== null) {
-            $n = 1;
-        }
-        return array_slice(static::extractIterator($xs), $n);
-    }
+    // abstract public static function rest($xs, $n = 1, $guard = null);
 
     public static function tail($xs, $n = 1, $guard = null)
     {
-        return self::rest($xs, $n, $guard);
+        return static::rest($xs, $n, $guard);
     }
 
     public static function drop($xs, $n = 1, $guard = null)
     {
-        return self::rest($xs, $n, $guard);
+        return static::rest($xs, $n, $guard);
     }
 
     /**
@@ -659,17 +629,7 @@ class Eager
      * @param     callable  $f
      * @return    array
      */
-    public static function takeWhile($xs, $f)
-    {
-        $result = array();
-        foreach ($xs as $i => $x) {
-            if (!call_user_func($f, $x, $i, $xs)) {
-                break;
-            }
-            $result[] = $x;
-        }
-        return $result;
-    }
+    // abstract public static function takeWhile($xs, $f);
 
     /**
      * Porting from the Prelude of Haskell.
@@ -679,17 +639,7 @@ class Eager
      * @param     callable  $f
      * @return    array
      */
-    public static function dropWhile($xs, $f)
-    {
-        $result = array();
-        $accepted = false;
-        foreach ($xs as $i => $x) {
-            if ($accepted || ($accepted = !call_user_func($f, $x, $i, $xs))) {
-                $result[] = $x;
-            }
-        }
-        return $result;
-    }
+    // abstract public static function dropWhile($xs, $f);
 
     /**
      * @category  Arrays
@@ -698,7 +648,7 @@ class Eager
      */
     public static function compact($xs)
     {
-        return static::filter($xs, get_called_class().'::identity');
+        return static::filter($xs, __CLASS__.'::identity');
     }
 
     /**
@@ -707,28 +657,7 @@ class Eager
      * @param     boolean   $shallow
      * @return    array
      */
-    public static function flatten($xs, $shallow = false)
-    {
-        return static::_flatten($xs, $shallow);
-    }
-
-    private static function _flatten($xss, $shallow, &$output = array())
-    {
-        foreach ($xss as $xs) {
-            if (static::isTraversable($xs)) {
-                if ($shallow) {
-                    foreach ($xs as $x) {
-                        $output[] = $x;
-                    }
-                } else {
-                    static::_flatten($xs, $shallow, $output);
-                }
-            } else {
-                $output[] = $xs;
-            }
-        }
-        return $output;
-    }
+    // abstract public static function flatten($xs, $shallow = false);
 
     /**
      * @varargs
@@ -805,10 +734,10 @@ class Eager
     public static function uniq($xs, $isSorted = false, $f = null)
     {
         if (!is_bool($isSorted)) {
-            $f = static::lookupIterator($isSorted);
+            $f = static::createCallback($isSorted);
             $isSorted = false;
         } else {
-            $f = static::lookupIterator($f);
+            $f = static::createCallback($f);
         }
 
         if ($isSorted) {
@@ -898,31 +827,7 @@ class Eager
      * @param     array  $xss
      * @return    array
      */
-    public static function unzip($xss)
-    {
-        $yss = $zss = $result = array();
-        $loop = true;
-
-        foreach ($xss as $xs) {
-            $yss[] = $wrapped = static::wrapIterator($xs);
-            $wrapped->rewind();
-            $loop = $loop && $wrapped->valid();
-            $zss[] = $wrapped->current();
-        }
-
-        if (!empty($zss)) while ($loop) {
-            $result[] = $zss;
-            $zss = array();
-            $loop = true;
-            foreach ($yss as $ys) {
-                $ys->next();
-                $zss[] = $ys->current();
-                $loop = $loop && $ys->valid();
-            }
-        }
-
-        return $result;
-    }
+    // abstract public static function unzip($xss);
 
     /**
      * Porting from the Prelude of Haskell.
@@ -1035,7 +940,7 @@ class Eager
     public static function sortedIndex($xs, $value, $f = null)
     {
         $xs = static::extractIterator($xs);
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $value = call_user_func($f, $value);
 
         $low = 0;
@@ -1060,23 +965,7 @@ class Eager
      * @param     int  $step
      * @return    array
      */
-    public static function range($start, $stop = null, $step = 1)
-    {
-        if ($stop === null) {
-            $stop = $start;
-            $start = 0;
-        }
-
-        $l = max(ceil(($stop - $start) / $step), 0);
-        $range = array();
-
-        for ($i = 0; $i < $l; $i++) {
-            $range[] = $start;
-            $start += $step;
-        }
-
-        return $range;
-    }
+    // abstract public static function range($start, $stop = null, $step = 1);
 
     /**
      * Porting from the Prelude of Haskell.
@@ -1087,19 +976,7 @@ class Eager
      * @return    array
      * @throws    OverflowException
      */
-    public static function cycle($xs, $n = null)
-    {
-        $result = array();
-        if ($n === null) {
-            throw new \OverflowException();
-        }
-        while ($n-- > 0) {
-            foreach ($xs as $x) {
-                $result[] = $x;
-            }
-        }
-        return $result;
-    }
+    // abstract public static function cycle($xs, $n = null);
 
     /**
      * Porting from the Prelude of Haskell.
@@ -1110,13 +987,7 @@ class Eager
      * @return    array
      * @throws    OverflowException
      */
-    public static function repeat($value, $n = -1)
-    {
-        if ($n < 0) {
-            throw new \OverflowException();
-        }
-        return $n === 0 ? array() : array_fill(0, $n, $value);
-    }
+    // abstract public static function repeat($value, $n = -1);
 
     /**
      * Porting from the Prelude of Haskell.
@@ -1127,10 +998,7 @@ class Eager
      * @return    array
      * @throws    OverflowException
      */
-    public static function iterate($acc, $f)
-    {
-        throw new \OverflowException();
-    }
+    // abstract public static function iterate($acc, $f);
 
     /**
      * @category  Arrays
@@ -1161,14 +1029,7 @@ class Eager
      * @param     array  *$xss
      * @return    array
      */
-    public static function concat()
-    {
-        $result = array();
-        foreach (func_get_args() as $xs) {
-            $result = array_merge($result, static::extractIterator($xs));
-        }
-        return $result;
-    }
+    // abstract public static function concat();
 
     /**
      * @category  Arrays
@@ -1377,6 +1238,16 @@ class Eager
     }
 
     /**
+     * @category  Chaining
+     * @param     mixed  $value
+     * @return    Wrapper
+     */
+    public static function chain($value)
+    {
+        return new Internal\Wrapper($value, get_called_class());
+    }
+
+    /**
      * Parallel version of map()
      *
      * @category  Parallel
@@ -1394,20 +1265,10 @@ class Eager
     }
 
     /**
-     * @category  Chaining
-     * @param     mixed  $value
-     * @return    Wrapper
-     */
-    public static function chain($value)
-    {
-        return new Internal\Wrapper($value, get_called_class());
-    }
-
-    /**
      * @param   mixed  $value
      * @return  callable
      */
-    protected static function lookupIterator($value)
+    protected static function createCallback($value)
     {
         if (is_scalar($value)) {
             return function($xs) use ($value) {
@@ -1417,7 +1278,7 @@ class Eager
         if (is_callable($value)) {
             return $value;
         }
-        return get_called_class().'::identity';
+        return __CLASS__.'::identity';
     }
 
     /**
@@ -1426,14 +1287,14 @@ class Eager
      */
     protected static function wrapIterator($xs)
     {
-        if (is_array($xs)) {
-            return new \ArrayIterator($xs);
-        }
         if ($xs instanceof \Iterator) {
             return $xs;
         }
         if ($xs instanceof \Traversable) {
             return new \IteratorIterator($xs);
+        }
+        if (is_array($xs)) {
+            return new \ArrayIterator($xs);
         }
         return $xs;
     }
@@ -1445,7 +1306,7 @@ class Eager
     protected static function extractIterator($xs)
     {
         return $xs instanceof \Traversable
-            ? iterator_to_array($xs, false)
-            : $xs;
+             ? iterator_to_array($xs, false)
+             : $xs;
     }
 }

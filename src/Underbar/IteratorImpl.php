@@ -9,9 +9,10 @@
 
 namespace Underbar;
 
-class LazyIterator extends Eager
+class IteratorImpl extends AbstractImpl
 {
     /**
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -23,6 +24,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -36,44 +38,13 @@ class LazyIterator extends Eager
     }
 
     /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @param     boolean          $isSorted
-     * @return    Generator
-     */
-    public static function groupBy($xs, $f = null, $isSorted = false)
-    {
-        if ($isSorted) {
-            $f = static::lookupIterator($f);
-            return new Iterator\GroupByIterator(static::wrapIterator($xs), $f);
-        }
-        return parent::groupBy($xs, $f, $isSorted);
-    }
-
-    /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @param     boolean          $isSorted
-     * @return    int
-     */
-    public static function countBy($xs, $f = null, $isSorted = false)
-    {
-        if ($isSorted) {
-            $f = static::lookupIterator($f);
-            return new Iterator\CountByIterator(static::wrapIterator($xs), $f);
-        }
-        return parent::countBy($xs, $f, $isSorted);
-    }
-
-    /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    Iterator
      */
-    public static function _first($xs, $n = null)
+    public static function firstN($xs, $n = null)
     {
         return $n > 0
              ? new Iterator\LimitIterator(static::wrapIterator($xs), 0, $n)
@@ -81,6 +52,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -95,6 +67,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -109,6 +82,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -120,6 +94,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -131,6 +106,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xs
      * @param     boolean  $shallow
@@ -143,6 +119,7 @@ class LazyIterator extends Eager
 
     /**
      * @varargs
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xss
      * @return    Iterator
@@ -157,6 +134,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -173,6 +151,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @return    Iterator
@@ -191,6 +170,7 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -202,11 +182,11 @@ class LazyIterator extends Eager
     }
 
     /**
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
      * @return    Iterator
-     * @throws    OverflowException
      */
     public static function iterate($acc, $f)
     {
@@ -215,6 +195,7 @@ class LazyIterator extends Eager
 
     /**
      * @varargs
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  *$xss
      * @return    Iterator

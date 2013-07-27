@@ -321,9 +321,10 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::zipWith(array(), array(), $plus);
         $this->assertEquals(array(), $_::toList($result));
 
-        if ($_ === 'Underbar\\Eager') {
+        if ($_ === 'Underbar\\ArrayImpl') {
             $this->setExpectedException('OverflowException');
         }
+
         $result = $_::zipWith(array(1, 2, 3), $_::cycle(array(1, 0)), $plus);
         $this->assertEquals(array(2, 2, 4), $_::toList($result));
 
@@ -534,7 +535,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::cycle(array(), 2);
         $this->assertEmpty($_::toList($result));
 
-        if ($_ === 'Underbar\\Eager') {
+        if ($_ === 'Underbar\\ArrayImpl') {
             $this->setExpectedException('OverflowException');
         }
         $result = $_::cycle(array(1, 2));
@@ -555,7 +556,7 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::repeat(1, 0);
         $this->assertEmpty($_::toList($result));
 
-        if ($_ === 'Underbar\\Eager') {
+        if ($_ === 'Underbar\\ArrayImpl') {
             $this->setExpectedException('OverflowException');
         }
         $result = $_::repeat(1);
@@ -567,7 +568,7 @@ class ArraysTest extends Underbar_TestCase
      */
     public function testIterate($_)
     {
-        if ($_ === 'Underbar\\Eager') {
+        if ($_ === 'Underbar\\ArrayImpl') {
             $this->setExpectedException('OverflowException');
         }
 

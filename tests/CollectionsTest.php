@@ -91,21 +91,10 @@ class CollectionsTest extends Underbar_TestCase
         }, $memo);
         $this->assertEquals($args, $expected);
 
-        // And again, with numeric keys.
-        $args = null;
-        $memo = array();
-        $object = array('2' => 1, '1' => 2);
-        $expected = array($memo, 2, '1', $object);
-
-        $_::reduceRight($object, function() use (&$args) {
-            $args || ($args = func_get_args());
-        }, $memo);
-        $this->assertEquals($args, $expected);
-
-        $expected = $_::reduceRight($_::range(10), function($x, $y) {
+        $result = $_::reduceRight($_::range(10), function($x, $y) {
             return $x - $y;
         }, 0);
-        $this->assertEquals(-45, $expected);
+        $this->assertEquals(-45, $result);
     }
 
     /**
@@ -487,7 +476,7 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testMemoize($_)
     {
-        if ($_ === 'Underbar\\Eager') {
+        if ($_ === 'Underbar\\ArrayImpl') {
             $this->setExpectedException('OverflowException');
         }
 

@@ -9,8 +9,6 @@
 
 namespace Underbar\Iterator;
 
-use Underbar\Eager as _;
-
 class FlattenIterator extends \RecursiveIteratorIterator
 {
     public function __construct($xs, $shallow)
@@ -25,19 +23,20 @@ class FlattenIterator extends \RecursiveIteratorIterator
     public function next()
     {
         parent::next();
-        if (($maxDepth = $this->getMaxDepth()) > 0) {
-            while (_::isTraversable($this->current())
-                   && $this->getDepth() < $maxDepth) {
-                parent::next();
-            }
-        }
+        $this->fetchIfShallow();
     }
 
     public function rewind()
     {
         parent::rewind();
+        $this->fetchIfShallow();
+    }
+
+    protected function fetchIfShallow()
+    {
         if (($maxDepth = $this->getMaxDepth()) > 0) {
-            while (_::isTraversable($this->current())
+            $current = $this->current();
+            while ((is_array($current) || $current instanceof \Traversable)
                    && $this->getDepth() < $maxDepth) {
                 parent::next();
             }

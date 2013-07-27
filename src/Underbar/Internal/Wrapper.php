@@ -13,19 +13,19 @@ class Wrapper implements \IteratorAggregate
 {
     private $value;
 
-    private $class;
+    private $impl;
 
-    public function __construct($value, $class)
+    public function __construct($value, $impl)
     {
         $this->value = $value;
-        $this->class = $class;
+        $this->impl = $impl;
     }
 
     public function __call($name, $aruguments)
     {
         array_unshift($aruguments, $this->value);
-        $value = call_user_func_array($this->class.'::'.$name, $aruguments);
-        return new static($value, $this->class);
+        $value = call_user_func_array($this->impl.'::'.$name, $aruguments);
+        return new static($value, $this->impl);
     }
 
     public function value()
@@ -33,24 +33,14 @@ class Wrapper implements \IteratorAggregate
         return $this->value;
     }
 
-    public function eager()
-    {
-        $this->class = 'Underbar\\Eager';
-        return $this;
-    }
-
-    public function lazy()
-    {
-        $this->class = 'Underbar\\Lazy';
-        return $this;
-    }
-
     public function getIterator()
     {
         if ($this->value instanceof \Traversable) {
             return $this->value;
+        } elseif (is_array($this->value)) {
+            return new \ArrayIterator($this->value);
         } else {
-            return new \ArrayIterator((array) $this->value);
+            return new \EmptyIterator();
         }
     }
 }
