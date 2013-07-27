@@ -21,14 +21,14 @@ class EnumerableTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($shouldBe, $result);
     }
 
-    public function testPush()
+    public function testConcat()
     {
         $xs = new MyArray(array(1, 2));
 
-        $result = $xs->push(3);
+        $result = $xs->concat(array(3));
         $this->assertEquals(array(1, 2, 3), $result);
 
-        $result = $xs->push(3, 4);
+        $result = $xs->concat(array(3, 4));
         $this->assertEquals(array(1, 2, 3, 4), $result);
     }
 }

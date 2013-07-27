@@ -42,23 +42,6 @@ class ChainingTest extends Underbar_TestCase
         })->value();
         $this->assertEquals(array(10, 6, 2), $_::toArray($numbers), 'filtered and reversed the numbers');
     }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testReverseConcatUnshiftPopMap($_)
-    {
-        $numbers = $_::chain(array(1, 2, 3, 4, 5))
-            ->reverse()
-            ->concat(array(5, 5, 5))
-            ->unshift(17)
-            ->pop()
-            ->map(function($n) { return $n * 2; })
-            ->toList()
-            ->value();
-        $shouldBe = array(34, 10, 8, 6, 4, 2, 10, 10);
-        $this->assertEquals($shouldBe, $numbers, 'can chain together array functions.');
-    }
 }
 
 // __END__

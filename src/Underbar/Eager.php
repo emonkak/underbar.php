@@ -1137,49 +1137,9 @@ class Eager
      * @param     array  $xs
      * @return    array
      */
-    public static function pop($xs)
-    {
-        $xs = static::extractIterator($xs);
-        array_pop($xs);
-        return $xs;
-    }
-
-    /**
-     * @varargs
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     mixed  *$values
-     * @return    array
-     */
-    public static function push($xs)
-    {
-        $xs = static::extractIterator($xs);
-        foreach (array_slice(func_get_args(), 1) as $value) {
-            $xs[] = $value;
-        }
-        return $xs;
-    }
-
-    /**
-     * @category  Arrays
-     * @param     array  $xs
-     * @return    array
-     */
     public static function reverse($xs)
     {
         return array_reverse(static::extractIterator($xs));
-    }
-
-    /**
-     * @category  Arrays
-     * @param     array  $xs
-     * @return    array
-     */
-    public static function shift($xs)
-    {
-        $xs = static::extractIterator($xs);
-        array_shift($xs);
-        return $xs;
     }
 
     /**
@@ -1193,37 +1153,6 @@ class Eager
         $xs = static::extractIterator($xs);
         is_callable($compare) ? usort($xs, $compare) : sort($xs);
         return $xs;
-    }
-
-    /**
-     * @varargs
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $index
-     * @param     int    $n
-     * @param     mixed  *$values
-     * @return    array
-     */
-    public static function splice($xs, $index, $n)
-    {
-        $xs = static::extractIterator($xs);
-        $values = array_slice(func_get_args(), 3);
-        array_splice($xs, $index, $n, $values);
-        return $xs;
-    }
-
-    /**
-     * @varargs
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     mixed  *$values
-     * @return    array
-     */
-    public static function unshift($xs)
-    {
-        $xs = static::extractIterator($xs);
-        $values = array_slice(func_get_args(), 1);
-        return array_merge($values, $xs);
     }
 
     /**
@@ -1254,21 +1183,6 @@ class Eager
             $str .= $x . $separator;
         }
         return substr($str, 0, -strlen($separator));
-    }
-
-    /**
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $begin
-     * @param     int    $end
-     * @return    array
-     */
-    public static function slice($xs, $begin, $end = null)
-    {
-        if ($end > 0) {
-            $end = max(0, $end - $begin);
-        }
-        return array_slice(static::extractIterator($xs), $begin, $end);
     }
 
     /**

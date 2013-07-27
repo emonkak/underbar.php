@@ -595,33 +595,6 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testPop($_)
-    {
-        $result = $_::pop(array(1, 2, 3));
-        $this->assertEquals(array(1, 2), $_::toList($result));
-
-        $result = $_::pop(array());
-        $this->assertEmpty($_::toList($result));
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testPush($_)
-    {
-        $result = $_::push(array(1, 2), 3);
-        $this->assertEquals(array(1, 2, 3), $_::toList($result));
-
-        $result = $_::push(array(), 1 , 2);
-        $this->assertEquals(array(1, 2), $_::toList($result));
-
-        $result = $_::push(array());
-        $this->assertEmpty($_::toList($result));
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testReverse($_)
     {
         $result = $_::reverse(array(1, 2, 3));
@@ -631,21 +604,6 @@ class ArraysTest extends Underbar_TestCase
         $this->assertEquals(array(2, 1, 0), $_::toList($result));
 
         $result = $_::reverse(array());
-        $this->assertEmpty($_::toList($result));
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testShift($_)
-    {
-        $result = $_::shift(array(1, 2, 3));
-        $this->assertEquals(array(2, 3), $_::toList($result));
-
-        $result = $_::shift($_::range(3));
-        $this->assertEquals(array(1, 2), $_::toList($result));
-
-        $result = $_::shift(array());
         $this->assertEmpty($_::toList($result));
     }
 
@@ -670,51 +628,12 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testSplice($_)
-    {
-        $myFish = array('angel', 'clown', 'mandarin', 'surgeon');
-
-        $myFish = $_::splice($myFish, 2, 0, 'drum');
-        $shouldBe = array('angel', 'clown', 'drum', 'mandarin', 'surgeon');
-        $this->assertEquals($shouldBe, $myFish);
-
-        $myFish = $_::splice($myFish, 3, 1);
-        $shouldBe = array('angel', 'clown', 'drum', 'surgeon');
-        $this->assertEquals($shouldBe, $myFish);
-
-        $myFish = $_::splice($myFish, 2, 1, 'trumpet');
-        $shouldBe = array('angel', 'clown', 'trumpet', 'surgeon');
-        $this->assertEquals($shouldBe, $myFish);
-
-        $myFish = $_::splice($myFish, 0, 2, 'parrot', 'anemone', 'blue');
-        $shouldBe = array('parrot', 'anemone', 'blue', 'trumpet', 'surgeon');
-        $this->assertEquals($shouldBe, $myFish);
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testJoin($_)
     {
         $xs = array('Wind', 'Rain', 'Fire');
         $this->assertEquals('Wind,Rain,Fire', $_::join($xs));
         $this->assertEquals('Wind, Rain, Fire', $_::join($xs, ', '));
         $this->assertEquals('Wind + Rain + Fire', $_::join($xs, ' + '));
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testSlice($_)
-    {
-        $xs = range(1, 5);
-        $this->assertEquals(array(1, 2, 3, 4, 5), $_::slice($xs, 0));
-        $this->assertEquals(array(3, 4, 5), $_::slice($xs, 2));
-        $this->assertEquals(array(3, 4), $_::slice($xs, 2, 4));
-        $this->assertEmpty($_::slice($xs, 1, 1));
-        $this->assertEquals(array(5), $_::slice($xs, -1));
-        $this->assertEquals(array(4, 5), $_::slice($xs, -2));
-        $this->assertEquals(array(1, 2), $_::slice($xs, 0, -3));
     }
 }
 
