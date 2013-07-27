@@ -41,20 +41,6 @@ class LazyGenerator extends Eager
 
     /**
      * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    Generator
-     */
-    public static function scanl($xs, $f, $acc)
-    {
-        foreach ($xs as $k => $x) {
-            yield $acc = call_user_func($f, $acc, $x, $k, $xs);
-        }
-    }
-
-    /**
-     * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
      * @param     boolean          $isSorted

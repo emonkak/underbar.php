@@ -37,18 +37,6 @@ class LazyIterator extends Eager
 
     /**
      * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    Iterator
-     */
-    public static function scanl($xs, $f, $acc)
-    {
-        return new Iterator\ScanLeftIterator(static::wrapIterator($xs), $f, $acc);
-    }
-
-    /**
-     * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
      * @param     boolean          $isSorted

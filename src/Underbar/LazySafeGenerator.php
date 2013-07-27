@@ -41,21 +41,6 @@ class LazySafeGenerator extends LazyGenerator
 
     /**
      * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    RewindableGenerator
-     */
-    public static function scanl($xs, $f, $acc)
-    {
-        return new Iterator\RewindableGenerator(
-            get_parent_class().'::'.__FUNCTION__,
-            array($xs, $f, $acc)
-        );
-    }
-
-    /**
-     * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
      * @param     boolean             $isSorted

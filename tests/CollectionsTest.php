@@ -111,32 +111,6 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testScanl($_)
-    {
-        $sum = function($acc, $n) {
-            return $acc + $n;
-        };
-
-        $result = $_::scanl(array(1, 2, 3), $sum, 0);
-        $this->assertEquals(array(1, 3, 6), $_::toList($result), 'can sum up an array');
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testScanr($_)
-    {
-        $minus = function($acc, $n) {
-            return $acc - $n;
-        };
-
-        $result = $_::scanr(array(1, 2, 3), $minus, 0);
-        $this->assertEquals(array(-3, -5, -6), $_::toList($result), 'can sum up an array');
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testFind($_)
     {
         $array = array(1, 2, 3, 4);

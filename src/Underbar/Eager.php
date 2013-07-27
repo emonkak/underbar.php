@@ -100,46 +100,6 @@ class Eager
     }
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    array
-     */
-    public static function scanl($xs, $f, $acc)
-    {
-        $result = array();
-        foreach ($xs as $k => $x) {
-            $result[] = $acc = call_user_func($f, $acc, $x, $k, $xs);
-        }
-        return $result;
-    }
-
-    /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     mixed     $acc
-     * @return    array
-     */
-    public static function scanr($xs, $f, $acc)
-    {
-        if (is_array($xs)) {
-            $result = array();
-            for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
-                $result[] = $acc = call_user_func($f, $acc, $x, key($xs), $xs);
-            }
-            return $result;
-        } else {
-            return static::scanl(static::reverse($xs), $f, $acc);
-        }
-    }
-
-    /**
      * Alias: detect
      *
      * @category  Collections
