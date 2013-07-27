@@ -830,30 +830,6 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     // abstract public static function unzip($xss);
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Arrays
-     * @param     mixed     $xs
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function span($xs, $f)
-    {
-        $ys = array(array(), array());
-        $inPrefix = true;
-
-        foreach ($xs as $k => $x) {
-            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
-                $ys[0][] = $x;
-            } else {
-                $ys[1][] = $x;
-            }
-        }
-
-        return $ys;
-    }
-
-    /**
      * @category  Arrays
      * @param     array  $xs
      * @param     array  $values

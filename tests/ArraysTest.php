@@ -111,33 +111,6 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
-    public function testSpan($_)
-    {
-        $result = $_::span(array(1, 2, 3, 4, 1, 2, 3, 4), function($x) {
-            return $x < 3;
-        });
-        $shouldBe = array(array(1, 2), array(3, 4, 1, 2, 3, 4));
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::span(array(1, 2, 3), function($x) {
-            return $x < 9;
-        });
-        $shouldBe = array(array(1, 2, 3), array());
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::span(array(1, 2, 3), function($x) {
-            return $x < 0;
-        });
-        $shouldBe = array(array(), array(1, 2, 3));
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::span(array(), function($x) { return $x < 3; });
-        $this->assertEquals(array(array(), array()), $result, 'empty array');
-    }
-
-    /**
-     * @dataProvider provider
-     */
     public function testInitial($_)
     {
         $result = $_::initial(array(1, 2, 3, 4, 5));
