@@ -21,7 +21,7 @@ foreach ($ref->getMethods() as $method) {
         continue;
     }
 
-    $args = array();
+    $args = array('$this' => '$this');
     foreach ($method->getParameters() as $i => $param) {
         if ($i === 0) {
             continue;
@@ -40,25 +40,22 @@ foreach ($ref->getMethods() as $method) {
         $args[$variable] = $arg;
     }
 
-    if ($isVarargs) {
-        for ($i = max($method->getNumberOfParameters() - 1, 0); $i < 10; $i++) {
-            $variable = '$' . chr(ord('a') + $i);
-            $args[$variable] = $variable . '=NULL';
-        }
-    }
-
     if ($method->returnsReference()) {
         echo "function &{$method->getName()}(";
     } else {
         echo "function {$method->getName()}(";
     }
-    echo implode(',', $args);
+    echo implode(',', array_slice($args, 1));
     echo '){';
-    echo "return Eager::{$method->getName()}(";
-    echo '$this';
-    echo empty($args) ? '' : ',';
-    echo implode(',', array_keys($args));
-    echo ');';
+
+    if ($isVarargs) {
+        echo "return call_user_func_array('{$ref->getName()}::{$method->getName()}', array_merge(array(\$this), func_get_args()));";
+    } else {
+        echo "return Eager::{$method->getName()}(";
+        echo implode(',', array_keys($args));
+        echo ');';
+    }
+
     echo '}', PHP_EOL;
 }
 

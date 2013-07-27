@@ -23,7 +23,7 @@ function all($a=NULL){return Eager::all($this,$a);}
 function some($a=NULL){return Eager::some($this,$a);}
 function any($a=NULL){return Eager::any($this,$a);}
 function contains($a){return Eager::contains($this,$a);}
-function invoke($a,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::invoke($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function invoke($a){return call_user_func_array('Underbar\Eager::invoke', array_merge(array($this), func_get_args()));}
 function pluck($a){return Eager::pluck($this,$a);}
 function max($a=NULL){return Eager::max($this,$a);}
 function min($a=NULL){return Eager::min($this,$a);}
@@ -49,15 +49,15 @@ function takeWhile($a){return Eager::takeWhile($this,$a);}
 function dropWhile($a){return Eager::dropWhile($this,$a);}
 function compact(){return Eager::compact($this);}
 function flatten($a=false){return Eager::flatten($this,$a);}
-function without($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::without($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function union($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::union($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function intersection($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::intersection($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function difference($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::difference($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function without(){return call_user_func_array('Underbar\Eager::without', array_merge(array($this), func_get_args()));}
+function union(){return call_user_func_array('Underbar\Eager::union', array_merge(array($this), func_get_args()));}
+function intersection(){return call_user_func_array('Underbar\Eager::intersection', array_merge(array($this), func_get_args()));}
+function difference(){return call_user_func_array('Underbar\Eager::difference', array_merge(array($this), func_get_args()));}
 function uniq($a=false,$b=NULL){return Eager::uniq($this,$a,$b);}
 function unique($a=false,$b=NULL){return Eager::unique($this,$a,$b);}
-function zip($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::zip($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function zipWith($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::zipWith($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function unzip($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::unzip($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function zip(){return call_user_func_array('Underbar\Eager::zip', array_merge(array($this), func_get_args()));}
+function zipWith(){return call_user_func_array('Underbar\Eager::zipWith', array_merge(array($this), func_get_args()));}
+function unzip(){return call_user_func_array('Underbar\Eager::unzip', array_merge(array($this), func_get_args()));}
 function span($a){return Eager::span($this,$a);}
 function object($a=NULL){return Eager::object($this,$a);}
 function indexOf($a,$b=0){return Eager::indexOf($this,$a,$b);}
@@ -68,23 +68,23 @@ function cycle($a=NULL){return Eager::cycle($this,$a);}
 function repeat($a=-1){return Eager::repeat($this,$a);}
 function iterate($a){return Eager::iterate($this,$a);}
 function pop(){return Eager::pop($this);}
-function push($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::push($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function push(){return call_user_func_array('Underbar\Eager::push', array_merge(array($this), func_get_args()));}
 function reverse(){return Eager::reverse($this);}
 function shift(){return Eager::shift($this);}
 function sort($a=NULL){return Eager::sort($this,$a);}
-function splice($a,$b,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::splice($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function unshift($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::unshift($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function concat($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::concat($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function splice($a,$b){return call_user_func_array('Underbar\Eager::splice', array_merge(array($this), func_get_args()));}
+function unshift(){return call_user_func_array('Underbar\Eager::unshift', array_merge(array($this), func_get_args()));}
+function concat(){return call_user_func_array('Underbar\Eager::concat', array_merge(array($this), func_get_args()));}
 function join($a=','){return Eager::join($this,$a);}
 function slice($a,$b=NULL){return Eager::slice($this,$a,$b);}
 function keys(){return Eager::keys($this);}
 function values(){return Eager::values($this);}
 function pairs(){return Eager::pairs($this);}
 function invert(){return Eager::invert($this);}
-function extend($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::extend($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function pick($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::pick($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function omit($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::omit($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
-function defaults($a=NULL,$b=NULL,$c=NULL,$d=NULL,$e=NULL,$f=NULL,$g=NULL,$h=NULL,$i=NULL,$j=NULL){return Eager::defaults($this,$a,$b,$c,$d,$e,$f,$g,$h,$i,$j);}
+function extend(){return call_user_func_array('Underbar\Eager::extend', array_merge(array($this), func_get_args()));}
+function pick(){return call_user_func_array('Underbar\Eager::pick', array_merge(array($this), func_get_args()));}
+function omit(){return call_user_func_array('Underbar\Eager::omit', array_merge(array($this), func_get_args()));}
+function defaults(){return call_user_func_array('Underbar\Eager::defaults', array_merge(array($this), func_get_args()));}
 function tap($a){return Eager::tap($this,$a);}
 function isArray(){return Eager::isArray($this);}
 function isTraversable(){return Eager::isTraversable($this);}
