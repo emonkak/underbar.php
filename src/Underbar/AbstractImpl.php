@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-abstract class AbstractImpl implements Internal\ImplementorInterface
+abstract class AbstractImpl implements Internal\ProviderInterface
 {
     /**
      * @chainable
@@ -382,7 +382,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract static function sortBy($xs, $f);
 
@@ -391,7 +391,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function groupBy($xs, $f = null);
 
@@ -400,7 +400,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function countBy($xs, $f = null);
 
@@ -408,7 +408,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @chainable
      * @category  Collections
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function shuffle($xs);
 
@@ -960,7 +960,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function reverse($xs);
 
@@ -969,7 +969,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $compare
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function sort($xs, $compare = null);
 

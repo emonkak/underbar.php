@@ -10,7 +10,7 @@
 
 namespace Underbar\Internal;
 
-interface ImplementorInterface
+interface ProviderInterface
 {
     /**
      * @chainable

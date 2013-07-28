@@ -13,7 +13,7 @@ class GeneratorImpl extends AbstractImpl
 {
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -28,7 +28,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -43,7 +43,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -58,7 +58,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
@@ -73,7 +73,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array  $xs
      * @return    Generator
@@ -87,7 +87,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array  $xs
      * @return    IteratorImpl
@@ -99,7 +99,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Collections
      * @param     array      $xs
      * @param     callable   $f
@@ -116,7 +116,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -134,7 +134,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -149,7 +149,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -173,7 +173,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -195,7 +195,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -213,7 +213,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -232,7 +232,7 @@ class GeneratorImpl extends AbstractImpl
     /**
      * @chainable
      * @varargs
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  $xss
      * @return    Generator
@@ -263,7 +263,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array    $xss
      * @param     boolean  $shallow
@@ -290,7 +290,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -313,7 +313,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -331,7 +331,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -346,7 +346,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
@@ -362,7 +362,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @category  Arrays
      * @param     array  $xs
@@ -377,7 +377,7 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @category  Arrays
      * @param     array     $xs
@@ -394,7 +394,7 @@ class GeneratorImpl extends AbstractImpl
     /**
      * @chainable
      * @varargs
-     * @see       ImplementorInterface
+     * @see       ProviderInterface
      * @category  Arrays
      * @param     array  *$xss
      * @return    Generator
