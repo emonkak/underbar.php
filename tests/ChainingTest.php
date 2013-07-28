@@ -20,8 +20,7 @@ class ChainingTest extends Underbar_TestCase
                 if (!isset($hash[$l])) $hash[$l] = 0;
                 $hash[$l]++;
                 return $hash;
-            }, array())
-            ->value();
+            }, array());
 
         $this->assertEquals(16, $counts['a'], 'counted all the letters in the song');
         $this->assertEquals(10, $counts['e'], 'counted all the letters in the song');
@@ -39,8 +38,8 @@ class ChainingTest extends Underbar_TestCase
             return $n % 4 === 0;
         })->sortBy(function($n) {
             return -$n;
-        })->value();
-        $this->assertEquals(array(10, 6, 2), $_::toArray($numbers), 'filtered and reversed the numbers');
+        })->toList();
+        $this->assertEquals(array(10, 6, 2), $numbers, 'filtered and reversed the numbers');
     }
 }
 

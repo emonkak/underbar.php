@@ -12,12 +12,13 @@ namespace Underbar;
 abstract class AbstractImpl implements Internal\ImplementorInterface
 {
     /**
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
      * @return    void
      */
-    public static function each($xs, $f)
+    final public static function each($xs, $f)
     {
         foreach ($xs as $k => $x) {
             call_user_func($f, $x, $k, $xs);
@@ -27,14 +28,19 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Alias: collect
      *
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function map($xs, $f);
 
-    public static function collect($xs, $f)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function collect($xs, $f)
     {
         return static::map($xs, $f);
     }
@@ -48,7 +54,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed     $acc
      * @return    mixed
      */
-    public static function reduce($xs, $f, $acc)
+    final public static function reduce($xs, $f, $acc)
     {
         foreach ($xs as $k => $x) {
             $acc = call_user_func($f, $acc, $x, $k, $xs);
@@ -56,12 +62,12 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         return $acc;
     }
 
-    public static function inject($xs, $f, $acc)
+    final public static function inject($xs, $f, $acc)
     {
         return static::reduce($xs, $f, $acc);
     }
 
-    public static function foldl($xs, $f, $acc)
+    final public static function foldl($xs, $f, $acc)
     {
         return static::reduce($xs, $f, $acc);
     }
@@ -75,12 +81,12 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed     $acc
      * @return    mixed
      */
-    public static function reduceRight($xs, $f, $acc)
+    final public static function reduceRight($xs, $f, $acc)
     {
         return static::reduce(static::reverse($xs), $f, $acc);
     }
 
-    public static function foldr($xs, $f, $acc)
+    final public static function foldr($xs, $f, $acc)
     {
         return static::reduceRight($xs, $f, $acc);
     }
@@ -93,7 +99,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     callable  $f
      * @return    mixed
      */
-    public static function find($xs, $f)
+    final public static function find($xs, $f)
     {
         foreach ($xs as $k => $x) {
             if (call_user_func($f, $x, $k, $xs)) {
@@ -102,7 +108,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         }
     }
 
-    public static function detect($xs, $f)
+    final public static function detect($xs, $f)
     {
         return static::find($xs, $f);
     }
@@ -110,34 +116,31 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Alias: select
      *
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function filter($xs, $f)
-    {
-        $ys = array();
-        foreach ($xs as $k => $x) {
-            if (call_user_func($f, $x, $k, $xs)) {
-                $ys[$k] = $x;
-            }
-        }
-        return $ys;
-    }
+    // abstract public static function filter($xs, $f);
 
-    public static function select($xs, $f)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function select($xs, $f)
     {
         return static::filter($xs, $f);
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array  $xs
      * @param     array  $properties
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function where($xs, $properties)
+    final public static function where($xs, $properties)
     {
         return static::filter($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
@@ -156,7 +159,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     array  $properties
      * @return    mixed
      */
-    public static function findWhere($xs, $properties)
+    final public static function findWhere($xs, $properties)
     {
         return static::find($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
@@ -170,12 +173,13 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function reject($xs, $f)
+    final public static function reject($xs, $f)
     {
         return static::filter($xs, function($x, $k, $xs) use ($f) {
             return !call_user_func($f, $x, $k, $xs);
@@ -190,7 +194,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     callable|string  $f
      * @return    boolean
      */
-    public static function every($xs, $f = null)
+    final public static function every($xs, $f = null)
     {
         $f = static::createCallback($f);
 
@@ -203,7 +207,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         return true;
     }
 
-    public static function all($xs, $f = null)
+    final public static function all($xs, $f = null)
     {
         return static::every($xs, $f);
     }
@@ -216,7 +220,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     callable|string  $f
      * @return    boolean
      */
-    public static function some($xs, $f = null)
+    final public static function some($xs, $f = null)
     {
         $f = static::createCallback($f);
 
@@ -229,7 +233,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         return false;
     }
 
-    public static function any($xs, $f = null)
+    final public static function any($xs, $f = null)
     {
         return static::some($xs, $f);
     }
@@ -240,7 +244,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed  $target
      * @return    boolean
      */
-    public static function contains($xs, $target)
+    final public static function contains($xs, $target)
     {
         foreach ($xs as $x) {
             if ($x === $target) {
@@ -251,14 +255,15 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Collections
      * @param     array   $xs
      * @param     string  $method
      * @param     miexed  *$arguments
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function invoke($xs, $method)
+    final public static function invoke($xs, $method)
     {
         $args = array_slice(func_get_args(), 2);
         return static::map($xs, function($x) use ($method, $args) {
@@ -267,12 +272,13 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array   $xs
      * @param     string  $property
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function pluck($xs, $property)
+    final public static function pluck($xs, $property)
     {
         return static::map($xs, function($x) use ($property) {
             if (isset($x->$property)) {
@@ -291,7 +297,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     callable|string  $f
      * @return    mixed|int
      */
-    public static function max($xs, $f = null)
+    final public static function max($xs, $f = null)
     {
         if ($f === null) {
             $xs = static::extractIterator($xs);
@@ -318,7 +324,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     callable|string  $f
      * @return    mixed|int
      */
-    public static function min($xs, $f = null)
+    final public static function min($xs, $f = null)
     {
         if ($f === null) {
             $xs = static::extractIterator($xs);
@@ -346,7 +352,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     array  $xs
      * @return    int
      */
-    public static function sum($xs)
+    final public static function sum($xs)
     {
         $acc = 0;
         foreach ($xs as $x) {
@@ -362,7 +368,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     array  $xs
      * @return    int
      */
-    public static function product($xs)
+    final public static function product($xs)
     {
         $acc = 1;
         foreach ($xs as $x) {
@@ -372,97 +378,46 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $x
-     * @return    array
-     */
-    public static function sortBy($xs, $x)
-    {
-        $f = static::createCallback($x);
-        $result = array();
-
-        foreach ($xs as $k => $x) {
-            $result[] = array(
-                'value' => $x,
-                'key' => $k,
-                'criteria' => call_user_func($f, $x, $k, $xs),
-            );
-        }
-
-        usort($result, function($left, $right) {
-            $a = $left['criteria'];
-            $b = $right['criteria'];
-            if ($a !== $b) {
-                return $a < $b ? -1 : 1;
-            } else {
-                return $left['key'] < $right['key'] ? -1 : 1;
-            }
-        });
-
-        return static::pluck($result, 'value');
-    }
-
-    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
      * @return    array
      */
-    public static function groupBy($xs, $f = null)
-    {
-        $f = static::createCallback($f);
-        $result = array();
-
-        foreach ($xs as $k => $x) {
-            $key = call_user_func($f, $x, $k, $xs);
-            $result[$key][] = $x;
-        }
-
-        return $result;
-    }
+    // abstract static function sortBy($xs, $f);
 
     /**
+     * @chainable
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    // abstract public static function groupBy($xs, $f = null);
+
+    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
-     * @return    int
+     * @return    array
      */
-    public static function countBy($xs, $f = null)
-    {
-        $f = static::createCallback($f);
-        $result = array();
-
-        foreach ($xs as $k => $x) {
-            $key = call_user_func($f, $x, $k, $xs);
-            if (isset($result[$key])) {
-                $result[$key]++;
-            } else {
-                $result[$key] = 1;
-            }
-        }
-
-        return $result;
-    }
+    // abstract public static function countBy($xs, $f = null);
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array  $xs
      * @return    array
      */
-    public static function shuffle($xs)
-    {
-        $xs = static::extractIterator($xs);
-        shuffle($xs);
-        return $xs;
-    }
+    // abstract public static function shuffle($xs);
 
     /**
      * @category  Collections
      * @param     mixed  $xs
      * @return    array
      */
-    public static function toArray($xs)
+    final public static function toArray($xs)
     {
         if ($xs instanceof \Traversable) {
             return iterator_to_array($xs, true);
@@ -481,7 +436,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed  $xs
      * @return    array
      */
-    public static function toList($xs)
+    final public static function toList($xs)
     {
         if ($xs instanceof \Traversable) {
             return iterator_to_array($xs, false);
@@ -496,21 +451,19 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     Iterator  $xs
      * @return    Iterator
      */
-    public static function memoize($xs)
-    {
-        return new Iterator\MemoizeIterator(static::wrapIterator($xs));
-    }
+    // abstract public static function memoize($xs);
 
     /**
      * @category  Collections
      * @param     mixed  $xs
      * @return    int
      */
-    public static function size($xs)
+    final public static function size($xs)
     {
         if ($xs instanceof \Countable) {
             return count($xs);
@@ -527,12 +480,13 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Alias: head, take
      *
+     * @chainable
      * @category  Arrays
-     * @param     arra  $xs
-     * @param     int   $n
-     * @return    array|mixed
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    mixed|null
      */
-    public static function first($xs, $n = null, $guard = null)
+    final public static function first($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
             return static::firstN($xs, $n);
@@ -543,33 +497,49 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         }
     }
 
-    public static function head($xs, $n = null, $guard = null)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function head($xs, $n = null, $guard = null)
     {
         return static::first($xs, $n, $guard);
     }
-
-    public static function take($xs, $n = null, $guard = null)
-    {
-        return static::first($xs, $n, $guard);
-    }
-
-    // abstract public static function firstN($xs, $n = null);
 
     /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function take($xs, $n = null, $guard = null)
+    {
+        return static::first($xs, $n, $guard);
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     arra  $xs
+     * @param     int   $n
+     * @return    array|Iterator
+     */
+    // abstract public static function take($xs, $n);
+
+    /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function initial($xs, $n = 1, $guard = null);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @param     int    $n
-     * @return    array|mixed
+     * @return    array|mixed|null|Iterator
      */
-    public static function last($xs, $n = null, $guard = null)
+    final public static function last($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
             return static::lastN($xs, $n);
@@ -581,7 +551,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         return $x;
     }
 
-    public static function lastN($xs, $n = null)
+    final public static function lastN($xs, $n = null)
     {
         $queue = new \SplQueue();
         if ($n <= 0) {
@@ -604,19 +574,28 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Alias: tail, drop
      *
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function rest($xs, $n = 1, $guard = null);
 
-    public static function tail($xs, $n = 1, $guard = null)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function tail($xs, $n = 1, $guard = null)
     {
         return static::rest($xs, $n, $guard);
     }
 
-    public static function drop($xs, $n = 1, $guard = null)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function drop($xs, $n = 1, $guard = null)
     {
         return static::rest($xs, $n, $guard);
     }
@@ -624,60 +603,66 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function takeWhile($xs, $f);
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function dropWhile($xs, $f);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function compact($xs)
+    final public static function compact($xs)
     {
         return static::filter($xs, __CLASS__.'::identity');
     }
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     boolean   $shallow
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function flatten($xs, $shallow = false);
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xs
      * @param     mixed  *$values
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function without($xs)
+    final public static function without($xs)
     {
         return static::difference($xs, array_slice(func_get_args(), 1));
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function union()
+    final public static function union()
     {
         return static::uniq(call_user_func_array(
             get_called_class().'::concat',
@@ -686,12 +671,13 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xs
      * @return    array
      */
-    public static function intersection()
+    final public static function intersection()
     {
         $xss = array();
         foreach (func_get_args() as $xs) {
@@ -701,13 +687,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xs
      * @param     array  *$others
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function difference($xs)
+    final public static function difference($xs)
     {
         $yss = array_slice(func_get_args(), 1);
         return static::filter($xs, function($x) use ($yss) {
@@ -725,13 +712,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Alias: unique
      *
+     * @chainable
      * @category  Arrays
      * @param     array            $xs
-     * @param     boolean             $isSorted
+     * @param     boolean|int      $isSorted
      * @param     callable|string  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function uniq($xs, $isSorted = false, $f = null)
+    final public static function uniq($xs, $isSorted = false, $f = null)
     {
         if (!is_bool($isSorted)) {
             $f = static::createCallback($isSorted);
@@ -786,18 +774,23 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         });
     }
 
-    public static function unique($xs, $isSorted = false, $f = null)
+    /**
+     * @chainable
+     * @category  Arrays
+     */
+    final public static function unique($xs, $isSorted = false, $f = null)
     {
         return static::uniq($xs, $f);
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function zip()
+    final public static function zip()
     {
         return static::unzip(func_get_args());
     }
@@ -805,13 +798,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array     *$xss
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function zipWith()
+    final public static function zipWith()
     {
         $xss = func_get_args();
         $f = array_pop($xss);
@@ -822,20 +816,22 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xss
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function unzip($xss);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     array  $values
      * @return    array
      */
-    public static function object($xs, $values = null)
+    final public static function object($xs, $values = null)
     {
         $result = array();
         $values = static::wrapIterator($values);
@@ -864,7 +860,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     boolean|int  $isSorted
      * @return    int
      */
-    public static function indexOf($xs, $value, $isSorted = 0)
+    final public static function indexOf($xs, $value, $isSorted = 0)
     {
         $xs = static::extractIterator($xs);
 
@@ -891,7 +887,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     int    $fromIndex
      * @return    int
      */
-    public static function lastIndexOf($xs, $x, $fromIndex = null)
+    final public static function lastIndexOf($xs, $x, $fromIndex = null)
     {
         $xs = static::extractIterator($xs);
         $l = count($xs);
@@ -913,7 +909,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     callable|string  $f
      * @return    int
      */
-    public static function sortedIndex($xs, $value, $f = null)
+    final public static function sortedIndex($xs, $value, $f = null)
     {
         $xs = static::extractIterator($xs);
         $f = static::createCallback($f);
@@ -935,21 +931,23 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
      * @param     int  $step
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function range($start, $stop = null, $step = 1);
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      * @throws    OverflowException
      */
     // abstract public static function cycle($xs, $n = null);
@@ -957,10 +955,11 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      * @throws    OverflowException
      */
     // abstract public static function repeat($value, $n = -1);
@@ -968,42 +967,38 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
-     * @return    array
+     * @return    Iterator
      * @throws    OverflowException
      */
     // abstract public static function iterate($acc, $f);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @return    array
      */
-    public static function reverse($xs)
-    {
-        return array_reverse(static::extractIterator($xs));
-    }
+    // abstract public static function reverse($xs);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $compare
      * @return    array
      */
-    public static function sort($xs, $compare = null)
-    {
-        $xs = static::extractIterator($xs);
-        is_callable($compare) ? usort($xs, $compare) : sort($xs);
-        return $xs;
-    }
+    // abstract public static function sort($xs, $compare = null);
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
-     * @return    array
+     * @return    array|Iterator
      */
     // abstract public static function concat();
 
@@ -1013,7 +1008,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     string  $separator
      * @return    string
      */
-    public static function join($xs, $separator = ',')
+    final public static function join($xs, $separator = ',')
     {
         $str = '';
         foreach ($xs as $x) {
@@ -1023,11 +1018,12 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function keys($xs)
+    final public static function keys($xs)
     {
         if ($xs instanceof \Traversable) {
             return static::map($xs, function($x, $k) {
@@ -1038,11 +1034,12 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array  $xs
-     * @return    array|Iterator
+     * @return    array|Iterator|Iterator
      */
-    public static function values($xs)
+    final public static function values($xs)
     {
         if ($xs instanceof \Traversable) {
             return $xs;
@@ -1051,11 +1048,12 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array    $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function pairs($xs)
+    final public static function pairs($xs)
     {
         return static::map($xs, function($x, $k) {
             return array($k, $x);
@@ -1063,11 +1061,12 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array  $xs
      * @return    array
      */
-    public static function invert($xs)
+    final public static function invert($xs)
     {
         $result = array();
         foreach ($xs as $k => $x) {
@@ -1077,13 +1076,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array  $destination
      * @param     array  *$sources
      * @return    array
      */
-    public static function extend($destination)
+    final public static function extend($destination)
     {
         $destination = static::toArray($destination);
         $sources = array_slice(func_get_args(), 1);
@@ -1096,13 +1096,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array         $xs
      * @param     array|string  *$keys
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function pick($xs)
+    final public static function pick($xs)
     {
         $whitelist = array();
         $keys = array_slice(func_get_args(), 1);
@@ -1123,13 +1124,26 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @category  Objects
+     * @param     mixed     $value
+     * @param     callable  $interceptor
+     * @return    mixed
+     */
+    final public static function tap($value, $interceptor)
+    {
+        call_user_func($interceptor, $value);
+        return $value;
+    }
+
+    /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array         $xs
      * @param     array|string  *$keys
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function omit($xs)
+    final public static function omit($xs)
     {
         $blacklist = array();
         $keys = array_slice(func_get_args(), 1);
@@ -1150,13 +1164,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array  $xs
      * @param     array  *$defaults
      * @return    array
      */
-    public static function defaults($xs)
+    final public static function defaults($xs)
     {
         $xs = static::toArray($xs);
         $defaults = array_slice(func_get_args(), 1);
@@ -1173,22 +1188,10 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
 
     /**
      * @category  Objects
-     * @param     mixed     $value
-     * @param     callable  $interceptor
-     * @return    mixed
-     */
-    public static function tap($value, $interceptor)
-    {
-        call_user_func($interceptor, $value);
-        return $value;
-    }
-
-    /**
-     * @category  Objects
      * @param     mixed  $xs
      * @return    boolean
      */
-    public static function isArray($value)
+    final public static function isArray($value)
     {
         return is_array($value) || $value instanceof \ArrayAccess;
     }
@@ -1198,7 +1201,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed  $xs
      * @return    boolean
      */
-    public static function isTraversable($value)
+    final public static function isTraversable($value)
     {
         return is_array($value) || $value instanceof \Traversable;
     }
@@ -1208,7 +1211,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed  $value
      * @return    mixed
      */
-    public static function identity($value)
+    final public static function identity($value)
     {
         return $value;
     }
@@ -1218,7 +1221,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     mixed  $value
      * @return    Wrapper
      */
-    public static function chain($value)
+    final public static function chain($value)
     {
         return new Internal\Wrapper($value, get_called_class());
     }
@@ -1226,6 +1229,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     /**
      * Parallel version of map()
      *
+     * @chainable
      * @category  Parallel
      * @param     array     $xs
      * @param     callable  $f
@@ -1233,7 +1237,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     int       $timeout
      * @return    Parallel
      */
-    public static function parMap($xs, $f, $n = null, $timeout = null)
+    final public static function parMap($xs, $f, $n = null, $timeout = null)
     {
         $parallel = new Internal\Parallel($f, $n, $timeout);
         $parallel->pushAll($xs);

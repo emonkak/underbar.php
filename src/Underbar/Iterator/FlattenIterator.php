@@ -9,37 +9,94 @@
 
 namespace Underbar\Iterator;
 
-class FlattenIterator extends \RecursiveIteratorIterator
+class FlattenIterator implements \RecursiveIterator
 {
-    public function __construct($xs, $shallow)
+    private $it;
+    private $depth;
+    private $children;
+
+    public function __construct(\Iterator $it, $depth)
     {
-        parent::__construct(
-            new FlattenInnerIterator($xs),
-            $shallow ? self::SELF_FIRST : self::LEAVES_ONLY
-        );
-        $this->setMaxDepth($shallow ? 1 : -1);
+        $this->it = $it;
+        $this->depth = $depth;
+    }
+
+    public function getChildren()
+    {
+        $current = $this->it->current();
+        $it = is_array($current) ? new \ArrayIterator($current) : $current;
+        return new self($it, $this->depth - 1);
+    }
+
+    public function hasChildren()
+    {
+        if ($this->depth === 0) {
+            return false;
+        }
+        $current = $this->it->current();
+        return is_array($current) || $current instanceof \Traversable;
+    }
+
+    public function current()
+    {
+        if ($this->children) {
+            return $this->children->current();
+        } else {
+            return $this->it->current();
+        }
+    }
+
+    public function key()
+    {
+        if ($this->children) {
+            return $this->children->key();
+        } else {
+            return $this->it->key();
+        }
     }
 
     public function next()
     {
-        parent::next();
-        $this->fetchIfShallow();
+        if ($this->children) {
+            $this->children->next();
+        } else {
+            $this->it->next();
+            $this->fetchChildren();
+        }
     }
 
     public function rewind()
     {
-        parent::rewind();
-        $this->fetchIfShallow();
+        if ($this->children) {
+            $this->children->rewind();
+        } else {
+            $this->it->rewind();
+            $this->fetchChildren();
+        }
     }
 
-    protected function fetchIfShallow()
+    public function valid()
     {
-        if (($maxDepth = $this->getMaxDepth()) > 0) {
-            $current = $this->current();
-            while ((is_array($current) || $current instanceof \Traversable)
-                   && $this->getDepth() < $maxDepth) {
-                parent::next();
+        if ($this->children) {
+            if ($this->children->valid()) {
+                return true;
             }
+
+            $this->it->next();
+            $this->fetchChildren();
         }
+
+        return $this->it->valid();
+    }
+
+    private function fetchChildren()
+    {
+        if (!$this->hasChildren()) {
+            $this->children = null;
+            return;
+        }
+
+        $this->children = $this->getChildren();
+        $this->children->rewind();
     }
 }

@@ -9,21 +9,20 @@
 
 namespace Underbar\Iterator;
 
-class MapIterator implements \Iterator
+class DropIterator implements \Iterator
 {
     private $it;
-    private $f;
-    private $current;
+    private $n;
 
-    public function __construct(\Iterator $it, $f)
+    public function __construct(\Iterator $it, $n)
     {
         $this->it = $it;
-        $this->f = $f;
+        $this->n = $n;
     }
 
     public function current()
     {
-        return $this->current;
+        return $this->it->current();
     }
 
     public function key()
@@ -34,29 +33,23 @@ class MapIterator implements \Iterator
     public function next()
     {
         $this->it->next();
-        $this->processIfValid();
     }
 
     public function rewind()
     {
         $this->it->rewind();
-        $this->processIfValid();
+        $n = $this->n;
+        while ($this->it->valid()) {
+            if ($n-- > 0) {
+                $this->it->next();
+            } else {
+                break;
+            }
+        }
     }
 
     public function valid()
     {
         return $this->it->valid();
-    }
-
-    private function processIfValid()
-    {
-        if ($this->it->valid()) {
-            $this->current = call_user_func(
-                $this->f,
-                $this->it->current(),
-                $this->it->key(),
-                $this->it
-            );
-        }
     }
 }

@@ -1,101 +1,85 @@
 <?php
 namespace Underbar;
 trait Enumerable{
+abstract function getCollection();
 abstract function getUnderbarImpl();
-function map($a){return call_user_func(array($this->getUnderbarImpl(),'map'),$this,$a);}
-function filter($a){return call_user_func(array($this->getUnderbarImpl(),'filter'),$this,$a);}
-function firstN($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'firstN'),$this,$a);}
-function initial($a=1,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'initial'),$this,$a,$b);}
-function rest($a=1,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'rest'),$this,$a,$b);}
-function takeWhile($a){return call_user_func(array($this->getUnderbarImpl(),'takeWhile'),$this,$a);}
-function dropWhile($a){return call_user_func(array($this->getUnderbarImpl(),'dropWhile'),$this,$a);}
-function flatten($a=false){return call_user_func(array($this->getUnderbarImpl(),'flatten'),$this,$a);}
-function unzip(){return call_user_func_array(array($this->getUnderbarImpl(),'unzip'), array_merge(array($this),func_get_args()));
-}
-function range($a=NULL,$b=1){return call_user_func(array($this->getUnderbarImpl(),'range'),$this,$a,$b);}
-function cycle($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'cycle'),$this,$a);}
-function repeat($a=-1){return call_user_func(array($this->getUnderbarImpl(),'repeat'),$this,$a);}
-function iterate($a){return call_user_func(array($this->getUnderbarImpl(),'iterate'),$this,$a);}
-function concat(){return call_user_func_array(array($this->getUnderbarImpl(),'concat'), array_merge(array($this),func_get_args()));
-}
-function each($a){return call_user_func(array($this->getUnderbarImpl(),'each'),$this,$a);}
-function collect($a){return call_user_func(array($this->getUnderbarImpl(),'collect'),$this,$a);}
-function reduce($a,$b){return call_user_func(array($this->getUnderbarImpl(),'reduce'),$this,$a,$b);}
-function inject($a,$b){return call_user_func(array($this->getUnderbarImpl(),'inject'),$this,$a,$b);}
-function foldl($a,$b){return call_user_func(array($this->getUnderbarImpl(),'foldl'),$this,$a,$b);}
-function reduceRight($a,$b){return call_user_func(array($this->getUnderbarImpl(),'reduceRight'),$this,$a,$b);}
-function foldr($a,$b){return call_user_func(array($this->getUnderbarImpl(),'foldr'),$this,$a,$b);}
-function find($a){return call_user_func(array($this->getUnderbarImpl(),'find'),$this,$a);}
-function detect($a){return call_user_func(array($this->getUnderbarImpl(),'detect'),$this,$a);}
-function select($a){return call_user_func(array($this->getUnderbarImpl(),'select'),$this,$a);}
-function where($a){return call_user_func(array($this->getUnderbarImpl(),'where'),$this,$a);}
-function findWhere($a){return call_user_func(array($this->getUnderbarImpl(),'findWhere'),$this,$a);}
-function reject($a){return call_user_func(array($this->getUnderbarImpl(),'reject'),$this,$a);}
-function every($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'every'),$this,$a);}
-function all($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'all'),$this,$a);}
-function some($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'some'),$this,$a);}
-function any($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'any'),$this,$a);}
-function contains($a){return call_user_func(array($this->getUnderbarImpl(),'contains'),$this,$a);}
-function invoke($a){return call_user_func_array(array($this->getUnderbarImpl(),'invoke'), array_merge(array($this),func_get_args()));
-}
-function pluck($a){return call_user_func(array($this->getUnderbarImpl(),'pluck'),$this,$a);}
-function max($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'max'),$this,$a);}
-function min($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'min'),$this,$a);}
-function sum(){return call_user_func(array($this->getUnderbarImpl(),'sum'),$this);}
-function product(){return call_user_func(array($this->getUnderbarImpl(),'product'),$this);}
-function sortBy($a){return call_user_func(array($this->getUnderbarImpl(),'sortBy'),$this,$a);}
-function groupBy($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'groupBy'),$this,$a);}
-function countBy($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'countBy'),$this,$a);}
-function shuffle(){return call_user_func(array($this->getUnderbarImpl(),'shuffle'),$this);}
-function toArray(){return call_user_func(array($this->getUnderbarImpl(),'toArray'),$this);}
-function toList(){return call_user_func(array($this->getUnderbarImpl(),'toList'),$this);}
-function memoize(){return call_user_func(array($this->getUnderbarImpl(),'memoize'),$this);}
-function size(){return call_user_func(array($this->getUnderbarImpl(),'size'),$this);}
-function first($a=NULL,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'first'),$this,$a,$b);}
-function head($a=NULL,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'head'),$this,$a,$b);}
-function take($a=NULL,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'take'),$this,$a,$b);}
-function last($a=NULL,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'last'),$this,$a,$b);}
-function lastN($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'lastN'),$this,$a);}
-function tail($a=1,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'tail'),$this,$a,$b);}
-function drop($a=1,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'drop'),$this,$a,$b);}
-function compact(){return call_user_func(array($this->getUnderbarImpl(),'compact'),$this);}
-function without(){return call_user_func_array(array($this->getUnderbarImpl(),'without'), array_merge(array($this),func_get_args()));
-}
-function union(){return call_user_func_array(array($this->getUnderbarImpl(),'union'), array_merge(array($this),func_get_args()));
-}
-function intersection(){return call_user_func_array(array($this->getUnderbarImpl(),'intersection'), array_merge(array($this),func_get_args()));
-}
-function difference(){return call_user_func_array(array($this->getUnderbarImpl(),'difference'), array_merge(array($this),func_get_args()));
-}
-function uniq($a=false,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'uniq'),$this,$a,$b);}
-function unique($a=false,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'unique'),$this,$a,$b);}
-function zip(){return call_user_func_array(array($this->getUnderbarImpl(),'zip'), array_merge(array($this),func_get_args()));
-}
-function zipWith(){return call_user_func_array(array($this->getUnderbarImpl(),'zipWith'), array_merge(array($this),func_get_args()));
-}
-function span($a){return call_user_func(array($this->getUnderbarImpl(),'span'),$this,$a);}
-function object($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'object'),$this,$a);}
-function indexOf($a,$b=0){return call_user_func(array($this->getUnderbarImpl(),'indexOf'),$this,$a,$b);}
-function lastIndexOf($a,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'lastIndexOf'),$this,$a,$b);}
-function sortedIndex($a,$b=NULL){return call_user_func(array($this->getUnderbarImpl(),'sortedIndex'),$this,$a,$b);}
-function reverse(){return call_user_func(array($this->getUnderbarImpl(),'reverse'),$this);}
-function sort($a=NULL){return call_user_func(array($this->getUnderbarImpl(),'sort'),$this,$a);}
-function join($a=','){return call_user_func(array($this->getUnderbarImpl(),'join'),$this,$a);}
-function keys(){return call_user_func(array($this->getUnderbarImpl(),'keys'),$this);}
-function values(){return call_user_func(array($this->getUnderbarImpl(),'values'),$this);}
-function pairs(){return call_user_func(array($this->getUnderbarImpl(),'pairs'),$this);}
-function invert(){return call_user_func(array($this->getUnderbarImpl(),'invert'),$this);}
-function extend(){return call_user_func_array(array($this->getUnderbarImpl(),'extend'), array_merge(array($this),func_get_args()));
-}
-function pick(){return call_user_func_array(array($this->getUnderbarImpl(),'pick'), array_merge(array($this),func_get_args()));
-}
-function omit(){return call_user_func_array(array($this->getUnderbarImpl(),'omit'), array_merge(array($this),func_get_args()));
-}
-function defaults(){return call_user_func_array(array($this->getUnderbarImpl(),'defaults'), array_merge(array($this),func_get_args()));
-}
-function tap($a){return call_user_func(array($this->getUnderbarImpl(),'tap'),$this,$a);}
-function isArray(){return call_user_func(array($this->getUnderbarImpl(),'isArray'),$this);}
-function isTraversable(){return call_user_func(array($this->getUnderbarImpl(),'isTraversable'),$this);}
-function chain(){return call_user_func(array($this->getUnderbarImpl(),'chain'),$this);}
-function parMap($a,$b=NULL,$c=NULL){return call_user_func(array($this->getUnderbarImpl(),'parMap'),$this,$a,$b,$c);}
+function map($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'map'),$this->getCollection(),$a);return $impl::chain($result);}
+function filter($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'filter'),$this->getCollection(),$a);return $impl::chain($result);}
+function sortBy($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sortBy'),$this->getCollection(),$a);return $impl::chain($result);}
+function groupBy($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'groupBy'),$this->getCollection(),$a);return $impl::chain($result);}
+function countBy($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'countBy'),$this->getCollection(),$a);return $impl::chain($result);}
+function shuffle(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'shuffle'),$this->getCollection());return $impl::chain($result);}
+function memoize(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'memoize'),$this->getCollection());return $impl::chain($result);}
+function firstN($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'firstN'),$this->getCollection(),$a);return $impl::chain($result);}
+function initial($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'initial'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function rest($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'rest'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function takeWhile($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'takeWhile'),$this->getCollection(),$a);return $impl::chain($result);}
+function dropWhile($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'dropWhile'),$this->getCollection(),$a);return $impl::chain($result);}
+function flatten($a=false){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'flatten'),$this->getCollection(),$a);return $impl::chain($result);}
+function unzip(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'unzip'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function range($a=NULL,$b=1){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'range'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function cycle($a=-1){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'cycle'),$this->getCollection(),$a);return $impl::chain($result);}
+function repeat($a=-1){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'repeat'),$this->getCollection(),$a);return $impl::chain($result);}
+function iterate($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'iterate'),$this->getCollection(),$a);return $impl::chain($result);}
+function reverse(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reverse'),$this->getCollection());return $impl::chain($result);}
+function sort($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sort'),$this->getCollection(),$a);return $impl::chain($result);}
+function concat(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'concat'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function each($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'each'),$this->getCollection(),$a);return $impl::chain($result);}
+function collect($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'collect'),$this->getCollection(),$a);return $impl::chain($result);}
+function reduce($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reduce'),$this->getCollection(),$a,$b);return $result;}
+function inject($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'inject'),$this->getCollection(),$a,$b);return $result;}
+function foldl($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'foldl'),$this->getCollection(),$a,$b);return $result;}
+function reduceRight($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reduceRight'),$this->getCollection(),$a,$b);return $result;}
+function foldr($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'foldr'),$this->getCollection(),$a,$b);return $result;}
+function find($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'find'),$this->getCollection(),$a);return $result;}
+function detect($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'detect'),$this->getCollection(),$a);return $result;}
+function select($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'select'),$this->getCollection(),$a);return $impl::chain($result);}
+function where($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'where'),$this->getCollection(),$a);return $impl::chain($result);}
+function findWhere($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'findWhere'),$this->getCollection(),$a);return $result;}
+function reject($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reject'),$this->getCollection(),$a);return $impl::chain($result);}
+function every($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'every'),$this->getCollection(),$a);return $result;}
+function all($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'all'),$this->getCollection(),$a);return $result;}
+function some($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'some'),$this->getCollection(),$a);return $result;}
+function any($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'any'),$this->getCollection(),$a);return $result;}
+function contains($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'contains'),$this->getCollection(),$a);return $result;}
+function invoke($a){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'invoke'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function pluck($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'pluck'),$this->getCollection(),$a);return $impl::chain($result);}
+function max($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'max'),$this->getCollection(),$a);return $result;}
+function min($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'min'),$this->getCollection(),$a);return $result;}
+function sum(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sum'),$this->getCollection());return $result;}
+function product(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'product'),$this->getCollection());return $result;}
+function toArray(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'toArray'),$this->getCollection());return $result;}
+function toList(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'toList'),$this->getCollection());return $result;}
+function size(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'size'),$this->getCollection());return $result;}
+function first($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'first'),$this->getCollection(),$a,$b);return $a===null?$result:$impl::chain($result);}function head($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'head'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function take($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'take'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function last($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'last'),$this->getCollection(),$a,$b);return $a===null?$result:$impl::chain($result);}function lastN($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'lastN'),$this->getCollection(),$a);return $result;}
+function tail($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'tail'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function drop($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'drop'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function compact(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'compact'),$this->getCollection());return $impl::chain($result);}
+function without(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'without'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function union(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'union'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function intersection(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'intersection'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function difference(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'difference'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function uniq($a=false,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'uniq'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function unique($a=false,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'unique'),$this->getCollection(),$a,$b);return $impl::chain($result);}
+function zip(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'zip'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function zipWith(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'zipWith'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function object($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'object'),$this->getCollection(),$a);return $impl::chain($result);}
+function indexOf($a,$b=0){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'indexOf'),$this->getCollection(),$a,$b);return $result;}
+function lastIndexOf($a,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'lastIndexOf'),$this->getCollection(),$a,$b);return $result;}
+function sortedIndex($a,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sortedIndex'),$this->getCollection(),$a,$b);return $result;}
+function join($a=','){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'join'),$this->getCollection(),$a);return $result;}
+function keys(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'keys'),$this->getCollection());return $impl::chain($result);}
+function values(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'values'),$this->getCollection());return $impl::chain($result);}
+function pairs(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'pairs'),$this->getCollection());return $impl::chain($result);}
+function invert(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'invert'),$this->getCollection());return $impl::chain($result);}
+function extend(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'extend'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function pick(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'pick'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function tap($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'tap'),$this->getCollection(),$a);return $result;}
+function omit(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'omit'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function defaults(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'defaults'), array_merge(array($this->getCollection()),func_get_args()));return $impl::chain($result);}
+function isArray(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'isArray'),$this->getCollection());return $result;}
+function isTraversable(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'isTraversable'),$this->getCollection());return $result;}
+function parMap($a,$b=NULL,$c=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'parMap'),$this->getCollection(),$a,$b,$c);return $impl::chain($result);}
 }

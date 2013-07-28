@@ -11,18 +11,15 @@ namespace Underbar\Iterator;
 
 class IterateIterator implements \Iterator
 {
-    private $f;
-
     private $initial;
-
+    private $f;
     private $acc;
-
     private $index;
 
     public function __construct($initial, $f)
     {
-        $this->f = $f;
         $this->initial = $initial;
+        $this->f = $f;
     }
 
     public function current()

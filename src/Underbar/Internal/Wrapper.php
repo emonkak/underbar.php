@@ -9,8 +9,12 @@
 
 namespace Underbar\Internal;
 
+use Underbar\Enumerable;
+
 class Wrapper implements \IteratorAggregate
 {
+    use Enumerable;
+
     private $value;
 
     private $impl;
@@ -21,14 +25,12 @@ class Wrapper implements \IteratorAggregate
         $this->impl = $impl;
     }
 
-    public function __call($name, $aruguments)
+    public function getUnderbarImpl()
     {
-        array_unshift($aruguments, $this->value);
-        $value = call_user_func_array($this->impl.'::'.$name, $aruguments);
-        return new static($value, $this->impl);
+        return $this->impl;
     }
 
-    public function value()
+    public function getCollection()
     {
         return $this->value;
     }
@@ -42,5 +44,10 @@ class Wrapper implements \IteratorAggregate
         } else {
             return new \EmptyIterator();
         }
+    }
+
+    public function value()
+    {
+        return $this->value;
     }
 }

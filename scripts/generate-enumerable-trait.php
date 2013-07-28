@@ -3,13 +3,15 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 $ref = new ReflectionClass('Underbar\\ArrayImpl');
-$categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Parallel|Objects|Chaining)|^$/';
+$categoryPattern = '/\*\s+@category\s+(Arrays|Collections|Objects|Parallel)|^$/';
+$chainabePattern = '/\*\s+@chainable/';
 $varargsPattern = '/\*\s+@varargs/';
 
 echo <<<EOF
 <?php
 namespace {$ref->getNamespaceName()};
 trait Enumerable{
+abstract function getCollection();
 abstract function getUnderbarImpl();
 
 EOF;
@@ -17,6 +19,7 @@ EOF;
 foreach ($ref->getMethods() as $method) {
     $docComment = $method->getDocComment();
     $isMatchedCategory = preg_match($categoryPattern, $docComment);
+    $isChainable = preg_match($chainabePattern, $docComment);
     $isVarargs = preg_match($varargsPattern, $docComment);
 
     if (!$method->isPublic()
@@ -26,7 +29,7 @@ foreach ($ref->getMethods() as $method) {
     }
 
     $defineArgs = array();
-    $callArgs = array('$this');
+    $callArgs = array('$this->getCollection()');
     foreach ($method->getParameters() as $i => $param) {
         if ($i === 0) {
             continue;
@@ -51,21 +54,31 @@ foreach ($ref->getMethods() as $method) {
     } else {
         echo "function {$method->getName()}(";
     }
+
     echo implode(',', $defineArgs) . '){';
+    echo '$impl=$this->getUnderbarImpl();';
 
     if ($isVarargs) {
         echo <<<EOF
-return call_user_func_array(array(\$this->getUnderbarImpl(),'{$method->getName()}'), array_merge(array(\$this),func_get_args()));
-
+\$result=call_user_func_array(array(\$impl,'{$method->getName()}'), array_merge(array(\$this->getCollection()),func_get_args()));
 EOF;
     } else {
         echo <<<EOF
-return call_user_func(array(\$this->getUnderbarImpl(),'{$method->getName()}'),
+\$result=call_user_func(array(\$impl,'{$method->getName()}'),
 EOF;
         echo implode(',', $callArgs) . ');';
     }
 
-    echo '}', PHP_EOL;
+    if ($isChainable) {
+        if ($method->getName() === 'first'
+            || $method->getName() === 'last') {
+            echo 'return $a===null?$result:$impl::chain($result);}';
+        } else {
+            echo 'return $impl::chain($result);}', PHP_EOL;
+        }
+    } else {
+        echo 'return $result;}', PHP_EOL;
+    }
 }
 
 echo '}', PHP_EOL;

@@ -41,11 +41,11 @@ class ObjectsTest extends Underbar_TestCase
     {
         $obj = array('first' => 'Moe', 'second' => 'Larry', 'third' => 'Curly');
 
-        $result = $_::chain($obj)->invert()->keys()->value();
-        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $_::toList($result), 'can invert an object');
+        $result = $_::chain($obj)->invert()->keys()->toList();
+        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $result, 'can invert an object');
 
-        $result = $_::chain($obj)->invert()->invert()->value();
-        $this->assertEquals($obj, $_::toArray($result), 'two inverts gets you back where you started');
+        $result = $_::chain($obj)->invert()->invert()->toArray();
+        $this->assertEquals($obj, $result, 'two inverts gets you back where you started');
     }
 
     /**
@@ -149,13 +149,6 @@ class ObjectsTest extends Underbar_TestCase
         $returned = $_::tap(1, $interceptor);
         $this->assertEquals(1, $intercepted, 'passes tapped object to interceptor');
         $this->assertEquals(1, $returned, 'returns tapped object');
-
-        $returned = $_::chain(array(1, 2, 3))
-            ->map(function($n) { return $n * 2; })
-            ->max()
-            ->tap($interceptor)
-            ->value();
-        $this->assertTrue(6 === $intercepted && 6 === $returned, 'can use tapped objects in a chain');
     }
 
     /**

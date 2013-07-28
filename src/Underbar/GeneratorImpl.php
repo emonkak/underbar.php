@@ -12,6 +12,7 @@ namespace Underbar;
 class GeneratorImpl extends AbstractImpl
 {
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
@@ -26,6 +27,78 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Generator
+     */
+    public static function sortBy($xs, $f)
+    {
+        return static::delay(function() use ($xs, $f) {
+            return ArrayImpl::sortBy($xs, $f);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Generator
+     */
+    public static function groupBy($xs, $f = null)
+    {
+        return static::delay(function() use ($xs, $f) {
+            return ArrayImpl::groupBy($xs, $f);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $x
+     * @return    Generator
+     */
+    public static function countBy($xs, $f = null)
+    {
+        return static::delay(function() use ($xs, $f) {
+            return ArrayImpl::countBy($xs, $f);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    Generator
+     */
+    public static function shuffle($xs)
+    {
+        return static::delay(function() use ($xs) {
+            return ArrayImpl::shuffle($xs);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    IteratorImpl
+     */
+    public static function memoize($xs)
+    {
+        return IteratorImpl::memoize($xs);
+    }
+
+    /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array      $xs
@@ -42,6 +115,7 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -59,6 +133,7 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -71,17 +146,18 @@ class GeneratorImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        foreach ($xs as $x) {
+        foreach ($xs as $i => $x) {
             $queue->enqueue($x);
             if ($n > 0) {
                 $n--;
             } else {
-                yield $queue->dequeue();
+                yield $i => $queue->dequeue();
             }
         }
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -93,16 +169,17 @@ class GeneratorImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        foreach ($xs as $i => $v) {
+        foreach ($xs as $i => $x) {
             if ($n > 0) {
                 $n--;
             } else {
-                yield $i => $v;
+                yield $i => $x;
             }
         }
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
@@ -120,6 +197,7 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
@@ -137,6 +215,7 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
@@ -168,6 +247,7 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xss
@@ -176,24 +256,25 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function flatten($xss, $shallow = false)
     {
-        foreach ($xss as $xs) {
+        foreach ($xss as $i => $xs) {
             if (static::isTraversable($xs)) {
                 if ($shallow) {
-                    foreach ($xs as $x) {
-                        yield $x;
+                    foreach ($xs as $j => $x) {
+                        yield $j => $x;
                     }
                 } else {
-                    foreach (static::flatten($xs, $shallow) as $x) {
-                        yield $x;
+                    foreach (static::flatten($xs, $shallow) as $j => $x) {
+                        yield $j => $x;
                     }
                 }
             } else {
-                yield $xs;
+                yield $i => $xs;
             }
         }
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
@@ -210,35 +291,31 @@ class GeneratorImpl extends AbstractImpl
 
         $len = max(ceil(($stop - $start) / $step), 0);
         for ($i = 0; $i < $len; $i++) {
-            yield $start;
+            yield $i => $start;
             $start += $step;
         }
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @param     array  $array
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Generator
      */
-    public static function cycle($array, $n = null)
+    public static function cycle($xs, $n = -1)
     {
-        if ($n === null) {
-            while (true) {
-                foreach ($array as $value) {
-                    yield $value;
-                }
-            }
-        } else {
-            while ($n-- > 0) {
-                foreach ($array as $value) {
-                    yield $value;
-                }
+        $xs = static::memoize($xs);
+        while ($n--) {
+            foreach ($xs as $i => $x) {
+                yield $i => $x;
             }
         }
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
@@ -253,6 +330,7 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
@@ -268,6 +346,38 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array  $xs
+     * @return    Generator
+     */
+    public static function reverse($xs)
+    {
+        return static::delay(function() use ($xs) {
+            return ArrayImpl::reverse($xs);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $compare
+     * @return    Generator
+     */
+    public static function sort($xs, $compare = null)
+    {
+        return static::delay(function() use ($xs, $compare) {
+            return ArrayImpl::sort($xs, $compare);
+        });
+    }
+
+    /**
+     * @chainable
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
@@ -280,6 +390,17 @@ class GeneratorImpl extends AbstractImpl
             foreach ($xs as $i => $x) {
                 yield $i => $x;
             }
+        }
+    }
+
+    /**
+     * @param   callable  $f
+     * @return  Generator
+     */
+    private static function delay($f)
+    {
+        foreach ($f() as $k => $x) {
+            yield $k => $x;
         }
     }
 }

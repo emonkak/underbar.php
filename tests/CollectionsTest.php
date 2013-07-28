@@ -84,12 +84,13 @@ class CollectionsTest extends Underbar_TestCase
         $args = null;
         $memo = array();
         $object = array('a' => 1, 'b' => 2);
-        $expected = array($memo, 2, 'b', $object);
 
         $_::reduceRight($object, function() use (&$args) {
             $args || ($args = func_get_args());
         }, $memo);
-        $this->assertEquals($args, $expected);
+        $this->assertEmpty($args[0]);
+        $this->assertEquals(2, $args[1]);
+        $this->assertEquals('b', $args[2]);
 
         $result = $_::reduceRight($_::range(10), function($x, $y) {
             return $x - $y;
@@ -136,11 +137,11 @@ class CollectionsTest extends Underbar_TestCase
             array('a' => 1, 'b' => 3),
             array('a' => 1, 'b' => 4)
         );
-        $result = $_::chain($list)->where(array('a' => 1))->toArray()->value();
+        $result = $_::chain($list)->where(array('a' => 1))->toArray();
         $this->assertCount(3, $result);
         $this->assertEquals(array('a' => 1, 'b' => 4), $_::last($result));
 
-        $result = $_::chain($list)->where(array('b' => 2))->toArray()->value();
+        $result = $_::chain($list)->where(array('b' => 2))->toArray();
         $this->assertCount(2, $result);
         $this->assertEquals(array('a' => 1, 'b' => 2), $_::first($result));
     }
@@ -348,7 +349,9 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testGroupBy($_)
     {
-        $parity = $_::groupBy(array(1, 2, 3, 4, 5, 6), function($num){ return $num % 2; });
+        $parity = $_::chain(array(1, 2, 3, 4, 5, 6))
+            ->groupBy(function($num){ return $num % 2; })
+            ->toArray();
         $this->assertArrayHasKey(0, $parity, 'created a group for each value');
         $this->assertArrayHasKey(1, $parity, 'created a group for each value');
 
@@ -356,7 +359,9 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals(array(2, 4, 6), $parity[0], 'put each even number in the right group');
 
         $list = array('one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten');
-        $result = $_::groupBy($list, function($x) { return strlen($x); });
+        $result = $_::chain($list)
+            ->groupBy(function($x) { return strlen($x); })
+            ->toArray();
         $shouldBe = array(
             3 => array('one', 'two', 'six', 'ten'),
             4 => array('four', 'five', 'nine'),
@@ -364,14 +369,16 @@ class CollectionsTest extends Underbar_TestCase
         );
         $this->assertEquals($shouldBe, $result);
 
-        $grouped = $_::groupBy(array(4.2, 6.1, 6.4), function($num) {
-            return floor($num) > 4 ? 'one' : 'two';
-        });
+        $grouped = $_::chain(array(4.2, 6.1, 6.4))
+            ->groupBy(function($num) {
+                return floor($num) > 4 ? 'one' : 'two';
+            })->toArray();
         $this->assertEquals(array(6.1, 6.4), $grouped['one']);
         $this->assertEquals(array(4.2), $grouped['two']);
 
-        $array = array(1, 2, 1, 2, 3);
-        $grouped = $_::groupBy($array);
+        $grouped = $_::chain(array(1, 2, 1, 2, 3))
+            ->groupBy()
+            ->toArray();
         $this->assertCount(2, $grouped['1']);
         $this->assertCount(1, $grouped['3']);
 
@@ -385,8 +392,7 @@ class CollectionsTest extends Underbar_TestCase
         $grouped = $_::chain($dict)
             ->groupBy('key', true)
             ->map(function($xs) use ($_) { return $_::toArray($_::pluck($xs, 'value')); })
-            ->toArray()
-            ->value();
+            ->toArray();
         $this->assertEquals(array(1, 2, 3), $grouped['foo']);
         $this->assertEquals(array(4, 5), $grouped['bar']);
     }
@@ -396,37 +402,33 @@ class CollectionsTest extends Underbar_TestCase
      */
     public function testCountBy($_)
     {
-        $parity = $_::countBy(array(1, 2, 3, 4, 5), function($num){ return $num % 2; });
+        $parity = $_::chain(array(1, 2, 3, 4, 5))
+            ->countBy(function($num){ return $num % 2; })
+            ->toArray();
         $this->assertEquals(2, $parity[0]);
         $this->assertEquals(3, $parity[1]);
 
         $list = array('one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten');
-        $grouped = $_::countBy($list, function($x) { return strlen($x); });
+        $grouped = $_::chain($list)
+            ->countBy(function($x) { return strlen($x); })
+            ->toArray();
         $this->assertEquals(4, $grouped['3']);
         $this->assertEquals(3, $grouped['4']);
         $this->assertEquals(3, $grouped['5']);
 
-        $grouped = $_::countBy(array(4.2, 6.1, 6.4), function($num) {
-            return floor($num) > 4 ? 'one' : 'two';
-        });
+        $grouped = $_::chain(array(4.2, 6.1, 6.4))
+            ->countBy(function($num) {
+                return floor($num) > 4 ? 'one' : 'two';
+            })
+            ->toArray();
         $this->assertEquals(2, $grouped['one']);
         $this->assertEquals(1, $grouped['two']);
 
-        $array = array(1, 2, 1, 2, 3);
-        $grouped = $_::countBy($array);
+        $grouped = $_::chain(array(1, 2, 1, 2, 3))
+            ->countBy()
+            ->toArray();
         $this->assertEquals(2, $grouped['1']);
         $this->assertEquals(1, $grouped['3']);
-
-        $dict = array(
-            array('key' => 'foo', 'value' => 1),
-            array('key' => 'foo', 'value' => 2),
-            array('key' => 'foo', 'value' => 3),
-            array('key' => 'bar', 'value' => 4),
-            array('key' => 'bar', 'value' => 5),
-        );
-        $grouped = $_::toArray($_::countBy($dict, 'key', true));
-        $this->assertEquals(3, $grouped['foo']);
-        $this->assertEquals(2, $grouped['bar']);
     }
 
     /**
@@ -435,7 +437,7 @@ class CollectionsTest extends Underbar_TestCase
     public function testShuffle($_)
     {
         $numbers = $_::toList($_::range(10));
-        $shuffled = $_::chain($numbers)->shuffle()->sort()->toList()->value();
+        $shuffled = $_::chain($numbers)->shuffle()->sort()->toList();
         $this->assertEquals($numbers, $shuffled, 'contains the same members before and after shuffle');
     }
 
@@ -481,22 +483,21 @@ class CollectionsTest extends Underbar_TestCase
         }
 
         $counter = 0;
+        $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597);
         $fibs = $_::chain(array(0, 1))
             ->iterate(function($pair) use (&$counter) {
                 $counter++;
                 return array($pair[1], $pair[0] + $pair[1]);
             })
             ->map(function($pair) { return $pair[0]; })
-            ->memoize()
-            ->value();
+            ->memoize();
 
-        $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597);
-        $result = $_::toList($_::take($fibs, count($shouldBe)));
+        $result = $_::chain($fibs)->take(count($shouldBe))->toList();
         $this->assertEquals($shouldBe, $result);
-        $this->assertEquals(count($shouldBe) + 1, $counter);
 
-        $this->assertEquals(6765, $fibs[20]);
-        $this->assertEquals(20 + 1, $counter);
+        $result = $_::chain($fibs)->take(20)->last();
+        $this->assertEquals(4181, $result);
+        $this->assertEquals(20, $counter);
     }
 
     /**

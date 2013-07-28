@@ -587,7 +587,7 @@ class ArraysTest extends Underbar_TestCase
     public function testSort($_)
     {
         $result = $_::sort(array(2, 3, 1));
-        $this->assertEquals(array(1, 2, 3), $result);
+        $this->assertEquals(array(1, 2, 3), $_::toList($result));
 
         $result = $_::sort(array(2, 3, 1), function($x, $y) {
             if ($x === $y) return 0;

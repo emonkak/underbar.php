@@ -12,6 +12,7 @@ namespace Underbar;
 class IteratorImpl extends AbstractImpl
 {
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
@@ -24,6 +25,7 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
@@ -32,12 +34,82 @@ class IteratorImpl extends AbstractImpl
      */
     public static function filter($xs, $f)
     {
-        return class_exists('CallbackFilterIterator', false)
-             ? new \CallbackFilterIterator(static::wrapIterator($xs), $f)
-             : new Iterator\FilterIterator(static::wrapIterator($xs), $f);
+        return new Iterator\FilterIterator(static::wrapIterator($xs), $f);
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Iterator
+     */
+    public static function sortBy($xs, $f)
+    {
+        return new Iterator\DelayIterator(function() use ($xs, $f) {
+            return new \ArrayIterator(ArrayImpl::sortBy($xs, $f));
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Iterator
+     */
+    public static function groupBy($xs, $f = null)
+    {
+        return new Iterator\DelayIterator(function() use ($xs, $f) {
+            return new \ArrayIterator(ArrayImpl::groupBy($xs, $f));
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $x
+     * @return    Iterator
+     */
+    public static function countBy($xs, $f = null)
+    {
+        return new Iterator\DelayIterator(function() use ($xs, $f) {
+            return new \ArrayIterator(ArrayImpl::countBy($xs, $f));
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    Iterator
+     */
+    public static function shuffle($xs)
+    {
+        return new Iterator\DelayIterator(function() use ($xs) {
+            return new \ArrayIterator(ArrayImpl::shuffle($xs));
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    Iterator
+     */
+    public static function memoize($xs)
+    {
+        return new Iterator\MemoizeIterator(static::wrapIterator($xs));
+    }
+
+    /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -46,12 +118,11 @@ class IteratorImpl extends AbstractImpl
      */
     public static function firstN($xs, $n = null)
     {
-        return $n > 0
-             ? new Iterator\LimitIterator(static::wrapIterator($xs), 0, $n)
-             : new \EmptyIterator();
+        return new Iterator\TakeIterator(static::wrapIterator($xs), $n);
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -67,6 +138,7 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -78,10 +150,11 @@ class IteratorImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        return new Iterator\LimitIterator(static::wrapIterator($xs), $n);
+        return new Iterator\DropIterator(static::wrapIterator($xs), $n);
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
@@ -94,6 +167,7 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
@@ -106,18 +180,20 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @param     array    $xs
-     * @param     boolean  $shallow
+     * @param     array  $xs
+     * @param     int    $depth
      * @return    Iterator
      */
-    public static function flatten($xs, $shallow = false)
+    public static function flatten($xs, $depth = -1)
     {
-        return new Iterator\FlattenIterator(static::wrapIterator($xs), $shallow);
+        return new Iterator\FlattenIterator(static::wrapIterator($xs), $depth);
     }
 
     /**
+     * @chainable
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
@@ -134,6 +210,7 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
@@ -151,25 +228,20 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
+     * @param     int    $n
      * @return    Iterator
      */
-    public static function cycle($xs, $n = null)
+    public static function cycle($xs, $n = -1)
     {
-        $wrapped = static::wrapIterator($xs);
-        if ($n === null) {
-            return new \InfiniteIterator($wrapped);
-        }
-        $it = new \AppendIterator();
-        while ($n-- > 0) {
-            $it->append($wrapped);
-        }
-        return $it;
+        return new Iterator\CycleIterator(static::memoize($xs), $n);
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
@@ -182,6 +254,7 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
@@ -194,6 +267,38 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array  $xs
+     * @return    Iterator
+     */
+    public static function reverse($xs)
+    {
+        return new Iterator\DelayIterator(function() use ($xs) {
+            return new \ArrayIterator(ArrayImpl::reverse($xs));
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $compare
+     * @return    Iterator
+     */
+    public static function sort($xs, $compare = null)
+    {
+        return new Iterator\DelayIterator(function() use ($xs, $compare) {
+            return new \ArrayIterator(ArrayImpl::sort($xs, $compare));
+        });
+    }
+
+    /**
+     * @chainable
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
@@ -202,7 +307,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function concat()
     {
-        $it = new \AppendIterator();
+        $it = new Iterator\ConcatIterator();
         foreach (func_get_args() as $array) {
             $it->append(static::wrapIterator($array));
         }

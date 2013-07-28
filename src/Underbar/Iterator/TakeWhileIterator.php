@@ -9,22 +9,43 @@
 
 namespace Underbar\Iterator;
 
-class TakeWhileIterator extends \IteratorIterator
+class TakeWhileIterator implements \Iterator
 {
+    private $it;
     private $f;
 
-    public function __construct($xs, $f)
+    public function __construct(\Iterator $it, $f)
     {
-        parent::__construct($xs);
+        $this->it = $it;
         $this->f = $f;
+    }
+
+    public function current()
+    {
+        return $this->it->current();
+    }
+
+    public function key()
+    {
+        return $this->it->key();
+    }
+
+    public function next()
+    {
+        $this->it->next();
+    }
+
+    public function rewind()
+    {
+        $this->it->rewind();
     }
 
     public function valid()
     {
-        return parent::valid() && call_user_func(
+        return $this->it->valid() && call_user_func(
             $this->f,
-            parent::current(),
-            parent::key(),
+            $this->it->current(),
+            $this->it->key(),
             $this
         );
     }

@@ -30,10 +30,9 @@ $f = function($_) use ($xs) {
 };
 
 $classes = array(
-    'Underbar\\LazyIterator',
-    'Underbar\\LazyGenerator',
-    'Underbar\\LazySafeGenerator',
-    'Underbar\\Eager',
+    'Underbar\\IteratorImpl',
+    'Underbar\\GeneratorImpl',
+    'Underbar\\ArrayImpl',
 );
 foreach ($classes as $class) {
     list (, $time) = bench(times($f, 100), $class);

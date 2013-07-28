@@ -12,6 +12,7 @@ namespace Underbar;
 class ArrayImpl extends AbstractImpl
 {
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
@@ -28,6 +29,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
@@ -46,6 +48,112 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function sortBy($xs, $f)
+    {
+        $f = static::createCallback($f);
+        $result = array();
+
+        foreach ($xs as $k => $x) {
+            $result[] = array(
+                'value' => $x,
+                'key' => $k,
+                'criteria' => call_user_func($f, $x, $k, $xs),
+            );
+        }
+
+        usort($result, function($left, $right) {
+            $a = $left['criteria'];
+            $b = $right['criteria'];
+            if ($a !== $b) {
+                return $a < $b ? -1 : 1;
+            } else {
+                return $left['key'] < $right['key'] ? -1 : 1;
+            }
+        });
+
+        return static::pluck($result, 'value');
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function groupBy($xs, $f = null)
+    {
+        $f = static::createCallback($f);
+        $result = array();
+
+        foreach ($xs as $k => $x) {
+            $key = call_user_func($f, $x, $k, $xs);
+            $result[$key][] = $x;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $x
+     * @return    array
+     */
+    public static function countBy($xs, $f = null)
+    {
+        $f = static::createCallback($f);
+        $result = array();
+
+        foreach ($xs as $k => $x) {
+            $key = call_user_func($f, $x, $k, $xs);
+            if (isset($result[$key])) {
+                $result[$key]++;
+            } else {
+                $result[$key] = 1;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    array
+     */
+    public static function shuffle($xs)
+    {
+        $xs = static::extractIterator($xs);
+        shuffle($xs);
+        return $xs;
+    }
+
+    /**
+     * @chainable
+     * @category  Collections
+     * @param     array  $xs
+     * @return    array
+     */
+    public static function memoize($xs)
+    {
+        return static::toArray($xs);
+    }
+
+    /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -60,6 +168,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -77,6 +186,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
@@ -92,6 +202,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
@@ -111,6 +222,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
@@ -130,6 +242,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xs
@@ -160,6 +273,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
@@ -193,6 +307,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
@@ -219,15 +334,17 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
+     * @param     int    $n
      * @return    array
      */
-    public static function cycle($xs, $n = null)
+    public static function cycle($xs, $n = -1)
     {
         $result = array();
-        if ($n === null) {
+        if ($n < 0) {
             throw new \OverflowException();
         }
         while ($n-- > 0) {
@@ -239,6 +356,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
@@ -254,6 +372,7 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
@@ -267,6 +386,36 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array  $xs
+     * @return    array
+     */
+    public static function reverse($xs)
+    {
+        return array_reverse(static::extractIterator($xs));
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $compare
+     * @return    array
+     */
+    public static function sort($xs, $compare = null)
+    {
+        $xs = static::extractIterator($xs);
+        is_callable($compare) ? usort($xs, $compare) : sort($xs);
+        return $xs;
+    }
+
+    /**
+     * @chainable
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays

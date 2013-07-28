@@ -1,5 +1,6 @@
 <?php
 /**
+ * @chainable
  * This file is part of the Underbar.php package.
  *
  * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
@@ -12,6 +13,7 @@ namespace Underbar\Internal;
 interface ImplementorInterface
 {
     /**
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -20,6 +22,7 @@ interface ImplementorInterface
     public static function map($xs, $f);
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array      $xs
      * @param     callable   $f
@@ -28,6 +31,50 @@ interface ImplementorInterface
     public static function filter($xs, $f);
 
     /**
+     * @chainable
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function sortBy($xs, $f);
+
+    /**
+     * @chainable
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function groupBy($xs, $f = null);
+
+    /**
+     * @chainable
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function countBy($xs, $f = null);
+
+    /**
+     * @chainable
+     * @category  Collections
+     * @param     array  $xs
+     * @return    array
+     */
+    public static function shuffle($xs);
+
+    /**
+     * @chainable
+     * @category  Collections
+     * @param     Iterator  $xs
+     * @return    Iterator
+     */
+    public static function memoize($xs);
+
+    /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -36,6 +83,7 @@ interface ImplementorInterface
     public static function firstN($xs, $n);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -44,6 +92,7 @@ interface ImplementorInterface
     public static function initial($xs, $n = 1, $guard = null);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -52,6 +101,7 @@ interface ImplementorInterface
     public static function rest($xs, $n = 1, $guard = null);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -60,6 +110,7 @@ interface ImplementorInterface
     public static function takeWhile($xs, $f);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -68,6 +119,7 @@ interface ImplementorInterface
     public static function dropWhile($xs, $f);
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xss
@@ -76,6 +128,7 @@ interface ImplementorInterface
     public static function unzip($xss);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array    $xss
      * @param     boolean  $shallow
@@ -84,6 +137,7 @@ interface ImplementorInterface
     public static function flatten($xss, $shallow = false);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -93,6 +147,7 @@ interface ImplementorInterface
     public static function range($start, $stop = null, $step = 1);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $array
      * @return    array|Iterator
@@ -100,6 +155,7 @@ interface ImplementorInterface
     public static function cycle($array, $n = null);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -108,6 +164,7 @@ interface ImplementorInterface
     public static function repeat($value, $n = -1);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
@@ -116,6 +173,24 @@ interface ImplementorInterface
     public static function iterate($acc, $f);
 
     /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @return    array|Iterator
+     */
+    public static function reverse($xs);
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $compare
+     * @return    array|Iterator
+     */
+    public static function sort($xs, $compare = null);
+
+    /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss

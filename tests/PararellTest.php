@@ -17,8 +17,7 @@ class PararellTest extends Underbar_TestCase
                 usleep(100000);
                 return $x * 100;
             }, 10)
-            ->sum()
-            ->value();
+            ->sum();
         $this->assertEquals(4500, $sum, 'sum numbers');
 
         $time = microtime(true) - $time;
