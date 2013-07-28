@@ -1167,26 +1167,6 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
-     * @category  Objects
-     * @param     mixed  $xs
-     * @return    boolean
-     */
-    final public static function isArray($value)
-    {
-        return is_array($value) || $value instanceof \ArrayAccess;
-    }
-
-    /**
-     * @category  Objects
-     * @param     mixed  $xs
-     * @return    boolean
-     */
-    final public static function isTraversable($value)
-    {
-        return is_array($value) || $value instanceof \Traversable;
-    }
-
-    /**
      * @category  Utility
      * @param     mixed  $value
      * @return    mixed
@@ -1243,6 +1223,17 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
 
     /**
      * @param   array|Iterator  $xs
+     * @return  array
+     */
+    protected static function extractIterator($xs)
+    {
+        return $xs instanceof \Traversable
+             ? iterator_to_array($xs, false)
+             : $xs;
+    }
+
+    /**
+     * @param   array|Iterator  $xs
      * @return  Iterator
      */
     protected static function wrapIterator($xs)
@@ -1260,13 +1251,11 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
-     * @param   array|Iterator  $xs
-     * @return  array
+     * @param   mixed  $xs
+     * @return  boolean
      */
-    protected static function extractIterator($xs)
+    protected static function isTraversable($value)
     {
-        return $xs instanceof \Traversable
-             ? iterator_to_array($xs, false)
-             : $xs;
+        return is_array($value) || $value instanceof \Traversable;
     }
 }

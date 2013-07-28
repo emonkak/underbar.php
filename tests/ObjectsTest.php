@@ -150,32 +150,6 @@ class ObjectsTest extends Underbar_TestCase
         $this->assertEquals(1, $intercepted, 'passes tapped object to interceptor');
         $this->assertEquals(1, $returned, 'returns tapped object');
     }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testIsArray($_)
-    {
-        $this->assertTrue($_::isArray(array()));
-        $this->assertTrue($_::isArray(new ArrayObject()));
-        $this->assertFalse($_::isArray(new EmptyIterator()));
-        $this->assertFalse($_::isArray(new StdClass()));
-        $this->assertFalse($_::isArray(0));
-        $this->assertFalse($_::isArray(null));
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testIsTraversable($_)
-    {
-        $this->assertTrue($_::isTraversable(array()));
-        $this->assertTrue($_::isTraversable(new ArrayObject()));
-        $this->assertTrue($_::isTraversable(new EmptyIterator()));
-        $this->assertFalse($_::isTraversable(new StdClass()));
-        $this->assertFalse($_::isTraversable(0));
-        $this->assertFalse($_::isTraversable(null));
-    }
 }
 
 // __END__
