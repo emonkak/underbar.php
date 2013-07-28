@@ -67,12 +67,8 @@ class FlattenIterator implements \RecursiveIterator
 
     public function rewind()
     {
-        if ($this->children) {
-            $this->children->rewind();
-        } else {
-            $this->it->rewind();
-            $this->fetchChildren();
-        }
+        $this->it->rewind();
+        $this->fetchChildren();
     }
 
     public function valid()
