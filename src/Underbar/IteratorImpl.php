@@ -198,12 +198,13 @@ class IteratorImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $depth
+     * @param     array    $xs
+     * @param     boolean  $shallow
      * @return    Iterator
      */
-    public static function flatten($xs, $depth = -1)
+    public static function flatten($xs, $shallow = false)
     {
+        $depth = $shallow ? 1 : -1;
         return new Iterator\FlattenIterator(self::wrapIterator($xs), $depth);
     }
 

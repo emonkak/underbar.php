@@ -617,10 +617,10 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @param     boolean   $shallow
+     * @param     int    $depth
      * @return    array|Iterator
      */
-    // abstract public static function flatten($xs, $shallow = false);
+    // abstract public static function flatten($xs, $depth = -1);
 
     /**
      * @chainable
