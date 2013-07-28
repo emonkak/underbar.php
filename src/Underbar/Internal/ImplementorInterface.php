@@ -89,6 +89,15 @@ interface ImplementorInterface
      * @param     int    $n
      * @return    array|Iterator
      */
+    public static function lastN($xs, $n);
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array|Iterator
+     */
     public static function initial($xs, $n = 1, $guard = null);
 
     /**

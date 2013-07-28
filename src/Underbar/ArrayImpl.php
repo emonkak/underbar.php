@@ -57,7 +57,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        $f = static::createCallback($f);
+        $f = self::createCallback($f);
         $result = array();
 
         foreach ($xs as $k => $x) {
@@ -78,7 +78,7 @@ class ArrayImpl extends AbstractImpl
             }
         });
 
-        return static::pluck($result, 'value');
+        return self::pluck($result, 'value');
     }
 
     /**
@@ -91,7 +91,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        $f = static::createCallback($f);
+        $f = self::createCallback($f);
         $result = array();
 
         foreach ($xs as $k => $x) {
@@ -112,7 +112,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        $f = static::createCallback($f);
+        $f = self::createCallback($f);
         $result = array();
 
         foreach ($xs as $k => $x) {
@@ -136,7 +136,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        $xs = static::extractIterator($xs);
+        $xs = self::extractIterator($xs);
         shuffle($xs);
         return $xs;
     }
@@ -149,7 +149,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function memoize($xs)
     {
-        return static::toArray($xs);
+        return self::toArray($xs);
     }
 
     /**
@@ -160,11 +160,39 @@ class ArrayImpl extends AbstractImpl
      * @param     int    $n
      * @return    array
      */
-    public static function firstN($xs, $n = null)
+    public static function firstN($xs, $n)
     {
         return $n > 0
-             ? array_slice(static::extractIterator($xs), 0, $n)
+             ? array_slice(self::extractIterator($xs), 0, $n)
              : array();
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    SplQueue
+     */
+    public static function lastN($xs, $n)
+    {
+        $queue = new \SplQueue();
+        if ($n <= 0) {
+            return $queue;
+        }
+
+        $i = 0;
+        foreach ($xs as $x) {
+            if ($i === $n) {
+                $queue->dequeue();
+                $i--;
+            }
+            $queue->enqueue($x);
+            $i++;
+        }
+
+        return $queue;
     }
 
     /**
@@ -181,7 +209,7 @@ class ArrayImpl extends AbstractImpl
             $n = 1;
         }
         return $n > 0
-             ? array_slice(static::extractIterator($xs), 0, -$n)
+             ? array_slice(self::extractIterator($xs), 0, -$n)
              : array();
     }
 
@@ -198,7 +226,7 @@ class ArrayImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        return array_slice(static::extractIterator($xs), $n);
+        return array_slice(self::extractIterator($xs), $n);
     }
 
     /**
@@ -251,19 +279,19 @@ class ArrayImpl extends AbstractImpl
      */
     public static function flatten($xs, $shallow = false)
     {
-        return static::_flatten($xs, $shallow);
+        return self::_flatten($xs, $shallow);
     }
 
     private static function _flatten($xss, $shallow, &$output = array())
     {
         foreach ($xss as $xs) {
-            if (static::isTraversable($xs)) {
+            if (self::isTraversable($xs)) {
                 if ($shallow) {
                     foreach ($xs as $x) {
                         $output[] = $x;
                     }
                 } else {
-                    static::_flatten($xs, $shallow, $output);
+                    self::_flatten($xs, $shallow, $output);
                 }
             } else {
                 $output[] = $xs;
@@ -286,7 +314,7 @@ class ArrayImpl extends AbstractImpl
         $loop = true;
 
         foreach ($xss as $xs) {
-            $yss[] = $wrapped = static::wrapIterator($xs);
+            $yss[] = $wrapped = self::wrapIterator($xs);
             $wrapped->rewind();
             $loop = $loop && $wrapped->valid();
             $zss[] = $wrapped->current();
@@ -395,7 +423,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return array_reverse(static::extractIterator($xs));
+        return array_reverse(self::extractIterator($xs));
     }
 
     /**
@@ -409,7 +437,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        $xs = static::extractIterator($xs);
+        $xs = self::extractIterator($xs);
         is_callable($compare) ? usort($xs, $compare) : sort($xs);
         return $xs;
     }
@@ -426,7 +454,7 @@ class ArrayImpl extends AbstractImpl
     {
         $result = array();
         foreach (func_get_args() as $xs) {
-            $result = array_merge($result, static::extractIterator($xs));
+            $result = array_merge($result, self::extractIterator($xs));
         }
         return $result;
     }

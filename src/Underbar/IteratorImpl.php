@@ -21,7 +21,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function map($xs, $f)
     {
-        return new Iterator\MapIterator(static::wrapIterator($xs), $f);
+        return new Iterator\MapIterator(self::wrapIterator($xs), $f);
     }
 
     /**
@@ -34,7 +34,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function filter($xs, $f)
     {
-        return new Iterator\FilterIterator(static::wrapIterator($xs), $f);
+        return new Iterator\FilterIterator(self::wrapIterator($xs), $f);
     }
 
     /**
@@ -105,7 +105,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function memoize($xs)
     {
-        return new Iterator\MemoizeIterator(static::wrapIterator($xs));
+        return new Iterator\MemoizeIterator(self::wrapIterator($xs));
     }
 
     /**
@@ -116,9 +116,24 @@ class IteratorImpl extends AbstractImpl
      * @param     int    $n
      * @return    Iterator
      */
-    public static function firstN($xs, $n = null)
+    public static function firstN($xs, $n)
     {
-        return new Iterator\TakeIterator(static::wrapIterator($xs), $n);
+        return new Iterator\TakeIterator(self::wrapIterator($xs), $n);
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Iterator
+     */
+    public static function lastN($xs, $n)
+    {
+        return new Iterator\DelayIterator(function() use ($xs, $n) {
+            return ArrayImpl::lastN($xs, $n);
+        });
     }
 
     /**
@@ -134,7 +149,7 @@ class IteratorImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        return new Iterator\InitialIterator(static::wrapIterator($xs), $n);
+        return new Iterator\InitialIterator(self::wrapIterator($xs), $n);
     }
 
     /**
@@ -150,7 +165,7 @@ class IteratorImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        return new Iterator\DropIterator(static::wrapIterator($xs), $n);
+        return new Iterator\DropIterator(self::wrapIterator($xs), $n);
     }
 
     /**
@@ -163,7 +178,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function takeWhile($xs, $f)
     {
-        return new Iterator\TakeWhileIterator(static::wrapIterator($xs), $f);
+        return new Iterator\TakeWhileIterator(self::wrapIterator($xs), $f);
     }
 
     /**
@@ -176,7 +191,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function dropWhile($xs, $f)
     {
-        return new Iterator\DropWhileIterator(static::wrapIterator($xs), $f);
+        return new Iterator\DropWhileIterator(self::wrapIterator($xs), $f);
     }
 
     /**
@@ -189,7 +204,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function flatten($xs, $depth = -1)
     {
-        return new Iterator\FlattenIterator(static::wrapIterator($xs), $depth);
+        return new Iterator\FlattenIterator(self::wrapIterator($xs), $depth);
     }
 
     /**
@@ -204,7 +219,7 @@ class IteratorImpl extends AbstractImpl
     {
         $it = new Iterator\ZipIterator();
         foreach ($xss as $xs) {
-            $it->attachIterator(static::wrapIterator($xs));
+            $it->attachIterator(self::wrapIterator($xs));
         }
         return $it;
     }
@@ -237,7 +252,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function cycle($xs, $n = -1)
     {
-        return new Iterator\CycleIterator(static::memoize($xs), $n);
+        return new Iterator\CycleIterator(self::memoize($xs), $n);
     }
 
     /**
@@ -309,7 +324,7 @@ class IteratorImpl extends AbstractImpl
     {
         $it = new Iterator\ConcatIterator();
         foreach (func_get_args() as $array) {
-            $it->append(static::wrapIterator($array));
+            $it->append(self::wrapIterator($array));
         }
         return $it;
     }

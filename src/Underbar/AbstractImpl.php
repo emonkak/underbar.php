@@ -551,26 +551,6 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         return $x;
     }
 
-    final public static function lastN($xs, $n = null)
-    {
-        $queue = new \SplQueue();
-        if ($n <= 0) {
-            return $queue;
-        }
-
-        $i = 0;
-        foreach ($xs as $x) {
-            if ($i === $n) {
-                $queue->dequeue();
-                $i--;
-            }
-            $queue->enqueue($x);
-            $i++;
-        }
-
-        return iterator_to_array($queue, false);
-    }
-
     /**
      * Alias: tail, drop
      *

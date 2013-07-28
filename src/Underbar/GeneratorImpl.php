@@ -36,7 +36,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return static::delay(function() use ($xs, $f) {
+        return self::delay(function() use ($xs, $f) {
             return ArrayImpl::sortBy($xs, $f);
         });
     }
@@ -51,7 +51,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return static::delay(function() use ($xs, $f) {
+        return self::delay(function() use ($xs, $f) {
             return ArrayImpl::groupBy($xs, $f);
         });
     }
@@ -66,7 +66,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return static::delay(function() use ($xs, $f) {
+        return self::delay(function() use ($xs, $f) {
             return ArrayImpl::countBy($xs, $f);
         });
     }
@@ -80,7 +80,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return static::delay(function() use ($xs) {
+        return self::delay(function() use ($xs) {
             return ArrayImpl::shuffle($xs);
         });
     }
@@ -130,6 +130,21 @@ class GeneratorImpl extends AbstractImpl
             }
             yield $i => $x;
         }
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Iterator
+     */
+    public static function lastN($xs, $n)
+    {
+        return self::delay(function() use ($xs, $n) {
+            return ArrayImpl::lastN($xs, $n);
+        });
     }
 
     /**
@@ -228,7 +243,7 @@ class GeneratorImpl extends AbstractImpl
         $loop = true;
 
         foreach ($xss as $xs) {
-            $yss[] = $ys = static::wrapIterator($xs);
+            $yss[] = $ys = self::wrapIterator($xs);
             $ys->rewind();
             $loop = $loop && $ys->valid();
             $zss[] = $ys->current();
@@ -257,13 +272,13 @@ class GeneratorImpl extends AbstractImpl
     public static function flatten($xss, $shallow = false)
     {
         foreach ($xss as $i => $xs) {
-            if (static::isTraversable($xs)) {
+            if (self::isTraversable($xs)) {
                 if ($shallow) {
                     foreach ($xs as $j => $x) {
                         yield $j => $x;
                     }
                 } else {
-                    foreach (static::flatten($xs, $shallow) as $j => $x) {
+                    foreach (self::flatten($xs, $shallow) as $j => $x) {
                         yield $j => $x;
                     }
                 }
@@ -306,7 +321,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function cycle($xs, $n = -1)
     {
-        $xs = static::memoize($xs);
+        $xs = self::memoize($xs);
         while ($n--) {
             foreach ($xs as $i => $x) {
                 yield $i => $x;
@@ -355,7 +370,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return static::delay(function() use ($xs) {
+        return self::delay(function() use ($xs) {
             return ArrayImpl::reverse($xs);
         });
     }
@@ -371,7 +386,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return static::delay(function() use ($xs, $compare) {
+        return self::delay(function() use ($xs, $compare) {
             return ArrayImpl::sort($xs, $compare);
         });
     }
