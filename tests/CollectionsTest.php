@@ -444,6 +444,43 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testMemoize($_)
+    {
+        $counter = 0;
+        $result = $_::chain(array(1, 2, 3))
+            ->map(function($n) use (&$counter) { $counter++; return $n * 2; })
+            ->memoize();
+
+        foreach ($result as $value);
+        foreach ($result as $value);
+        $this->assertEquals($counter, 3);
+        $this->assertEquals(array(2, 4, 6), $_::toList($result));
+
+        if ($_ === 'Underbar\\ArrayImpl') {
+            $this->setExpectedException('OverflowException');
+        }
+
+        $counter = 0;
+        $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597);
+        $fibs = $_::chain(array(0, 1))
+            ->iterate(function($pair) use (&$counter) {
+                $counter++;
+                return array($pair[1], $pair[0] + $pair[1]);
+            })
+            ->map(function($pair) { return $pair[0]; })
+            ->memoize();
+
+        $result = $_::chain($fibs)->take(count($shouldBe))->toList();
+        $this->assertEquals($shouldBe, $result);
+
+        $result = $_::chain($fibs)->take(20)->last();
+        $this->assertEquals(4181, $result);
+        $this->assertEquals(20, $counter);
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testToArray($_)
     {
         $array = array(1, 2, 3);
@@ -471,33 +508,6 @@ class CollectionsTest extends Underbar_TestCase
         $this->assertEquals(array('a', 'b', 'c', 'd'), $_::toList('abcd'), 'works with string');
 
         $this->assertEquals(array(1), $_::toList(1), 'works with scalar');
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testMemoize($_)
-    {
-        if ($_ === 'Underbar\\ArrayImpl') {
-            $this->setExpectedException('OverflowException');
-        }
-
-        $counter = 0;
-        $shouldBe = array(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597);
-        $fibs = $_::chain(array(0, 1))
-            ->iterate(function($pair) use (&$counter) {
-                $counter++;
-                return array($pair[1], $pair[0] + $pair[1]);
-            })
-            ->map(function($pair) { return $pair[0]; })
-            ->memoize();
-
-        $result = $_::chain($fibs)->take(count($shouldBe))->toList();
-        $this->assertEquals($shouldBe, $result);
-
-        $result = $_::chain($fibs)->take(20)->last();
-        $this->assertEquals(4181, $result);
-        $this->assertEquals(20, $counter);
     }
 
     /**
