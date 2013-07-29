@@ -30,11 +30,6 @@ class Wrapper implements \IteratorAggregate
         return $this->impl;
     }
 
-    public function getCollection()
-    {
-        return $this->value;
-    }
-
     public function getIterator()
     {
         if ($this->value instanceof \Traversable) {

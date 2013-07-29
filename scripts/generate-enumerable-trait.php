@@ -11,8 +11,8 @@ echo <<<EOF
 <?php
 namespace {$ref->getNamespaceName()};
 trait Enumerable{
-abstract function getCollection();
 abstract function getUnderbarImpl();
+abstract function value();
 
 EOF;
 
@@ -29,7 +29,7 @@ foreach ($ref->getMethods() as $method) {
     }
 
     $defineArgs = array();
-    $callArgs = array('$this->getCollection()');
+    $callArgs = array('$this->value()');
     foreach ($method->getParameters() as $i => $param) {
         if ($i === 0) {
             continue;
@@ -60,7 +60,7 @@ foreach ($ref->getMethods() as $method) {
 
     if ($isVarargs) {
         echo <<<EOF
-\$result=call_user_func_array(array(\$impl,'{$method->getName()}'), array_merge(array(\$this->getCollection()),func_get_args()));
+\$result=call_user_func_array(array(\$impl,'{$method->getName()}'), array_merge(array(\$this->value()),func_get_args()));
 EOF;
     } else {
         echo <<<EOF

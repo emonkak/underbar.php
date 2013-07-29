@@ -33,14 +33,14 @@ class MyArray extends ArrayObject
 {
     use Underbar\Enumerable;
 
-    public function getCollection()
-    {
-        return \$this;
-    }
-
     public function getUnderbarImpl()
     {
         return 'Underbar\\IteratorImpl';
+    }
+
+    public function value()
+    {
+        return \$this->getIterator();
     }
 }
 EOF
