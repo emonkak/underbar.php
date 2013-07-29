@@ -3,24 +3,35 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 $ref = new ReflectionClass('Underbar\\ArrayImpl');
-$categoryPattern = '/\*\s+@category\s+(Arrays|Collections|Objects|Parallel)|^$/';
-$chainabePattern = '/\*\s+@chainable/';
-$varargsPattern = '/\*\s+@varargs/';
+$CATEGORY_PATTERN = '/\*\s+@category\s+(Arrays|Collections|Objects|Parallel)|^$/';
+$CHAINABE_PATTERN = '/\*\s+@chainable/';
+$VARARGS_PATTERN = '/\*\s+@varargs/';
 
 echo <<<EOF
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
+
 namespace {$ref->getNamespaceName()};
-trait Enumerable{
-abstract function getUnderbarImpl();
-abstract function value();
+
+trait Enumerable
+{
+    abstract function getUnderbarImpl();
+
+    abstract function value();
 
 EOF;
 
 foreach ($ref->getMethods() as $method) {
     $docComment = $method->getDocComment();
-    $isMatchedCategory = preg_match($categoryPattern, $docComment);
-    $isChainable = preg_match($chainabePattern, $docComment);
-    $isVarargs = preg_match($varargsPattern, $docComment);
+    $isMatchedCategory = preg_match($CATEGORY_PATTERN, $docComment);
+    $isChainable = preg_match($CHAINABE_PATTERN, $docComment);
+    $isVarargs = preg_match($VARARGS_PATTERN, $docComment);
 
     if (!$method->isPublic()
         || !$isMatchedCategory
@@ -28,56 +39,73 @@ foreach ($ref->getMethods() as $method) {
         continue;
     }
 
-    $defineArgs = array();
-    $callArgs = array('$this->value()');
+    $argVars = array('$this->value()');
+    $funcArgs = array();
+
     foreach ($method->getParameters() as $i => $param) {
         if ($i === 0) {
             continue;
         }
 
-        $defineArg = '';
-        if ($param->isPassedByReference()) {
-            $defineArg .= '&';
-        }
-        $callArg = '$' . chr(ord('a') + $i - 1);
-        $defineArg .= $callArg;
+        $argVars[] = $funcArg = '$' . $param->getName();
+
         if ($param->isOptional()) {
-            $defineArg .= '=';
-            $defineArg .= var_export($param->getDefaultValue(), true);
+            $defaultValue = $param->getDefaultValue();
+            $funcArg .= ' = ';
+            $funcArg .= $defaultValue !== null
+                      ? var_export($param->getDefaultValue(), true)
+                      : 'null';
         }
-        $defineArgs[] = $defineArg;
-        $callArgs[] = $callArg;
+
+        $funcArgs[] = $funcArg;
     }
 
-    if ($method->returnsReference()) {
-        echo "function &{$method->getName()}(";
-    } else {
-        echo "function {$method->getName()}(";
-    }
+    $args = implode(', ', $funcArgs);
+    echo <<<EOF
 
-    echo implode(',', $defineArgs) . '){';
-    echo '$impl=$this->getUnderbarImpl();';
+    public function {$method->getName()}($args)
+    {
+        \$impl = \$this->getUnderbarImpl();
+
+EOF;
 
     if ($isVarargs) {
         echo <<<EOF
-\$result=call_user_func_array(array(\$impl,'{$method->getName()}'), array_merge(array(\$this->value()),func_get_args()));
+        \$result = call_user_func_array(
+            array(\$impl, '{$method->getName()}'),
+            array_merge(array(\$this->value()), func_get_args())
+        );
+
 EOF;
     } else {
+        $args = implode(', ', $argVars);
         echo <<<EOF
-\$result=call_user_func(array(\$impl,'{$method->getName()}'),
+        \$result = \$impl::{$method->getName()}($args);
+
 EOF;
-        echo implode(',', $callArgs) . ');';
     }
 
     if ($isChainable) {
         if ($method->getName() === 'first'
             || $method->getName() === 'last') {
-            echo 'return $a===null?$result:$impl::chain($result);}';
+            echo <<<EOF
+        return {$argVars[1]} !== null ? \$impl::chain(\$result) : \$result;
+    }
+
+EOF;
         } else {
-            echo 'return $impl::chain($result);}', PHP_EOL;
+            echo <<<EOF
+        return \$impl::chain(\$result);
+    }
+
+EOF;
         }
     } else {
-        echo 'return $result;}', PHP_EOL;
+            echo <<<EOF
+        return \$result;
+    }
+
+EOF;
     }
 }
 

@@ -1,83 +1,609 @@
 <?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
+
 namespace Underbar;
-trait Enumerable{
-abstract function getUnderbarImpl();
-abstract function value();
-function map($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'map'),$this->value(),$a);return $impl::chain($result);}
-function filter($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'filter'),$this->value(),$a);return $impl::chain($result);}
-function sortBy($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sortBy'),$this->value(),$a);return $impl::chain($result);}
-function groupBy($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'groupBy'),$this->value(),$a);return $impl::chain($result);}
-function countBy($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'countBy'),$this->value(),$a);return $impl::chain($result);}
-function shuffle(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'shuffle'),$this->value());return $impl::chain($result);}
-function memoize(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'memoize'),$this->value());return $impl::chain($result);}
-function firstN($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'firstN'),$this->value(),$a);return $impl::chain($result);}
-function lastN($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'lastN'),$this->value(),$a);return $impl::chain($result);}
-function initial($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'initial'),$this->value(),$a,$b);return $impl::chain($result);}
-function rest($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'rest'),$this->value(),$a,$b);return $impl::chain($result);}
-function takeWhile($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'takeWhile'),$this->value(),$a);return $impl::chain($result);}
-function dropWhile($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'dropWhile'),$this->value(),$a);return $impl::chain($result);}
-function flatten($a=false){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'flatten'),$this->value(),$a);return $impl::chain($result);}
-function unzip(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'unzip'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function range($a=NULL,$b=1){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'range'),$this->value(),$a,$b);return $impl::chain($result);}
-function cycle($a=-1){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'cycle'),$this->value(),$a);return $impl::chain($result);}
-function repeat($a=-1){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'repeat'),$this->value(),$a);return $impl::chain($result);}
-function iterate($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'iterate'),$this->value(),$a);return $impl::chain($result);}
-function reverse(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reverse'),$this->value());return $impl::chain($result);}
-function sort($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sort'),$this->value(),$a);return $impl::chain($result);}
-function concat(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'concat'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function each($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'each'),$this->value(),$a);return $impl::chain($result);}
-function collect($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'collect'),$this->value(),$a);return $impl::chain($result);}
-function reduce($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reduce'),$this->value(),$a,$b);return $result;}
-function inject($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'inject'),$this->value(),$a,$b);return $result;}
-function foldl($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'foldl'),$this->value(),$a,$b);return $result;}
-function reduceRight($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reduceRight'),$this->value(),$a,$b);return $result;}
-function foldr($a,$b){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'foldr'),$this->value(),$a,$b);return $result;}
-function find($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'find'),$this->value(),$a);return $result;}
-function detect($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'detect'),$this->value(),$a);return $result;}
-function select($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'select'),$this->value(),$a);return $impl::chain($result);}
-function where($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'where'),$this->value(),$a);return $impl::chain($result);}
-function findWhere($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'findWhere'),$this->value(),$a);return $result;}
-function reject($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'reject'),$this->value(),$a);return $impl::chain($result);}
-function every($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'every'),$this->value(),$a);return $result;}
-function all($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'all'),$this->value(),$a);return $result;}
-function some($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'some'),$this->value(),$a);return $result;}
-function any($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'any'),$this->value(),$a);return $result;}
-function contains($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'contains'),$this->value(),$a);return $result;}
-function invoke($a){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'invoke'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function pluck($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'pluck'),$this->value(),$a);return $impl::chain($result);}
-function max($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'max'),$this->value(),$a);return $result;}
-function min($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'min'),$this->value(),$a);return $result;}
-function sum(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sum'),$this->value());return $result;}
-function product(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'product'),$this->value());return $result;}
-function toArray(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'toArray'),$this->value());return $result;}
-function toList(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'toList'),$this->value());return $result;}
-function size(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'size'),$this->value());return $result;}
-function first($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'first'),$this->value(),$a,$b);return $a===null?$result:$impl::chain($result);}function head($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'head'),$this->value(),$a,$b);return $impl::chain($result);}
-function take($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'take'),$this->value(),$a,$b);return $impl::chain($result);}
-function last($a=NULL,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'last'),$this->value(),$a,$b);return $a===null?$result:$impl::chain($result);}function tail($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'tail'),$this->value(),$a,$b);return $impl::chain($result);}
-function drop($a=1,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'drop'),$this->value(),$a,$b);return $impl::chain($result);}
-function compact(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'compact'),$this->value());return $impl::chain($result);}
-function without(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'without'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function union(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'union'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function intersection(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'intersection'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function difference(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'difference'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function uniq($a=false,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'uniq'),$this->value(),$a,$b);return $impl::chain($result);}
-function unique($a=false,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'unique'),$this->value(),$a,$b);return $impl::chain($result);}
-function zip(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'zip'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function zipWith(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'zipWith'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function object($a=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'object'),$this->value(),$a);return $impl::chain($result);}
-function indexOf($a,$b=0){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'indexOf'),$this->value(),$a,$b);return $result;}
-function lastIndexOf($a,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'lastIndexOf'),$this->value(),$a,$b);return $result;}
-function sortedIndex($a,$b=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'sortedIndex'),$this->value(),$a,$b);return $result;}
-function join($a=','){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'join'),$this->value(),$a);return $result;}
-function keys(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'keys'),$this->value());return $impl::chain($result);}
-function values(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'values'),$this->value());return $impl::chain($result);}
-function pairs(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'pairs'),$this->value());return $impl::chain($result);}
-function invert(){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'invert'),$this->value());return $impl::chain($result);}
-function extend(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'extend'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function pick(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'pick'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function tap($a){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'tap'),$this->value(),$a);return $result;}
-function omit(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'omit'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function defaults(){$impl=$this->getUnderbarImpl();$result=call_user_func_array(array($impl,'defaults'), array_merge(array($this->value()),func_get_args()));return $impl::chain($result);}
-function parMap($a,$b=NULL,$c=NULL){$impl=$this->getUnderbarImpl();$result=call_user_func(array($impl,'parMap'),$this->value(),$a,$b,$c);return $impl::chain($result);}
+
+trait Enumerable
+{
+    abstract function getUnderbarImpl();
+
+    abstract function value();
+
+    public function map($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::map($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function filter($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::filter($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function sortBy($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::sortBy($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function groupBy($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::groupBy($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function countBy($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::countBy($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function shuffle()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::shuffle($this->value());
+        return $impl::chain($result);
+    }
+
+    public function memoize()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::memoize($this->value());
+        return $impl::chain($result);
+    }
+
+    public function firstN($n)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::firstN($this->value(), $n);
+        return $impl::chain($result);
+    }
+
+    public function lastN($n)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::lastN($this->value(), $n);
+        return $impl::chain($result);
+    }
+
+    public function initial($n = 1, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::initial($this->value(), $n, $guard);
+        return $impl::chain($result);
+    }
+
+    public function rest($n = 1, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::rest($this->value(), $n, $guard);
+        return $impl::chain($result);
+    }
+
+    public function takeWhile($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::takeWhile($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function dropWhile($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::dropWhile($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function flatten($shallow = false)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::flatten($this->value(), $shallow);
+        return $impl::chain($result);
+    }
+
+    public function unzip()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'unzip'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function range($stop = null, $step = 1)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::range($this->value(), $stop, $step);
+        return $impl::chain($result);
+    }
+
+    public function cycle($n = -1)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::cycle($this->value(), $n);
+        return $impl::chain($result);
+    }
+
+    public function repeat($n = -1)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::repeat($this->value(), $n);
+        return $impl::chain($result);
+    }
+
+    public function iterate($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::iterate($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function reverse()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::reverse($this->value());
+        return $impl::chain($result);
+    }
+
+    public function sort($compare = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::sort($this->value(), $compare);
+        return $impl::chain($result);
+    }
+
+    public function concat()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'concat'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function each($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::each($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function collect($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::collect($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function reduce($f, $acc)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::reduce($this->value(), $f, $acc);
+        return $result;
+    }
+
+    public function inject($f, $acc)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::inject($this->value(), $f, $acc);
+        return $result;
+    }
+
+    public function foldl($f, $acc)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::foldl($this->value(), $f, $acc);
+        return $result;
+    }
+
+    public function reduceRight($f, $acc)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::reduceRight($this->value(), $f, $acc);
+        return $result;
+    }
+
+    public function foldr($f, $acc)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::foldr($this->value(), $f, $acc);
+        return $result;
+    }
+
+    public function find($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::find($this->value(), $f);
+        return $result;
+    }
+
+    public function detect($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::detect($this->value(), $f);
+        return $result;
+    }
+
+    public function select($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::select($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function where($properties)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::where($this->value(), $properties);
+        return $impl::chain($result);
+    }
+
+    public function findWhere($properties)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::findWhere($this->value(), $properties);
+        return $result;
+    }
+
+    public function reject($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::reject($this->value(), $f);
+        return $impl::chain($result);
+    }
+
+    public function every($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::every($this->value(), $f);
+        return $result;
+    }
+
+    public function all($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::all($this->value(), $f);
+        return $result;
+    }
+
+    public function some($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::some($this->value(), $f);
+        return $result;
+    }
+
+    public function any($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::any($this->value(), $f);
+        return $result;
+    }
+
+    public function contains($target)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::contains($this->value(), $target);
+        return $result;
+    }
+
+    public function invoke($method)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'invoke'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function pluck($property)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::pluck($this->value(), $property);
+        return $impl::chain($result);
+    }
+
+    public function max($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::max($this->value(), $f);
+        return $result;
+    }
+
+    public function min($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::min($this->value(), $f);
+        return $result;
+    }
+
+    public function sum()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::sum($this->value());
+        return $result;
+    }
+
+    public function product()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::product($this->value());
+        return $result;
+    }
+
+    public function toArray()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::toArray($this->value());
+        return $result;
+    }
+
+    public function toList()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::toList($this->value());
+        return $result;
+    }
+
+    public function size()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::size($this->value());
+        return $result;
+    }
+
+    public function first($n = null, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::first($this->value(), $n, $guard);
+        return $n !== null ? $impl::chain($result) : $result;
+    }
+
+    public function head($n = null, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::head($this->value(), $n, $guard);
+        return $impl::chain($result);
+    }
+
+    public function take($n = null, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::take($this->value(), $n, $guard);
+        return $impl::chain($result);
+    }
+
+    public function last($n = null, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::last($this->value(), $n, $guard);
+        return $n !== null ? $impl::chain($result) : $result;
+    }
+
+    public function tail($n = 1, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::tail($this->value(), $n, $guard);
+        return $impl::chain($result);
+    }
+
+    public function drop($n = 1, $guard = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::drop($this->value(), $n, $guard);
+        return $impl::chain($result);
+    }
+
+    public function compact()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::compact($this->value());
+        return $impl::chain($result);
+    }
+
+    public function without()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'without'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function union()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'union'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function intersection()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'intersection'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function difference()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'difference'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function uniq($isSorted = false, $f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::uniq($this->value(), $isSorted, $f);
+        return $impl::chain($result);
+    }
+
+    public function unique($isSorted = false, $f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::unique($this->value(), $isSorted, $f);
+        return $impl::chain($result);
+    }
+
+    public function zip()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'zip'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function zipWith()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'zipWith'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function object($values = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::object($this->value(), $values);
+        return $impl::chain($result);
+    }
+
+    public function indexOf($value, $isSorted = 0)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::indexOf($this->value(), $value, $isSorted);
+        return $result;
+    }
+
+    public function lastIndexOf($x, $fromIndex = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::lastIndexOf($this->value(), $x, $fromIndex);
+        return $result;
+    }
+
+    public function sortedIndex($value, $f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::sortedIndex($this->value(), $value, $f);
+        return $result;
+    }
+
+    public function join($separator = ',')
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::join($this->value(), $separator);
+        return $result;
+    }
+
+    public function keys()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::keys($this->value());
+        return $impl::chain($result);
+    }
+
+    public function values()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::values($this->value());
+        return $impl::chain($result);
+    }
+
+    public function pairs()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::pairs($this->value());
+        return $impl::chain($result);
+    }
+
+    public function invert()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::invert($this->value());
+        return $impl::chain($result);
+    }
+
+    public function extend()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'extend'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function pick()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'pick'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function tap($interceptor)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::tap($this->value(), $interceptor);
+        return $result;
+    }
+
+    public function omit()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'omit'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function defaults()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'defaults'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function parMap($f, $n = null, $timeout = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::parMap($this->value(), $f, $n, $timeout);
+        return $impl::chain($result);
+    }
 }
