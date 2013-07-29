@@ -13,7 +13,7 @@ class IteratorImpl extends AbstractImpl
 {
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -26,7 +26,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -39,7 +39,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -54,7 +54,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -69,7 +69,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
@@ -84,7 +84,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array  $xs
      * @return    Iterator
@@ -98,7 +98,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array  $xs
      * @return    Iterator
@@ -110,7 +110,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -123,7 +123,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -138,7 +138,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -154,7 +154,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -170,7 +170,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -183,7 +183,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -196,7 +196,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xs
      * @param     boolean  $shallow
@@ -211,7 +211,7 @@ class IteratorImpl extends AbstractImpl
     /**
      * @chainable
      * @varargs
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xss
      * @return    Iterator
@@ -227,7 +227,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -245,7 +245,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -258,7 +258,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -271,7 +271,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
@@ -284,7 +284,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @category  Arrays
      * @param     array  $xs
@@ -299,7 +299,7 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @category  Arrays
      * @param     array     $xs
@@ -316,7 +316,7 @@ class IteratorImpl extends AbstractImpl
     /**
      * @chainable
      * @varargs
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  *$xss
      * @return    Iterator

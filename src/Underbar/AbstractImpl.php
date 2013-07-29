@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-abstract class AbstractImpl implements Internal\ProviderInterface
+abstract class AbstractImpl implements Internal\ImplementorInterface
 {
     /**
      * @chainable
@@ -413,6 +413,14 @@ abstract class AbstractImpl implements Internal\ProviderInterface
     // abstract public static function shuffle($xs);
 
     /**
+     * @chainable
+     * @category  Collections
+     * @param     Iterator  $xs
+     * @return    Iterator
+     */
+    // abstract public static function memoize($xs);
+
+    /**
      * @category  Collections
      * @param     mixed  $xs
      * @return    array
@@ -449,14 +457,6 @@ abstract class AbstractImpl implements Internal\ProviderInterface
         }
         return (array) $xs;
     }
-
-    /**
-     * @chainable
-     * @category  Collections
-     * @param     Iterator  $xs
-     * @return    Iterator
-     */
-    // abstract public static function memoize($xs);
 
     /**
      * @category  Collections

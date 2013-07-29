@@ -13,7 +13,7 @@ class ArrayImpl extends AbstractImpl
 {
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -30,7 +30,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -49,7 +49,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -83,7 +83,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -104,7 +104,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
@@ -129,7 +129,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array  $xs
      * @return    array
@@ -154,7 +154,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -169,7 +169,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -197,7 +197,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -215,7 +215,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -231,7 +231,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -251,7 +251,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -271,7 +271,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xs
      * @param     boolean  $shallow
@@ -303,7 +303,7 @@ class ArrayImpl extends AbstractImpl
     /**
      * @chainable
      * @varargs
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xss
      * @return    array
@@ -336,7 +336,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -363,7 +363,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -386,7 +386,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -403,7 +403,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
@@ -417,7 +417,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @category  Arrays
      * @param     array  $xs
@@ -430,7 +430,7 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @category  Arrays
      * @param     array     $xs
@@ -447,7 +447,7 @@ class ArrayImpl extends AbstractImpl
     /**
      * @chainable
      * @varargs
-     * @see       ProviderInterface
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  *$xss
      * @return    array

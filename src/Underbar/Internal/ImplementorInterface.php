@@ -1,6 +1,5 @@
 <?php
 /**
- * @chainable
  * This file is part of the Underbar.php package.
  *
  * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
@@ -10,7 +9,7 @@
 
 namespace Underbar\Internal;
 
-interface ProviderInterface
+interface ImplementorInterface
 {
     /**
      * @chainable
