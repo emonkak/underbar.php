@@ -12,12 +12,10 @@ namespace Underbar\Iterator;
 class RangeIterator implements \Iterator
 {
     private $start;
-
     private $stop;
-
     private $step;
-
     private $current;
+    private $index;
 
     public function __construct($start, $stop, $step)
     {
@@ -33,22 +31,25 @@ class RangeIterator implements \Iterator
 
     public function key()
     {
+        return $this->index;
     }
 
     public function next()
     {
         $this->current += $this->step;
+        $this->index++;
     }
 
     public function rewind()
     {
         $this->current = $this->start;
+        $this->index = 0;
     }
 
     public function valid()
     {
         return $this->step > 0
-            ? $this->current < $this->stop
-            : $this->current > $this->stop;
+             ? $this->current < $this->stop
+             : $this->current > $this->stop;
     }
 }

@@ -9,15 +9,16 @@
 
 namespace Underbar;
 
-class Eager
+abstract class AbstractImpl implements Internal\ImplementorInterface
 {
     /**
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
      * @return    void
      */
-    public static function each($xs, $f)
+    final public static function each($xs, $f)
     {
         foreach ($xs as $k => $x) {
             call_user_func($f, $x, $k, $xs);
@@ -27,21 +28,19 @@ class Eager
     /**
      * Alias: collect
      *
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function map($xs, $f)
-    {
-        $ys = array();
-        foreach ($xs as $k => $x) {
-            $ys[$k] = call_user_func($f, $x, $k, $xs);
-        }
-        return $ys;
-    }
+    // abstract public static function map($xs, $f);
 
-    public static function collect($xs, $f)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function collect($xs, $f)
     {
         return static::map($xs, $f);
     }
@@ -55,7 +54,7 @@ class Eager
      * @param     mixed     $acc
      * @return    mixed
      */
-    public static function reduce($xs, $f, $acc)
+    final public static function reduce($xs, $f, $acc)
     {
         foreach ($xs as $k => $x) {
             $acc = call_user_func($f, $acc, $x, $k, $xs);
@@ -63,12 +62,12 @@ class Eager
         return $acc;
     }
 
-    public static function inject($xs, $f, $acc)
+    final public static function inject($xs, $f, $acc)
     {
         return static::reduce($xs, $f, $acc);
     }
 
-    public static function foldl($xs, $f, $acc)
+    final public static function foldl($xs, $f, $acc)
     {
         return static::reduce($xs, $f, $acc);
     }
@@ -82,19 +81,12 @@ class Eager
      * @param     mixed     $acc
      * @return    mixed
      */
-    public static function reduceRight($xs, $f, $acc)
+    final public static function reduceRight($xs, $f, $acc)
     {
-        if (is_array($xs)) {
-            for ($i = count($xs), $x = end($xs); $i--; $x = prev($xs)) {
-                $acc = call_user_func($f, $acc, $x, key($xs), $xs);
-            }
-            return $acc;
-        } else {
-            return static::reduce(static::reverse($xs), $f, $acc);
-        }
+        return static::reduce(static::reverse($xs), $f, $acc);
     }
 
-    public static function foldr($xs, $f, $acc)
+    final public static function foldr($xs, $f, $acc)
     {
         return static::reduceRight($xs, $f, $acc);
     }
@@ -107,7 +99,7 @@ class Eager
      * @param     callable  $f
      * @return    mixed
      */
-    public static function find($xs, $f)
+    final public static function find($xs, $f)
     {
         foreach ($xs as $k => $x) {
             if (call_user_func($f, $x, $k, $xs)) {
@@ -116,7 +108,7 @@ class Eager
         }
     }
 
-    public static function detect($xs, $f)
+    final public static function detect($xs, $f)
     {
         return static::find($xs, $f);
     }
@@ -124,34 +116,31 @@ class Eager
     /**
      * Alias: select
      *
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function filter($xs, $f)
-    {
-        $ys = array();
-        foreach ($xs as $k => $x) {
-            if (call_user_func($f, $x, $k, $xs)) {
-                $ys[$k] = $x;
-            }
-        }
-        return $ys;
-    }
+    // abstract public static function filter($xs, $f);
 
-    public static function select($xs, $f)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function select($xs, $f)
     {
         return static::filter($xs, $f);
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array  $xs
      * @param     array  $properties
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function where($xs, $properties)
+    final public static function where($xs, $properties)
     {
         return static::filter($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
@@ -170,7 +159,7 @@ class Eager
      * @param     array  $properties
      * @return    mixed
      */
-    public static function findWhere($xs, $properties)
+    final public static function findWhere($xs, $properties)
     {
         return static::find($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
@@ -184,12 +173,13 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function reject($xs, $f)
+    final public static function reject($xs, $f)
     {
         return static::filter($xs, function($x, $k, $xs) use ($f) {
             return !call_user_func($f, $x, $k, $xs);
@@ -204,9 +194,9 @@ class Eager
      * @param     callable|string  $f
      * @return    boolean
      */
-    public static function every($xs, $f = null)
+    final public static function every($xs, $f = null)
     {
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
 
         foreach ($xs as $k => $x) {
             if (!call_user_func($f, $x, $k, $xs)) {
@@ -217,7 +207,7 @@ class Eager
         return true;
     }
 
-    public static function all($xs, $f = null)
+    final public static function all($xs, $f = null)
     {
         return static::every($xs, $f);
     }
@@ -230,9 +220,9 @@ class Eager
      * @param     callable|string  $f
      * @return    boolean
      */
-    public static function some($xs, $f = null)
+    final public static function some($xs, $f = null)
     {
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
 
         foreach ($xs as $k => $x) {
             if (call_user_func($f, $x, $k, $xs)) {
@@ -243,7 +233,7 @@ class Eager
         return false;
     }
 
-    public static function any($xs, $f = null)
+    final public static function any($xs, $f = null)
     {
         return static::some($xs, $f);
     }
@@ -254,7 +244,7 @@ class Eager
      * @param     mixed  $target
      * @return    boolean
      */
-    public static function contains($xs, $target)
+    final public static function contains($xs, $target)
     {
         foreach ($xs as $x) {
             if ($x === $target) {
@@ -265,14 +255,15 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Collections
      * @param     array   $xs
      * @param     string  $method
      * @param     miexed  *$arguments
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function invoke($xs, $method)
+    final public static function invoke($xs, $method)
     {
         $args = array_slice(func_get_args(), 2);
         return static::map($xs, function($x) use ($method, $args) {
@@ -281,12 +272,13 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array   $xs
      * @param     string  $property
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function pluck($xs, $property)
+    final public static function pluck($xs, $property)
     {
         return static::map($xs, function($x) use ($property) {
             if (isset($x->$property)) {
@@ -305,14 +297,14 @@ class Eager
      * @param     callable|string  $f
      * @return    mixed|int
      */
-    public static function max($xs, $f = null)
+    final public static function max($xs, $f = null)
     {
         if ($f === null) {
             $xs = static::extractIterator($xs);
             return empty($xs) ? -INF : max($xs);
         }
 
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $computed = -INF;
         $result = -INF;
         foreach ($xs as $k => $x) {
@@ -332,14 +324,14 @@ class Eager
      * @param     callable|string  $f
      * @return    mixed|int
      */
-    public static function min($xs, $f = null)
+    final public static function min($xs, $f = null)
     {
         if ($f === null) {
             $xs = static::extractIterator($xs);
             return empty($xs) ? INF : min($xs);
         }
 
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $computed = INF;
         $result = INF;
         foreach ($xs as $k => $x) {
@@ -360,7 +352,7 @@ class Eager
      * @param     array  $xs
      * @return    int
      */
-    public static function sum($xs)
+    final public static function sum($xs)
     {
         $acc = 0;
         foreach ($xs as $x) {
@@ -376,7 +368,7 @@ class Eager
      * @param     array  $xs
      * @return    int
      */
-    public static function product($xs)
+    final public static function product($xs)
     {
         $acc = 1;
         foreach ($xs as $x) {
@@ -386,99 +378,54 @@ class Eager
     }
 
     /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $x
-     * @return    array
-     */
-    public static function sortBy($xs, $x)
-    {
-        $f = static::lookupIterator($x);
-        $result = array();
-
-        foreach ($xs as $k => $x) {
-            $result[] = array(
-                'value' => $x,
-                'key' => $k,
-                'criteria' => call_user_func($f, $x, $k, $xs),
-            );
-        }
-
-        usort($result, function($left, $right) {
-            $a = $left['criteria'];
-            $b = $right['criteria'];
-            if ($a !== $b) {
-                return $a < $b ? -1 : 1;
-            } else {
-                return $left['key'] < $right['key'] ? -1 : 1;
-            }
-        });
-
-        return self::pluck($result, 'value');
-    }
-
-    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
-     * @param     boolean             $isSorted
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function groupBy($xs, $f = null, $isSorted = false)
-    {
-        $f = static::lookupIterator($f);
-        $result = array();
-
-        foreach ($xs as $k => $x) {
-            $key = call_user_func($f, $x, $k, $xs);
-            $result[$key][] = $x;
-        }
-
-        return $result;
-    }
+    // abstract static function sortBy($xs, $f);
 
     /**
+     * @chainable
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array|Iterator
+     */
+    // abstract public static function groupBy($xs, $f = null);
+
+    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x
-     * @param     boolean             $isSorted
-     * @return    int
+     * @return    array|Iterator
      */
-    public static function countBy($xs, $f = null, $isSorted = false)
-    {
-        $f = static::lookupIterator($f);
-        $result = array();
-
-        foreach ($xs as $k => $x) {
-            $key = call_user_func($f, $x, $k, $xs);
-            if (isset($result[$key])) {
-                $result[$key]++;
-            } else {
-                $result[$key] = 1;
-            }
-        }
-
-        return $result;
-    }
+    // abstract public static function countBy($xs, $f = null);
 
     /**
+     * @chainable
      * @category  Collections
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function shuffle($xs)
-    {
-        $xs = static::extractIterator($xs);
-        shuffle($xs);
-        return $xs;
-    }
+    // abstract public static function shuffle($xs);
+
+    /**
+     * @chainable
+     * @category  Collections
+     * @param     Iterator  $xs
+     * @return    Iterator
+     */
+    // abstract public static function memoize($xs);
 
     /**
      * @category  Collections
      * @param     mixed  $xs
      * @return    array
      */
-    public static function toArray($xs)
+    final public static function toArray($xs)
     {
         if ($xs instanceof \Traversable) {
             return iterator_to_array($xs, true);
@@ -497,7 +444,7 @@ class Eager
      * @param     mixed  $xs
      * @return    array
      */
-    public static function toList($xs)
+    final public static function toList($xs)
     {
         if ($xs instanceof \Traversable) {
             return iterator_to_array($xs, false);
@@ -513,20 +460,10 @@ class Eager
 
     /**
      * @category  Collections
-     * @param     Iterator  $xs
-     * @return    Iterator
-     */
-    public static function memoize($xs)
-    {
-        return new Iterator\MemoizeIterator(static::wrapIterator($xs));
-    }
-
-    /**
-     * @category  Collections
      * @param     mixed  $xs
      * @return    int
      */
-    public static function size($xs)
+    final public static function size($xs)
     {
         if ($xs instanceof \Countable) {
             return count($xs);
@@ -543,15 +480,16 @@ class Eager
     /**
      * Alias: head, take
      *
+     * @chainable
      * @category  Arrays
-     * @param     arra  $xs
-     * @param     int   $n
-     * @return    array|mixed
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    mixed|null
      */
-    public static function first($xs, $n = null, $guard = null)
+    final public static function first($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
-            return static::_first($xs, $n);
+            return static::firstN($xs, $n);
         }
 
         foreach ($xs as $x) {
@@ -559,196 +497,152 @@ class Eager
         }
     }
 
-    public static function head($xs, $n = null, $guard = null)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function head($xs, $n = null, $guard = null)
     {
         return static::first($xs, $n, $guard);
     }
 
-    public static function take($xs, $n = null, $guard = null)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function take($xs, $n = null, $guard = null)
     {
         return static::first($xs, $n, $guard);
     }
 
-    public static function _first($xs, $n)
-    {
-        return $n > 0 ? array_slice(static::extractIterator($xs), 0, $n) : array();
-    }
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     arra  $xs
+     * @param     int   $n
+     * @return    array|Iterator
+     */
+    // abstract public static function take($xs, $n);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function initial($xs, $n = 1, $guard = null)
-    {
-        if ($guard !== null) {
-            $n = 1;
-        }
-        return $n > 0 ? array_slice(static::extractIterator($xs), 0, -$n) : array();
-    }
+    // abstract public static function initial($xs, $n = 1, $guard = null);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @param     int    $n
-     * @return    array|mixed
+     * @return    array|mixed|null|Iterator
      */
-    public static function last($xs, $n = null, $guard = null)
+    final public static function last($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
-            return static::_last($xs, $n);
+            return static::lastN($xs, $n);
         }
+
         $x = null;
         foreach ($xs as $x) {
         }
         return $x;
     }
 
-    public static function _last($xs, $n = null)
-    {
-        $queue = new \SplQueue();
-        if ($n <= 0) {
-            return $queue;
-        }
-
-        $i = 0;
-        foreach ($xs as $x) {
-            if ($i === $n) {
-                $queue->dequeue();
-                $i--;
-            }
-            $queue->enqueue($x);
-            $i++;
-        }
-
-        return iterator_to_array($queue, false);
-    }
-
     /**
      * Alias: tail, drop
      *
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function rest($xs, $n = 1, $guard = null)
+    // abstract public static function rest($xs, $n = 1, $guard = null);
+
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function tail($xs, $n = 1, $guard = null)
     {
-        if ($guard !== null) {
-            $n = 1;
-        }
-        return array_slice(static::extractIterator($xs), $n);
+        return static::rest($xs, $n, $guard);
     }
 
-    public static function tail($xs, $n = 1, $guard = null)
+    /**
+     * @chainable
+     * @category  Collections
+     */
+    final public static function drop($xs, $n = 1, $guard = null)
     {
-        return self::rest($xs, $n, $guard);
-    }
-
-    public static function drop($xs, $n = 1, $guard = null)
-    {
-        return self::rest($xs, $n, $guard);
+        return static::rest($xs, $n, $guard);
     }
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function takeWhile($xs, $f)
-    {
-        $result = array();
-        foreach ($xs as $i => $x) {
-            if (!call_user_func($f, $x, $i, $xs)) {
-                break;
-            }
-            $result[] = $x;
-        }
-        return $result;
-    }
+    // abstract public static function takeWhile($xs, $f);
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function dropWhile($xs, $f)
-    {
-        $result = array();
-        $accepted = false;
-        foreach ($xs as $i => $x) {
-            if ($accepted || ($accepted = !call_user_func($f, $x, $i, $xs))) {
-                $result[] = $x;
-            }
-        }
-        return $result;
-    }
+    // abstract public static function dropWhile($xs, $f);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function compact($xs)
+    final public static function compact($xs)
     {
-        return static::filter($xs, get_called_class().'::identity');
+        return static::filter($xs, __CLASS__.'::identity');
     }
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @param     boolean   $shallow
-     * @return    array
+     * @param     int    $depth
+     * @return    array|Iterator
      */
-    public static function flatten($xs, $shallow = false)
-    {
-        return static::_flatten($xs, $shallow);
-    }
-
-    private static function _flatten($xss, $shallow, &$output = array())
-    {
-        foreach ($xss as $xs) {
-            if (static::isTraversable($xs)) {
-                if ($shallow) {
-                    foreach ($xs as $x) {
-                        $output[] = $x;
-                    }
-                } else {
-                    static::_flatten($xs, $shallow, $output);
-                }
-            } else {
-                $output[] = $xs;
-            }
-        }
-        return $output;
-    }
+    // abstract public static function flatten($xs, $depth = -1);
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xs
      * @param     mixed  *$values
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function without($xs)
+    final public static function without($xs)
     {
         return static::difference($xs, array_slice(func_get_args(), 1));
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function union()
+    final public static function union()
     {
         return static::uniq(call_user_func_array(
             get_called_class().'::concat',
@@ -757,12 +651,13 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xs
      * @return    array
      */
-    public static function intersection()
+    final public static function intersection()
     {
         $xss = array();
         foreach (func_get_args() as $xs) {
@@ -772,13 +667,14 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xs
      * @param     array  *$others
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function difference($xs)
+    final public static function difference($xs)
     {
         $yss = array_slice(func_get_args(), 1);
         return static::filter($xs, function($x) use ($yss) {
@@ -796,19 +692,20 @@ class Eager
     /**
      * Alias: unique
      *
+     * @chainable
      * @category  Arrays
      * @param     array            $xs
-     * @param     boolean             $isSorted
+     * @param     boolean|int      $isSorted
      * @param     callable|string  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function uniq($xs, $isSorted = false, $f = null)
+    final public static function uniq($xs, $isSorted = false, $f = null)
     {
         if (!is_bool($isSorted)) {
-            $f = static::lookupIterator($isSorted);
+            $f = static::createCallback($isSorted);
             $isSorted = false;
         } else {
-            $f = static::lookupIterator($f);
+            $f = static::createCallback($f);
         }
 
         if ($isSorted) {
@@ -857,18 +754,23 @@ class Eager
         });
     }
 
-    public static function unique($xs, $isSorted = false, $f = null)
+    /**
+     * @chainable
+     * @category  Arrays
+     */
+    final public static function unique($xs, $isSorted = false, $f = null)
     {
         return static::uniq($xs, $f);
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function zip()
+    final public static function zip()
     {
         return static::unzip(func_get_args());
     }
@@ -876,13 +778,14 @@ class Eager
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array     *$xss
      * @param     callable  $f
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function zipWith()
+    final public static function zipWith()
     {
         $xss = func_get_args();
         $f = array_pop($xss);
@@ -893,68 +796,22 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  $xss
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function unzip($xss)
-    {
-        $yss = $zss = $result = array();
-        $loop = true;
-
-        foreach ($xss as $xs) {
-            $yss[] = $wrapped = static::wrapIterator($xs);
-            $wrapped->rewind();
-            $loop = $loop && $wrapped->valid();
-            $zss[] = $wrapped->current();
-        }
-
-        if (!empty($zss)) while ($loop) {
-            $result[] = $zss;
-            $zss = array();
-            $loop = true;
-            foreach ($yss as $ys) {
-                $ys->next();
-                $zss[] = $ys->current();
-                $loop = $loop && $ys->valid();
-            }
-        }
-
-        return $result;
-    }
+    // abstract public static function unzip($xss);
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @category  Arrays
-     * @param     mixed     $xs
-     * @param     callable  $f
-     * @return    array
-     */
-    public static function span($xs, $f)
-    {
-        $ys = array(array(), array());
-        $inPrefix = true;
-
-        foreach ($xs as $k => $x) {
-            if ($inPrefix = $inPrefix && call_user_func($f, $x, $k, $xs)) {
-                $ys[0][] = $x;
-            } else {
-                $ys[1][] = $x;
-            }
-        }
-
-        return $ys;
-    }
-
-    /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     array  $values
      * @return    array
      */
-    public static function object($xs, $values = null)
+    final public static function object($xs, $values = null)
     {
         $result = array();
         $values = static::wrapIterator($values);
@@ -983,7 +840,7 @@ class Eager
      * @param     boolean|int  $isSorted
      * @return    int
      */
-    public static function indexOf($xs, $value, $isSorted = 0)
+    final public static function indexOf($xs, $value, $isSorted = 0)
     {
         $xs = static::extractIterator($xs);
 
@@ -1010,7 +867,7 @@ class Eager
      * @param     int    $fromIndex
      * @return    int
      */
-    public static function lastIndexOf($xs, $x, $fromIndex = null)
+    final public static function lastIndexOf($xs, $x, $fromIndex = null)
     {
         $xs = static::extractIterator($xs);
         $l = count($xs);
@@ -1032,10 +889,10 @@ class Eager
      * @param     callable|string  $f
      * @return    int
      */
-    public static function sortedIndex($xs, $value, $f = null)
+    final public static function sortedIndex($xs, $value, $f = null)
     {
         $xs = static::extractIterator($xs);
-        $f = static::lookupIterator($f);
+        $f = static::createCallback($f);
         $value = call_user_func($f, $value);
 
         $low = 0;
@@ -1054,121 +911,76 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
      * @param     int  $step
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function range($start, $stop = null, $step = 1)
-    {
-        if ($stop === null) {
-            $stop = $start;
-            $start = 0;
-        }
-
-        $l = max(ceil(($stop - $start) / $step), 0);
-        $range = array();
-
-        for ($i = 0; $i < $l; $i++) {
-            $range[] = $start;
-            $start += $step;
-        }
-
-        return $range;
-    }
+    // abstract public static function range($start, $stop = null, $step = 1);
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      * @throws    OverflowException
      */
-    public static function cycle($xs, $n = null)
-    {
-        $result = array();
-        if ($n === null) {
-            throw new \OverflowException();
-        }
-        while ($n-- > 0) {
-            foreach ($xs as $x) {
-                $result[] = $x;
-            }
-        }
-        return $result;
-    }
+    // abstract public static function cycle($xs, $n = null);
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
-     * @return    array
+     * @return    array|Iterator
      * @throws    OverflowException
      */
-    public static function repeat($value, $n = -1)
-    {
-        if ($n < 0) {
-            throw new \OverflowException();
-        }
-        return $n === 0 ? array() : array_fill(0, $n, $value);
-    }
+    // abstract public static function repeat($value, $n = -1);
 
     /**
      * Porting from the Prelude of Haskell.
      *
+     * @chainable
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
-     * @return    array
+     * @return    Iterator
      * @throws    OverflowException
      */
-    public static function iterate($acc, $f)
-    {
-        throw new \OverflowException();
-    }
+    // abstract public static function iterate($acc, $f);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function reverse($xs)
-    {
-        return array_reverse(static::extractIterator($xs));
-    }
+    // abstract public static function reverse($xs);
 
     /**
+     * @chainable
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $compare
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function sort($xs, $compare = null)
-    {
-        $xs = static::extractIterator($xs);
-        is_callable($compare) ? usort($xs, $compare) : sort($xs);
-        return $xs;
-    }
+    // abstract public static function sort($xs, $compare = null);
 
     /**
+     * @chainable
      * @varargs
      * @category  Arrays
      * @param     array  *$xss
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function concat()
-    {
-        $result = array();
-        foreach (func_get_args() as $xs) {
-            $result = array_merge($result, static::extractIterator($xs));
-        }
-        return $result;
-    }
+    // abstract public static function concat();
 
     /**
      * @category  Arrays
@@ -1176,7 +988,7 @@ class Eager
      * @param     string  $separator
      * @return    string
      */
-    public static function join($xs, $separator = ',')
+    final public static function join($xs, $separator = ',')
     {
         $str = '';
         foreach ($xs as $x) {
@@ -1186,11 +998,12 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array  $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function keys($xs)
+    final public static function keys($xs)
     {
         if ($xs instanceof \Traversable) {
             return static::map($xs, function($x, $k) {
@@ -1201,11 +1014,12 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array  $xs
-     * @return    array|Iterator
+     * @return    array|Iterator|Iterator
      */
-    public static function values($xs)
+    final public static function values($xs)
     {
         if ($xs instanceof \Traversable) {
             return $xs;
@@ -1214,11 +1028,12 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array    $xs
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function pairs($xs)
+    final public static function pairs($xs)
     {
         return static::map($xs, function($x, $k) {
             return array($k, $x);
@@ -1226,11 +1041,12 @@ class Eager
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     array  $xs
      * @return    array
      */
-    public static function invert($xs)
+    final public static function invert($xs)
     {
         $result = array();
         foreach ($xs as $k => $x) {
@@ -1240,13 +1056,14 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array  $destination
      * @param     array  *$sources
      * @return    array
      */
-    public static function extend($destination)
+    final public static function extend($destination)
     {
         $destination = static::toArray($destination);
         $sources = array_slice(func_get_args(), 1);
@@ -1259,13 +1076,14 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array         $xs
      * @param     array|string  *$keys
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function pick($xs)
+    final public static function pick($xs)
     {
         $whitelist = array();
         $keys = array_slice(func_get_args(), 1);
@@ -1286,13 +1104,26 @@ class Eager
     }
 
     /**
+     * @category  Objects
+     * @param     mixed     $value
+     * @param     callable  $interceptor
+     * @return    mixed
+     */
+    final public static function tap($value, $interceptor)
+    {
+        call_user_func($interceptor, $value);
+        return $value;
+    }
+
+    /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array         $xs
      * @param     array|string  *$keys
-     * @return    array
+     * @return    array|Iterator
      */
-    public static function omit($xs)
+    final public static function omit($xs)
     {
         $blacklist = array();
         $keys = array_slice(func_get_args(), 1);
@@ -1313,13 +1144,14 @@ class Eager
     }
 
     /**
+     * @chainable
      * @varargs
      * @category  Objects
      * @param     array  $xs
      * @param     array  *$defaults
      * @return    array
      */
-    public static function defaults($xs)
+    final public static function defaults($xs)
     {
         $xs = static::toArray($xs);
         $defaults = array_slice(func_get_args(), 1);
@@ -1335,62 +1167,13 @@ class Eager
     }
 
     /**
-     * @category  Objects
-     * @param     mixed     $value
-     * @param     callable  $interceptor
-     * @return    mixed
-     */
-    public static function tap($value, $interceptor)
-    {
-        call_user_func($interceptor, $value);
-        return $value;
-    }
-
-    /**
-     * @category  Objects
-     * @param     mixed  $xs
-     * @return    boolean
-     */
-    public static function isArray($value)
-    {
-        return is_array($value) || $value instanceof \ArrayAccess;
-    }
-
-    /**
-     * @category  Objects
-     * @param     mixed  $xs
-     * @return    boolean
-     */
-    public static function isTraversable($value)
-    {
-        return is_array($value) || $value instanceof \Traversable;
-    }
-
-    /**
      * @category  Utility
      * @param     mixed  $value
      * @return    mixed
      */
-    public static function identity($value)
+    final public static function identity($value)
     {
         return $value;
-    }
-
-    /**
-     * Parallel version of map()
-     *
-     * @category  Parallel
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     int       $n
-     * @param     int       $timeout
-     * @return    Parallel
-     */
-    public static function parMap($xs, $f, $n = null, $timeout = null)
-    {
-        $parallel = new Internal\Parallel($f, $n, $timeout);
-        $parallel->pushAll($xs);
-        return $parallel;
     }
 
     /**
@@ -1398,16 +1181,34 @@ class Eager
      * @param     mixed  $value
      * @return    Wrapper
      */
-    public static function chain($value)
+    final public static function chain($value)
     {
         return new Internal\Wrapper($value, get_called_class());
+    }
+
+    /**
+     * Parallel version of map()
+     *
+     * @chainable
+     * @category  Parallel
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     int       $n
+     * @param     int       $timeout
+     * @return    Parallel
+     */
+    final public static function parMap($xs, $f, $n = null, $timeout = null)
+    {
+        $parallel = new Internal\Parallel($f, $n, $timeout);
+        $parallel->pushAll($xs);
+        return $parallel;
     }
 
     /**
      * @param   mixed  $value
      * @return  callable
      */
-    protected static function lookupIterator($value)
+    protected static function createCallback($value)
     {
         if (is_scalar($value)) {
             return function($xs) use ($value) {
@@ -1417,25 +1218,7 @@ class Eager
         if (is_callable($value)) {
             return $value;
         }
-        return get_called_class().'::identity';
-    }
-
-    /**
-     * @param   array|Iterator  $xs
-     * @return  Iterator
-     */
-    protected static function wrapIterator($xs)
-    {
-        if (is_array($xs)) {
-            return new \ArrayIterator($xs);
-        }
-        if ($xs instanceof \Iterator) {
-            return $xs;
-        }
-        if ($xs instanceof \Traversable) {
-            return new \IteratorIterator($xs);
-        }
-        return $xs;
+        return __CLASS__.'::identity';
     }
 
     /**
@@ -1445,7 +1228,34 @@ class Eager
     protected static function extractIterator($xs)
     {
         return $xs instanceof \Traversable
-            ? iterator_to_array($xs, false)
-            : $xs;
+             ? iterator_to_array($xs, false)
+             : $xs;
+    }
+
+    /**
+     * @param   array|Iterator  $xs
+     * @return  Iterator
+     */
+    protected static function wrapIterator($xs)
+    {
+        if ($xs instanceof \Iterator) {
+            return $xs;
+        }
+        if ($xs instanceof \Traversable) {
+            return new \IteratorIterator($xs);
+        }
+        if (is_array($xs)) {
+            return new \ArrayIterator($xs);
+        }
+        return $xs;
+    }
+
+    /**
+     * @param   mixed  $xs
+     * @return  boolean
+     */
+    protected static function isTraversable($value)
+    {
+        return is_array($value) || $value instanceof \Traversable;
     }
 }

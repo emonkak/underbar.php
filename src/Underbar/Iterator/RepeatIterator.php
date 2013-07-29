@@ -12,9 +12,7 @@ namespace Underbar\Iterator;
 class RepeatIterator implements \Iterator
 {
     private $value;
-
     private $index;
-
     private $n;
 
     public function __construct($value, $n)

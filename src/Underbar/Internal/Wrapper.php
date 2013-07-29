@@ -9,48 +9,40 @@
 
 namespace Underbar\Internal;
 
+use Underbar\Enumerable;
+
 class Wrapper implements \IteratorAggregate
 {
+    use Enumerable;
+
     private $value;
 
-    private $class;
+    private $impl;
 
-    public function __construct($value, $class)
+    public function __construct($value, $impl)
     {
         $this->value = $value;
-        $this->class = $class;
+        $this->impl = $impl;
     }
 
-    public function __call($name, $aruguments)
+    public function getUnderbarImpl()
     {
-        array_unshift($aruguments, $this->value);
-        $value = call_user_func_array($this->class.'::'.$name, $aruguments);
-        return new static($value, $this->class);
-    }
-
-    public function value()
-    {
-        return $this->value;
-    }
-
-    public function eager()
-    {
-        $this->class = 'Underbar\\Eager';
-        return $this;
-    }
-
-    public function lazy()
-    {
-        $this->class = 'Underbar\\Lazy';
-        return $this;
+        return $this->impl;
     }
 
     public function getIterator()
     {
         if ($this->value instanceof \Traversable) {
             return $this->value;
+        } elseif (is_array($this->value)) {
+            return new \ArrayIterator($this->value);
         } else {
-            return new \ArrayIterator((array) $this->value);
+            return new \EmptyIterator();
         }
+    }
+
+    public function value()
+    {
+        return $this->value;
     }
 }

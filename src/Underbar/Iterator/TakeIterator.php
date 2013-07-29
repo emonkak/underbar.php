@@ -9,23 +9,21 @@
 
 namespace Underbar\Iterator;
 
-class InitialIterator implements \Iterator
+class TakeIterator implements \Iterator
 {
     private $it;
     private $n;
-    private $queue;
-    private $current;
+    private $index;
 
     public function __construct(\Iterator $it, $n)
     {
         $this->it = $it;
         $this->n = $n;
-        $this->queue = new \SplQueue();
     }
 
     public function current()
     {
-        return $this->current;
+        return $this->it->current();
     }
 
     public function key()
@@ -35,31 +33,18 @@ class InitialIterator implements \Iterator
 
     public function next()
     {
+        $this->index++;
         $this->it->next();
-        $this->queue->enqueue($this->it->current());
-        $this->current = $this->queue->dequeue();
     }
 
     public function rewind()
     {
+        $this->index = 0;
         $this->it->rewind();
-
-        $n = $this->n;
-        while ($this->it->valid()) {
-            $this->queue->enqueue($this->it->current());
-            if (--$n < 0) {
-                break;
-            }
-            $this->it->next();
-        }
-
-        if (!$this->queue->isEmpty()) {
-            $this->current = $this->queue->dequeue();
-        }
     }
 
     public function valid()
     {
-        return $this->it->valid();
+        return $this->it->valid() && $this->index < $this->n;
     }
 }

@@ -9,9 +9,11 @@
 
 namespace Underbar;
 
-class LazyGenerator extends Eager
+class GeneratorImpl extends AbstractImpl
 {
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -25,6 +27,79 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Generator
+     */
+    public static function sortBy($xs, $f)
+    {
+        return self::delay(function() use ($xs, $f) {
+            return ArrayImpl::sortBy($xs, $f);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Generator
+     */
+    public static function groupBy($xs, $f = null)
+    {
+        return self::delay(function() use ($xs, $f) {
+            return ArrayImpl::groupBy($xs, $f);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $x
+     * @return    Generator
+     */
+    public static function countBy($xs, $f = null)
+    {
+        return self::delay(function() use ($xs, $f) {
+            return ArrayImpl::countBy($xs, $f);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    Generator
+     */
+    public static function shuffle($xs)
+    {
+        return self::delay(function() use ($xs) {
+            return ArrayImpl::shuffle($xs);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array  $xs
+     * @return    IteratorImpl
+     */
+    public static function memoize($xs)
+    {
+        return IteratorImpl::memoize($xs);
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Collections
      * @param     array      $xs
      * @param     callable   $f
@@ -40,79 +115,14 @@ class LazyGenerator extends Eager
     }
 
     /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @param     boolean          $isSorted
-     * @return    Generator
-     */
-    public static function groupBy($xs, $f = null, $isSorted = false)
-    {
-        return $isSorted ? static::_groupBy($xs, $f) : parent::groupBy($xs, $f);
-    }
-
-    public static function _groupBy($xs, $f = null)
-    {
-        $f = static::lookupIterator($f);
-        $acc = array();
-        $lastKey = null;
-
-        foreach ($xs as $i => $x) {
-            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
-                if (!empty($acc)) {
-                    yield $lastKey => $acc;
-                    $acc = array();
-                }
-                $lastKey = $key;
-            }
-            $acc[] = $x;
-        }
-
-        if (!empty($acc)) {
-            yield $lastKey => $acc;
-        }
-    }
-
-    /**
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @return    int
-     */
-    public static function countBy($xs, $f = null, $isSorted = false)
-    {
-        return $isSorted ? static::_countBy($xs, $f) : parent::countBy($xs, $f);
-    }
-
-    public static function _countBy($xs, $f = null)
-    {
-        $f = static::lookupIterator($f);
-        $acc = 0;
-        $lastKey = null;
-
-        foreach ($xs as $i => $x) {
-            if (($key = call_user_func($f, $x, $i, $xs)) !== $lastKey) {
-                if ($acc !== 0) {
-                    yield $lastKey => $acc;
-                    $acc = 0;
-                }
-                $lastKey = $key;
-            }
-            $acc++;
-        }
-
-        if ($acc !== 0) {
-            yield $lastKey => $acc;
-        }
-    }
-
-    /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    Generator
      */
-    public static function _first($xs, $n)
+    public static function firstN($xs, $n)
     {
         foreach ($xs as $i => $x) {
             if (--$n < 0) {
@@ -123,6 +133,23 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Iterator
+     */
+    public static function lastN($xs, $n)
+    {
+        return self::delay(function() use ($xs, $n) {
+            return ArrayImpl::lastN($xs, $n);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -134,17 +161,19 @@ class LazyGenerator extends Eager
         if ($guard !== null) {
             $n = 1;
         }
-        foreach ($xs as $x) {
+        foreach ($xs as $i => $x) {
             $queue->enqueue($x);
             if ($n > 0) {
                 $n--;
             } else {
-                yield $queue->dequeue();
+                yield $i => $queue->dequeue();
             }
         }
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
@@ -155,16 +184,18 @@ class LazyGenerator extends Eager
         if ($guard !== null) {
             $n = 1;
         }
-        foreach ($xs as $i => $v) {
+        foreach ($xs as $i => $x) {
             if ($n > 0) {
                 $n--;
             } else {
-                yield $i => $v;
+                yield $i => $x;
             }
         }
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
@@ -181,10 +212,12 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $f
-     * @return    mixed|Generator
+     * @return    Generator
      */
     public static function dropWhile($xs, $f)
     {
@@ -197,7 +230,9 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
      * @varargs
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  $xss
      * @return    Generator
@@ -208,7 +243,7 @@ class LazyGenerator extends Eager
         $loop = true;
 
         foreach ($xss as $xs) {
-            $yss[] = $ys = static::wrapIterator($xs);
+            $yss[] = $ys = self::wrapIterator($xs);
             $ys->rewind();
             $loop = $loop && $ys->valid();
             $zss[] = $ys->current();
@@ -227,6 +262,8 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array    $xss
      * @param     boolean  $shallow
@@ -234,24 +271,26 @@ class LazyGenerator extends Eager
      */
     public static function flatten($xss, $shallow = false)
     {
-        foreach ($xss as $xs) {
-            if (static::isTraversable($xs)) {
+        foreach ($xss as $i => $xs) {
+            if (self::isTraversable($xs)) {
                 if ($shallow) {
-                    foreach ($xs as $x) {
-                        yield $x;
+                    foreach ($xs as $j => $x) {
+                        yield $j => $x;
                     }
                 } else {
-                    foreach (static::flatten($xs, $shallow) as $x) {
-                        yield $x;
+                    foreach (self::flatten($xs, $shallow) as $j => $x) {
+                        yield $j => $x;
                     }
                 }
             } else {
-                yield $xs;
+                yield $i => $xs;
             }
         }
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop
@@ -267,34 +306,32 @@ class LazyGenerator extends Eager
 
         $len = max(ceil(($stop - $start) / $step), 0);
         for ($i = 0; $i < $len; $i++) {
-            yield $start;
+            yield $i => $start;
             $start += $step;
         }
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
-     * @param     array  $array
+     * @param     array  $xs
+     * @param     int    $n
      * @return    Generator
      */
-    public static function cycle($array, $n = null)
+    public static function cycle($xs, $n = -1)
     {
-        if ($n === null) {
-            while (true) {
-                foreach ($array as $value) {
-                    yield $value;
-                }
-            }
-        } else {
-            while ($n-- > 0) {
-                foreach ($array as $value) {
-                    yield $value;
-                }
+        $xs = self::memoize($xs);
+        while ($n--) {
+            foreach ($xs as $i => $x) {
+                yield $i => $x;
             }
         }
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed  $value
      * @param     int    $n
@@ -308,11 +345,12 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     mixed     $acc
      * @param     callable  $f
      * @return    Generator
-     * @throws    OverflowException
      */
     public static function iterate($acc, $f)
     {
@@ -323,7 +361,40 @@ class LazyGenerator extends Eager
     }
 
     /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array  $xs
+     * @return    Generator
+     */
+    public static function reverse($xs)
+    {
+        return self::delay(function() use ($xs) {
+            return ArrayImpl::reverse($xs);
+        });
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $compare
+     * @return    Generator
+     */
+    public static function sort($xs, $compare = null)
+    {
+        return self::delay(function() use ($xs, $compare) {
+            return ArrayImpl::sort($xs, $compare);
+        });
+    }
+
+    /**
+     * @chainable
      * @varargs
+     * @see       ImplementorInterface
      * @category  Arrays
      * @param     array  *$xss
      * @return    Generator
@@ -334,6 +405,17 @@ class LazyGenerator extends Eager
             foreach ($xs as $i => $x) {
                 yield $i => $x;
             }
+        }
+    }
+
+    /**
+     * @param   callable  $f
+     * @return  Generator
+     */
+    private static function delay($f)
+    {
+        foreach ($f() as $k => $x) {
+            yield $k => $x;
         }
     }
 }

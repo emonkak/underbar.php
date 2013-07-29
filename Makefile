@@ -2,7 +2,7 @@ SOURCES=$(shell find src tests -name '*.php')
 
 all: src/Underbar/Enumerable.php
 
-src/Underbar/Enumerable.php: scripts/generate-enumerable-trait.php src/Underbar/Eager.php
+src/Underbar/Enumerable.php: scripts/generate-enumerable-trait.php
 	php $< > $@
 
 report/index.html: $(SOURCES)
@@ -16,4 +16,4 @@ report: report/index.html
 test:
 	vendor/phpunit/phpunit/composer/bin/phpunit tests
 
-.PHONY: all clean report test
+.PHONY: all clean report test src/Underbar/Enumerable.php

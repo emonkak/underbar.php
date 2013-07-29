@@ -9,23 +9,58 @@
 
 namespace Underbar\Iterator;
 
-class FilterIterator extends \FilterIterator
+class FilterIterator implements \Iterator
 {
+    private $it;
     private $f;
 
-    public function __construct($xs, $f)
+    public function __construct(\Iterator $it, $f)
     {
-        parent::__construct($xs);
+        $this->it = $it;
         $this->f = $f;
     }
 
-    public function accept()
+    public function current()
     {
-        return call_user_func(
-            $this->f,
-            $this->current(),
-            $this->key(),
-            $this
-        );
+        return $this->it->current();
+    }
+
+    public function key()
+    {
+        return $this->it->key();
+    }
+
+    public function next()
+    {
+        $this->it->next();
+        $this->nextAceeptedElement();
+    }
+
+    public function rewind()
+    {
+        $this->it->rewind();
+        $this->nextAceeptedElement();
+    }
+
+    public function valid()
+    {
+        return $this->it->valid();
+    }
+
+    private function nextAceeptedElement()
+    {
+        while ($this->it->valid()) {
+            $accpted = call_user_func(
+                $this->f,
+                $this->it->current(),
+                $this->it->key(),
+                $this->it
+            );
+            if ($accpted) {
+                break;
+            } else {
+                $this->it->next();
+            }
+        }
     }
 }

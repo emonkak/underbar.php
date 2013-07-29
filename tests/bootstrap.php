@@ -9,13 +9,12 @@ class Underbar_TestCase extends PHPUnit_Framework_TestCase
     public function provider()
     {
         $classes = array(
-            array('Underbar\\Eager'),
-            array('Underbar\\LazyIterator'),
+            array('Underbar\\ArrayImpl'),
+            array('Underbar\\IteratorImpl'),
         );
 
         if (class_exists('Generator', false)) {
-            $classes[] = array('Underbar\\LazyGenerator');
-            $classes[] = array('Underbar\\LazySafeGenerator');
+            $classes[] = array('Underbar\\GeneratorImpl');
         }
 
         return $classes;

@@ -9,21 +9,19 @@
 
 namespace Underbar\Iterator;
 
-class MapIterator implements \Iterator
+class DelayIterator implements \Iterator
 {
-    private $it;
     private $f;
-    private $current;
+    private $it;
 
-    public function __construct(\Iterator $it, $f)
+    public function __construct($f)
     {
-        $this->it = $it;
         $this->f = $f;
     }
 
     public function current()
     {
-        return $this->current;
+        return $this->it->current();
     }
 
     public function key()
@@ -34,29 +32,16 @@ class MapIterator implements \Iterator
     public function next()
     {
         $this->it->next();
-        $this->processIfValid();
     }
 
     public function rewind()
     {
+        $this->it = call_user_func($this->f);
         $this->it->rewind();
-        $this->processIfValid();
     }
 
     public function valid()
     {
         return $this->it->valid();
-    }
-
-    private function processIfValid()
-    {
-        if ($this->it->valid()) {
-            $this->current = call_user_func(
-                $this->f,
-                $this->it->current(),
-                $this->it->key(),
-                $this->it
-            );
-        }
     }
 }

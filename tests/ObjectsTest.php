@@ -41,11 +41,11 @@ class ObjectsTest extends Underbar_TestCase
     {
         $obj = array('first' => 'Moe', 'second' => 'Larry', 'third' => 'Curly');
 
-        $result = $_::chain($obj)->invert()->keys()->value();
-        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $_::toList($result), 'can invert an object');
+        $result = $_::chain($obj)->invert()->keys()->toList();
+        $this->assertEquals(array('Moe', 'Larry', 'Curly'), $result, 'can invert an object');
 
-        $result = $_::chain($obj)->invert()->invert()->value();
-        $this->assertEquals($obj, $_::toArray($result), 'two inverts gets you back where you started');
+        $result = $_::chain($obj)->invert()->invert()->toArray();
+        $this->assertEquals($obj, $result, 'two inverts gets you back where you started');
     }
 
     /**
@@ -149,39 +149,6 @@ class ObjectsTest extends Underbar_TestCase
         $returned = $_::tap(1, $interceptor);
         $this->assertEquals(1, $intercepted, 'passes tapped object to interceptor');
         $this->assertEquals(1, $returned, 'returns tapped object');
-
-        $returned = $_::chain(array(1, 2, 3))
-            ->map(function($n) { return $n * 2; })
-            ->max()
-            ->tap($interceptor)
-            ->value();
-        $this->assertTrue(6 === $intercepted && 6 === $returned, 'can use tapped objects in a chain');
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testIsArray($_)
-    {
-        $this->assertTrue($_::isArray(array()));
-        $this->assertTrue($_::isArray(new ArrayObject()));
-        $this->assertFalse($_::isArray(new EmptyIterator()));
-        $this->assertFalse($_::isArray(new StdClass()));
-        $this->assertFalse($_::isArray(0));
-        $this->assertFalse($_::isArray(null));
-    }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testIsTraversable($_)
-    {
-        $this->assertTrue($_::isTraversable(array()));
-        $this->assertTrue($_::isTraversable(new ArrayObject()));
-        $this->assertTrue($_::isTraversable(new EmptyIterator()));
-        $this->assertFalse($_::isTraversable(new StdClass()));
-        $this->assertFalse($_::isTraversable(0));
-        $this->assertFalse($_::isTraversable(null));
     }
 }
 

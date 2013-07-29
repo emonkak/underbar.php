@@ -2,18 +2,36 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$ref = new ReflectionClass('Underbar\\Eager');
-$categoryPattern = '/\*\s+@category\s+(Collections|Arrays|Parallel|Objects|Chaining)|^$/';
-$varargsPattern = '/\*\s+@varargs/';
+$ref = new ReflectionClass('Underbar\\ArrayImpl');
+$CATEGORY_PATTERN = '/\*\s+@category\s+(Arrays|Collections|Objects|Parallel)|^$/';
+$CHAINABE_PATTERN = '/\*\s+@chainable/';
+$VARARGS_PATTERN = '/\*\s+@varargs/';
 
-echo '<?php', PHP_EOL;
-echo "namespace {$ref->getNamespaceName()};", PHP_EOL;
-echo 'trait Enumerable{', PHP_EOL;
+echo <<<EOF
+<?php
+/**
+ * This file is part of the Underbar.php package.
+ *
+ * Copyright (C) 2013 Shota Nozaki <emonkak@gmail.com>
+ *
+ * Licensed under the MIT License
+ */
+
+namespace {$ref->getNamespaceName()};
+
+trait Enumerable
+{
+    abstract function getUnderbarImpl();
+
+    abstract function value();
+
+EOF;
 
 foreach ($ref->getMethods() as $method) {
     $docComment = $method->getDocComment();
-    $isMatchedCategory = preg_match($categoryPattern, $docComment);
-    $isVarargs = preg_match($varargsPattern, $docComment);
+    $isMatchedCategory = preg_match($CATEGORY_PATTERN, $docComment);
+    $isChainable = preg_match($CHAINABE_PATTERN, $docComment);
+    $isVarargs = preg_match($VARARGS_PATTERN, $docComment);
 
     if (!$method->isPublic()
         || !$isMatchedCategory
@@ -21,45 +39,74 @@ foreach ($ref->getMethods() as $method) {
         continue;
     }
 
-    $args = array('$this' => '$this');
+    $argVars = array('$this->value()');
+    $funcArgs = array();
+
     foreach ($method->getParameters() as $i => $param) {
         if ($i === 0) {
             continue;
         }
 
-        $arg = '';
-        if ($param->isPassedByReference()) {
-            $arg .= '&';
-        }
-        $variable = '$' . chr(ord('a') + $i - 1);
-        $arg .= $variable;
+        $argVars[] = $funcArg = '$' . $param->getName();
+
         if ($param->isOptional()) {
-            $arg .= '=';
-            $arg .= var_export($param->getDefaultValue(), true);
+            $defaultValue = $param->getDefaultValue();
+            $funcArg .= ' = ';
+            $funcArg .= $defaultValue !== null
+                      ? var_export($param->getDefaultValue(), true)
+                      : 'null';
         }
-        $args[$variable] = $arg;
+
+        $funcArgs[] = $funcArg;
     }
 
-    if ($method->returnsReference()) {
-        echo "function &{$method->getName()}(";
-    } else {
-        echo "function {$method->getName()}(";
-    }
-    echo implode(',', array_slice($args, 1));
-    echo '){';
+    $args = implode(', ', $funcArgs);
+    echo <<<EOF
+
+    public function {$method->getName()}($args)
+    {
+        \$impl = \$this->getUnderbarImpl();
+
+EOF;
 
     if ($isVarargs) {
-        echo "return call_user_func_array('{$ref->getName()}::{$method->getName()}', array_merge(array(\$this), func_get_args()));";
+        echo <<<EOF
+        \$result = call_user_func_array(
+            array(\$impl, '{$method->getName()}'),
+            array_merge(array(\$this->value()), func_get_args())
+        );
+
+EOF;
     } else {
-        echo "return Eager::{$method->getName()}(";
-        echo implode(',', array_keys($args));
-        echo ');';
+        $args = implode(', ', $argVars);
+        echo <<<EOF
+        \$result = \$impl::{$method->getName()}($args);
+
+EOF;
     }
 
-    echo '}', PHP_EOL;
+    if ($isChainable) {
+        if ($method->getName() === 'first'
+            || $method->getName() === 'last') {
+            echo <<<EOF
+        return {$argVars[1]} !== null ? \$impl::chain(\$result) : \$result;
+    }
+
+EOF;
+        } else {
+            echo <<<EOF
+        return \$impl::chain(\$result);
+    }
+
+EOF;
+        }
+    } else {
+            echo <<<EOF
+        return \$result;
+    }
+
+EOF;
+    }
 }
 
-echo <<<EOF
-function lazy(){return Lazy::chain(\$this);}
-}
-EOF;
+echo '}', PHP_EOL;

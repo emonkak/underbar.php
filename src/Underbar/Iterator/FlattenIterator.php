@@ -9,38 +9,101 @@
 
 namespace Underbar\Iterator;
 
-use Underbar\Eager as _;
-
-class FlattenIterator extends \RecursiveIteratorIterator
+class FlattenIterator implements \RecursiveIterator
 {
-    public function __construct($xs, $shallow)
+    private $it;
+    private $depth;
+    private $children;
+
+    public function __construct(\Iterator $it, $depth)
     {
-        parent::__construct(
-            new FlattenInnerIterator($xs),
-            $shallow ? self::SELF_FIRST : self::LEAVES_ONLY
-        );
-        $this->setMaxDepth($shallow ? 1 : -1);
+        $this->it = $it;
+        $this->depth = $depth;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function hasChildren()
+    {
+        return !!$this->children;
+    }
+
+    public function current()
+    {
+        if ($this->children) {
+            return $this->children->current();
+        } else {
+            return $this->it->current();
+        }
+    }
+
+    public function key()
+    {
+        if ($this->children) {
+            return $this->children->key();
+        } else {
+            return $this->it->key();
+        }
     }
 
     public function next()
     {
-        parent::next();
-        if (($maxDepth = $this->getMaxDepth()) > 0) {
-            while (_::isTraversable($this->current())
-                   && $this->getDepth() < $maxDepth) {
-                parent::next();
+        if ($this->children) {
+            $this->children->next();
+            if ($this->children->valid()) {
+                return;
             }
         }
+
+        $this->it->next();
+        $this->fetchNext();
     }
 
     public function rewind()
     {
-        parent::rewind();
-        if (($maxDepth = $this->getMaxDepth()) > 0) {
-            while (_::isTraversable($this->current())
-                   && $this->getDepth() < $maxDepth) {
-                parent::next();
+        $this->it->rewind();
+        $this->fetchNext();
+    }
+
+    public function valid()
+    {
+        if ($this->children) {
+            return $this->children->valid();
+        } else {
+            return $this->it->valid();
+        }
+    }
+
+    private function fetchNext()
+    {
+        while ($this->it->valid()) {
+            if ($this->fetchChildren()) {
+                return;
+            }
+            $this->it->next();
+        }
+    }
+
+    private function fetchChildren()
+    {
+        $current = $this->it->current();
+
+        if ($this->depth !== 0) {
+            if (is_array($current)) {
+                $this->children = new self(new \ArrayIterator($current), $this->depth - 1);
+                $this->children->rewind();
+                return $this->children->valid();
+            } elseif ($current instanceof \Traversable) {
+                $this->children = new self($current, $this->depth - 1);
+                $this->children->rewind();
+                return $this->children->valid();
             }
         }
+
+        $this->children = null;
+        return true;
     }
 }

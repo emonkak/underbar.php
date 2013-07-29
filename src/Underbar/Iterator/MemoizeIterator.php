@@ -9,86 +9,60 @@
 
 namespace Underbar\Iterator;
 
-class MemoizeIterator extends \CachingIterator
+class MemoizeIterator implements \Iterator
 {
-    private $cache;
+    private $it;
+    private $index;
+    private $cache = array();
+    private $cachedKeys = array();
+    private $cacheSize = 0;
 
-    public function __construct($xs)
+    public function __construct(\Iterator $it)
     {
-        parent::__construct($xs, self::TOSTRING_USE_KEY | self::FULL_CACHE);
-        parent::rewind();
+        $this->it = $it;
+    }
+
+    public function current()
+    {
+        return $this->cachedElements[$this->index];
+    }
+
+    public function key()
+    {
+        return $this->cachedKeys[$this->index];
+    }
+
+    public function next()
+    {
+        $this->index++;
+        if ($this->cacheSize === $this->index) {
+            $this->it->next();
+            $this->memo();
+        }
     }
 
     public function rewind()
     {
-        $this->cache = $this->getCache();
-        if (empty($this->cache)) {
-            parent::rewind();
+        $this->index = 0;
+        if ($this->cacheSize === 0) {
+            $this->it->rewind();
+            $this->memo();
         }
     }
 
     public function valid()
     {
-        return !empty($this->cache) || parent::valid();
+        return $this->index < $this->cacheSize;
     }
 
-    public function current()
+    private function memo()
     {
-        return empty($this->cache)
-            ? parent::current()
-            : current($this->cache);
-    }
-
-    public function key()
-    {
-        return empty($this->cache)
-            ? parent::key()
-            : key($this->cache);
-    }
-
-    public function next()
-    {
-        if (empty($this->cache)) {
-            parent::next();
+        if (!$this->it->valid()) {
             return;
         }
 
-        next($this->cache);
-        if (key($this->cache) === null) {
-            $this->cache = null;
-            parent::next();
-        }
-    }
-
-    public function offsetExists($offset)
-    {
-        if (parent::offsetExists($offset)) {
-            return true;
-        }
-
-        do {
-            if ($this->key() === $offset) {
-                return true;
-            }
-            $this->next();
-        } while ($this->valid());
-
-        return false;
-    }
-
-    public function offsetGet($offset)
-    {
-        if (parent::offsetExists($offset)) {
-            return parent::offsetGet($offset);
-        }
-
-        do {
-            if ($this->key() === $offset) {
-                return $this->current();
-            }
-            $this->next();
-        } while ($this->valid());
-
-        return null;
+        $this->cachedElements[] = $this->it->current();
+        $this->cachedKeys[] = $this->it->current();
+        $this->cacheSize++;
     }
 }
