@@ -42,7 +42,7 @@ _::chain(0)
     ->iterate(function($n) { return $n + 1; })
     ->filter(function($n) { return $n % 2 === 0; })
     ->take(5)
-    ->each(functions($n) { echo $n, PHP_EOL; });
+    ->each(function($n) { echo $n, PHP_EOL; });
 // => 0
 //    2
 //    4
