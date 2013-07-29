@@ -1,12 +1,12 @@
 # underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/emonkak/underbar.php)
 
-underbar.php is a underscore.js like library.
+underbar.php is a list processing library for PHP, like underscore.js.
 
 However not aim full compatibility of undersocre.js.
 
 # Requirements
 
-- PHP 5.3 or higher (Suggest PHP 5.4 or higher)
+- PHP 5.4 or higher
 - [Composer](http://getcomposer.org/)
 
 # Licence
@@ -34,9 +34,10 @@ MIT Licence
 ```php
 require __DIR__ . '/vendor/autoload.php';
 
-use Underbar\Lazy as _;
+// Have other `ArrayImpl` And `GeneratorImpl`.
+use Underbar\IteratorImpl as _;
 
-// Take five elements from a even infinite list
+// Take five elements from a even infinite list.
 _::chain(0)
     ->iterate(function($n) { return $n + 1; })
     ->filter(function($n) { return $n % 2 === 0; })
@@ -48,7 +49,7 @@ _::chain(0)
 //    6
 //    8
 
-// Get a first element
+// Get a first element.
 echo _::first(array(100)), PHP_EOL;
 // => 100
 ```
