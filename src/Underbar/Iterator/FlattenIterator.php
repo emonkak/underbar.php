@@ -23,18 +23,12 @@ class FlattenIterator implements \RecursiveIterator
 
     public function getChildren()
     {
-        $current = $this->it->current();
-        $it = is_array($current) ? new \ArrayIterator($current) : $current;
-        return new self($it, $this->depth - 1);
+        return $this->children;
     }
 
     public function hasChildren()
     {
-        if ($this->depth === 0) {
-            return false;
-        }
-        $current = $this->it->current();
-        return is_array($current) || $current instanceof \Traversable;
+        return !!$this->children;
     }
 
     public function current()
@@ -59,40 +53,57 @@ class FlattenIterator implements \RecursiveIterator
     {
         if ($this->children) {
             $this->children->next();
-        } else {
-            $this->it->next();
-            $this->fetchChildren();
+            if ($this->children->valid()) {
+                return;
+            }
         }
+
+        $this->it->next();
+        $this->fetchNext();
     }
 
     public function rewind()
     {
         $this->it->rewind();
-        $this->fetchChildren();
+        $this->fetchNext();
     }
 
     public function valid()
     {
         if ($this->children) {
-            if ($this->children->valid()) {
-                return true;
-            }
-
-            $this->it->next();
-            $this->fetchChildren();
+            return $this->children->valid();
+        } else {
+            return $this->it->valid();
         }
+    }
 
-        return $this->it->valid();
+    private function fetchNext()
+    {
+        while ($this->it->valid()) {
+            if ($this->fetchChildren()) {
+                return;
+            }
+            $this->it->next();
+        }
     }
 
     private function fetchChildren()
     {
-        if (!$this->hasChildren()) {
-            $this->children = null;
-            return;
+        $current = $this->it->current();
+
+        if ($this->depth !== 0) {
+            if (is_array($current)) {
+                $this->children = new self(new \ArrayIterator($current), $this->depth - 1);
+                $this->children->rewind();
+                return $this->children->valid();
+            } elseif ($current instanceof \Traversable) {
+                $this->children = new self($current, $this->depth - 1);
+                $this->children->rewind();
+                return $this->children->valid();
+            }
         }
 
-        $this->children = $this->getChildren();
-        $this->children->rewind();
+        $this->children = null;
+        return true;
     }
 }
