@@ -33,13 +33,13 @@ class FilterIterator implements \Iterator
     public function next()
     {
         $this->it->next();
-        $this->nextAceeptedElement();
+        $this->fetchNext();
     }
 
     public function rewind()
     {
         $this->it->rewind();
-        $this->nextAceeptedElement();
+        $this->fetchNext();
     }
 
     public function valid()
@@ -47,7 +47,7 @@ class FilterIterator implements \Iterator
         return $this->it->valid();
     }
 
-    private function nextAceeptedElement()
+    private function fetchNext()
     {
         while ($this->it->valid()) {
             $accpted = call_user_func(

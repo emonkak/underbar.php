@@ -27,7 +27,7 @@ class ZipIterator implements \Iterator
         unset($this->iterators[$hash]);
     }
 
-    public function countIterator(\Iterator $it)
+    public function countIterator()
     {
         return count($this->iterators);
     }
