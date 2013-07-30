@@ -16,13 +16,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @return    void
+     * @return    array|Iterator
      */
     final public static function each($xs, $f)
     {
         foreach ($xs as $k => $x) {
             call_user_func($f, $x, $k, $xs);
         }
+        return $xs;
     }
 
     /**
