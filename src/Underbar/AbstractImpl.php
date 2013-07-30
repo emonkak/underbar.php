@@ -1104,6 +1104,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @chainable
      * @category  Objects
      * @param     mixed     $value
      * @param     callable  $interceptor

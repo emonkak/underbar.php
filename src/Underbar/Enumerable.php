@@ -577,7 +577,7 @@ trait Enumerable
     {
         $impl = $this->getUnderbarImpl();
         $result = $impl::tap($this->value(), $interceptor);
-        return $result;
+        return $impl::chain($result);
     }
 
     public function omit()
