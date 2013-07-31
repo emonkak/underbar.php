@@ -1,6 +1,6 @@
-# underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/emonkak/underbar.php)
+# Underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/emonkak/underbar.php)
 
-underbar.php is a collection processing library for PHP, like underscore.js.
+Underbar.php is a collection processing library for PHP, like underscore.js.
 
 However not aim full compatibility of undersocre.js.
 
