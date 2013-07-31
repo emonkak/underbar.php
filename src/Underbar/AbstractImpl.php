@@ -912,16 +912,6 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
-     * @chainable
-     * @category  Arrays
-     * @param     int  $start
-     * @param     int  $stop
-     * @param     int  $step
-     * @return    array|Iterator
-     */
-    // abstract public static function range($start, $stop = null, $step = 1);
-
-    /**
      * Porting from the Prelude of Haskell.
      *
      * @chainable
@@ -1177,6 +1167,16 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     {
         return $value;
     }
+
+    /**
+     * @chainable
+     * @category  Utility
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
+     * @return    array|Iterator
+     */
+    // abstract public static function range($start, $stop = null, $step = 1);
 
     /**
      * @category  Chaining

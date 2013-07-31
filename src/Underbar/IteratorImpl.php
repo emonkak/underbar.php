@@ -229,24 +229,6 @@ class IteratorImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @param     int  $start
-     * @param     int  $stop
-     * @param     int  $step
-     * @return    Iterator
-     */
-    public static function range($start, $stop = null, $step = 1)
-    {
-        if ($stop === null) {
-            $stop = $start;
-            $start = 0;
-        }
-        return new Iterator\RangeIterator($start, $stop, $step);
-    }
-
-    /**
-     * @chainable
-     * @see       ImplementorInterface
-     * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    Iterator
@@ -328,5 +310,23 @@ class IteratorImpl extends AbstractImpl
             $it->append(self::wrapIterator($array));
         }
         return $it;
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Utility
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
+     * @return    Iterator
+     */
+    public static function range($start, $stop = null, $step = 1)
+    {
+        if ($stop === null) {
+            $stop = $start;
+            $start = 0;
+        }
+        return new Iterator\RangeIterator($start, $stop, $step);
     }
 }

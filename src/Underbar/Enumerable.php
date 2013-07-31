@@ -123,13 +123,6 @@ trait Enumerable
         return $impl::chain($result);
     }
 
-    public function range($stop = null, $step = 1)
-    {
-        $impl = $this->getUnderbarImpl();
-        $result = $impl::range($this->value(), $stop, $step);
-        return $impl::chain($result);
-    }
-
     public function cycle($n = -1)
     {
         $impl = $this->getUnderbarImpl();

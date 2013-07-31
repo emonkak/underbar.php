@@ -338,33 +338,6 @@ class ArrayImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @param     int  $start
-     * @param     int  $stop
-     * @param     int  $step
-     * @return    array
-     */
-    public static function range($start, $stop = null, $step = 1)
-    {
-        if ($stop === null) {
-            $stop = $start;
-            $start = 0;
-        }
-
-        $l = max(ceil(($stop - $start) / $step), 0);
-        $range = array();
-
-        for ($i = 0; $i < $l; $i++) {
-            $range[] = $start;
-            $start += $step;
-        }
-
-        return $range;
-    }
-
-    /**
-     * @chainable
-     * @see       ImplementorInterface
-     * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
      * @return    array
@@ -459,5 +432,32 @@ class ArrayImpl extends AbstractImpl
             $result = array_merge($result, self::extractIterator($xs));
         }
         return $result;
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Utility
+     * @param     int  $start
+     * @param     int  $stop
+     * @param     int  $step
+     * @return    array
+     */
+    public static function range($start, $stop = null, $step = 1)
+    {
+        if ($stop === null) {
+            $stop = $start;
+            $start = 0;
+        }
+
+        $l = max(ceil(($stop - $start) / $step), 0);
+        $range = array();
+
+        for ($i = 0; $i < $l; $i++) {
+            $range[] = $start;
+            $start += $step;
+        }
+
+        return $range;
     }
 }
