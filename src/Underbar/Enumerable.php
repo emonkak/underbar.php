@@ -356,6 +356,13 @@ trait Enumerable
         return $result;
     }
 
+    public function average()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::average($this->value());
+        return $result;
+    }
+
     public function toArray()
     {
         $impl = $this->getUnderbarImpl();

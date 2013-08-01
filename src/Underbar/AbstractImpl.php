@@ -379,6 +379,22 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @category  Collections
+     * @param     array  $xs
+     * @return    float
+     */
+    final public static function average($xs)
+    {
+        $total = 0;
+        $n = 0;
+        foreach ($xs as $x) {
+            $total += $x;
+            $n++;
+        }
+        return $n > 0 ? $total / $n : null;
+    }
+
+    /**
      * @chainable
      * @category  Collections
      * @param     array            $xs
