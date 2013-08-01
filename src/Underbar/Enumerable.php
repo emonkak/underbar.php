@@ -113,6 +113,23 @@ trait Enumerable
         return $impl::chain($result);
     }
 
+    public function intersection()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = call_user_func_array(
+            array($impl, 'intersection'),
+            array_merge(array($this->value()), func_get_args())
+        );
+        return $impl::chain($result);
+    }
+
+    public function uniq($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::uniq($this->value(), $f);
+        return $impl::chain($result);
+    }
+
     public function unzip()
     {
         $impl = $this->getUnderbarImpl();
@@ -429,16 +446,6 @@ trait Enumerable
         return $impl::chain($result);
     }
 
-    public function intersection()
-    {
-        $impl = $this->getUnderbarImpl();
-        $result = call_user_func_array(
-            array($impl, 'intersection'),
-            array_merge(array($this->value()), func_get_args())
-        );
-        return $impl::chain($result);
-    }
-
     public function difference()
     {
         $impl = $this->getUnderbarImpl();
@@ -449,17 +456,10 @@ trait Enumerable
         return $impl::chain($result);
     }
 
-    public function uniq($isSorted = false, $f = null)
+    public function unique($f = null)
     {
         $impl = $this->getUnderbarImpl();
-        $result = $impl::uniq($this->value(), $isSorted, $f);
-        return $impl::chain($result);
-    }
-
-    public function unique($isSorted = false, $f = null)
-    {
-        $impl = $this->getUnderbarImpl();
-        $result = $impl::unique($this->value(), $isSorted, $f);
+        $result = $impl::unique($this->value(), $f);
         return $impl::chain($result);
     }
 

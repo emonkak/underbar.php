@@ -146,6 +146,27 @@ interface ImplementorInterface
 
     /**
      * @chainable
+     * @varargs
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     array  *$others
+     * @return    array|Iterator
+     */
+    public static function intersection($xs);
+
+    /**
+     * Alias: unique
+     *
+     * @chainable
+     * @category  Arrays
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array|Iterator
+     */
+    public static function uniq($xs, $f = null);
+
+    /**
+     * @chainable
      * @category  Arrays
      * @param     int  $start
      * @param     int  $stop

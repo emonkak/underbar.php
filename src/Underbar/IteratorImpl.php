@@ -213,6 +213,46 @@ class IteratorImpl extends AbstractImpl
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
+     * @param     array  $xs
+     * @param     array  *$others
+     * @return    array
+     */
+    public static function intersection($xs)
+    {
+        $others = [];
+        foreach (array_slice(func_get_args(), 1) as $ys) {
+            $others[] = self::extractIterator($ys);
+        }
+
+        $size = count($others);
+        if ($size === 1) {
+            $others = $others[0];
+        } elseif ($size > 1) {
+            $others = call_user_func_array('array_intersect', $others);
+        }
+
+        return new Iterator\IntersectIterator(self::wrapIterator($xs), $others);
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Iterator
+     */
+    public static function uniq($xs, $f = null)
+    {
+        $f = self::createCallback($f);
+        return new Iterator\UniqueIterator(self::wrapIterator($xs), $f);
+    }
+
+    /**
+     * @chainable
+     * @varargs
+     * @see       ImplementorInterface
+     * @category  Arrays
      * @param     array  $xss
      * @return    Iterator
      */

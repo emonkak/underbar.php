@@ -655,17 +655,11 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @chainable
      * @varargs
      * @category  Arrays
-     * @param     array  *$xs
-     * @return    array
+     * @param     array  $xs
+     * @param     array  *$others
+     * @return    array|Iterator
      */
-    final public static function intersection()
-    {
-        $xss = array();
-        foreach (func_get_args() as $xs) {
-            $xss[] = static::extractIterator($xs);
-        }
-        return call_user_func_array('array_intersect', $xss);
-    }
+    // abstract public static function intersection($xs);
 
     /**
      * @chainable
@@ -696,70 +690,16 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @chainable
      * @category  Arrays
      * @param     array            $xs
-     * @param     boolean|int      $isSorted
      * @param     callable|string  $f
      * @return    array|Iterator
      */
-    final public static function uniq($xs, $isSorted = false, $f = null)
-    {
-        if (!is_bool($isSorted)) {
-            $f = static::createCallback($isSorted);
-            $isSorted = false;
-        } else {
-            $f = static::createCallback($f);
-        }
-
-        if ($isSorted) {
-            $lastValue = null;
-            return static::filter($xs, function($x, $i, $xs) use (
-                $f,
-                &$lastValue
-            ) {
-                $x = call_user_func($f, $x, $i, $xs);
-                if ($lastValue !== $x) {
-                    $lastValue = $x;
-                    return false;
-                }
-                return true;
-            });
-        }
-
-        $seenScalar = $seenObjects = $seenOthers = array();
-        return static::filter($xs, function($x, $i, $xs) use (
-            $f,
-            &$seenScalar,
-            &$seenObjects,
-            &$seenOthers
-        ) {
-            $x = call_user_func($f, $x, $i, $xs);
-
-            if (is_scalar($x)) {
-                if (isset($seenScalar[$x])) {
-                    return false;
-                }
-                $seenScalar[$x] = 0;
-            } elseif (is_object($x)) {
-                $hash = spl_object_hash($x);
-                if (isset($seenObjects[$hash])) {
-                    return false;
-                }
-                $seenObjects[$hash] = 0;
-            } else {
-                if (in_array($x, $seenOthers, true)) {
-                    return false;
-                }
-                $seenOthers[] = $x;
-            }
-
-            return true;
-        });
-    }
+    // abstract public static function uniq($xs, $f = null);
 
     /**
      * @chainable
      * @category  Arrays
      */
-    final public static function unique($xs, $isSorted = false, $f = null)
+    final public static function unique($xs, $f = null)
     {
         return static::uniq($xs, $f);
     }

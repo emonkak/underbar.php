@@ -222,10 +222,11 @@ class ArraysTest extends Underbar_TestCase
      */
     public function testIntersection($_)
     {
-        $stooges = array('moe', 'curly', 'larry');
+        $stooges = array('moe', 'curly', 'larry', 'moe');
         $leaders = array('moe', 'groucho');
         $shouldBe = array('moe');
-        $this->assertEquals($shouldBe, $_::intersection($stooges, $leaders), 'can take the set intersection of two arrays');
+        $result = $_::intersection($stooges, $leaders);
+        $this->assertEquals($shouldBe, $_::toList($result), 'can take the set intersection of two arrays');
     }
 
     /**

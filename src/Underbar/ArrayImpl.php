@@ -305,6 +305,47 @@ class ArrayImpl extends AbstractImpl
      * @varargs
      * @see       ImplementorInterface
      * @category  Arrays
+     * @param     array  $xs
+     * @param     array  *$others
+     * @return    array
+     */
+    public static function intersection($xs)
+    {
+        $xss = array();
+        foreach (func_get_args() as $xs) {
+            $xss[] = static::extractIterator($xs);
+        }
+        return array_unique(call_user_func_array('array_intersect', $xss));
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function uniq($xs, $f = null)
+    {
+        $f = static::createCallback($f);
+        $set = new Internal\Set();
+
+        $result = [];
+        foreach ($xs as $k => $x) {
+            if ($set->add(call_user_func($f, $x, $k, $xs))) {
+                $result[$k] = $x;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @chainable
+     * @varargs
+     * @see       ImplementorInterface
+     * @category  Arrays
      * @param     array  $xss
      * @return    array
      */
