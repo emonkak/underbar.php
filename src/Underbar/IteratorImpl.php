@@ -132,7 +132,7 @@ class IteratorImpl extends AbstractImpl
     public static function lastN($xs, $n)
     {
         return new Iterator\DelayIterator(function() use ($xs, $n) {
-            return new \ArrayIterator(ArrayImpl::lastN($xs, $n));
+            return ArrayImpl::lastN($xs, $n);
         });
     }
 
