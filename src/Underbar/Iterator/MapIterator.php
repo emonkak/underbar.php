@@ -14,6 +14,7 @@ class MapIterator implements \Iterator
     private $it;
     private $f;
     private $current;
+    private $key;
 
     public function __construct(\Iterator $it, $f)
     {
@@ -28,19 +29,19 @@ class MapIterator implements \Iterator
 
     public function key()
     {
-        return $this->it->key();
+        return $this->key;
     }
 
     public function next()
     {
         $this->it->next();
-        $this->processIfValid();
+        $this->fetch();
     }
 
     public function rewind()
     {
         $this->it->rewind();
-        $this->processIfValid();
+        $this->fetch();
     }
 
     public function valid()
@@ -48,13 +49,14 @@ class MapIterator implements \Iterator
         return $this->it->valid();
     }
 
-    private function processIfValid()
+    private function fetch()
     {
         if ($this->it->valid()) {
+            $this->key = $this->it->key();
             $this->current = call_user_func(
                 $this->f,
                 $this->it->current(),
-                $this->it->key(),
+                $this->key,
                 $this->it
             );
         }

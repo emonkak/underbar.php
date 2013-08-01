@@ -13,6 +13,8 @@ class FilterIterator implements \Iterator
 {
     private $it;
     private $f;
+    private $key;
+    private $current;
 
     public function __construct(\Iterator $it, $f)
     {
@@ -22,12 +24,12 @@ class FilterIterator implements \Iterator
 
     public function current()
     {
-        return $this->it->current();
+        return $this->current;
     }
 
     public function key()
     {
-        return $this->it->key();
+        return $this->key;
     }
 
     public function next()
@@ -50,13 +52,14 @@ class FilterIterator implements \Iterator
     private function fetchNext()
     {
         while ($this->it->valid()) {
-            $accpted = call_user_func(
+            $this->current = $this->it->current();
+            $this->key = $this->it->key();
+            if (call_user_func(
                 $this->f,
-                $this->it->current(),
-                $this->it->key(),
+                $this->current,
+                $this->key,
                 $this->it
-            );
-            if ($accpted) {
+            )) {
                 break;
             } else {
                 $this->it->next();

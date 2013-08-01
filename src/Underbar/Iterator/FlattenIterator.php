@@ -89,9 +89,8 @@ class FlattenIterator implements \RecursiveIterator
 
     private function fetchChildren()
     {
-        $current = $this->it->current();
-
         if ($this->depth !== 0) {
+            $current = $this->it->current();
             if (is_array($current)) {
                 $this->children = new self(new \ArrayIterator($current), $this->depth - 1);
                 $this->children->rewind();
