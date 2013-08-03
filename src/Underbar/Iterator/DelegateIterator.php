@@ -9,15 +9,14 @@
 
 namespace Underbar\Iterator;
 
-class DropIterator implements \Iterator
+class DelegateIterator implements \Iterator
 {
+    private $f;
     private $it;
-    private $n;
 
-    public function __construct(\Iterator $it, $n)
+    public function __construct($f)
     {
-        $this->it = $it;
-        $this->n = $n;
+        $this->f = $f;
     }
 
     public function current()
@@ -37,15 +36,8 @@ class DropIterator implements \Iterator
 
     public function rewind()
     {
+        $this->it = call_user_func($this->f);
         $this->it->rewind();
-        $n = $this->n;
-        while ($this->it->valid()) {
-            if ($n-- > 0) {
-                $this->it->next();
-            } else {
-                break;
-            }
-        }
     }
 
     public function valid()

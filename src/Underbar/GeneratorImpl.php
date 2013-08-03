@@ -36,7 +36,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return self::delay(function() use ($xs, $f) {
+        return self::delegate(function() use ($xs, $f) {
             return ArrayImpl::sortBy($xs, $f);
         });
     }
@@ -51,7 +51,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return self::delay(function() use ($xs, $f) {
+        return self::delegate(function() use ($xs, $f) {
             return ArrayImpl::groupBy($xs, $f);
         });
     }
@@ -66,7 +66,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return self::delay(function() use ($xs, $f) {
+        return self::delegate(function() use ($xs, $f) {
             return ArrayImpl::countBy($xs, $f);
         });
     }
@@ -80,7 +80,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return self::delay(function() use ($xs) {
+        return self::delegate(function() use ($xs) {
             return ArrayImpl::shuffle($xs);
         });
     }
@@ -142,7 +142,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function lastN($xs, $n)
     {
-        return self::delay(function() use ($xs, $n) {
+        return self::delegate(function() use ($xs, $n) {
             return ArrayImpl::lastN($xs, $n);
         });
     }
@@ -402,7 +402,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return self::delay(function() use ($xs) {
+        return self::delegate(function() use ($xs) {
             return ArrayImpl::reverse($xs);
         });
     }
@@ -418,7 +418,7 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return self::delay(function() use ($xs, $compare) {
+        return self::delegate(function() use ($xs, $compare) {
             return ArrayImpl::sort($xs, $compare);
         });
     }
@@ -467,7 +467,7 @@ class GeneratorImpl extends AbstractImpl
      * @param   callable  $f
      * @return  Generator
      */
-    private static function delay($f)
+    private static function delegate($f)
     {
         foreach ($f() as $k => $x) {
             yield $k => $x;

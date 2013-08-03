@@ -34,7 +34,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function filter($xs, $f)
     {
-        return new Iterator\FilterIterator(self::wrapIterator($xs), $f);
+        return new \CallbackFilterIterator(self::wrapIterator($xs), $f);
     }
 
     /**
@@ -47,7 +47,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return new Iterator\DelayIterator(function() use ($xs, $f) {
+        return new Iterator\DelegateIterator(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::sortBy($xs, $f));
         });
     }
@@ -62,7 +62,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return new Iterator\DelayIterator(function() use ($xs, $f) {
+        return new Iterator\DelegateIterator(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::groupBy($xs, $f));
         });
     }
@@ -77,7 +77,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return new Iterator\DelayIterator(function() use ($xs, $f) {
+        return new Iterator\DelegateIterator(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::countBy($xs, $f));
         });
     }
@@ -91,7 +91,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return new Iterator\DelayIterator(function() use ($xs) {
+        return new Iterator\DelegateIterator(function() use ($xs) {
             return new \ArrayIterator(ArrayImpl::shuffle($xs));
         });
     }
@@ -118,7 +118,9 @@ class IteratorImpl extends AbstractImpl
      */
     public static function firstN($xs, $n)
     {
-        return new Iterator\TakeIterator(self::wrapIterator($xs), $n);
+        return $n > 0
+             ? new \LimitIterator(self::wrapIterator($xs), 0, $n)
+             : new \EmptyIterator;
     }
 
     /**
@@ -131,7 +133,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function lastN($xs, $n)
     {
-        return new Iterator\DelayIterator(function() use ($xs, $n) {
+        return new Iterator\DelegateIterator(function() use ($xs, $n) {
             return ArrayImpl::lastN($xs, $n);
         });
     }
@@ -165,7 +167,7 @@ class IteratorImpl extends AbstractImpl
         if ($guard !== null) {
             $n = 1;
         }
-        return new Iterator\DropIterator(self::wrapIterator($xs), $n);
+        return new \LimitIterator(self::wrapIterator($xs), $n);
     }
 
     /**
@@ -204,8 +206,11 @@ class IteratorImpl extends AbstractImpl
      */
     public static function flatten($xs, $shallow = false)
     {
-        $depth = $shallow ? 1 : -1;
-        return new Iterator\FlattenIterator(self::wrapIterator($xs), $depth);
+        $inner = new Iterator\FlattenIterator(
+            self::wrapIterator($xs),
+            $shallow ? 1 : -1
+        );
+        return new \RecursiveIteratorIterator($inner);
     }
 
     /**
@@ -258,7 +263,9 @@ class IteratorImpl extends AbstractImpl
      */
     public static function unzip($xss)
     {
-        $it = new Iterator\ZipIterator();
+        $it = new \MultipleIterator(
+            \MultipleIterator::MIT_NEED_ALL | \MultipleIterator::MIT_KEYS_NUMERIC
+        );
         foreach ($xss as $xs) {
             $it->attachIterator(self::wrapIterator($xs));
         }
@@ -275,7 +282,16 @@ class IteratorImpl extends AbstractImpl
      */
     public static function cycle($xs, $n = -1)
     {
-        return new Iterator\CycleIterator(self::memoize($xs), $n);
+        $inner = static::wrapIterator($xs);
+        if ($n >= 0) {
+            $it = new \AppendIterator();
+            while ($n--) {
+                $it->append($inner);
+            }
+            return $it;
+        } else {
+            return new \InfiniteIterator($inner);
+        }
     }
 
     /**
@@ -314,7 +330,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return new Iterator\DelayIterator(function() use ($xs) {
+        return new Iterator\DelegateIterator(function() use ($xs) {
             return new \ArrayIterator(ArrayImpl::reverse($xs));
         });
     }
@@ -330,7 +346,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return new Iterator\DelayIterator(function() use ($xs, $compare) {
+        return new Iterator\DelegateIterator(function() use ($xs, $compare) {
             return new \ArrayIterator(ArrayImpl::sort($xs, $compare));
         });
     }
@@ -345,7 +361,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function concat()
     {
-        $it = new Iterator\ConcatIterator();
+        $it = new \AppendIterator();
         foreach (func_get_args() as $array) {
             $it->append(self::wrapIterator($array));
         }
