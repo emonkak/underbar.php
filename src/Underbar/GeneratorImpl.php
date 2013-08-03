@@ -265,7 +265,7 @@ class GeneratorImpl extends AbstractImpl
      * @param     array  *$others
      * @return    Generator
      */
-    final public static function intersection($xs)
+    public static function intersection($xs)
     {
         $others = [];
         foreach (array_slice(func_get_args(), 1) as $ys) {
