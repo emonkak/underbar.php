@@ -385,13 +385,13 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      */
     final public static function average($xs)
     {
-        $total = 0;
+        $total = 0.0;
         $n = 0;
         foreach ($xs as $x) {
             $total += $x;
             $n++;
         }
-        return $n > 0 ? $total / $n : null;
+        return $n > 0 ? $total / $n : INF;
     }
 
     /**

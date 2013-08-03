@@ -309,6 +309,15 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testAverage($_)
+    {
+        $this->assertEquals(4.5, $_::average($_::range(0, 10)), 'agverage between 0-9');
+        $this->assertEquals(INF, $_::average(array()), 'average empty array');
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testSortBy($_)
     {
         $people = array(
