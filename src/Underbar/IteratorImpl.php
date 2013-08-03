@@ -263,9 +263,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function unzip($xss)
     {
-        $it = new \MultipleIterator(
-            \MultipleIterator::MIT_NEED_ALL | \MultipleIterator::MIT_KEYS_NUMERIC
-        );
+        $it = new Iterator\ZipIterator();
         foreach ($xss as $xs) {
             $it->attachIterator(self::wrapIterator($xs));
         }
