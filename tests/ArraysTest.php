@@ -33,6 +33,18 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testFirstOrElse($_)
+    {
+        $result = $_::firstOrElse(array(1, 2, 3), 10);
+        $this->assertEquals(1, $result);
+
+        $result = $_::firstOrElse(array(), 10);
+        $this->assertEquals(10, $result);
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testRest($_)
     {
         $numbers = array(1, 2, 3, 4);
@@ -143,6 +155,18 @@ class ArraysTest extends Underbar_TestCase
 
         $result = $_::map(array(array(1, 2, 3), array(1, 2, 3)), array($_, 'last'));
         $this->assertEquals(array(3, 3), $_::toList($result), 'works well with _.map');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testLastOrElse($_)
+    {
+        $result = $_::lastOrElse(array(1, 2, 3), 10);
+        $this->assertEquals(3, $result);
+
+        $result = $_::lastOrElse(array(), 10);
+        $this->assertEquals(10, $result);
     }
 
     /**

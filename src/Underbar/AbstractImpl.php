@@ -501,16 +501,14 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n
-     * @return    mixed|null
+     * @return    array|mixed|null|Iterator
      */
     final public static function first($xs, $n = null, $guard = null)
     {
         if ($n !== null && $guard === null) {
             return static::firstN($xs, $n);
-        }
-
-        foreach ($xs as $x) {
-            return $x;
+        } else {
+            return static::firstOrElse($xs, null);
         }
     }
 
@@ -539,7 +537,21 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     int   $n
      * @return    array|Iterator
      */
-    // abstract public static function take($xs, $n);
+    // abstract public static function firstN($xs, $n);
+
+    /**
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     mixed  $default
+     * @return    mixed
+     */
+    final public static function firstOrElse($xs, $default)
+    {
+        foreach ($xs as $x) {
+            return $x;
+        }
+        return $default;
+    }
 
     /**
      * @chainable
@@ -560,9 +572,29 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     {
         if ($n !== null && $guard === null) {
             return static::lastN($xs, $n);
+        } else {
+            return static::lastOrElse($xs, null);
         }
+    }
 
-        $x = null;
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     arra  $xs
+     * @param     int   $n
+     * @return    array|Iterator
+     */
+    // abstract public static function lastN($xs, $n);
+
+    /**
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     mixed  $default
+     * @return    mixed
+     */
+    final public static function lastOrElse($xs, $default)
+    {
+        $x = $default;
         foreach ($xs as $x) {
         }
         return $x;
