@@ -56,4 +56,4 @@ echo _::first(array(100)), PHP_EOL;
 
 # API
 
-See https://emonkak.github.io/underbar.php/
+See http://emonkak.github.io/underbar.php/
