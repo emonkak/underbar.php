@@ -13,6 +13,9 @@ class TakeWhileIterator implements \Iterator
 {
     private $it;
     private $f;
+    private $current;
+    private $key;
+    private $accepted;
 
     public function __construct(\Iterator $it, $f)
     {
@@ -22,31 +25,44 @@ class TakeWhileIterator implements \Iterator
 
     public function current()
     {
-        return $this->it->current();
+        return $this->current;
     }
 
     public function key()
     {
-        return $this->it->key();
+        return $this->key;
     }
 
     public function next()
     {
         $this->it->next();
+        $this->fetch();
     }
 
     public function rewind()
     {
         $this->it->rewind();
+        $this->fetch();
     }
 
     public function valid()
     {
-        return $this->it->valid() && call_user_func(
-            $this->f,
-            $this->it->current(),
-            $this->it->key(),
-            $this
-        );
+        return $this->accepted;
+    }
+
+    private function fetch()
+    {
+        if ($this->it->valid()) {
+            $this->current = $this->it->current();
+            $this->key = $this->it->key();
+            $this->accepted = call_user_func(
+                $this->f,
+                $this->current,
+                $this->key,
+                $this
+            );
+        } else {
+            $this->accepted = false;
+        }
     }
 }
