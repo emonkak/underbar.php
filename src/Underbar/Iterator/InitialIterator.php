@@ -20,7 +20,6 @@ class InitialIterator implements \Iterator
     {
         $this->it = $it;
         $this->n = $n;
-        $this->queue = new \SplQueue();
     }
 
     public function current()
@@ -44,7 +43,9 @@ class InitialIterator implements \Iterator
     {
         $this->it->rewind();
 
+        $this->queue = new \SplQueue();
         $n = $this->n;
+
         while ($this->it->valid()) {
             $this->queue->enqueue($this->it->current());
             if (--$n < 0) {
