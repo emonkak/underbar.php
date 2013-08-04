@@ -90,7 +90,6 @@ class CollectionsTest extends Underbar_TestCase
         }, $memo);
         $this->assertEmpty($args[0]);
         $this->assertEquals(2, $args[1]);
-        $this->assertEquals('b', $args[2]);
 
         $result = $_::reduceRight($_::range(10), function($x, $y) {
             return $x - $y;

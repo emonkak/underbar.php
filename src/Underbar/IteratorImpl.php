@@ -47,7 +47,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return new Iterator\DelegateIterator(function() use ($xs, $f) {
+        return static::lazy(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::sortBy($xs, $f));
         });
     }
@@ -62,7 +62,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return new Iterator\DelegateIterator(function() use ($xs, $f) {
+        return static::lazy(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::groupBy($xs, $f));
         });
     }
@@ -77,7 +77,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return new Iterator\DelegateIterator(function() use ($xs, $f) {
+        return static::lazy(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::countBy($xs, $f));
         });
     }
@@ -91,7 +91,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return new Iterator\DelegateIterator(function() use ($xs) {
+        return static::lazy(function() use ($xs) {
             return new \ArrayIterator(ArrayImpl::shuffle($xs));
         });
     }
@@ -133,7 +133,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function lastN($xs, $n)
     {
-        return new Iterator\DelegateIterator(function() use ($xs, $n) {
+        return static::lazy(function() use ($xs, $n) {
             return ArrayImpl::lastN($xs, $n);
         });
     }
@@ -328,7 +328,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return new Iterator\DelegateIterator(function() use ($xs) {
+        return static::lazy(function() use ($xs) {
             return new \ArrayIterator(ArrayImpl::reverse($xs));
         });
     }
@@ -344,7 +344,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return new Iterator\DelegateIterator(function() use ($xs, $compare) {
+        return static::lazy(function() use ($xs, $compare) {
             return new \ArrayIterator(ArrayImpl::sort($xs, $compare));
         });
     }

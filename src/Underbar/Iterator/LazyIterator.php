@@ -9,7 +9,7 @@
 
 namespace Underbar\Iterator;
 
-class DelegateIterator implements \Iterator
+class LazyIterator implements \Iterator
 {
     private $f;
     private $it;

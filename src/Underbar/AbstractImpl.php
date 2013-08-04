@@ -1190,7 +1190,6 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
-     * @chainable
      * @category  Utility
      * @param     int  $start
      * @param     int  $stop
@@ -1198,6 +1197,16 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @return    array|Iterator
      */
     // abstract public static function range($start, $stop = null, $step = 1);
+
+    /**
+     * @category  Utility
+     * @param     callable  $f
+     * @return    Iterator
+     */
+    final public static function lazy($f)
+    {
+        return new Iterator\LazyIterator($f);
+    }
 
     /**
      * @category  Chaining

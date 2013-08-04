@@ -36,8 +36,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return self::delegate(function() use ($xs, $f) {
-            return ArrayImpl::sortBy($xs, $f);
+        return self::lazy(function() use ($xs, $f) {
+            foreach (ArrayImpl::sortBy($xs, $f) as $k => $x) {
+                yield $k => $x;
+            }
         });
     }
 
@@ -51,8 +53,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return self::delegate(function() use ($xs, $f) {
-            return ArrayImpl::groupBy($xs, $f);
+        return self::lazy(function() use ($xs, $f) {
+            foreach (ArrayImpl::groupBy($xs, $f) as $k => $x) {
+                yield $k => $x;
+            }
         });
     }
 
@@ -66,8 +70,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return self::delegate(function() use ($xs, $f) {
-            return ArrayImpl::countBy($xs, $f);
+        return self::lazy(function() use ($xs, $f) {
+            foreach (ArrayImpl::countBy($xs, $f) as $k => $x) {
+                yield $k => $x;
+            }
         });
     }
 
@@ -80,8 +86,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return self::delegate(function() use ($xs) {
-            return ArrayImpl::shuffle($xs);
+        return self::lazy(function() use ($xs) {
+            foreach (ArrayImpl::shuffle($xs) as $x) {
+                yield $x;
+            }
         });
     }
 
@@ -90,7 +98,7 @@ class GeneratorImpl extends AbstractImpl
      * @see       ImplementorInterface
      * @category  Collections
      * @param     array  $xs
-     * @return    IteratorImpl
+     * @return    Iterator
      */
     public static function memoize($xs)
     {
@@ -142,8 +150,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function lastN($xs, $n)
     {
-        return self::delegate(function() use ($xs, $n) {
-            return ArrayImpl::lastN($xs, $n);
+        return self::lazy(function() use ($xs, $n) {
+            foreach (ArrayImpl::lastN($xs, $n) as $x) {
+                yield $x;
+            }
         });
     }
 
@@ -402,8 +412,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return self::delegate(function() use ($xs) {
-            return ArrayImpl::reverse($xs);
+        return self::lazy(function() use ($xs) {
+            foreach (ArrayImpl::reverse($xs) as $x) {
+                yield $x;
+            }
         });
     }
 
@@ -418,8 +430,10 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return self::delegate(function() use ($xs, $compare) {
-            return ArrayImpl::sort($xs, $compare);
+        return self::lazy(function() use ($xs, $compare) {
+            foreach (ArrayImpl::sort($xs, $compare) as $x) {
+                yield $x;
+            }
         });
     }
 
@@ -460,17 +474,6 @@ class GeneratorImpl extends AbstractImpl
         for ($i = 0; $i < $len; $i++) {
             yield $i => $start;
             $start += $step;
-        }
-    }
-
-    /**
-     * @param   callable  $f
-     * @return  Generator
-     */
-    private static function delegate($f)
-    {
-        foreach ($f() as $k => $x) {
-            yield $k => $x;
         }
     }
 }
