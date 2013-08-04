@@ -405,11 +405,25 @@ trait Enumerable
         return $impl::chain($result);
     }
 
+    public function firstOrElse($default)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::firstOrElse($this->value(), $default);
+        return $result;
+    }
+
     public function last($n = null, $guard = null)
     {
         $impl = $this->getUnderbarImpl();
         $result = $impl::last($this->value(), $n, $guard);
         return $n !== null ? $impl::chain($result) : $result;
+    }
+
+    public function lastOrElse($default)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::lastOrElse($this->value(), $default);
+        return $result;
     }
 
     public function tail($n = 1, $guard = null)
