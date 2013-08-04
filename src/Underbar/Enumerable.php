@@ -577,6 +577,20 @@ trait Enumerable
         return $impl::chain($result);
     }
 
+    public function get($key)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::get($this->value(), $key);
+        return $result;
+    }
+
+    public function getOrElse($key, $default)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::getOrElse($this->value(), $key, $default);
+        return $result;
+    }
+
     public function pick()
     {
         $impl = $this->getUnderbarImpl();
@@ -584,13 +598,6 @@ trait Enumerable
             array($impl, 'pick'),
             array_merge(array($this->value()), func_get_args())
         );
-        return $impl::chain($result);
-    }
-
-    public function tap($interceptor)
-    {
-        $impl = $this->getUnderbarImpl();
-        $result = $impl::tap($this->value(), $interceptor);
         return $impl::chain($result);
     }
 
@@ -611,6 +618,13 @@ trait Enumerable
             array($impl, 'defaults'),
             array_merge(array($this->value()), func_get_args())
         );
+        return $impl::chain($result);
+    }
+
+    public function tap($interceptor)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::tap($this->value(), $interceptor);
         return $impl::chain($result);
     }
 

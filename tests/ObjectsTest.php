@@ -75,6 +75,32 @@ class ObjectsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testGet($_)
+    {
+        $obj = array('a' => 1, 'b' => 2, 'c' => 3);
+
+        $this->assertEquals(1, $_::get($obj, 'a'), 'works with array');
+        $this->assertEquals(2, $_::get(new ArrayObject($obj), 'b'), 'works with ArrayObject');
+        $this->assertEquals(3, $_::get(new ArrayIterator($obj), 'c'), 'works with ArrayIterator');
+        $this->assertNull($_::get($obj, 'd'), 'undefined key');
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testGetOrElse($_)
+    {
+        $obj = array('a' => 1, 'b' => 2, 'c' => 3);
+
+        $this->assertEquals(1, $_::getOrElse($obj, 'a', 10), 'works with array');
+        $this->assertEquals(2, $_::getOrElse(new ArrayObject($obj), 'b', '10'), 'works with ArrayObject');
+        $this->assertEquals(3, $_::getOrElse(new ArrayIterator($obj), 'c', '10'), 'works with ArrayIterator');
+        $this->assertEquals(10, $_::getOrElse($obj, 'd', 10), 'undefined key');
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testPick($_)
     {
         $obj = array('a' => 1, 'b' => 2, 'c' => 3);

@@ -1055,6 +1055,39 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @category  Objects
+     * @param     array   $xs
+     * @param     string  $key
+     * @return    mixed|null
+     */
+    final public static function get($xs, $key)
+    {
+        return static::getOrElse($xs, $key, null);
+    }
+
+    /**
+     * @category  Objects
+     * @param     array   $xs
+     * @param     string  $key
+     * @param     mixed   $default
+     * @return    mixed
+     */
+    final public static function getOrElse($xs, $key, $default)
+    {
+        if (static::isArray($xs)) {
+            return isset($xs[$key]) ? $xs[$key] : $default;
+        }
+
+        foreach ($xs as $k => $x) {
+            if ($k === $key) {
+                return $x;
+            }
+        }
+
+        return $default;
+    }
+
+    /**
      * @chainable
      * @varargs
      * @category  Objects
@@ -1080,19 +1113,6 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         return static::filter($xs, function($x, $k) use ($whitelist) {
             return isset($whitelist[$k]);
         });
-    }
-
-    /**
-     * @chainable
-     * @category  Objects
-     * @param     mixed     $value
-     * @param     callable  $interceptor
-     * @return    mixed
-     */
-    final public static function tap($value, $interceptor)
-    {
-        call_user_func($interceptor, $value);
-        return $value;
     }
 
     /**
@@ -1144,6 +1164,19 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
         }
 
         return $xs;
+    }
+
+    /**
+     * @chainable
+     * @category  Objects
+     * @param     mixed     $value
+     * @param     callable  $interceptor
+     * @return    mixed
+     */
+    final public static function tap($value, $interceptor)
+    {
+        call_user_func($interceptor, $value);
+        return $value;
     }
 
     /**
@@ -1241,11 +1274,20 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
-     * @param   mixed  $xs
+     * @param   mixed  $value
      * @return  boolean
      */
     protected static function isTraversable($value)
     {
         return is_array($value) || $value instanceof \Traversable;
+    }
+
+    /**
+     * @param   mixed  $value
+     * @return  boolean
+     */
+    protected static function isArray($value)
+    {
+        return is_array($value) || $value instanceof \ArrayAccess;
     }
 }
