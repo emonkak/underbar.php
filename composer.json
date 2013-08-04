@@ -1,10 +1,10 @@
 {
     "name": "emonkak/underbar.php",
-    "description": "An array and iterator utility, like Underscore.js",
-    "version": "0.2.1",
+    "description": "A collection processing library for PHP, like Underscore.js",
+    "version": "0.2.2",
     "type": "library",
     "keywords": ["array", "collection", "generator", "iterator", "lazy", "parallel"],
-    "homepage": "https://github.com/emonkak/underbar.php",
+    "homepage": "http://emonkak.github.io/underbar.php/",
     "license": "MIT",
     "authors": [
         {

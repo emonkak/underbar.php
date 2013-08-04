@@ -249,8 +249,12 @@ class ArraysTest extends Underbar_TestCase
         $stooges = array('moe', 'curly', 'larry', 'moe');
         $leaders = array('moe', 'groucho');
         $shouldBe = array('moe');
+
         $result = $_::intersection($stooges, $leaders);
         $this->assertEquals($shouldBe, $_::toList($result), 'can take the set intersection of two arrays');
+
+        $result = $_::intersection($stooges, $leaders, $leaders);
+        $this->assertEquals($shouldBe, $_::toList($result), 'can take the set intersection of three arrays');
     }
 
     /**

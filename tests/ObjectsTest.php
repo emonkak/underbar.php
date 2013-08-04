@@ -80,9 +80,11 @@ class ObjectsTest extends Underbar_TestCase
         $obj = array('a' => 1, 'b' => 2, 'c' => 3);
 
         $this->assertEquals(1, $_::get($obj, 'a'), 'works with array');
-        $this->assertEquals(2, $_::get(new ArrayObject($obj), 'b'), 'works with ArrayObject');
-        $this->assertEquals(3, $_::get(new ArrayIterator($obj), 'c'), 'works with ArrayIterator');
+        $this->assertEquals(2, $_::get(new ArrayIterator($obj), 'b'), 'works with ArrayIterator');
+        $this->assertEquals(3, $_::get(new IteratorIterator(new ArrayIterator($obj)), 'c'), 'works with IteratorIterator');
+
         $this->assertNull($_::get($obj, 'd'), 'undefined key');
+        $this->assertNull($_::get(new IteratorIterator(new ArrayIterator($obj)), 'd'), 'undefined key with IteratorIterator');
     }
 
     /**
@@ -93,9 +95,11 @@ class ObjectsTest extends Underbar_TestCase
         $obj = array('a' => 1, 'b' => 2, 'c' => 3);
 
         $this->assertEquals(1, $_::getOrElse($obj, 'a', 10), 'works with array');
-        $this->assertEquals(2, $_::getOrElse(new ArrayObject($obj), 'b', '10'), 'works with ArrayObject');
-        $this->assertEquals(3, $_::getOrElse(new ArrayIterator($obj), 'c', '10'), 'works with ArrayIterator');
+        $this->assertEquals(2, $_::getOrElse(new ArrayIterator($obj), 'b', '10'), 'works with ArrayIterator');
+        $this->assertEquals(3, $_::getOrElse(new IteratorIterator(new ArrayIterator($obj)), 'c', '10'), 'works with IteratorIterator');
+
         $this->assertEquals(10, $_::getOrElse($obj, 'd', 10), 'undefined key');
+        $this->assertEquals(10, $_::getOrElse(new IteratorIterator(new ArrayIterator($obj)), 'd', '10'), 'undefined key with IteratorIterator');
     }
 
     /**
