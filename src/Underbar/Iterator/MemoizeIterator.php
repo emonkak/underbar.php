@@ -13,7 +13,7 @@ class MemoizeIterator implements \Iterator
 {
     private $it;
     private $index;
-    private $cache = array();
+    private $cachedElements = array();
     private $cachedKeys = array();
     private $cacheSize = 0;
 
