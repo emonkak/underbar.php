@@ -172,6 +172,7 @@ class Parallel implements \Iterator, \Countable
         foreach ($this->sockets as $pid => $socket) {
             fclose($socket);
             static::signal($pid, SIGTERM);
+            pcntl_waitpid($pid, $status, WUNTRACED);
         }
     }
 
