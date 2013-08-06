@@ -17,12 +17,16 @@ class GeneratorImpl extends AbstractImpl
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
+     * @param     callable  $g
      * @return    Generator
      */
-    public static function map($xs, $f)
+    public static function map($xs, $f, $g = null)
     {
-        foreach ($xs as $i => $x) {
-            yield $i => call_user_func($f, $x, $i, $xs);
+        $f = $f !== null ? $f : __CLASS__.'::identity';
+        $g = $g !== null ? $g : __CLASS__.'::identity';
+
+        foreach ($xs as $k => $x) {
+            yield call_user_func($g, $k, $x, $xs) => call_user_func($f, $x, $k, $xs);
         }
     }
 

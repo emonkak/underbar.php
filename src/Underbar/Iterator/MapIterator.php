@@ -13,13 +13,15 @@ class MapIterator implements \Iterator
 {
     private $it;
     private $f;
+    private $g;
     private $current;
     private $key;
 
-    public function __construct(\Iterator $it, $f)
+    public function __construct(\Iterator $it, $f, $g)
     {
         $this->it = $it;
         $this->f = $f;
+        $this->g = $g;
     }
 
     public function current()
@@ -52,11 +54,18 @@ class MapIterator implements \Iterator
     private function fetch()
     {
         if ($this->it->valid()) {
-            $this->key = $this->it->key();
+            $key = $this->it->key();
+            $current = $this->it->current();
+            $this->key = call_user_func(
+                $this->g,
+                $key,
+                $current,
+                $this->it
+            );
             $this->current = call_user_func(
                 $this->f,
-                $this->it->current(),
-                $this->key,
+                $current,
+                $key,
                 $this->it
             );
         }

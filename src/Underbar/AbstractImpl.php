@@ -33,17 +33,18 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
+     * @param     callable  $g
      * @return    array|Iterator
      */
-    // abstract public static function map($xs, $f);
+    // abstract public static function map($xs, $f, $g = null);
 
     /**
      * @chainable
      * @category  Collections
      */
-    final public static function collect($xs, $f)
+    final public static function collect($xs, $f, $g = null)
     {
-        return static::map($xs, $f);
+        return static::map($xs, $f, $g);
     }
 
     /**
@@ -1027,11 +1028,11 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      */
     final public static function invert($xs)
     {
-        $result = array();
-        foreach ($xs as $k => $x) {
-            $result[$x] = $k;
-        }
-        return $result;
+        return static::map($xs, function($x, $k) {
+            return $k;
+        }, function($k, $x) {
+            return $x;
+        });
     }
 
     /**

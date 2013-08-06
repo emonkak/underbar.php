@@ -17,11 +17,14 @@ class IteratorImpl extends AbstractImpl
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
+     * @param     callable  $g
      * @return    Iterator
      */
-    public static function map($xs, $f)
+    public static function map($xs, $f, $g = null)
     {
-        return new Iterator\MapIterator(self::wrapIterator($xs), $f);
+        $f = $f !== null ? $f : __CLASS__.'::identity';
+        $g = $g !== null ? $g : __CLASS__.'::identity';
+        return new Iterator\MapIterator(self::wrapIterator($xs), $f, $g);
     }
 
     /**
