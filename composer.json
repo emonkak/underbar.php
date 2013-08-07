@@ -1,7 +1,7 @@
 {
     "name": "emonkak/underbar.php",
     "description": "A collection processing library for PHP, like Underscore.js",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "type": "library",
     "keywords": ["array", "collection", "generator", "iterator", "lazy", "parallel"],
     "homepage": "http://emonkak.github.io/underbar.php/",

@@ -9,39 +9,17 @@
 
 namespace Underbar\Iterator;
 
-class LazyIterator implements \Iterator
+class LazyIterator implements \IteratorAggregate
 {
     private $f;
-    private $it;
 
     public function __construct($f)
     {
         $this->f = $f;
     }
 
-    public function current()
+    public function getIterator()
     {
-        return $this->it->current();
-    }
-
-    public function key()
-    {
-        return $this->it->key();
-    }
-
-    public function next()
-    {
-        $this->it->next();
-    }
-
-    public function rewind()
-    {
-        $this->it = call_user_func($this->f);
-        $this->it->rewind();
-    }
-
-    public function valid()
-    {
-        return $this->it->valid();
+        return call_user_func($this->f);
     }
 }
