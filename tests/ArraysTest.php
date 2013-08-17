@@ -181,6 +181,20 @@ class ArraysTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testConcatMap($_)
+    {
+        $list = array(1, 2, 3);
+
+        $result = $_::concatMap($list, function($x) use ($_) {
+            return $_::range(1, $x + 1);
+        });
+        $shouldBe = [1, 1, 2, 1, 2, 3];
+        $this->assertEquals($shouldBe, $_::toList($result));
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testFlatten($_)
     {
         $list = array(1, array(2), array(3, array(array(array(4)))));

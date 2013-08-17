@@ -128,12 +128,12 @@ interface ImplementorInterface
 
     /**
      * @chainable
-     * @varargs
      * @category  Arrays
-     * @param     array  $xss
+     * @param     array     $xs
+     * @param     callable  $f
      * @return    array|Iterator
      */
-    public static function unzip($xss);
+    public static function concatMap($xs, $f);
 
     /**
      * @chainable
@@ -164,6 +164,15 @@ interface ImplementorInterface
      * @return    array|Iterator
      */
     public static function uniq($xs, $f = null);
+
+    /**
+     * @chainable
+     * @varargs
+     * @category  Arrays
+     * @param     array  $xss
+     * @return    array|Iterator
+     */
+    public static function unzip($xss);
 
     /**
      * @chainable

@@ -247,6 +247,23 @@ class GeneratorImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    Generator
+     */
+    public static function concatMap($xs, $f)
+    {
+        foreach ($xs as $k => $x) {
+            foreach (call_user_func($f, $x, $k, $xs) as $k2 => $x2) {
+                yield $k2 => $x2;
+            }
+        }
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
      * @param     array    $xss
      * @param     boolean  $shallow
      * @return    Generator

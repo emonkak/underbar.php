@@ -11,25 +11,28 @@ namespace Underbar\Iterator;
 
 class FlattenIterator extends \IteratorIterator implements \RecursiveIterator
 {
-    private $depth;
+    private $shallow;
 
-    public function __construct(\Iterator $it, $depth = -1)
+    public function __construct(\Iterator $it, $shallow)
     {
         parent::__construct($it);
-        $this->depth = $depth;
+        $this->shallow = $shallow;
     }
 
     public function getChildren()
     {
-        $current = $this->current();
-        $inner = is_array($current) ? new \ArrayIterator($current) : $current;
-        return new self($inner, $this->depth - 1);
+        $inner = $this->current();
+        if (is_array($inner)) {
+            $inner = new \ArrayIterator($inner);
+        }
+        return $this->shallow
+            ? new NoRecursiveIterator($inner)
+            : new self($inner, $this->shallow);
     }
 
     public function hasChildren()
     {
-        $current = $this->current();
-        return $this->depth !== 0
-               && (is_array($current) || $current instanceof \Traversable);
+        $inner = $this->current();
+        return is_array($inner) || $inner instanceof \Traversable;
     }
 }

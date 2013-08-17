@@ -203,6 +203,23 @@ class IteratorImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    Iterator
+     */
+    public static function concatMap($xs, $f)
+    {
+        $inner = new Iterator\ConcatMapIterator(
+            self::wrapIterator($xs),
+            $f
+        );
+        return new \RecursiveIteratorIterator($inner);
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
      * @param     array    $xs
      * @param     boolean  $shallow
      * @return    Iterator
@@ -211,7 +228,7 @@ class IteratorImpl extends AbstractImpl
     {
         $inner = new Iterator\FlattenIterator(
             self::wrapIterator($xs),
-            $shallow ? 1 : -1
+            $shallow
         );
         return new \RecursiveIteratorIterator($inner);
     }

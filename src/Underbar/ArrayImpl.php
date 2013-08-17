@@ -278,6 +278,25 @@ class ArrayImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    array
+     */
+    public static function concatMap($xs, $f)
+    {
+        $ys = array();
+        foreach ($xs as $k => $x) {
+            foreach (call_user_func($f, $x, $k, $xs) as $y) {
+                $ys[] = $y;
+            }
+        }
+        return $ys;
+    }
+
+    /**
+     * @chainable
+     * @see       ImplementorInterface
+     * @category  Arrays
      * @param     array    $xs
      * @param     boolean  $shallow
      * @return    array

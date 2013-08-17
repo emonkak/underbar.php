@@ -106,6 +106,13 @@ trait Enumerable
         return $impl::chain($result);
     }
 
+    public function concatMap($f)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::concatMap($this->value(), $f);
+        return $impl::chain($result);
+    }
+
     public function flatten($shallow = false)
     {
         $impl = $this->getUnderbarImpl();
