@@ -188,6 +188,7 @@ interface ImplementorInterface
      * @chainable
      * @category  Arrays
      * @param     array  $array
+     * @param     int    $n
      * @return    array|Iterator
      */
     public static function cycle($array, $n = null);

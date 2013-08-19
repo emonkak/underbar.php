@@ -427,7 +427,6 @@ class GeneratorImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @category  Arrays
      * @param     array  $xs
      * @return    Generator
      */
@@ -443,7 +442,6 @@ class GeneratorImpl extends AbstractImpl
     /**
      * @chainable
      * @see       ImplementorInterface
-     * @category  Arrays
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $compare

@@ -457,7 +457,6 @@ class ArrayImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @category  Arrays
      * @param     array  $xs
      * @return    array
      */
@@ -469,7 +468,6 @@ class ArrayImpl extends AbstractImpl
     /**
      * @chainable
      * @see       ImplementorInterface
-     * @category  Arrays
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $compare

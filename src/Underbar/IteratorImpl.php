@@ -342,7 +342,6 @@ class IteratorImpl extends AbstractImpl
      * @chainable
      * @see       ImplementorInterface
      * @category  Arrays
-     * @category  Arrays
      * @param     array  $xs
      * @return    Iterator
      */
@@ -356,7 +355,6 @@ class IteratorImpl extends AbstractImpl
     /**
      * @chainable
      * @see       ImplementorInterface
-     * @category  Arrays
      * @category  Arrays
      * @param     array     $xs
      * @param     callable  $compare
