@@ -478,7 +478,7 @@ class CollectionsTest extends Underbar_TestCase
             ->map(function($pair) { return $pair[0]; })
             ->memoize();
 
-        $result = $_::chain($fibs)->take(count($shouldBe))->toList();
+        $result = $_::chain($fibs)->take(count($shouldBe))->toArray();
         $this->assertEquals($shouldBe, $result);
 
         $result = $_::chain($fibs)->take(20)->last();

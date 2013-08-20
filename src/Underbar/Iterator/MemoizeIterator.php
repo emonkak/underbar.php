@@ -62,7 +62,7 @@ class MemoizeIterator implements \Iterator
         }
 
         $this->cachedElements[] = $this->it->current();
-        $this->cachedKeys[] = $this->it->current();
+        $this->cachedKeys[] = $this->it->key();
         $this->cacheSize++;
     }
 }
