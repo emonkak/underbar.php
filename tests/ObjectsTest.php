@@ -180,6 +180,27 @@ class ObjectsTest extends Underbar_TestCase
         $this->assertEquals(1, $intercepted, 'passes tapped object to interceptor');
         $this->assertEquals(1, $returned, 'returns tapped object');
     }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testIsEmptry($_)
+    {
+        $this->assertTrue($_::isEmpty([]), 'with array');
+        $this->assertTrue($_::isEmpty(new ArrayIterator([])), 'with Countable object');
+        $this->assertTrue($_::isEmpty(new EmptyIterator()), 'with Iterator object');
+        $this->assertTrue($_::isEmpty(new InfiniteIterator(new EmptyIterator())), 'with Iterator object');
+        $this->assertTrue($_::isEmpty($_::lazy(function() {
+            return new EmptyIterator();
+        })), 'with IteratorAggregate object');
+
+        $this->assertFalse($_::isEmpty([1]), 'with array');
+        $this->assertFalse($_::isEmpty(new ArrayIterator([1])), 'with Countable object');
+        $this->assertFalse($_::isEmpty(new InfiniteIterator(new ArrayIterator([1]))), 'with Iterator object');
+        $this->assertFalse($_::isEmpty($_::lazy(function() {
+            return new ArrayIterator([1]);
+        })), 'with IteratorAggregate object');
+    }
 }
 
 // __END__

@@ -1181,6 +1181,30 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
     }
 
     /**
+     * @category  Objects
+     * @param     mixed  $xs
+     * @return    boolean
+     */
+    final public static function isEmpty($xs)
+    {
+        if ($xs instanceof \Countable) {
+            return count($xs) === 0;
+        } elseif ($xs instanceof \Iterator) {
+            $xs->rewind();
+            return !$xs->valid();
+        } elseif ($xs instanceof \IteratorAggregate) {
+            return self::isEmpty($xs->getIterator());
+        } elseif ($xs instanceof \Traversable) {
+            foreach ($xs as $x) {
+                return true;
+            }
+            return false;
+        } else {
+            return empty($xs);
+        }
+    }
+
+    /**
      * @category  Utility
      * @param     mixed  $value
      * @return    mixed
