@@ -137,7 +137,22 @@ class IteratorImpl extends AbstractImpl
     public static function lastN($xs, $n)
     {
         return static::lazy(function() use ($xs, $n) {
-            return ArrayImpl::lastN($xs, $n);
+            $queue = new \SplQueue();
+            if ($n <= 0) {
+                return $queue;
+            }
+
+            $i = 0;
+            foreach ($xs as $x) {
+                if ($i === $n) {
+                    $queue->dequeue();
+                    $i--;
+                }
+                $queue->enqueue($x);
+                $i++;
+            }
+
+            return $queue;
         });
     }
 

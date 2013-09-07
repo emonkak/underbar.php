@@ -182,22 +182,7 @@ class ArrayImpl extends AbstractImpl
      */
     public static function lastN($xs, $n)
     {
-        $queue = new \SplQueue();
-        if ($n <= 0) {
-            return $queue;
-        }
-
-        $i = 0;
-        foreach ($xs as $x) {
-            if ($i === $n) {
-                $queue->dequeue();
-                $i--;
-            }
-            $queue->enqueue($x);
-            $i++;
-        }
-
-        return $queue;
+        return $n > 0 ? array_slice(self::extractIterator($xs), -$n) : [];
     }
 
     /**
