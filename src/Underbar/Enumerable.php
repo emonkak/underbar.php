@@ -635,6 +635,13 @@ trait Enumerable
         return $impl::chain($result);
     }
 
+    public function isEmpty()
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::isEmpty($this->value());
+        return $result;
+    }
+
     public function parMap($f, $n = null, $timeout = null)
     {
         $impl = $this->getUnderbarImpl();
