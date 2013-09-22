@@ -54,105 +54,13 @@ class Parallel implements \Iterator, \Countable
     protected $timeout;
 
     /**
-     * Send the signal.
-     *
-     * @param   int   $pid     Process ID
-     * @param   int   $signal  Signal to sent
-     * @return  boolean
-     */
-    protected static function signal($pid, $signal)
-    {
-        if (function_exists('posix_kill')) {
-            return posix_kill($pid, $signal);
-        } else {
-            system("kill -$signal $pid", $result);
-            return $result === 0;
-        }
-    }
-
-    /**
-     * Return the socket pair for interprocess communication.
-     *
-     * @return  array
-     */
-    protected static function pair()
-    {
-        return stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
-    }
-
-    /**
-     * Read data with unserialize from a socket.
-     *
-     * @param   resource  $socket
-     * @return  void
-     * @throws  RuntimeException
-     */
-    protected static function read($socket)
-    {
-        $result = fgets($socket);
-        if ($result === false) {
-            throw new \RuntimeException();
-        }
-        return static::unserialize($result);
-    }
-
-    /**
-     * Write data with serialize to a socket.
-     *
-     * @param   resource  $socket
-     * @param   mixed     $value
-     * @return  boolean
-     */
-    protected static function write($socket, $value)
-    {
-        $value = static::serialize($value) . PHP_EOL;
-        $written = 0;
-        while ($written < strlen($value)) {
-            $bytes = fwrite($socket, substr($value, $written));
-            if ($bytes === false) {
-                return false;
-            }
-            $written += $bytes;
-        }
-        return true;
-    }
-
-    /**
-     * Serialize data
-     *
-     * @param   mixed  $source
-     * @return  string
-     */
-    protected static function serialize($source)
-    {
-        return base64_encode(serialize($source));
-    }
-
-    /**
-     * Unserialize data
-     *
-     * @param   mixed   $source
-     * @return  string
-     * @throws  UnexpectedValueException
-     */
-    protected static function unserialize($source)
-    {
-        $source = base64_decode($source);
-        $result = @unserialize($source);
-        if ($result === false && $source !== serialize(false)) {
-            throw new \UnexpectedValueException();
-        }
-        return $result;
-    }
-
-    /**
      * Forked processes and start tasks.
      *
      * @param  callable  $procedure  Procedure to execute in child processes
      * @param  int       $n          Number of process
      * @param  int       $timeout    Timeout of IO wait
      */
-    public function __construct($procedure, $n = 4, $timeout = null)
+    public function __construct($procedure, $n, $timeout = null)
     {
         $this->queue = new \SplQueue();
         $this->results = new \SplQueue();
@@ -171,7 +79,7 @@ class Parallel implements \Iterator, \Countable
     {
         foreach ($this->sockets as $pid => $socket) {
             fclose($socket);
-            static::signal($pid, SIGTERM);
+            $this->signal($pid, SIGTERM);
             pcntl_waitpid($pid, $status, WUNTRACED);
         }
     }
@@ -349,7 +257,7 @@ class Parallel implements \Iterator, \Countable
         if (stream_select($read, $write, $except, $time) > 0) {
             foreach ($read as $socket) {
                 try {
-                    $result = static::read($socket);
+                    $result = $this->read($socket);
                 } catch (\RuntimeException $e) {
                     continue;
                 }
@@ -380,7 +288,7 @@ class Parallel implements \Iterator, \Countable
                 if ($this->queue->isEmpty()) {
                     break;
                 }
-                if (static::write($socket, $this->queue->dequeue()) !== false) {
+                if ($this->write($socket, $this->queue->dequeue()) !== false) {
                     $this->remain++;
                 }
             }
@@ -397,11 +305,103 @@ class Parallel implements \Iterator, \Countable
     {
         while (true) {
             try {
-                $result = static::read($socket);  // is blocking
+                $result = $this->read($socket);  // is blocking
             } catch (\RuntimeException $e) {
                 break;
             }
-            static::write($socket, call_user_func($this->procedure, $result));
+            $this->write($socket, call_user_func($this->procedure, $result));
         }
+    }
+
+    /**
+     * Send the signal.
+     *
+     * @param   int   $pid     Process ID
+     * @param   int   $signal  Signal to sent
+     * @return  boolean
+     */
+    protected function signal($pid, $signal)
+    {
+        if (function_exists('posix_kill')) {
+            return posix_kill($pid, $signal);
+        } else {
+            system("kill -$signal $pid", $result);
+            return $result === 0;
+        }
+    }
+
+    /**
+     * Return the socket pair for interprocess communication.
+     *
+     * @return  array
+     */
+    protected function pair()
+    {
+        return stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+    }
+
+    /**
+     * Read data with unserialize from a socket.
+     *
+     * @param   resource  $socket
+     * @return  void
+     * @throws  \RuntimeException
+     */
+    protected function read($socket)
+    {
+        $result = fgets($socket);
+        if ($result === false) {
+            throw new \RuntimeException();
+        }
+        return $this->unserialize($result);
+    }
+
+    /**
+     * Write data with serialize to a socket.
+     *
+     * @param   resource  $socket
+     * @param   mixed     $value
+     * @return  boolean
+     */
+    protected function write($socket, $value)
+    {
+        $value = $this->serialize($value) . PHP_EOL;
+        $written = 0;
+        while ($written < strlen($value)) {
+            $bytes = fwrite($socket, substr($value, $written));
+            if ($bytes === false) {
+                return false;
+            }
+            $written += $bytes;
+        }
+        return true;
+    }
+
+    /**
+     * Serialize data
+     *
+     * @param   mixed  $source
+     * @return  string
+     */
+    protected function serialize($source)
+    {
+        return base64_encode(serialize($source));
+    }
+
+    /**
+     * Unserialize data
+     *
+     * @param   mixed   $source
+     * @return  string
+     * @throws  \UnexpectedValueException
+     */
+    protected function unserialize($source)
+    {
+        $source = base64_decode($source);
+        $result = @unserialize($source);
+        if ($result === false && $source !== serialize(false)) {
+            throw new \UnexpectedValueException();
+        }
+        return $result;
     }
 }

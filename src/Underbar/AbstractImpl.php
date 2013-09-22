@@ -1254,7 +1254,7 @@ abstract class AbstractImpl implements Internal\ImplementorInterface
      * @param     int       $timeout
      * @return    Parallel
      */
-    final public static function parMap($xs, $f, $n = null, $timeout = null)
+    final public static function parMap($xs, $f, $n = 4, $timeout = null)
     {
         $parallel = new Internal\Parallel($f, $n, $timeout);
         $parallel->pushAll($xs);
