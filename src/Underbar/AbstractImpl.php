@@ -9,7 +9,7 @@
 
 namespace Underbar;
 
-abstract class AbstractImpl implements Internal\ImplementorInterface
+class AbstractImpl
 {
     /**
      * @chainable
