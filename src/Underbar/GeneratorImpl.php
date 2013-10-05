@@ -448,6 +448,28 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
+     * @category  Collections
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Generator
+     */
+    protected static function sampleN($xs, $n)
+    {
+        $xs = self::extractIterator($xs);
+        $n = min($n, count($xs));
+
+        while ($n-- > 0) {
+            $key = array_rand($xs);
+            if ($key === null) {
+                break;
+            }
+            yield $xs[$key];
+            unset($xs[$key]);
+        }
+    }
+
+    /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n

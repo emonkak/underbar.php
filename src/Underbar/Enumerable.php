@@ -364,6 +364,13 @@ trait Enumerable
         return $result;
     }
 
+    public function sample($n = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::sample($this->value(), $n);
+        return $n !== null ? $impl::chain($result) : $result;
+    }
+
     public function toArray()
     {
         $impl = $this->getUnderbarImpl();

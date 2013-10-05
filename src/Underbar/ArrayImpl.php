@@ -478,6 +478,30 @@ class ArrayImpl extends AbstractImpl
     }
 
     /**
+     * @category  Collections
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array
+     */
+    protected static function sampleN($xs, $n)
+    {
+        $xs = self::extractIterator($xs);
+        $n = min($n, count($xs));
+        $result = array();
+
+        while ($n-- > 0) {
+            $key = array_rand($xs);
+            if ($key === null) {
+                break;
+            }
+            $result[] = $xs[$key];
+            unset($xs[$key]);
+        }
+
+        return $result;
+    }
+
+    /**
      * @chainable
      * @category  Arrays
      * @param     array  $xs

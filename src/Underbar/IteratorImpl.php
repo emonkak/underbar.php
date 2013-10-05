@@ -371,6 +371,18 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
+     * @category  Collections
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Generator
+     */
+    protected static function sampleN($xs, $n)
+    {
+        return new Iterator\SampleIterator(self::extractIterator($xs), $n);
+    }
+
+    /**
+     * @chainable
      * @category  Arrays
      * @param     array  $xs
      * @param     int    $n

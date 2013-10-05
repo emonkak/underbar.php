@@ -491,6 +491,26 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testSample($_)
+    {
+        $numbers = range(0, 9);
+        $allSampled = $_::chain($numbers)->sample(10)->sort()->toList();
+        $this->assertEquals($numbers, $allSampled);
+
+        $this->assertContains($_::sample($numbers), $numbers);
+        $this->assertNull($_::sample(array()));
+        $this->assertEmpty($_::toList($_::sample(array(), 5)));
+        $this->assertEmpty($_::toList($_::sample(array(), 0)));
+        $this->assertEmpty($_::toList($_::sample(array(1, 2, 3), 0)));
+        $this->assertEmpty($_::toList($_::sample(array(1, 2), -1)));
+
+        $numbers = array('a' => 1, 'b' => 2, 'c' => 3);
+        $this->assertContains($_::sample($numbers), $numbers);
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testMemoize($_)
     {
         $counter = 0;

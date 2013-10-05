@@ -86,8 +86,7 @@ EOF;
     }
 
     if ($isChainable) {
-        if ($method->getName() === 'first'
-            || $method->getName() === 'last') {
+        if (in_array($method->getName(), ['first', 'last', 'sample'])) {
             echo <<<EOF
         return {$argVars[1]} !== null ? \$impl::chain(\$result) : \$result;
     }

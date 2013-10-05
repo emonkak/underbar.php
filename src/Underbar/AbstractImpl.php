@@ -418,6 +418,25 @@ class AbstractImpl
     }
 
     /**
+     * @chainable
+     * @category  Collections
+     * @param     array  $xs
+     * @param     int    $n
+     * @param     int    $n
+     * @return    array|mixed|null|Iterator
+     */
+    public static function sample($xs, $n = null)
+    {
+        if ($n === null) {
+            $xs = static::extractIterator($xs);
+            $key = array_rand($xs);
+            return $key !== null ? $xs[$key] : null;
+        } else {
+            return static::sampleN($xs, $n);
+        }
+    }
+
+    /**
      * @category  Collections
      * @param     mixed  $xs
      * @return    array
