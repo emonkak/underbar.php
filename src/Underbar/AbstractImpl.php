@@ -966,7 +966,7 @@ class AbstractImpl
             $xs->rewind();
             return !$xs->valid();
         } elseif ($xs instanceof \IteratorAggregate) {
-            return self::isEmpty($xs->getIterator());
+            return static::isEmpty($xs->getIterator());
         } elseif ($xs instanceof \Traversable) {
             foreach ($xs as $x) {
                 return true;
