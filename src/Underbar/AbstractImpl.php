@@ -30,9 +30,9 @@ class AbstractImpl
      * @chainable
      * @category  Collections
      */
-    final public static function collect($xs, $f, $g = null)
+    final public static function collect($xs, $f)
     {
-        return static::map($xs, $f, $g);
+        return static::map($xs, $f);
     }
 
     /**
@@ -801,11 +801,11 @@ class AbstractImpl
      */
     final public static function invert($xs)
     {
-        return static::map($xs, function($x, $k) {
-            return $k;
-        }, function($k, $x) {
-            return $x;
-        });
+        $result = array();
+        foreach ($xs as $k => $x) {
+            $result[$x] = $k;
+        }
+        return $result;
     }
 
     /**

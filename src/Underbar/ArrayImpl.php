@@ -16,19 +16,14 @@ class ArrayImpl extends AbstractImpl
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
-     * @param     callable  $g
      * @return    array
      */
-    public static function map($xs, $f, $g = null)
+    public static function map($xs, $f)
     {
         $ys = array();
-        $f = $f !== null ? $f : __CLASS__.'::identity';
-        $g = $g !== null ? $g : __CLASS__.'::identity';
-
         foreach ($xs as $k => $x) {
-            $ys[call_user_func($g, $k, $x, $xs)] = call_user_func($f, $x, $k, $xs);
+            $ys[$k] = call_user_func($f, $x, $k, $xs);
         }
-
         return $ys;
     }
 

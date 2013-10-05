@@ -15,10 +15,10 @@ trait Enumerable
 
     abstract function value();
 
-    public function map($f, $g = null)
+    public function map($f)
     {
         $impl = $this->getUnderbarImpl();
-        $result = $impl::map($this->value(), $f, $g);
+        $result = $impl::map($this->value(), $f);
         return $impl::chain($result);
     }
 
@@ -193,10 +193,10 @@ trait Enumerable
         return $impl::chain($result);
     }
 
-    public function collect($f, $g = null)
+    public function collect($f)
     {
         $impl = $this->getUnderbarImpl();
-        $result = $impl::collect($this->value(), $f, $g);
+        $result = $impl::collect($this->value(), $f);
         return $impl::chain($result);
     }
 
