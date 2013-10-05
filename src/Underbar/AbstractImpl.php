@@ -1224,16 +1224,6 @@ class AbstractImpl
     // abstract public static function range($start, $stop = null, $step = 1);
 
     /**
-     * @category  Utility
-     * @param     callable  $f
-     * @return    Iterator
-     */
-    final public static function lazy($f)
-    {
-        return new Iterator\LazyIterator($f);
-    }
-
-    /**
      * @category  Chaining
      * @param     mixed  $value
      * @return    Wrapper

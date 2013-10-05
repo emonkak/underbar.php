@@ -186,20 +186,26 @@ class ObjectsTest extends Underbar_TestCase
      */
     public function testIsEmptry($_)
     {
-        $this->assertTrue($_::isEmpty([]), 'with array');
-        $this->assertTrue($_::isEmpty(new ArrayIterator([])), 'with Countable object');
-        $this->assertTrue($_::isEmpty(new EmptyIterator()), 'with Iterator object');
-        $this->assertTrue($_::isEmpty(new InfiniteIterator(new EmptyIterator())), 'with Iterator object');
-        $this->assertTrue($_::isEmpty($_::lazy(function() {
-            return new EmptyIterator();
-        })), 'with IteratorAggregate object');
+        $it = $this->getMock('IteratorAggregate');
+        $it
+            ->expects($this->at(0))
+            ->method('getIterator')
+            ->will($this->returnValue(new EmptyIterator()));
+        $it
+            ->expects($this->at(1))
+            ->method('getIterator')
+            ->will($this->returnValue(new ArrayIterator([1])));
 
-        $this->assertFalse($_::isEmpty([1]), 'with array');
-        $this->assertFalse($_::isEmpty(new ArrayIterator([1])), 'with Countable object');
-        $this->assertFalse($_::isEmpty(new InfiniteIterator(new ArrayIterator([1]))), 'with Iterator object');
-        $this->assertFalse($_::isEmpty($_::lazy(function() {
-            return new ArrayIterator([1]);
-        })), 'with IteratorAggregate object');
+        $this->assertTrue($_::isEmpty([]), 'for array');
+        $this->assertTrue($_::isEmpty(new ArrayIterator([])), 'for Countable object');
+        $this->assertTrue($_::isEmpty(new EmptyIterator()), 'for Iterator object');
+        $this->assertTrue($_::isEmpty(new InfiniteIterator(new EmptyIterator())), 'for Iterator object');
+        $this->assertTrue($_::isEmpty($it), 'for IteratorAggregate object');
+
+        $this->assertFalse($_::isEmpty([1]), 'for array');
+        $this->assertFalse($_::isEmpty(new ArrayIterator([1])), 'for Countable object');
+        $this->assertFalse($_::isEmpty(new InfiniteIterator(new ArrayIterator([1]))), 'for Iterator object');
+        $this->assertFalse($_::isEmpty($it), 'for IteratorAggregate object');
     }
 }
 

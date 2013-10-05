@@ -47,7 +47,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return static::lazy(function() use ($xs, $f) {
+        return new Iterator\DeferIterator(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::sortBy($xs, $f));
         });
     }
@@ -61,7 +61,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return static::lazy(function() use ($xs, $f) {
+        return new Iterator\DeferIterator(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::groupBy($xs, $f));
         });
     }
@@ -90,7 +90,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return static::lazy(function() use ($xs, $f) {
+        return new Iterator\DeferIterator(function() use ($xs, $f) {
             return new \ArrayIterator(ArrayImpl::countBy($xs, $f));
         });
     }
@@ -103,7 +103,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return static::lazy(function() use ($xs) {
+        return new Iterator\DeferIterator(function() use ($xs) {
             return new \ArrayIterator(ArrayImpl::shuffle($xs));
         });
     }
@@ -117,49 +117,6 @@ class IteratorImpl extends AbstractImpl
     public static function memoize($xs)
     {
         return new Iterator\MemoizeIterator(self::wrapIterator($xs));
-    }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    Iterator
-     */
-    public static function firstN($xs, $n)
-    {
-        return $n > 0
-             ? new \LimitIterator(self::wrapIterator($xs), 0, $n)
-             : new \EmptyIterator;
-    }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    Iterator
-     */
-    public static function lastN($xs, $n)
-    {
-        return static::lazy(function() use ($xs, $n) {
-            $queue = new \SplQueue();
-            if ($n <= 0) {
-                return $queue;
-            }
-
-            $i = 0;
-            foreach ($xs as $x) {
-                if ($i === $n) {
-                    $queue->dequeue();
-                    $i--;
-                }
-                $queue->enqueue($x);
-                $i++;
-            }
-
-            return $queue;
-        });
     }
 
     /**
@@ -355,7 +312,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return static::lazy(function() use ($xs) {
+        return new Iterator\DeferIterator(function() use ($xs) {
             return new \ArrayIterator(ArrayImpl::reverse($xs));
         });
     }
@@ -369,7 +326,7 @@ class IteratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return static::lazy(function() use ($xs, $compare) {
+        return new Iterator\DeferIterator(function() use ($xs, $compare) {
             return new \ArrayIterator(ArrayImpl::sort($xs, $compare));
         });
     }
@@ -405,5 +362,49 @@ class IteratorImpl extends AbstractImpl
             $start = 0;
         }
         return new Iterator\RangeIterator($start, $stop, $step);
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Iterator
+     */
+    protected static function firstN($xs, $n)
+    {
+        return $n > 0
+             ? new \LimitIterator(self::wrapIterator($xs), 0, $n)
+             : new \EmptyIterator;
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Iterator
+     */
+    protected static function lastN($xs, $n)
+    {
+        if ($n <= 0) {
+            return new \EmptyIterator();
+        }
+
+        return new Iterator\DeferIterator(function() use ($xs, $n) {
+            $i = 0;
+            $queue = new \SplQueue();
+
+            foreach ($xs as $x) {
+                if ($i == $n) {
+                    $queue->dequeue();
+                    $i--;
+                }
+                $queue->enqueue($x);
+                $i++;
+            }
+
+            return $queue;
+        });
     }
 }

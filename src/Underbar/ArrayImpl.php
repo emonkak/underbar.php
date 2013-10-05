@@ -178,32 +178,6 @@ class ArrayImpl extends AbstractImpl
      * @param     int    $n
      * @return    array
      */
-    public static function firstN($xs, $n)
-    {
-        return $n > 0
-             ? array_slice(self::extractIterator($xs), 0, $n)
-             : array();
-    }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    SplQueue
-     */
-    public static function lastN($xs, $n)
-    {
-        return $n > 0 ? array_slice(self::extractIterator($xs), -$n) : [];
-    }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    array
-     */
     public static function initial($xs, $n = 1, $guard = null)
     {
         if ($guard !== null) {
@@ -288,16 +262,11 @@ class ArrayImpl extends AbstractImpl
     /**
      * @chainable
      * @category  Arrays
-     * @param     array    $xs
+     * @param     array    $xss
      * @param     boolean  $shallow
      * @return    array
      */
-    public static function flatten($xs, $shallow = false)
-    {
-        return self::_flatten($xs, $shallow);
-    }
-
-    private static function _flatten($xss, $shallow, &$output = array())
+    public static function flatten($xss, $shallow = false, &$output = array())
     {
         foreach ($xss as $xs) {
             if (self::isTraversable($xs)) {
@@ -306,7 +275,7 @@ class ArrayImpl extends AbstractImpl
                         $output[] = $x;
                     }
                 } else {
-                    self::_flatten($xs, $shallow, $output);
+                    self::flatten($xs, $shallow, $output);
                 }
             } else {
                 $output[] = $xs;
@@ -503,5 +472,31 @@ class ArrayImpl extends AbstractImpl
         }
 
         return $range;
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array
+     */
+    protected static function firstN($xs, $n)
+    {
+        return $n > 0
+             ? array_slice(self::extractIterator($xs), 0, $n)
+             : array();
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    SplQueue
+     */
+    protected static function lastN($xs, $n)
+    {
+        return $n > 0 ? array_slice(self::extractIterator($xs), -$n) : [];
     }
 }

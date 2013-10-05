@@ -71,20 +71,6 @@ trait Enumerable
         return $impl::chain($result);
     }
 
-    public function firstN($n)
-    {
-        $impl = $this->getUnderbarImpl();
-        $result = $impl::firstN($this->value(), $n);
-        return $impl::chain($result);
-    }
-
-    public function lastN($n)
-    {
-        $impl = $this->getUnderbarImpl();
-        $result = $impl::lastN($this->value(), $n);
-        return $impl::chain($result);
-    }
-
     public function initial($n = 1, $guard = null)
     {
         $impl = $this->getUnderbarImpl();
@@ -120,10 +106,11 @@ trait Enumerable
         return $impl::chain($result);
     }
 
-    public function flatten($shallow = false)
+    public function flatten($shallow = false, $output = array (
+))
     {
         $impl = $this->getUnderbarImpl();
-        $result = $impl::flatten($this->value(), $shallow);
+        $result = $impl::flatten($this->value(), $shallow, $output);
         return $impl::chain($result);
     }
 

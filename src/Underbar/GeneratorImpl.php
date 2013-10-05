@@ -38,11 +38,9 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sortBy($xs, $f)
     {
-        return self::lazy(function() use ($xs, $f) {
-            foreach (ArrayImpl::sortBy($xs, $f) as $k => $x) {
-                yield $k => $x;
-            }
-        });
+        foreach (ArrayImpl::sortBy($xs, $f) as $k => $x) {
+            yield $k => $x;
+        }
     }
 
     /**
@@ -54,11 +52,9 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function groupBy($xs, $f = null)
     {
-        return self::lazy(function() use ($xs, $f) {
-            foreach (ArrayImpl::groupBy($xs, $f) as $k => $x) {
-                yield $k => $x;
-            }
-        });
+        foreach (ArrayImpl::groupBy($xs, $f) as $k => $x) {
+            yield $k => $x;
+        }
     }
 
     /**
@@ -86,11 +82,9 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function countBy($xs, $f = null)
     {
-        return self::lazy(function() use ($xs, $f) {
-            foreach (ArrayImpl::countBy($xs, $f) as $k => $x) {
-                yield $k => $x;
-            }
-        });
+        foreach (ArrayImpl::countBy($xs, $f) as $k => $x) {
+            yield $k => $x;
+        }
     }
 
     /**
@@ -101,11 +95,9 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function shuffle($xs)
     {
-        return self::lazy(function() use ($xs) {
-            foreach (ArrayImpl::shuffle($xs) as $x) {
-                yield $x;
-            }
-        });
+        foreach (ArrayImpl::shuffle($xs) as $x) {
+            yield $x;
+        }
     }
 
     /**
@@ -133,39 +125,6 @@ class GeneratorImpl extends AbstractImpl
                 yield $i => $x;
             }
         }
-    }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    Generator
-     */
-    public static function firstN($xs, $n)
-    {
-        foreach ($xs as $i => $x) {
-            if (--$n < 0) {
-                break;
-            }
-            yield $i => $x;
-        }
-    }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    Iterator
-     */
-    public static function lastN($xs, $n)
-    {
-        return self::lazy(function() use ($xs, $n) {
-            foreach (ArrayImpl::lastN($xs, $n) as $x) {
-                yield $x;
-            }
-        });
     }
 
     /**
@@ -426,11 +385,9 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function reverse($xs)
     {
-        return self::lazy(function() use ($xs) {
-            foreach (ArrayImpl::reverse($xs) as $x) {
-                yield $x;
-            }
-        });
+        foreach (ArrayImpl::reverse($xs) as $x) {
+            yield $x;
+        }
     }
 
     /**
@@ -442,11 +399,9 @@ class GeneratorImpl extends AbstractImpl
      */
     public static function sort($xs, $compare = null)
     {
-        return self::lazy(function() use ($xs, $compare) {
-            foreach (ArrayImpl::sort($xs, $compare) as $x) {
-                yield $x;
-            }
-        });
+        foreach (ArrayImpl::sort($xs, $compare) as $x) {
+            yield $x;
+        }
     }
 
     /**
@@ -484,6 +439,51 @@ class GeneratorImpl extends AbstractImpl
         for ($i = 0; $i < $len; $i++) {
             yield $i => $start;
             $start += $step;
+        }
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Generator
+     */
+    protected static function firstN($xs, $n)
+    {
+        foreach ($xs as $i => $x) {
+            if (--$n < 0) {
+                break;
+            }
+            yield $i => $x;
+        }
+    }
+
+    /**
+     * @chainable
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    Generator
+     */
+    protected static function lastN($xs, $n)
+    {
+        $i = 0;
+        $queue = new \SplQueue();
+
+        if ($n > 0) {
+            foreach ($xs as $x) {
+                if ($i == $n) {
+                    $queue->dequeue();
+                    $i--;
+                }
+                $queue->enqueue($x);
+                $i++;
+            }
+        }
+
+        foreach ($queue as $x) {
+            yield $x;
         }
     }
 }
