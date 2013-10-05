@@ -27,18 +27,6 @@ class AbstractImpl
     }
 
     /**
-     * Alias: collect
-     *
-     * @chainable
-     * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @param     callable  $g
-     * @return    array|Iterator
-     */
-    // abstract public static function map($xs, $f, $g = null);
-
-    /**
      * @chainable
      * @category  Collections
      */
@@ -114,17 +102,6 @@ class AbstractImpl
     {
         return static::find($xs, $f);
     }
-
-    /**
-     * Alias: select
-     *
-     * @chainable
-     * @category  Collections
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    array|Iterator
-     */
-    // abstract public static function filter($xs, $f);
 
     /**
      * @chainable
@@ -396,49 +373,6 @@ class AbstractImpl
     }
 
     /**
-     * @chainable
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @return    array|Iterator
-     */
-    // abstract static function sortBy($xs, $f);
-
-    /**
-     * @chainable
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @return    array|Iterator
-     */
-    // abstract public static function groupBy($xs, $f = null);
-
-    /**
-     * @chainable
-     * @category  Collections
-     * @param     array            $xs
-     * @param     callable|string  $x
-     * @return    array|Iterator
-     */
-    // abstract public static function countBy($xs, $f = null);
-
-    /**
-     * @chainable
-     * @category  Collections
-     * @param     array  $xs
-     * @return    array|Iterator
-     */
-    // abstract public static function shuffle($xs);
-
-    /**
-     * @chainable
-     * @category  Collections
-     * @param     Iterator  $xs
-     * @return    Iterator
-     */
-    // abstract public static function memoize($xs);
-
-    /**
      * @category  Collections
      * @param     mixed  $xs
      * @return    array
@@ -532,15 +466,6 @@ class AbstractImpl
     }
 
     /**
-     * @chainable
-     * @category  Arrays
-     * @param     arra  $xs
-     * @param     int   $n
-     * @return    array|Iterator
-     */
-    // abstract public static function firstN($xs, $n);
-
-    /**
      * @category  Arrays
      * @param     array  $xs
      * @param     mixed  $default
@@ -558,15 +483,6 @@ class AbstractImpl
      * @chainable
      * @category  Arrays
      * @param     array  $xs
-     * @param     int    $n
-     * @return    array|Iterator
-     */
-    // abstract public static function initial($xs, $n = 1, $guard = null);
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
      * @return    array|mixed|null|Iterator
      */
     final public static function last($xs, $n = null, $guard = null)
@@ -577,15 +493,6 @@ class AbstractImpl
             return static::lastOrElse($xs, null);
         }
     }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     arra  $xs
-     * @param     int   $n
-     * @return    array|Iterator
-     */
-    // abstract public static function lastN($xs, $n);
 
     /**
      * @category  Arrays
@@ -600,17 +507,6 @@ class AbstractImpl
         }
         return $x;
     }
-
-    /**
-     * Alias: tail, drop
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    array|Iterator
-     */
-    // abstract public static function rest($xs, $n = 1, $guard = null);
 
     /**
      * @chainable
@@ -631,28 +527,6 @@ class AbstractImpl
     }
 
     /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    array|Iterator
-     */
-    // abstract public static function takeWhile($xs, $f);
-
-    /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $f
-     * @return    array|Iterator
-     */
-    // abstract public static function dropWhile($xs, $f);
-
-    /**
      * @chainable
      * @category  Arrays
      * @param     array  $xs
@@ -662,15 +536,6 @@ class AbstractImpl
     {
         return static::filter($xs, __CLASS__.'::identity');
     }
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $depth
-     * @return    array|Iterator
-     */
-    // abstract public static function flatten($xs, $depth = -1);
 
     /**
      * @chainable
@@ -708,16 +573,6 @@ class AbstractImpl
      * @param     array  *$others
      * @return    array|Iterator
      */
-    // abstract public static function intersection($xs);
-
-    /**
-     * @chainable
-     * @varargs
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     array  *$others
-     * @return    array|Iterator
-     */
     final public static function difference($xs)
     {
         $yss = array_slice(func_get_args(), 1);
@@ -732,17 +587,6 @@ class AbstractImpl
             return true;
         });
     }
-
-    /**
-     * Alias: unique
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     array            $xs
-     * @param     callable|string  $f
-     * @return    array|Iterator
-     */
-    // abstract public static function uniq($xs, $f = null);
 
     /**
      * @chainable
@@ -784,15 +628,6 @@ class AbstractImpl
             return call_user_func_array($f, $xs);
         });
     }
-
-    /**
-     * @chainable
-     * @varargs
-     * @category  Arrays
-     * @param     array  $xss
-     * @return    array|Iterator
-     */
-    // abstract public static function unzip($xss);
 
     /**
      * @chainable
@@ -899,68 +734,6 @@ class AbstractImpl
 
         return $low;
     }
-
-    /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @param     int    $n
-     * @return    array|Iterator
-     * @throws    OverflowException
-     */
-    // abstract public static function cycle($xs, $n = null);
-
-    /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     mixed  $value
-     * @param     int    $n
-     * @return    array|Iterator
-     * @throws    OverflowException
-     */
-    // abstract public static function repeat($value, $n = -1);
-
-    /**
-     * Porting from the Prelude of Haskell.
-     *
-     * @chainable
-     * @category  Arrays
-     * @param     mixed     $acc
-     * @param     callable  $f
-     * @return    Iterator
-     * @throws    OverflowException
-     */
-    // abstract public static function iterate($acc, $f);
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array  $xs
-     * @return    array|Iterator
-     */
-    // abstract public static function reverse($xs);
-
-    /**
-     * @chainable
-     * @category  Arrays
-     * @param     array     $xs
-     * @param     callable  $compare
-     * @return    array|Iterator
-     */
-    // abstract public static function sort($xs, $compare = null);
-
-    /**
-     * @chainable
-     * @varargs
-     * @category  Arrays
-     * @param     array  *$xss
-     * @return    array|Iterator
-     */
-    // abstract public static function concat();
 
     /**
      * @category  Arrays
@@ -1213,15 +986,6 @@ class AbstractImpl
     {
         return $value;
     }
-
-    /**
-     * @category  Utility
-     * @param     int  $start
-     * @param     int  $stop
-     * @param     int  $step
-     * @return    array|Iterator
-     */
-    // abstract public static function range($start, $stop = null, $step = 1);
 
     /**
      * @category  Chaining
