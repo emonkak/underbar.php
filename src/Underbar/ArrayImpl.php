@@ -391,7 +391,7 @@ class ArrayImpl extends AbstractImpl
         if ($n < 0) {
             throw new \OverflowException();
         }
-        return $n === 0 ? array() : array_fill(0, $n, $value);
+        return $n == 0 ? array() : array_fill(0, $n, $value);
     }
 
     /**

@@ -123,8 +123,8 @@ class AbstractImpl
     {
         return static::filter($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
-                if (!((isset($x->$key) && $x->$key === $value)
-                      || (isset($x[$key]) && $x[$key] === $value))) {
+                if (!((isset($x->$key) && $x->$key == $value)
+                      || (isset($x[$key]) && $x[$key] == $value))) {
                     return false;
                 }
             }
@@ -142,8 +142,8 @@ class AbstractImpl
     {
         return static::find($xs, function($x) use ($properties) {
             foreach ($properties as $key => $value) {
-                if (!((isset($x->$key) && $x->$key === $value)
-                      || (isset($x[$key]) && $x[$key] === $value))) {
+                if (!((isset($x->$key) && $x->$key == $value)
+                      || (isset($x[$key]) && $x[$key] == $value))) {
                     return false;
                 }
             }
