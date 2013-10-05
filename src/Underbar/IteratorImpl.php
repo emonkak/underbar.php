@@ -68,7 +68,21 @@ class IteratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Iterator
+     */
+    public static function indexBy($xs, $f = null)
+    {
+        return new Iterator\IndexByIterator(
+            self::wrapIterator($xs),
+            self::createCallback($f)
+        );
+    }
+
+    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x

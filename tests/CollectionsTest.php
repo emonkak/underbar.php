@@ -408,6 +408,45 @@ class CollectionsTest extends Underbar_TestCase
     /**
      * @dataProvider provider
      */
+    public function testIndexBy($_)
+    {
+        $parity = $_::chain(array(1, 2, 3, 4, 5))
+            ->indexBy(function($num) {
+                return $num % 2 == 0 ? 'true' : 'false';
+            })
+            ->toArray();
+        $this->assertEquals($parity['true'], 4);
+        $this->assertEquals($parity['false'], 5);
+
+        $list = array(
+            array('string' => 'one', 'length' => strlen('one')),
+            array('string' => 'two', 'length' => strlen('two')),
+            array('string' => 'three', 'length' => strlen('three')),
+            array('string' => 'four', 'length' => strlen('four')),
+            array('string' => 'five', 'length' => strlen('five')),
+            array('string' => 'six', 'length' => strlen('six')),
+            array('string' => 'seven', 'length' => strlen('seven')),
+            array('string' => 'eight', 'length' => strlen('eight')),
+            array('string' => 'nine', 'length' => strlen('nine')),
+            array('string' => 'ten', 'length' => strlen('ten')),
+        );
+        $grouped = $_::chain($list)
+            ->indexBy('length')
+            ->toArray();
+        $this->assertEquals($grouped[3]['string'], 'ten');
+        $this->assertEquals($grouped[4]['string'], 'nine');
+        $this->assertEquals($grouped[5]['string'], 'eight');
+
+        $array = array(1, 2, 1, 2, 3);
+        $grouped = $_::chain($array)->indexBy()->toArray();
+        $this->assertEquals($grouped[1], 1);
+        $this->assertEquals($grouped[2], 2);
+        $this->assertEquals($grouped[3], 3);
+    }
+
+    /**
+     * @dataProvider provider
+     */
     public function testCountBy($_)
     {
         $parity = $_::chain(array(1, 2, 3, 4, 5))

@@ -63,7 +63,22 @@ class GeneratorImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    Generator
+     */
+    public static function indexBy($xs, $f = null)
+    {
+        $f = self::createCallback($f);
+
+        foreach ($xs as $k => $x) {
+            yield call_user_func($f, $x, $k, $xs) => $x;
+        }
+    }
+
+    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x

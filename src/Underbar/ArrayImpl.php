@@ -105,7 +105,26 @@ class ArrayImpl extends AbstractImpl
 
     /**
      * @chainable
-     * @see       ImplementorInterface
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array
+     */
+    public static function indexBy($xs, $f = null)
+    {
+        $f = self::createCallback($f);
+        $result = array();
+
+        foreach ($xs as $k => $x) {
+            $key = call_user_func($f, $x, $k, $xs);
+            $result[$key] = $x;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @chainable
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $x

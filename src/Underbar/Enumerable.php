@@ -43,6 +43,13 @@ trait Enumerable
         return $impl::chain($result);
     }
 
+    public function indexBy($f = null)
+    {
+        $impl = $this->getUnderbarImpl();
+        $result = $impl::indexBy($this->value(), $f);
+        return $impl::chain($result);
+    }
+
     public function countBy($f = null)
     {
         $impl = $this->getUnderbarImpl();
@@ -642,7 +649,7 @@ trait Enumerable
         return $result;
     }
 
-    public function parMap($f, $n = null, $timeout = null)
+    public function parMap($f, $n = 4, $timeout = null)
     {
         $impl = $this->getUnderbarImpl();
         $result = $impl::parMap($this->value(), $f, $n, $timeout);
