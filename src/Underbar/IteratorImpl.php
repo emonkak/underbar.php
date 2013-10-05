@@ -12,6 +12,8 @@ namespace Underbar;
 class IteratorImpl extends AbstractImpl
 {
     /**
+     * Alias: collect
+     *
      * @chainable
      * @category  Collections
      * @param     array     $xs
@@ -24,6 +26,8 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * Alias: select
+     *
      * @chainable
      * @category  Collections
      * @param     array     $xs
@@ -132,6 +136,8 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * Alias: tail, drop
+     *
      * @chainable
      * @category  Arrays
      * @param     array  $xs
@@ -228,6 +234,8 @@ class IteratorImpl extends AbstractImpl
     }
 
     /**
+     * Alias: unique
+     *
      * @chainable
      * @category  Arrays
      * @param     array            $xs

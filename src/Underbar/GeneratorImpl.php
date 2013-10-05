@@ -12,6 +12,8 @@ namespace Underbar;
 class GeneratorImpl extends AbstractImpl
 {
     /**
+     * Alias: collect
+     *
      * @chainable
      * @category  Collections
      * @param     array     $xs
@@ -26,6 +28,8 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * Alias: select
+     *
      * @chainable
      * @category  Collections
      * @param     array            $xs
@@ -147,6 +151,8 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * Alias: tail, drop
+     *
      * @chainable
      * @category  Arrays
      * @param     array  $xs
@@ -278,6 +284,8 @@ class GeneratorImpl extends AbstractImpl
     }
 
     /**
+     * Alias: unique
+     *
      * @chainable
      * @category  Arrays
      * @param     array            $xs

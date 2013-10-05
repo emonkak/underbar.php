@@ -29,6 +29,9 @@ class AbstractImpl
     /**
      * @chainable
      * @category  Collections
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    array|Iterator
      */
     final public static function collect($xs, $f)
     {
@@ -52,11 +55,25 @@ class AbstractImpl
         return $acc;
     }
 
+    /**
+     * @category  Collections
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    mixed
+     */
     final public static function inject($xs, $f, $acc)
     {
         return static::reduce($xs, $f, $acc);
     }
 
+    /**
+     * @category  Collections
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    mixed
+     */
     final public static function foldl($xs, $f, $acc)
     {
         return static::reduce($xs, $f, $acc);
@@ -76,6 +93,13 @@ class AbstractImpl
         return static::reduce(static::reverse($xs), $f, $acc);
     }
 
+    /**
+     * @category  Collections
+     * @param     array     $xs
+     * @param     callable  $f
+     * @param     mixed     $acc
+     * @return    mixed
+     */
     final public static function foldr($xs, $f, $acc)
     {
         return static::reduceRight($xs, $f, $acc);
@@ -98,6 +122,12 @@ class AbstractImpl
         }
     }
 
+    /**
+     * @category  Collections
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    mixed
+     */
     final public static function detect($xs, $f)
     {
         return static::find($xs, $f);
@@ -106,6 +136,9 @@ class AbstractImpl
     /**
      * @chainable
      * @category  Collections
+     * @param     array     $xs
+     * @param     callable  $f
+     * @return    array|Iterator
      */
     final public static function select($xs, $f)
     {
@@ -186,6 +219,12 @@ class AbstractImpl
         return true;
     }
 
+    /**
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    boolean
+     */
     final public static function all($xs, $f = null)
     {
         return static::every($xs, $f);
@@ -212,6 +251,12 @@ class AbstractImpl
         return false;
     }
 
+    /**
+     * @category  Collections
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    boolean
+     */
     final public static function any($xs, $f = null)
     {
         return static::some($xs, $f);
@@ -449,7 +494,10 @@ class AbstractImpl
 
     /**
      * @chainable
-     * @category  Collections
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array|mixed|null|Iterator
      */
     final public static function head($xs, $n = null, $guard = null)
     {
@@ -458,7 +506,10 @@ class AbstractImpl
 
     /**
      * @chainable
-     * @category  Collections
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array|mixed|null|Iterator
      */
     final public static function take($xs, $n = null, $guard = null)
     {
@@ -510,7 +561,10 @@ class AbstractImpl
 
     /**
      * @chainable
-     * @category  Collections
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array|Iterator
      */
     final public static function tail($xs, $n = 1, $guard = null)
     {
@@ -519,7 +573,10 @@ class AbstractImpl
 
     /**
      * @chainable
-     * @category  Collections
+     * @category  Arrays
+     * @param     array  $xs
+     * @param     int    $n
+     * @return    array|Iterator
      */
     final public static function drop($xs, $n = 1, $guard = null)
     {
@@ -591,6 +648,9 @@ class AbstractImpl
     /**
      * @chainable
      * @category  Arrays
+     * @param     array            $xs
+     * @param     callable|string  $f
+     * @return    array|Iterator
      */
     final public static function unique($xs, $f = null)
     {
