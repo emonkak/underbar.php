@@ -2,7 +2,7 @@ SOURCES=$(shell find src -name '*.php')
 
 all: src/Underbar/Enumerable.php
 
-src/Underbar/Enumerable.php: scripts/generate-enumerable-trait.php src/Underbar/ArrayImpl.php
+src/Underbar/Enumerable.php: scripts/generate-enumerable-trait.php src/Underbar/AbstractImpl.php src/Underbar/ArrayImpl.php
 	php $< > $@
 
 clean:
