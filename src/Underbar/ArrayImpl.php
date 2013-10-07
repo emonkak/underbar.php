@@ -486,7 +486,6 @@ class ArrayImpl extends AbstractImpl
     protected static function sampleN($xs, $n)
     {
         $xs = self::extractIterator($xs);
-        $n = min($n, count($xs));
         $result = array();
 
         while ($n-- > 0) {

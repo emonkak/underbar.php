@@ -456,7 +456,6 @@ class GeneratorImpl extends AbstractImpl
     protected static function sampleN($xs, $n)
     {
         $xs = self::extractIterator($xs);
-        $n = min($n, count($xs));
 
         while ($n-- > 0) {
             $key = array_rand($xs);
