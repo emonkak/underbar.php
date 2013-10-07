@@ -27,6 +27,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of map()
+     *
      * @chainable
      * @category  Collections
      * @param     array     $xs
@@ -56,6 +58,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of reduce()
+     *
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -68,6 +72,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of reduce()
+     *
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -94,6 +100,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of foldr
+     *
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -123,6 +131,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of find()
+     *
      * @category  Collections
      * @param     array     $xs
      * @param     callable  $f
@@ -220,6 +230,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of every()
+     *
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -252,6 +264,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of some()
+     *
      * @category  Collections
      * @param     array            $xs
      * @param     callable|string  $f
@@ -512,6 +526,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of first()
+     *
      * @chainable
      * @category  Arrays
      * @param     array  $xs
@@ -524,6 +540,8 @@ class AbstractImpl
     }
 
     /**
+     * Alias of first()
+     *
      * @chainable
      * @category  Arrays
      * @param     array  $xs
