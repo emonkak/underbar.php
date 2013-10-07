@@ -497,6 +497,9 @@ class CollectionsTest extends Underbar_TestCase
         $allSampled = $_::chain($numbers)->sample(10)->sort()->toList();
         $this->assertEquals($numbers, $allSampled);
 
+        $allSampled = $_::chain($numbers)->sample(100)->sort()->toList();
+        $this->assertEquals($numbers, $allSampled);
+
         $this->assertContains($_::sample($numbers), $numbers);
         $this->assertNull($_::sample(array()));
         $this->assertEmpty($_::toList($_::sample(array(), 5)));
