@@ -4,16 +4,16 @@ Underbar.php is a collection processing library for PHP, like underscore.js.
 
 However not aim full compatibility of undersocre.js.
 
-# Requirements
+## Requirements
 
 - PHP 5.4 or higher
 - [Composer](http://getcomposer.org/)
 
-# Licence
+## Licence
 
 MIT Licence
 
-# Getting Started
+## Getting Started
 
 1. Install [Composer](http://getcomposer.org/).
 2. Create the `composer.json`
@@ -29,15 +29,16 @@ MIT Licence
 }
 ```
 
-# Example
+## Example
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
 
-// Have other `ArrayImpl` And `GeneratorImpl`.
+
+// There are also ArrayImpl and GeneratorImpl.
 use Underbar\IteratorImpl as _;
 
-// Take five elements from a even infinite list.
+// Take five elements from a infinite list of even numbers.
 _::chain(0)
     ->iterate(function($n) { return $n + 1; })
     ->filter(function($n) { return $n % 2 === 0; })
@@ -54,6 +55,6 @@ echo _::first(array(100)), PHP_EOL;
 // => 100
 ```
 
-# API
+## API Reference
 
 See http://emonkak.github.io/underbar.php/
