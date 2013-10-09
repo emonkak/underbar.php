@@ -32,9 +32,6 @@ MIT Licence
 ## Example
 
 ```php
-require __DIR__ . '/vendor/autoload.php';
-
-
 // There are also ArrayImpl and GeneratorImpl.
 use Underbar\IteratorImpl as _;
 
