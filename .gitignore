@@ -1,0 +1,4 @@
+/vendor/
+.sass-cache
+composer.lock
+

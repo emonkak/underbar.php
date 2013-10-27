@@ -1,0 +1,827 @@
+doctype html
+
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no")
+    meta(name="keywords", content="array,collection,generator,iterator,lazy,library,parallel,php,underscore.js")
+    meta(name="description", content="Underbar.php - A collection processing library for PHP, like Underscore.js.")
+    title Underbar.php - A collection processing library for PHP, like Underscore.js.
+    link(href="css/styles.css", rel="stylesheet")
+    script(src="//b.st-hatena.com/js/bookmark_button.js", async)
+  body
+    header#header.header
+      div.header-title
+        a(href="#logo") Underbar.php (0.2.3)
+        a.button-menu(href="#header") &#x2630;
+
+      nav: dl.menu
+        dd.menu-entry: a(href="#introduction") Introduction
+        dd.menu-entry: a(href="#getting-started") Getting Started
+
+        dt.menu-title: a(href="#classes") Classes
+        dd.menu-entry: a(href="#AbstractImpl") AbstractImpl
+        dd.menu-entry: a(href="#ArrayImpl") ArrayImpl
+        dd.menu-entry: a(href="#IteratorImpl") IteratorImpl
+        dd.menu-entry: a(href="#GeneratorImpl") GeneratorImpl
+        dd.menu-entry: a(href="#Enumerable") Enumerable
+
+        dt.menu-title: a(href="#collections") Collections
+        dd.menu-entry: a(href="#map") map
+        dd.menu-entry: a(href="#map") collect
+        dd.menu-entry: a(href="#reduce") reduce
+        dd.menu-entry: a(href="#reduce") inject
+        dd.menu-entry: a(href="#reduce") reduce
+        dd.menu-entry: a(href="#reduceRight") reduceRight
+        dd.menu-entry: a(href="#reduceRight") foldr
+        dd.menu-entry: a(href="#find") find
+        dd.menu-entry: a(href="#find") detect
+        dd.menu-entry: a(href="#filter") filter
+        dd.menu-entry: a(href="#filter") select
+        dd.menu-entry: a(href="#where") where
+        dd.menu-entry: a(href="#findWhere") findWhere
+        dd.menu-entry: a(href="#reject") reject
+        dd.menu-entry: a(href="#every") every
+        dd.menu-entry: a(href="#every") all
+        dd.menu-entry: a(href="#some") some
+        dd.menu-entry: a(href="#some") any
+        dd.menu-entry: a(href="#contains") contains
+        dd.menu-entry: a(href="#invoke") invoke
+        dd.menu-entry: a(href="#pluck") pluck
+        dd.menu-entry: a(href="#max") max
+        dd.menu-entry: a(href="#min") min
+        dd.menu-entry: a(href="#sum") sum
+        dd.menu-entry: a(href="#product") product
+        dd.menu-entry: a(href="#average") average
+        dd.menu-entry: a(href="#sortBy") sortBy
+        dd.menu-entry: a(href="#groupBy") groupBy
+        dd.menu-entry: a(href="#indexBy") indexBy
+        dd.menu-entry: a(href="#countBy") countBy
+        dd.menu-entry: a(href="#shuffle") shuffle
+        dd.menu-entry: a(href="#memoize") memoize
+        dd.menu-entry: a(href="#toArray") toArray
+        dd.menu-entry: a(href="#toList") toList
+        dd.menu-entry: a(href="#size") size
+
+        dt.menu-title: a(href="#arrays") Arrays
+        dd.menu-entry: a(href="#first") first
+        dd.menu-entry: a(href="#first") head
+        dd.menu-entry: a(href="#first") take
+        dd.menu-entry: a(href="#firstOrElse") firstOrElse
+        dd.menu-entry: a(href="#initial") initial
+        dd.menu-entry: a(href="#last") last
+        dd.menu-entry: a(href="#lastOrElse") lastOrElse
+        dd.menu-entry: a(href="#rest") rest
+        dd.menu-entry: a(href="#rest") tail
+        dd.menu-entry: a(href="#rest") drop
+        dd.menu-entry: a(href="#takeWhile") takeWhile
+        dd.menu-entry: a(href="#dropWhile") dropWhile
+        dd.menu-entry: a(href="#compact") compact
+        dd.menu-entry: a(href="#flatten") flatten
+        dd.menu-entry: a(href="#without") without
+        dd.menu-entry: a(href="#union") union
+        dd.menu-entry: a(href="#intersection") intersection
+        dd.menu-entry: a(href="#difference") difference
+        dd.menu-entry: a(href="#uniq") uniq
+        dd.menu-entry: a(href="#uniq") unique
+        dd.menu-entry: a(href="#zip") zip
+        dd.menu-entry: a(href="#zipWith") zipWith
+        dd.menu-entry: a(href="#unzip") unzip
+        dd.menu-entry: a(href="#object") object
+        dd.menu-entry: a(href="#indexOf") indexOf
+        dd.menu-entry: a(href="#lastIndexOf") lastIndexOf
+        dd.menu-entry: a(href="#sortedIndex") sortedIndex
+        dd.menu-entry: a(href="#cycle") cycle
+        dd.menu-entry: a(href="#repeat") repeat
+        dd.menu-entry: a(href="#iterate") iterate
+        dd.menu-entry: a(href="#reverse") reverse
+        dd.menu-entry: a(href="#sort") sort
+        dd.menu-entry: a(href="#concat") concat
+        dd.menu-entry: a(href="#join") join
+
+        dt.menu-title: a(href="#objects") Objects
+        dd.menu-entry: a(href="#keys") keys
+        dd.menu-entry: a(href="#values") values
+        dd.menu-entry: a(href="#pairs") pairs
+        dd.menu-entry: a(href="#invert") invert
+        dd.menu-entry: a(href="#extend") extend
+        dd.menu-entry: a(href="#get") get
+        dd.menu-entry: a(href="#getOrElse") getOrElse
+        dd.menu-entry: a(href="#pick") pick
+        dd.menu-entry: a(href="#omit") omit
+        dd.menu-entry: a(href="#defaults") defaults
+        dd.menu-entry: a(href="#tap") tap
+        dd.menu-entry: a(href="#isEmpty") isEmpty
+
+        dt.menu-title: a(href="#utility") Utility
+        dd.menu-entry: a(href="#identity") identity
+        dd.menu-entry: a(href="#range") range
+
+        dt.menu-title: a(href="#parallel") Parallel
+        dd.menu-entry: a(href="#parMap") parMap
+
+        dt.menu-title: a(href="#chaining") Chaining
+        dd.menu-entry: a(href="#chain") chain
+
+        dt.menu-title: a(href="#change-log") Change Log
+
+    article#main.content
+      header#logo.logo
+        h1 Underbar.php
+        p A collection processing library for PHP, like Underscore.js.
+        p: a.button(href="https://github.com/emonkak/underbar.php") GitHub Repository
+
+      ul.social-buttons
+        li: iframe.github-watch-button-frame(src="http://ghbtns.com/github-btn.html?user=emonkak&repo=underbar.php&type=watch&count=true", width="110", height="20")
+        li: a.twitter-share-button(href="https://twitter.com/share") Tweet
+        li: a.hatena-bookmark-button(href="http://b.hatena.ne.jp/entry/http://emonkak.github.io/underbar.php/", data-hatena-bookmark-layout="standard-balloon")
+          img(src="http://b.st-hatena.com/images/entry-button/button-only.gif", alt="このエントリーをはてなブックマークに追加", width="20", height="20")
+
+      section#introduction
+        include:md ja_JP/introduction.markdown
+        p.top: a(href="#") TOP
+
+      section#getting-started
+        include:md ja_JP/getting-started.markdown
+        p.top: a(href="#") TOP
+
+      section#classes
+        include:md ja_JP/classes.markdown
+
+        section#Underbar
+          h3 Underbar Namespace
+
+          // AbstractImpl {{{
+          article#AbstractImpl
+            h4.api AbstractImpl <small>Class</small>
+              a.source(href="https://github.com/emonkak/underbar.php/blob/master/src/Underbar/AbstractImpl.php") Source
+            include:md ja_JP/classes/AbstractImpl.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // ArrayImpl {{{
+          article#ArrayImpl
+            h4.api ArrayImpl <small>Class</small>
+              a.source(href="https://github.com/emonkak/underbar.php/blob/master/src/Underbar/ArrayImpl.php") Source
+            ol.extends
+              li: code: a(href="#AbstractImpl") AbstractImpl
+              li: code: em ArrayImpl
+            include:md ja_JP/classes/ArrayImpl.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // IteratorImpl  {{{
+          article#IteratorImpl
+            h4.api.lazy IteratorImpl <small>Class</small>
+              a.source(href="https://github.com/emonkak/underbar.php/blob/master/src/Underbar/IteratorImpl.php") Source
+            ol.extends
+              li: code: a(href="#AbstractImpl") AbstractImpl
+              li: code: em IteratorImpl
+            include:md ja_JP/classes/IteratorImpl.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // GeneratorImpl  {{{
+          article#GeneratorImpl
+            h4.api.lazy GeneratorImpl <small>Class</small>
+              a.source(href="https://github.com/emonkak/underbar.php/blob/master/src/Underbar/GeneratorImpl.php") Source
+            ol.extends
+              li: code: a(href="#AbstractImpl") AbstractImpl
+              li: code: em GeneratorImpl
+            include:md ja_JP/classes/GeneratorImpl.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // Enumerable  {{{
+          article#Enumerable
+            h4.api.lazy Enumerable <small>Trait</small>
+              a.source(href="https://github.com/emonkak/underbar.php/blob/master/src/Underbar/Enumerable.php") Source
+            include:md ja_JP/classes/Enumrable.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+      section#functions
+        include:md ja_JP/functions.markdown
+
+        section#collections
+          h3 Collection Functions
+
+          // each()  {{{
+          article#each
+            h4.api <em>array</em> each(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            h4.api <em>Iterator</em> each(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/each.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // map()  {{{
+          article#map
+            h4.api <em>array</em> map(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            h4.api.lazy <em>Iterator</em> map(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/map.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // reduce()  {{{
+          article#reduce
+            h4.api <em>mixed</em> reduce(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>, <em>mixed</em> <var>$acc</var>)
+            ul.aliases
+              li: code inject()
+              li: code foldl()
+            include:md ja_JP/functions/reduce.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // reduceRight()  {{{
+          article#reduceRight
+            h4.api <em>mixed</em> reduceRight(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>, <em>mixed</em> <var>$acc</var>)
+            ul.aliases
+              li: code foldr()
+            include:md ja_JP/functions/reduceRight.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // find()  {{{
+          article#find
+            h4.api <em>mixed</em> find(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            ul.aliases
+              li: code detect()
+            include:md ja_JP/functions/find.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // filter()  {{{
+          article#filter
+            h4.api <em>array</em> filter(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            h4.api.lazy <em>Iterator</em> filter(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            ul.aliases
+              li: code select()
+            include:md ja_JP/functions/filter.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // where()  {{{
+          article#where
+            h4.api <em>array</em> where(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>array</em> <var>$properties</var>)
+            h4.api.lazy <em>Iterator</em> where(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>array</em> <var>$properties</var>)
+            include:md ja_JP/functions/where.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // findWhere()  {{{
+          article#findWhere
+            h4.api <em>mixed</em> findWhere(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>array</em> <var>$properties</var>)
+            include:md ja_JP/functions/findWhere.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // reject()  {{{
+          article#reject
+            h4.api <em>array</em> reject(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            h4.api.lazy <em>Iterator</em> reject(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/reject.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // every()  {{{
+          article#every
+            h4.api <em>boolean</em> every(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            ul.aliases
+              li: code all()
+            include:md ja_JP/functions/every.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // some()  {{{
+          article#some
+            h4.api <em>boolean</em> some(<em>array</em>|<em>Traversable</em> <var>$xs</var>, [<em>callable|string</em> <var>$f</var>])
+            ul.aliases
+              li: code any()
+            include:md ja_JP/functions/some.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // contains()  {{{
+          article#contains
+            h4.api <em>boolean</em> contains(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$target</var>)
+            include:md ja_JP/functions/contains.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // invoke()  {{{
+          article#invoke
+            h4.api <em>array</em> invoke(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>string</em> <var>$method</var> [, <em>mixed</em> <var>$argments...</var>])
+            h4.api.lazy <em>Iterator</em> invoke(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>string</em> <var>$method</var> [, <em>mixed</em> <var>$argments...</var>])
+            include:md ja_JP/functions/invoke.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // pluck()  {{{
+          article#pluck
+            h4.api <em>array</em> pluck(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>string</em> <var>$property</var>)
+            h4.api.lazy <em>Iterator</em> pluck(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>string</em> <var>$property</var>)
+            include:md ja_JP/functions/pluck.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // max()  {{{
+          article#max
+            h4.api <em>int</em> max(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api <em>mixed</em> max(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable|string</em> <var>$f</var>)
+            include:md ja_JP/functions/max.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // min()  {{{
+          article#min
+            h4.api <em>int</em> min(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api <em>mixed</em> min(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable|string</em> <var>$f</var>)
+            include:md ja_JP/functions/min.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // sum()  {{{
+          article#sum
+            h4.api <em>int</em> sum(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/sum.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // product()  {{{
+          article#product
+            h4.api <em>int</em> product(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/product.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // average()  {{{
+          article#average
+            h4.api <em>float</em> average(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/average.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // sortBy()  {{{
+          article#sortBy
+            h4.api <em>array</em> sortBy(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            include:md ja_JP/functions/sortBy.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // groupBy()  {{{
+          article#groupBy
+            h4.api <em>array</em> groupBy(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            h4.api.stream <em>Iterator</em> groupBy(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            include:md ja_JP/functions/groupBy.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // indexBy()  {{{
+          article#indexBy
+            h4.api <em>array</em> indexBy(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            h4.api.lazy <em>Iterator</em> indexBy(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable|string</em> <var>$f</var>)
+            include:md ja_JP/functions/indexBy.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // countBy()  {{{
+          article#countBy
+            h4.api <em>array</em> countBy(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable|string</em> <var>$f</var>)
+            h4.api.stream <em>Iterator</em> countBy(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable|string</em> <var>$f</var>)
+            include:md ja_JP/functions/countBy.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // shuffle()  {{{
+          article#shuffle
+            h4.api <em>array</em> shuffle(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.stream <em>Iterator</em> shuffle(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/shuffle.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // sample()  {{{
+          article#sample
+            h4.api <em>mixed</em> sample(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.lazy <em>Iterator</em> sample(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$n</var>)
+            include:md ja_JP/functions/shuffle.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // memoize()  {{{
+          article#memoize
+            h4.api <em>array</em> memoize(<em>Iterator</em> <var>$xs</var>)
+            h4.api.lazy <em>Iterator</em> memoize(<em>Iterator</em> <var>$xs</var>)
+            include:md ja_JP/functions/memoize.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // toArray()  {{{
+          article#toArray
+            h4.api <em>array</em> toArray(<em>mixed</em> <var>$xs</var>)
+            include:md ja_JP/functions/toArray.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // toList()  {{{
+          article#toList
+            h4.api <em>array</em> toList(<em>mixed</em> <var>$xs</var>)
+            include:md ja_JP/functions/toList.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // size()  {{{
+          article#size
+            h4.api <em>int</em> size(<em>mixed</em> <var>$xs</var>)
+            include:md ja_JP/functions/size.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+        section#arrays
+          h3 Array Functions
+
+          // first()  {{{
+          article#first
+            h4.api <em>mixed</em> first(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api <em>array</em> first(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>int</em> <var>$n</var>)
+            h4.api.lazy <em>Iterator</em> first(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>int</em> <var>$n</var>)
+            ul.aliases
+              li: code head()
+              li: code take()
+            include:md ja_JP/functions/first.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // firstOrElse()  {{{
+          article#firstOrElse
+            h4.api <em>mixed</em> firstOrElse(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$default</var>)
+            include:md ja_JP/functions/firstOrElse.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // initial()  {{{
+          article#initial
+            h4.api <em>array</em> initial(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>int</em> <var>$n = 1</var>])
+            h4.api.lazy <em>Iterator</em> initial(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>int</em> <var>$n = 1</var>])
+            include:md ja_JP/functions/initial.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // last()  {{{
+          article#last
+            h4.api <em>mixed</em> last(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.stream <em>Iterator</em> Iterator(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>int</em> <var>$n</var>)
+            include:md ja_JP/functions/last.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // lastOrElse()  {{{
+          article#lastOrElse
+            h4.api <em>mixed</em> lastOrElse(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$default</var>)
+            include:md ja_JP/functions/lastOrElse.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // rest()  {{{
+          article#rest
+            h4.api <em>array</em> rest(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>int</em> <var>$n = 1</var>])
+            h4.api.lazy <em>Iterator</em> rest(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>int</em> <var>$n = 1</var>])
+            ul.aliases
+              li: code tail()
+              li: code drop()
+            include:md ja_JP/functions/rest.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // takeWhile()  {{{
+          article#takeWhile
+            h4.api <em>array</em> takeWhile(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            h4.api.lazy <em>Iterator</em> takeWhile(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/takeWhile.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // dropWhile()  {{{
+          article#dropWhile
+            h4.api <em>array</em> dropWhile(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            h4.api.lazy <em>Iterator</em> dropWhile(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/dropWhile.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // compact()  {{{
+          article#compact
+            h4.api <em>array</em> compact(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.lazy <em>Iterator</em> compact(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/compact.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // flatten()  {{{
+          article#flatten
+            h4.api <em>array</em> flatten(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>boolean</em> <var>$shallow = false</var>])
+            h4.api.lazy <em>Iterator</em> flatten(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>boolean</em> <var>$shallow = false</var>])
+            include:md ja_JP/functions/flatten.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // without()  {{{
+          article#without
+            h4.api <em>array</em> without(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>mixed</em> <var>$values...</var>])
+            h4.api.lazy <em>Iterator</em> without(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>mixed</em> <var>$values...</var>])
+            include:md ja_JP/functions/without.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // union()  {{{
+          article#union
+            h4.api <em>array</em> union(<em>array</em>|<em>Traversable</em> <var>$xss...</var>)
+            h4.api.lazy <em>Iterator</em> union(<em>array</em>|<em>Traversable</em> <var>$xss...</var>)
+            include:md ja_JP/functions/union.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // intersection()  {{{
+          article#intersection
+            h4.api <em>array</em> intersection(<em>array</em>|<em>Traversable</em> <var>$xss...</var>)
+            h4.api.lazy <em>Iterator</em> intersection(<em>array</em>|<em>Traversable</em> <var>$xss...</var>)
+            include:md ja_JP/functions/intersection.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // difference()  {{{
+          article#difference
+            h4.api <em>array</em> difference(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>array</em> <var>$others...</var>)
+            h4.api.lazy <em>Iterator</em> difference(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>array</em> <var>$others...</var>)
+            include:md ja_JP/functions/difference.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // uniq()  {{{
+          article#uniq
+            h4.api <em>array</em> uniq(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            h4.api.lazy <em>Iterator</em> uniq(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable|string</em> <var>$f</var>])
+            ul.aliases
+              li: code unique()
+            include:md ja_JP/functions/uniq.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // zip()  {{{
+          article#zip
+            h4.api <em>array</em> zip(<em>array</em>|<em>Traversable</em> <var>$xss...</var>)
+            h4.api.lazy <em>Iterator</em> zip(<em>array</em>|<em>Traversable</em> <var>$xss...</var>)
+            include:md ja_JP/functions/zip.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // zipWith()  {{{
+          article#zipWith
+            h4.api <em>array</em> zipWith(<em>array</em>|<em>Traversable</em> <var>$xss...</var>, <em>callable</em> <var>$f</var>)
+            h4.api.lazy <em>Iterator</em> zipWith(<em>array</em>|<em>Traversable</em> <var>$xss...</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/zipWith.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // unzip()  {{{
+          article#unzip
+            h4.api <em>array</em> unzip(<em>array</em>|<em>Traversable</em> <var>$xss</var>)
+            h4.api.lazy <em>Iterator</em> unzip(<em>array</em>|<em>Traversable</em> <var>$xss</var>)
+            include:md ja_JP/functions/unzip.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // object()  {{{
+          article#object
+            h4.api <em>array</em> object(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array</em> <var>$values</var>])
+            h4.api.lazy <em>Iterator</em> object(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array</em> <var>$values</var>])
+            include:md ja_JP/functions/object.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // indexOf()  {{{
+          article#indexOf
+            h4.api <em>int</em> indexOf(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$value</var> [, <em>boolean</em> <var>$isSorted = false</var>])
+            h4.api <em>int</em> indexOf(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$value</var> [, <em>int</em> <var>$fromIndex = 0</var>])
+            include:md ja_JP/functions/indexOf.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // lastIndexOf()  {{{
+          article#lastIndexOf
+            h4.api <em>int</em> lastIndexOf(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$value</var> [, <em>int</em> <var>$fromIndex = 0</var>])
+            include:md ja_JP/functions/lastIndexOf.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // sortedIndex()  {{{
+          article#sortedIndex
+            h4.api <em>array</em> sortedIndex(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>mixed</em> <var>$value</var> [, <em>callable|string</em> <var>$f</var>])
+            include:md ja_JP/functions/sortedIndex.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // cycle()  {{{
+          article#cycle
+            h4.api <em>array</em> cycle(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>int</em>, <var>$n</var>)
+            h4.api.lazy <em>Iterator</em> cycle(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>int</em> <var>$n</var>])
+            include:md ja_JP/functions/cycle.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // repeat()  {{{
+          article#repeat
+            h4.api <em>array</em> repeat(<em>mixed</em> <var>$value</var>)
+            h4.api.lazy <em>Iterator</em> repeat(<em>mixed</em> <var>$value</var>, <em>int</em>, <var>$n</var>)
+            include:md ja_JP/functions/repeat.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // iterate()  {{{
+          article#iterate
+            h4.api.lazy <em>Iterator</em> iterate(<em>mixed</em> <var>$acc</var>, <em>callable</em> <var>$f</var>)
+            include:md ja_JP/functions/iterate.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // reverse()  {{{
+          article#reverse
+            h4.api <em>array</em> reverse(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.stream <em>Iterator</em> reverse(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/reverse.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // sort()  {{{
+          article#sort
+            h4.api <em>array</em> sort(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>callable</em> <var>$compare</var>])
+            h4.api.stream <em>Iterator</em> sort(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/sort.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // concat()  {{{
+          article#concat
+            h4.api <em>array</em> concat(<em>array</em>|<em>Traversable</em> <var>$xs...</var>)
+            h4.api.lazy <em>Iterator</em> concat(<em>array</em>|<em>Traversable</em> <var>$xs...</var>)
+            include:md ja_JP/functions/concat.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // join()  {{{
+          article#join
+            h4.api <em>array</em> join(<em>array</em>|<em>Traversable</em> <var>$xs</var> [ , <em>string</em> <var>$separator = ","</var>])
+            include:md ja_JP/functions/join.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+        section#objects
+          h3 Object Functions
+
+          // keys()  {{{
+          article#keys
+            h4.api <em>array</em> keys(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.lazy <em>Iterator</em> keys(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/keys.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // values()  {{{
+          article#values
+            h4.api <em>array</em> values(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.lazy <em>Iterator</em> values(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/values.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // pairs()  {{{
+          article#pairs
+            h4.api <em>array</em> pairs(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            h4.api.lazy <em>Iterator</em> pairs(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/pairs.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // invert()  {{{
+          article#invert
+            h4.api <em>array</em> invert(<em>array</em>|<em>Traversable</em> <var>$xs</var>)
+            include:md ja_JP/functions/invert.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // extend()  {{{
+          article#extend
+            h4.api <em>array</em> extend(<em>array</em>|<em>Traversable</em> <var>$destination</var> [, <em>array</em> <var>$sources...</var>])
+            include:md ja_JP/functions/extend.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // get()  {{{
+          article#get
+            h4.api <em>mixed</em> get(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>string</em> <var>$key</var>)
+            include:md ja_JP/functions/get.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // getOrElse()  {{{
+          article#getOrElse
+            h4.api <em>mixed</em> getOrElse(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>string</em> <var>$key</var>, <em>mixed</em> <var>$default</var>)
+            include:md ja_JP/functions/getOrElse.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // pick()  {{{
+          article#pick
+            h4.api <em>array</em> pick(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array|string</em> <var>$keys...</var>])
+            h4.api.lazy <em>Iterator</em> pick(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array|string</em> <var>$keys...</var>])
+            include:md ja_JP/functions/pick.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // omit()  {{{
+          article#omit
+            h4.api <em>array</em> omit(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array|string</em> <var>$keys...</var>])
+            h4.api.lazy <em>Iterator</em> omit(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array|string</em> <var>$keys...</var>])
+            include:md ja_JP/functions/omit.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // defaults()  {{{
+          article#defaults
+            h4.api <em>array</em> defaults(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array</em> <var>$defaults...</var>])
+            h4.api.lazy <em>Iterator</em> defaults(<em>array</em>|<em>Traversable</em> <var>$xs</var> [, <em>array</em> <var>$defaults...</var>])
+            include:md ja_JP/functions/defaults.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // tap()  {{{
+          article#tap
+            h4.api <em>array</em> tap(<em>mixed</em> <var>$value</var>, <em>callable</em> <var>$interceptor</var>)
+            include:md ja_JP/functions/tap.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // isEmpty()  {{{
+          article#isEmpty
+            h4.api <em>boolean</em> isEmpty(<em>mixed</em> <var>$xs</var>)
+            include:md ja_JP/functions/isEmpty.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+        section#utility
+          h3 Utility Functions
+          // identity()  {{{
+          article#identity
+            h4.api <em>array</em> identity(<em>mixed</em> <var>$value</var>)
+            include:md ja_JP/functions/identity.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+          // range()  {{{
+          article#range
+            h4.api <em>array</em> range(<em>int</em> <var>$start</var>, <em>int</em> <var>$end</var> [, <em>int</em> <var>$step = 1</var>])
+            h4.api.lazy <em>Iterator</em> range(<em>int</em> <var>$start</var>, <em>int</em> <var>$end</var> [, <em>int</em> <var>$step = 1</var>])
+            include:md ja_JP/functions/range.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+        section#parallel
+          h3 Parallel Functions
+
+          // parMap()  {{{
+          article#parMap
+            h4.api <em>Parallel</em> parMap(<em>array</em>|<em>Traversable</em> <var>$xs</var>, <em>callable</em> <var>$f</var>, <em>int</em> <var>$n = 4</var>)
+            include:md ja_JP/functions/parMap.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+        section#chaining
+          h3 Chaining
+
+          // chain()  {{{
+          article#chain()
+            h4.api <em>Wrapper</em> chain(<em>mixed</em> <var>$value</var>)
+            include:md ja_JP/functions/chain.markdown
+            p.top: a(href="#") TOP
+          // }}}
+
+      section#change-log
+        include:md ja_JP/change-log.markdown
+        p.top: a(href="#") TOP
+
+      footer.footer
+        p Developed by <a href="http://twitter.com/emonkak">@emonkak</a>
+        p Licensed under the <a href="https://github.com/emonkak/underbar.php/blob/master/LICENSE">MIT License</a>
+
+    script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/1.2.1/lodash.min.js")
+    script(src="js/prism.js")
+    script(src="js/core.js")
+    script.
+      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-41380289-1', 'emonkak.github.io');
+      ga('send', 'pageview');

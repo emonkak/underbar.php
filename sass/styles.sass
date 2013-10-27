@@ -1,0 +1,487 @@
+@import "blueprint/reset"
+@import "compass/css3"
+@import "compass/css3/background-size"
+@import "compass/css3/opacity"
+@import "compass/css3/transition"
+@import "compass/utilities/general/clearfix"
+
+@import "_baseline"
+@import "_flatui-colors"
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600)
+
+// Variables  {{{1
+
+$sidebar-width: 240px
+$content-width: 940px
+
+$font-size: 14px
+
+$white-color: #fff
+$black-color: $flatui-colors-midnight-blue
+$dark-color: $flatui-colors-wet-asphalt
+$light-color: $flatui-colors-clouds
+$lightgray-color: $flatui-colors-silver
+$gray-color: $flatui-colors-asbestos
+$accent-color: $flatui-colors-turquoise
+$dark-accent-color: $flatui-colors-green-sea
+
+
+
+
+// Mixins  {{{1
+
+@mixin layout-one-column()
+  @media screen and (max-width: 768px)
+    @content
+
+@mixin layout-two-column()
+  @media screen and (min-width: 769px)
+    @content
+
+
+
+
+// Common  {{{1
+
+body
+  // @extend .baseline-grid
+  font-family: "Open Sans", "Helvetica", "Arial", sans-serif
+  font-size: $font-size
+  color: $black-color
+  background-color: $white-color
+  -webkit-text-size-adjust: 100%
+
+h1, h2, h3, h4, h5, h6
+  // background: rgba(255, 0, 0, 0.2)
+  font-weight: bold
+
+a
+  color: $accent-color
+  text-decoration: none
+
+  &:hover
+    text-decoration: underline
+
+pre
+  font-family:  "Consolas", "Menlo", "Monaco", "Courier", monospace
+  background-color: $light-color
+  padding: 0.5em * baseline-line-height()
+  overflow: auto
+
+  code
+    white-space: inherit
+
+code
+  padding: 2px 4px
+  background-color: $light-color
+  white-space: nowrap
+  line-height: 0
+
+em
+  font-weight: bold
+
+strong
+  color: $white-color
+  background-color: $accent-color
+  padding: 2px 4px
+  font-weight: bold
+
+var
+  font-style: normal
+
+ul, ol
+  margin-left: 1.5em
+
+li > ul, li > ol
+  margin-bottom: 0
+
+table
+  width: 100%
+  border-collapse: collapse
+  border-spacing: 0
+  border: 1px solid $light-color
+  margin:
+    top: -1px
+    bottom: calc(#{1em * baseline-line-height()} - 1px)
+
+thead tr
+  background: $dark-color
+  color: $white-color
+
+tbody tr:nth-child(even)
+  background: $light-color
+
+th, td
+  padding: 0 0.5em
+
+th
+  font-weight: bold
+
+
+
+
+// Syntax highlight  {{{1
+
+.token
+  &.keyword,
+  &.operator,
+  &.boolean
+    font-weight: bold
+
+  &.comment
+    font-style: italic
+    color: #999988
+
+  &.number,
+  &.variable,
+  &.this
+    color: #008080
+
+  &.string
+    color: #d14
+
+  &.function
+    color: #0086B3
+
+    .punctuation
+      color: $black-color
+
+  &.class-name
+    color: #445588
+    font-weight: bold
+
+
+
+
+// Header  {{{1
+
+.header
+  background-color: $dark-color
+  color: $light-color
+  -webkit-font-smoothing: antialiased
+
+  a
+    display: block
+    text-decoration: none
+
+.header-title, .menu-title, .menu-entry
+  @include transition-property(background color)
+  @include transition-duration(0.25s)
+  @include transition-timing-function(ease-out)
+
+  &:hover
+    color: $accent-color
+
+.header-title, .menu-title
+  position: relative
+  color: $white-color
+  font-weight: bold
+
+  a:first-child
+    color: inherit
+    padding: 0.5em * baseline-line-height() 8px
+
+.menu
+  margin: 0
+
+.menu-entry
+  a
+    color: inherit
+    padding: 0.125em * baseline-line-height() 0.5em
+
+  &.is-active
+    background-color: $black-color
+    font-weight: bold
+
+  &:hover
+    background-color: $black-color
+    color: $accent-color
+
+
+
+
+// Main  {{{1
+
+.logo
+  position: relative
+  padding: 4em * baseline-line-height() 1em
+  margin-bottom: 4em * baseline-line-height()
+  background-color: $light-color
+
+  h1
+    @include baseline-font(64)
+    font-weight: 300
+    margin-bottom: 1rem * baseline-line-height()
+    text-align: center
+
+  p
+    @include baseline-font(24)
+    color: $lightgray-color
+    text-align: center
+
+.content
+  > section
+    margin-left: 1em
+    margin-right: 1em
+    max-width: $content-width
+
+  section
+    margin-bottom: 4em * baseline-line-height()
+
+
+
+
+// Social  {{{1
+
+.social-buttons
+  @include clearfix
+  margin: -(3.5em * baseline-line-height()) 0 (3.5em * baseline-line-height())
+  height: 1em * baseline-line-height()
+  text-align: center
+  list-style: none
+
+  li
+    display: inline-block
+
+.hatena-bookmark-button-frame
+  width: 130px !important
+
+.github-watch-button-frame
+  width: 95px !important
+
+.twitter-share-button
+  width: 110px !important
+
+
+
+
+// Footer  {{{1
+
+.footer
+  background-color: $light-color
+  padding:
+    top: 2em * baseline-line-height()
+    bottom: 2em * baseline-line-height()
+
+  p
+    margin: 0
+    text-align: center
+
+
+
+
+// Layout  {{{1
+// One Column  {{{2
+
+@include layout-one-column()
+  .header
+    position: absolute
+    z-index: 1
+
+  .header:target
+    .menu
+      @include transition-timing-function(ease-in)
+      max-height: 1500px
+
+    .button-menu
+      pointer-events: none
+
+    .button-menu, .header-title
+      color: $accent-color
+      background-color: $black-color
+
+  .button-menu
+    position: absolute
+    top: 50%
+    right: 8px
+
+  .menu
+    @include clearfix
+    @include transition-property(max-height)
+    @include transition-duration(0.25s)
+    @include transition-timing-function(ease-out)
+    overflow: hidden
+    max-height: 0
+
+  .menu-title
+    clear: left
+    position: relative
+
+  .menu-entry
+    float: left
+
+  .logo
+    padding-top: 7em * baseline-line-height()
+
+    h1
+      @include baseline-font(48)
+
+
+
+
+
+
+// Two Column  {{{2
+
+@include layout-two-column()
+  .header
+    position: fixed
+    top: 0
+    bottom: 0
+    left: 0
+    width: $sidebar-width
+    overflow: auto
+    -webkit-overflow-scrolling: touch
+
+    .button-menu
+      display: none
+
+  .menu-entry
+    text-indent: 0.5em
+
+  .content
+    margin-left: $sidebar-width
+
+    > section
+      margin-left: 2em
+      margin-right: 2em
+
+
+
+
+// Classes  {{{1
+%float-list  // {{{2
+  @include clearfix
+  list-style: none
+  margin-left: 0
+
+  li
+    float: left
+
+
+
+
+.api  // {{{2
+  padding-left: 6px
+  border-left: 6px solid $dark-color
+
+  &.lazy
+    border-left: 6px solid $accent-color
+
+  &.stream
+    border-left: 6px solid $flatui-colors-peter-river
+
+  &:not(:last-of-type)
+    margin: 0
+
+  em, var
+    font-weight: normal
+
+  em
+    color: $gray-color
+
+  small
+    font-weight: normal
+    font-size: 1rem * baseline-font-size(16)
+    color: $gray-color
+
+
+
+
+.source  // {{{2
+  @include transition-property(background color)
+  @include transition-duration(0.25s)
+  @include transition-timing-function(ease-out)
+  color: $white-color
+  background-color: $accent-color
+  font-size: 1rem * baseline-font-size(16)
+  font-weight: normal
+  padding: 2px 4px
+  margin: 0 0.5em
+
+  &:hover
+    background-color: lighten($accent-color, 5%)
+    text-decoration: none
+
+
+
+
+.aliases  // {{{2
+  @extend %float-list
+
+  li:first-child:before
+    content: "Aliases: "
+
+  li:only-child:before
+    content: "Alias: "
+
+  li + li:before
+    content: ", "
+
+
+
+
+.extends  // {{{2
+  @extend %float-list
+
+  li:first-child:before
+    content: "Extends: "
+
+  li + li:before
+    content: "\a0>\a0"
+
+
+
+
+.top  // {{{2
+  text-align: right
+
+  a
+    border-bottom: 2px solid $accent-color
+    text-decoration: none
+
+    &:hover
+      border-bottom: none
+
+
+
+
+.button  // {{{2
+  @include transition-property(background color)
+  @include transition-duration(0.25s)
+  @include transition-timing-function(ease-out)
+  background-color: $accent-color
+  color: $white-color
+  padding: 0.5em * baseline-line-height() 1em
+
+  &:hover
+    background-color: lighten($accent-color, 5%)
+    text-decoration: none
+
+
+
+
+.button-menu  // {{{2
+  @include transition-property(color)
+  @include transition-duration(0.5s)
+  @include transition-timing-function(ease-out)
+  $height: 32px
+  font-size: 1em * baseline-font-size(20)
+  color: $white-color
+  width: 48px
+  height: $height
+  text-align: center
+  line-height: $height
+  padding: 0
+  margin-top: -($height / 2)
+
+  &:hover
+    color: $accent-color
+
+
+
+
+// __END__  {{{1
+// vim: expandtab softtabstop=2 shiftwidth=2
+// vim: foldmethod=marker
