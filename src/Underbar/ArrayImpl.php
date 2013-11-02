@@ -488,7 +488,7 @@ class ArrayImpl extends AbstractImpl
         $xs = self::extractIterator($xs);
         $result = array();
 
-        while ($n-- > 0) {
+        while ($n-- > 0 && !empty($xs)) {
             $key = array_rand($xs);
             if ($key === null) {
                 break;

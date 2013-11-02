@@ -594,7 +594,7 @@ class ArraysTest extends Underbar_TestCase
 
         $result = $_::chain(array())
             ->iterate(function($xs) { return range(1, count($xs) + 1); })
-            ->map(function($xs) { return array_product($xs); })
+            ->map(function($xs) use ($_) { return $_::product($xs); })
             ->take(10);
         $shouldBe = array(1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880);
         $this->assertEquals($shouldBe, $_::toList($result), 'factorial');

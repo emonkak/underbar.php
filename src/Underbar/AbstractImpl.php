@@ -443,6 +443,9 @@ class AbstractImpl
     {
         if ($n === null) {
             $xs = static::extractIterator($xs);
+            if (empty($xs)) {
+                return null;
+            }
             $key = array_rand($xs);
             return $key !== null ? $xs[$key] : null;
         } else {
@@ -457,11 +460,11 @@ class AbstractImpl
      */
     final public static function toArray($xs)
     {
-        if ($xs instanceof \Traversable) {
-            return iterator_to_array($xs, true);
-        }
         if (is_array($xs)) {
             return $xs;
+        }
+        if ($xs instanceof \Traversable) {
+            return iterator_to_array($xs, true);
         }
         if (is_string($xs)) {
             return str_split($xs);
@@ -476,11 +479,11 @@ class AbstractImpl
      */
     final public static function toList($xs)
     {
-        if ($xs instanceof \Traversable) {
-            return iterator_to_array($xs, false);
-        }
         if (is_array($xs)) {
             return array_values($xs);
+        }
+        if ($xs instanceof \Traversable) {
+            return iterator_to_array($xs, false);
         }
         if (is_string($xs)) {
             return str_split($xs);
@@ -495,7 +498,7 @@ class AbstractImpl
      */
     final public static function size($xs)
     {
-        if ($xs instanceof \Countable) {
+        if (is_array($xs) || $xs instanceof \Countable) {
             return count($xs);
         }
         if ($xs instanceof \Traversable) {
@@ -1057,21 +1060,26 @@ class AbstractImpl
      */
     final public static function isEmpty($xs)
     {
+        if (is_array($xs)) {
+            return empty($xs);
+        }
         if ($xs instanceof \Countable) {
             return count($xs) === 0;
-        } elseif ($xs instanceof \Iterator) {
+        }
+        if ($xs instanceof \Iterator) {
             $xs->rewind();
             return !$xs->valid();
-        } elseif ($xs instanceof \IteratorAggregate) {
+        }
+        if ($xs instanceof \IteratorAggregate) {
             return static::isEmpty($xs->getIterator());
-        } elseif ($xs instanceof \Traversable) {
+        }
+        if ($xs instanceof \Traversable) {
             foreach ($xs as $x) {
                 return true;
             }
             return false;
-        } else {
-            return empty($xs);
         }
+        return empty($xs);
     }
 
     /**
@@ -1135,9 +1143,7 @@ class AbstractImpl
      */
     protected static function extractIterator($xs)
     {
-        return $xs instanceof \Traversable
-             ? iterator_to_array($xs, false)
-             : $xs;
+        return is_array($xs) ? $xs : iterator_to_array($xs);
     }
 
     /**
@@ -1146,14 +1152,14 @@ class AbstractImpl
      */
     protected static function wrapIterator($xs)
     {
+        if (is_array($xs)) {
+            return new \ArrayIterator($xs);
+        }
         if ($xs instanceof \Iterator) {
             return $xs;
         }
         if ($xs instanceof \Traversable) {
             return new \IteratorIterator($xs);
-        }
-        if (is_array($xs)) {
-            return new \ArrayIterator($xs);
         }
         return $xs;
     }

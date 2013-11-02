@@ -32,10 +32,10 @@ class Wrapper implements \IteratorAggregate
 
     public function getIterator()
     {
-        if ($this->value instanceof \Traversable) {
-            return $this->value;
-        } elseif (is_array($this->value)) {
+        if (is_array($this->value)) {
             return new \ArrayIterator($this->value);
+        } elseif ($this->value instanceof \Traversable) {
+            return $this->value;
         } else {
             return new \EmptyIterator();
         }

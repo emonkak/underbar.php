@@ -36,7 +36,9 @@ class IteratorImpl extends AbstractImpl
      */
     public static function filter($xs, $f)
     {
-        return new \CallbackFilterIterator(self::wrapIterator($xs), $f);
+        return class_exists('CallbackFilterIterator')
+             ? new \CallbackFilterIterator(self::wrapIterator($xs), $f)
+             : new Iterator\FilterIterator(self::wrapIterator($xs), $f);
     }
 
     /**

@@ -53,10 +53,12 @@ class SampleIterator implements \Iterator
 
     private function fetch()
     {
-        $key = array_rand($this->candidates);
-        if ($key !== null) {
-            $this->current = $this->candidates[$key];
-            unset($this->candidates[$key]);
+        if (!empty($this->candidates)) {
+            $key = array_rand($this->candidates);
+            if ($key !== null) {
+                $this->current = $this->candidates[$key];
+                unset($this->candidates[$key]);
+            }
         }
     }
 }
