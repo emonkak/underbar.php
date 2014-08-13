@@ -651,6 +651,13 @@ class ArraysTest extends Underbar_TestCase
         $this->assertEquals('Wind,Rain,Fire', $_::join($xs));
         $this->assertEquals('Wind, Rain, Fire', $_::join($xs, ', '));
         $this->assertEquals('Wind + Rain + Fire', $_::join($xs, ' + '));
+        $this->assertEquals('WindRainFire', $_::join($xs, ''));
+
+        $xs = new \ArrayIterator(array('Wind', 'Rain', 'Fire'));
+        $this->assertEquals('Wind,Rain,Fire', $_::join($xs));
+        $this->assertEquals('Wind, Rain, Fire', $_::join($xs, ', '));
+        $this->assertEquals('Wind + Rain + Fire', $_::join($xs, ' + '));
+        $this->assertEquals('WindRainFire', $_::join($xs, ''));
     }
 }
 

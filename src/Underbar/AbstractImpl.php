@@ -847,7 +847,7 @@ class AbstractImpl
         foreach ($xs as $x) {
             $str .= $x . $separator;
         }
-        return substr($str, 0, -strlen($separator));
+        return $separator === '' ? $str : substr($str, 0, -strlen($separator));
     }
 
     /**
