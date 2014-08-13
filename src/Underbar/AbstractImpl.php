@@ -843,11 +843,7 @@ class AbstractImpl
      */
     final public static function join($xs, $separator = ',')
     {
-        $str = '';
-        foreach ($xs as $x) {
-            $str .= $x . $separator;
-        }
-        return substr($str, 0, -strlen($separator));
+        return implode($xs, $separator);
     }
 
     /**
