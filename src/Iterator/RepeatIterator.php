@@ -43,6 +43,6 @@ class RepeatIterator implements \Iterator
 
     public function valid()
     {
-        return ($this->n - $this->index) !== 0;
+        return ($this->n - $this->index) > 0;
     }
 }

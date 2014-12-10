@@ -9,18 +9,21 @@
 
 namespace Underbar\Iterator;
 
-use Underbar\Internal;
+use Underbar\Comparer\EqualityComparer;
+use Underbar\Util\Set;
 
 class IntersectIterator implements \Iterator
 {
-    protected $it;
-    protected $others;
-    protected $set;
+    private $it;
+    private $others;
+    private $equalityComparer;
+    private $set;
 
-    public function __construct(\Iterator $it, $others)
+    public function __construct(\Iterator $it, $others, EqualityComparer $equalityComparer)
     {
         $this->it = $it;
         $this->others = $others;
+        $this->equalityComparer = $equalityComparer;
     }
 
     public function current()
@@ -41,7 +44,7 @@ class IntersectIterator implements \Iterator
 
     public function rewind()
     {
-        $this->set = new Internal\Set();
+        $this->set = new Set($this->equalityComparer);
         foreach ($this->others as $other) {
             $this->set->addAll($other);
         }

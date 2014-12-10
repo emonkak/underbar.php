@@ -2,12 +2,11 @@
 
 namespace Underbar;
 
-use Underbar\Comparer\DefaultComparerResolver;
+use Underbar\Comparer\ComparerResolver;
 use Underbar\Iterator\ParallelIterator;
-use Underbar\Predicate\DefaultPredicateResolver;
-use Underbar\Selector\DefaultKeySelectorResolver;
-use Underbar\Selector\DefaultSelectorResolver;
-use Underbar\Selector\ValueSelector;
+use Underbar\Predicate\PredicateResolver;
+use Underbar\Selector\KeySelectorResolver;
+use Underbar\Selector\SelectorResolver;
 use Underbar\Util\Iterators;
 
 trait Enumerable
@@ -58,18 +57,17 @@ trait Enumerable
         return $this->newCollection($this->getProvider()->concatMap($xs, $valueSelector, $keySelector));
     }
 
-    static function parMap(callable $f, $workers = 4, $timeout = null)
+    public function parMap(callable $f, $workers = 4, $timeout = null)
     {
         if ($workers <= 0) {
             throw new \RuntimeException('The Worker must be at least one.');
         }
-        $xs = $this->getSource();
         $it = new ParallelIterator($f, $timeout);
         for ($i = 0; $i < $workers; $i++) {
             $it->fork();
         }
-        $it->pushAll($xs);
-        return $it;
+        $it->pushAll($this->getSource());
+        return $this->newCollection($it);
     }
 
     public function reduce(callable $f, $acc)
@@ -181,7 +179,7 @@ trait Enumerable
     {
         $args = array_slice(func_get_args(), 1);
         return $this->map(function($x) use ($method, $args) {
-            return call_user_func_array(array($x, $method), $args);
+            return call_user_func_array([$x, $method], $args);
         });
     }
 
@@ -274,14 +272,14 @@ trait Enumerable
         $selector = $this->resolveSelector($selector);
         return $this->newLazyCollection(function() use ($selector) {
             $xs = $this->getSource();
-            $result = array();
+            $result = [];
 
             foreach ($xs as $k => $x) {
-                $result[] = array(
+                $result[] = [
                     'value' => $x,
                     'key' => $k,
                     'criteria' => call_user_func($selector, $x, $k, $xs),
-                );
+                ];
             }
 
             usort($result, function($left, $right) {
@@ -303,7 +301,7 @@ trait Enumerable
         $selector = $this->resolveSelector($selector);
         return $this->newLazyCollection(function() use ($selector) {
             $xs = $this->getSource();
-            $result = array();
+            $result = [];
 
             foreach ($xs as $k => $x) {
                 $key = call_user_func($selector, $x, $k, $xs);
@@ -327,7 +325,7 @@ trait Enumerable
         $selector = $this->resolveSelector($selector);
         return $this->newLazyCollection(function() use ($selector) {
             $xs = $this->getSource();
-            $result = array();
+            $result = [];
 
             foreach ($xs as $k => $x) {
                 $key = call_user_func($selector, $x, $k, $xs);
@@ -454,12 +452,26 @@ trait Enumerable
         return $this->newCollection($this->getProvider()->drop($xs, $n));
     }
 
+    public function takeWhile($predicate)
+    {
+        $xs = $this->getSource();
+        $predicate = $this->resolvePredicate($predicate);
+        return $this->newCollection($this->getProvider()->takeWhile($xs, $predicate));
+    }
+
+    public function dropWhile($predicate)
+    {
+        $xs = $this->getSource();
+        $predicate = $this->resolvePredicate($predicate);
+        return $this->newCollection($this->getProvider()->dropWhile($xs, $predicate));
+    }
+
     public function compact()
     {
         return $this->filter($this->resolveSelector(null));
     }
 
-    public function flatten($shallow)
+    public function flatten($shallow = false)
     {
         $xss = $this->getSource();
         return $this->newCollection($this->getProvider()->flatten($xss, $shallow));
@@ -516,15 +528,7 @@ trait Enumerable
         return $this->newCollection($this->getProvider()->zip($xss));
     }
 
-    public function zipWith($f)
-    {
-        return call_user_func_array([$this, 'zip'], array_slice(func_get_args(), 1))
-            ->map(function($xs, $i, $xss) use ($f) {
-                return call_user_func_array($f, $xs);
-            });
-    }
-
-    public function cycle($n = -1)
+    public function cycle($n = null)
     {
         $xs = $this->getSource();
         return $this->newCollection($this->getProvider()->cycle($xs, $n));
@@ -556,25 +560,27 @@ trait Enumerable
 
     public function object($values = null)
     {
-        $result = array();
-        $xs = $this->getSource();
-        if ($values !== null) {
-            $values = Iterators::create($values);
-            $values->rewind();
-            foreach ($xs as $key) {
-                if (!$values->valid()) {
-                    break;
-                }
+        return $this->newLazyCollection(function() use ($values) {
+            $result = [];
+            $xs = $this->getSource();
+            if ($values !== null) {
+                $values = Iterators::create($values);
+                $values->rewind();
+                foreach ($xs as $key) {
+                    if (!$values->valid()) {
+                        break;
+                    }
 
-                $result[$key] = $values->current();
-                $values->next();
+                    $result[$key] = $values->current();
+                    $values->next();
+                }
+            } else {
+                foreach ($xs as $x) {
+                    $result[$x[0]] = $x[1];
+                }
             }
-        } else {
-            foreach ($xs as $x) {
-                $result[$x[0]] = $x[1];
-            }
-        }
-        return $result;
+            return $result;
+        });
     }
 
     public function indexOf($value, $isSorted = 0)
@@ -657,9 +663,8 @@ trait Enumerable
 
     public function pairs()
     {
-        $xs = $this->getSource();
-        return $this->map($xs, function($x, $k) {
-            return array($k, $x);
+        return $this->map(function($x, $k) {
+            return [$k, $x];
         });
     }
 
@@ -688,7 +693,7 @@ trait Enumerable
     public function pick()
     {
         $keys = func_get_args();
-        $whitelist = array();
+        $whitelist = [];
 
         foreach ($keys as $key) {
             if (static::isTraversable($key)) {
@@ -707,7 +712,7 @@ trait Enumerable
 
     public function omit()
     {
-        $blacklist = array();
+        $blacklist = [];
         $keys = array_slice(func_get_args(), 1);
 
         foreach ($keys as $key) {
@@ -755,22 +760,22 @@ trait Enumerable
 
     protected function getComparerResolver()
     {
-        return DefaultComparerResolver::getInstance();
+        return ComparerResolver::getInstance();
     }
 
     protected function getSelectorResolver()
     {
-        return DefaultSelectorResolver::getInstance();
+        return SelectorResolver::getInstance();
     }
 
     protected function getKeySelectorResolver()
     {
-        return DefaultKeySelectorResolver::getInstance();
+        return KeySelectorResolver::getInstance();
     }
 
     protected function getPredicateResolver()
     {
-        return DefaultPredicateResolver::getInstance();
+        return PredicateResolver::getInstance();
     }
 
     private function newCollection($source)

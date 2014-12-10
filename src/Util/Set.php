@@ -9,17 +9,28 @@
 
 namespace Underbar\Util;
 
-class Set implements \Iterator
+use Underbar\Comparer\IEqualityComparer;
+use Underbar\Iterator\FlattenIterator;
+
+class Set implements \IteratorAggregate
 {
     /**
-     * @var array
+     * @var IEqualityComparer
      */
-    private $hashTable = array();
+    private $equalityComparer;
 
     /**
      * @var array
      */
-    private $list;
+    private $hashTable = [];
+
+    /**
+     * @param IEqualityComparer $equalityComparer
+     */
+    public function __construct(IEqualityComparer $equalityComparer)
+    {
+        $this->equalityComparer = $equalityComparer;
+    }
 
     /**
      * Add the element to this set.
@@ -29,12 +40,16 @@ class Set implements \Iterator
      */
     public function add($element)
     {
-        if (!$this->contains($element)) {
-            $hash = $this->hash($element);
-            $this->hashTable[$hash][] = $element;
-            return true;
+        $hash = $this->equalityComparer->hash($element);
+        if (isset($this->hashTable[$hash])) {
+            foreach ($this->hashTable[$hash] as $other) {
+                if ($this->equalityComparer->equals($element, $other)) {
+                    return false;
+                }
+            }
         }
-        return false;
+        $this->hashTable[$hash][] = $element;
+        return true;
     }
 
     /**
@@ -58,9 +73,15 @@ class Set implements \Iterator
      */
     public function contains($element)
     {
-        $hash = $this->hash($element);
-        return isset($this->hashTable[$hash])
-               && in_array($element, $this->hashTable[$hash], true);
+        $hash = $this->equalityComparer->hash($element);
+        if (isset($this->hashTable[$hash])) {
+            foreach ($this->hashTable[$hash] as $other) {
+                if ($this->equalityComparer->equals($element, $other)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -71,91 +92,24 @@ class Set implements \Iterator
      */
     public function remove($element)
     {
-        $hash = $this->hash($element);
+        $hash = $this->equalityComparer->hash($element);
         if (isset($this->hashTable[$hash])) {
-            $i = array_search($element, $this->hashTable[$hash], true);
-            if ($i !== false) {
-                unset($this->hashTable[$hash][$i]);
-                return true;
+            foreach ($this->hashTable[$hash] as $i => $other) {
+                if ($this->equalityComparer->equals($element, $other)) {
+                    unset($this->hashTable[$hash][$i]);
+                    return true;
+                }
             }
         }
         return false;
     }
 
     /**
-     * @see Iterator
-     * @return mixed
+     * @see \IteratorAggregate
+     * @return \Traversable
      */
-    public function current()
+    public function getIterator()
     {
-        return current($this->list);
-    }
-
-    /**
-     * @see Iterator
-     * @return mixed
-     */
-    public function key()
-    {
-        return key($this->hashTable);
-    }
-
-    /**
-     * @see Iterator
-     * @return void
-     */
-    public function next()
-    {
-        next($this->list);
-        if (key($this->list) === null) {
-            next($this->hashTable);
-            $this->fetchNextList();
-        }
-    }
-
-    /**
-     * @see Iterator
-     * @return mixed
-     */
-    public function rewind()
-    {
-        reset($this->hashTable);
-        $this->fetchNextList();
-    }
-
-    /**
-     * @see Iterator
-     * @return boolean
-     */
-    public function valid()
-    {
-        return is_array($this->list) && key($this->list) !== null;
-    }
-
-    /**
-     * Calculate hash of the element
-     *
-     * @param mixed $element
-     * @return string
-     */
-    private function hash($element)
-    {
-        return is_object($element)
-             ? spl_object_hash($element) : sha1(serialize($element));
-    }
-
-    /**
-     * @return void
-     */
-    private function fetchNextList()
-    {
-        while (is_array($this->list = current($this->hashTable))) {
-            if (empty($this->list)) {
-                next($this->hashTable);
-            } else {
-                reset($this->list);
-                break;
-            }
-        }
+        return new FlattenIterator(new \ArrayIterator($this->hashTable), true);
     }
 }

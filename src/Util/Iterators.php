@@ -11,19 +11,19 @@ class Iterators
     {
     }
 
-    public static function create($source)
+    public static function create($src)
     {
-        if ($source instanceof \Iterator) {
-            return $source;
+        if ($src instanceof \Iterator) {
+            return $src;
         }
-        if ($source instanceof \Traversable) {
-            return new \IteratorIterator($source);
+        if ($src instanceof \Traversable) {
+            return new \IteratorIterator($src);
         }
-        if (is_array($source)) {
-            return new \ArrayIterator($source);
+        if (is_array($src)) {
+            return new \ArrayIterator($src);
         }
 
-        $type = gettype($source);
+        $type = gettype($src);
         throw new \InvalidArgumentException("'$type' is not iterable.");
     }
 
@@ -32,33 +32,33 @@ class Iterators
         return new LazyIterator($factory);
     }
 
-    public static function memoize($source)
+    public static function memoize($src)
     {
-        return new MemoizeIterator(self::create($source));
+        return new MemoizeIterator(self::create($src));
     }
 
-    public static function toArray($source)
+    public static function toArray($src)
     {
-        if ($source instanceof \ArrayIterator) {
-            return $source->getArrayCopy();
+        if ($src instanceof \ArrayIterator) {
+            return $src->getArrayCopy();
         }
-        if ($source instanceof \Traversable) {
-            return iterator_to_array($source, true);
+        if ($src instanceof \Traversable) {
+            return iterator_to_array($src, true);
         }
-        if (is_array($source)) {
-            return $source;
+        if (is_array($src)) {
+            return $src;
         }
-        $type = gettype($source);
+        $type = gettype($src);
         throw new \InvalidArgumentException("'$type' can not convert to array.");
     }
 
-    public static function toArrayRec($source, $depth)
+    public static function toArrayRec($src, $depth)
     {
         if ($depth === 1) {
             return self::toArray($it);
         } else {
-            $acc = array();
-            foreach ($source as $k => $v) {
+            $acc = [];
+            foreach ($src as $k => $v) {
                 if ($v instanceof \Traversable) {
                     $acc[$k] = self::toArrayRec($v, $depth - 1);
                 } else {
@@ -69,29 +69,29 @@ class Iterators
         }
     }
 
-    public static function toList($source)
+    public static function toList($src)
     {
-        if ($source instanceof \ArrayIterator) {
-            return array_values($source->getArrayCopy());
+        if (is_array($src)) {
+            return array_values($src);
         }
-        if ($source instanceof \Traversable) {
-            return iterator_to_array($source, false);
+        if ($src instanceof \ArrayIterator) {
+            return array_values($src->getArrayCopy());
         }
-        if (is_array($source)) {
-            return array_values($source);
+        if ($src instanceof \Traversable) {
+            return iterator_to_array($src, false);
         }
-        $type = gettype($source);
+        $type = gettype($src);
         throw new \InvalidArgumentException("'$type' can not convert to array.");
     }
 
-    public static function toListRec($source, $depth)
+    public static function toListRec($src, $depth)
     {
         if ($depth === 1) {
-            return self::toList($source);
+            return self::toList($src);
         } else {
-            $acc = array();
-            foreach ($source as $v) {
-                if ($value instanceof \Traversable) {
+            $acc = [];
+            foreach ($src as $v) {
+                if ($v instanceof \Traversable) {
                     $acc[] = self::toListRec($v, $depth - 1);
                 } else {
                     $acc[] = $v;
@@ -101,51 +101,51 @@ class Iterators
         }
     }
 
-    public static function count($source)
+    public static function count($src)
     {
-        if (is_array($source)) {
-            return count($source);
+        if (is_array($src)) {
+            return count($src);
         }
-        while ($source instanceof \IteratorAggregate) {
-            $source = $source->getIterator();
+        while ($src instanceof \IteratorAggregate) {
+            $src = $src->getIterator();
         }
-        if ($source instanceof \Countable) {
-            return count($source);
+        if ($src instanceof \Countable) {
+            return count($src);
         }
-        if ($source instanceof \Traversable) {
-            return iterator_count($source);
+        if ($src instanceof \Traversable) {
+            return iterator_count($src);
         }
-        $type = gettype($source);
+        $type = gettype($src);
         throw new \InvalidArgumentException("'$type' is not countable.");
     }
 
-    public static function isTraversable($value)
+    public static function isTraversable($src)
     {
-        return is_array($value) || $value instanceof \Traversable;
+        return is_array($src) || $src instanceof \Traversable;
     }
 
-    public static function isEmpty($source)
+    public static function isEmpty($src)
     {
-        if (is_array($source)) {
-            return empty($source);
+        if (is_array($src)) {
+            return empty($src);
         }
-        while ($source instanceof \IteratorAggregate) {
-            $source = $source->getIterator();
+        while ($src instanceof \IteratorAggregate) {
+            $src = $src->getIterator();
         }
-        if ($source instanceof \Countable) {
-            return count($source) === 0;
+        if ($src instanceof \Countable) {
+            return count($src) === 0;
         }
-        if ($source instanceof \Iterator) {
-            $source->rewind();
-            return !$source->valid();
+        if ($src instanceof \Iterator) {
+            $src->rewind();
+            return !$src->valid();
         }
-        if ($source instanceof \Traversable) {
-            foreach ($source as $value) {
+        if ($src instanceof \Traversable) {
+            foreach ($src as $v) {
                 return true;
             }
             return false;
         }
-        $type = gettype($source);
+        $type = gettype($src);
         throw new \InvalidArgumentException("'$type' is not countable.");
     }
 }

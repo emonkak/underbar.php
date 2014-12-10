@@ -2,7 +2,9 @@
 
 namespace Underbar\Provider;
 
+use Underbar\Comparer\EqualityComparer;
 use Underbar\Util\Iterators;
+use Underbar\Util\Set;
 use Underbar\Util\Singleton;
 
 class ArrayProvider implements CollectionProvider
@@ -18,7 +20,7 @@ class ArrayProvider implements CollectionProvider
      */
     public function map($xs, callable $valueSelector, callable $keySelector)
     {
-        $result = array();
+        $result = [];
         foreach ($xs as $k => $x) {
             $key = call_user_func($keySelector, $x, $k, $xs);
             $result[$key] = call_user_func($valueSelector, $x, $k, $xs);
@@ -31,7 +33,7 @@ class ArrayProvider implements CollectionProvider
      */
     public function concatMap($xs, callable $selector)
     {
-        $result = array();
+        $result = [];
         foreach ($xs as $k => $x) {
             foreach (call_user_func($selector, $x, $k, $xs) as $y) {
                 $result[] = $y;
@@ -45,7 +47,7 @@ class ArrayProvider implements CollectionProvider
      */
     public function filter($xs, callable $predicate)
     {
-        $result = array();
+        $result = [];
         foreach ($xs as $k => $x) {
             if (call_user_func($predicate, $x, $k, $xs)) {
                 $result[$k] = $x;
@@ -60,7 +62,7 @@ class ArrayProvider implements CollectionProvider
     public function sample($xs, $n)
     {
         $array = Iterators::toArray($xs);
-        $result = array();
+        $result = [];
 
         while ($n-- > 0 && !empty($array)) {
             $key = array_rand($array);
@@ -89,7 +91,7 @@ class ArrayProvider implements CollectionProvider
     {
         return $n > 0
             ? array_slice(Iterators::toArray($xs), 0, -$n)
-            : array();
+            : [];
     }
 
     /**
@@ -99,7 +101,7 @@ class ArrayProvider implements CollectionProvider
     {
         return $n > 0
             ? array_slice(Iterators::toArray($xs), 0, $n)
-            : array();
+            : [];
     }
 
     /**
@@ -123,7 +125,7 @@ class ArrayProvider implements CollectionProvider
      */
     public function takeWhile($xs, callable $predicate)
     {
-        $result = array();
+        $result = [];
         foreach ($xs as $k => $x) {
             if (!call_user_func($predicate, $x, $k, $xs)) {
                 break;
@@ -138,7 +140,7 @@ class ArrayProvider implements CollectionProvider
      */
     public function dropWhile($xs, callable $predicate)
     {
-        $result = array();
+        $result = [];
         $accepted = false;
         foreach ($xs as $k => $x) {
             if ($accepted || ($accepted = !call_user_func($predicate, $x, $k, $xs))) {
@@ -156,19 +158,19 @@ class ArrayProvider implements CollectionProvider
         return $this->doFlatten($xs, $shallow);
     }
 
-    private function doFlatten($xs, $shallow, &$output = array())
+    private function doFlatten($xs, $shallow, &$output = [])
     {
-        foreach ($xss as $xs) {
-            if (Iterators::isTraversable($xs)) {
+        foreach ($xs as $child) {
+            if (Iterators::isTraversable($child)) {
                 if ($shallow) {
-                    foreach ($xs as $x) {
+                    foreach ($child as $x) {
                         $output[] = $x;
                     }
                 } else {
-                    $this->doFlatten($xs, $shallow, $output);
+                    $this->doFlatten($child, $shallow, $output);
                 }
             } else {
-                $output[] = $xs;
+                $output[] = $child;
             }
         }
         return $output;
@@ -193,7 +195,7 @@ class ArrayProvider implements CollectionProvider
      */
     public function uniq($xs, callable $selector)
     {
-        $set = new Set();
+        $set = new Set(EqualityComparer::getInstance());
         $result = [];
         foreach ($xs as $k => $x) {
             if ($set->add(call_user_func($selector, $x, $k, $xs))) {
@@ -208,24 +210,24 @@ class ArrayProvider implements CollectionProvider
      */
     public function zip($xss)
     {
-        $yss = $zss = $result = array();
+        $iters = $zipped = $result = [];
         $loop = true;
 
         foreach ($xss as $xs) {
-            $yss[] = $it = Iterators::create($xs);
+            $iters[] = $it = Iterators::create($xs);
             $it->rewind();
             $loop = $loop && $it->valid();
-            $zss[] = $it->current();
+            $zipped[] = $it->current();
         }
 
-        if (!empty($zss)) while ($loop) {
-            $result[] = $zss;
-            $zss = array();
+        if (!empty($zipped)) while ($loop) {
+            $result[] = $zipped;
+            $zipped = [];
             $loop = true;
-            foreach ($yss as $ys) {
-                $ys->next();
-                $zss[] = $ys->current();
-                $loop = $loop && $ys->valid();
+            foreach ($iters as $it) {
+                $it->next();
+                $zipped[] = $it->current();
+                $loop = $loop && $it->valid();
             }
         }
 
@@ -237,9 +239,9 @@ class ArrayProvider implements CollectionProvider
      */
     public function concat($xss)
     {
-        $result = array();
+        $result = [];
         foreach ($xss as $xs) {
-            $result = array_merge($result, Iterator::toArray($xs));
+            $result = array_merge($result, Iterators::toArray($xs));
         }
         return $result;
     }
@@ -249,10 +251,10 @@ class ArrayProvider implements CollectionProvider
      */
     public function cycle($xs, $n)
     {
-        if ($n < 0) {
-            throw new \OverflowException();
+        if ($n === null) {
+            throw new \OverflowException("Can't handle infinite stream.");
         }
-        $result = array();
+        $result = [];
         while ($n-- > 0) {
             foreach ($xs as $x) {
                 $result[] = $x;
@@ -267,7 +269,7 @@ class ArrayProvider implements CollectionProvider
     public function range($start, $stop, $step)
     {
         $l = max(ceil(($stop - $start) / $step), 0);
-        $range = array();
+        $range = [];
 
         for ($i = 0; $i < $l; $i++) {
             $range[] = $start;
@@ -282,10 +284,10 @@ class ArrayProvider implements CollectionProvider
      */
     public function repeat($value, $n)
     {
-        if ($n < 0) {
-            throw new \OverflowException();
+        if ($n === null) {
+            throw new \OverflowException("Can't handle infinite stream.");
         }
-        return $n == 0 ? array() : array_fill(0, $n, $value);
+        return $n > 0 ? array_fill(0, $n, $value) : [];
     }
 
     /**
@@ -301,6 +303,6 @@ class ArrayProvider implements CollectionProvider
      */
     public function iterate($initial, callable $f)
     {
-        throw new \OverflowException();
+        throw new \OverflowException("Can't handle infinite stream.");
     }
 }

@@ -43,7 +43,7 @@ class Collection implements \IteratorAggregate
         );
     }
 
-    public static function repeat($value, $n = -1)
+    public static function repeat($value, $n = null)
     {
         return new Collection(
             self::$defaultProvider->repeat($value, $n),

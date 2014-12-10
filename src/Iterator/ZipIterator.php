@@ -11,7 +11,7 @@ namespace Underbar\Iterator;
 
 class ZipIterator implements \Iterator
 {
-    private $iterators = array();
+    private $iterators = [];
     private $current;
     private $index;
 
@@ -33,7 +33,7 @@ class ZipIterator implements \Iterator
     public function next()
     {
         $this->index++;
-        $this->current = array();
+        $this->current = [];
         foreach ($this->iterators as $it) {
             $it->next();
             $this->current[] = $it->current();
@@ -43,7 +43,7 @@ class ZipIterator implements \Iterator
     public function rewind()
     {
         $this->index = 0;
-        $this->current = array();
+        $this->current = [];
         foreach ($this->iterators as $it) {
             $it->rewind();
             $this->current[] = $it->current();
@@ -57,7 +57,7 @@ class ZipIterator implements \Iterator
         }
 
         foreach ($this->iterators as $it) {
-            if ($it->valid()) {
+            if (!$it->valid()) {
                 return false;
             }
         }

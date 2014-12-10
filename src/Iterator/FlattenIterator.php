@@ -26,7 +26,7 @@ class FlattenIterator extends \IteratorIterator implements \RecursiveIterator
             $inner = new \ArrayIterator($inner);
         }
         return $this->shallow
-            ? new NoRecursiveIterator($inner)
+            ? new NonRecursiveIterator($inner)
             : new self($inner, $this->shallow);
     }
 

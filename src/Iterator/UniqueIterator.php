@@ -9,20 +9,23 @@
 
 namespace Underbar\Iterator;
 
-use Underbar\Internal;
+use Underbar\Comparer\EqualityComparer;
+use Underbar\Util\Set;
 
 class UniqueIterator implements \Iterator
 {
     private $it;
     private $selector;
+    private $equalityComparer;
     private $set;
     private $current;
     private $key;
 
-    public function __construct(\Iterator $it, callable $selector)
+    public function __construct(\Iterator $it, callable $selector, EqualityComparer $equalityComparer)
     {
         $this->it = $it;
         $this->selector = $selector;
+        $this->equalityComparer = $equalityComparer;
     }
 
     public function current()
@@ -43,7 +46,7 @@ class UniqueIterator implements \Iterator
 
     public function rewind()
     {
-        $this->set = new Internal\Set();
+        $this->set = new Set($this->equalityComparer);
         $this->it->rewind();
         $this->fetch();
     }

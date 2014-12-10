@@ -100,6 +100,6 @@ trait EnumerableAliases
 
     public function unique($selector = null)
     {
-        return $this->uniq($n);
+        return $this->uniq($selector);
     }
 }

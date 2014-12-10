@@ -2,6 +2,7 @@
 
 namespace Underbar\Provider;
 
+use Underbar\Comparer\EqualityComparer;
 use Underbar\Iterator\ConcatMapIterator;
 use Underbar\Iterator\DropWhileIterator;
 use Underbar\Iterator\FlattenIterator;
@@ -99,13 +100,15 @@ class IteratorProvider implements CollectionProvider
             $i = 0;
             $queue = new \SplQueue();
 
-            foreach ($xs as $x) {
-                if ($i == $n) {
-                    $queue->dequeue();
-                    $i--;
+            if ($n > 0) {
+                foreach ($xs as $x) {
+                    if ($i == $n) {
+                        $queue->dequeue();
+                        $i--;
+                    }
+                    $queue->enqueue($x);
+                    $i++;
                 }
-                $queue->enqueue($x);
-                $i++;
             }
 
             return $queue;
@@ -141,7 +144,7 @@ class IteratorProvider implements CollectionProvider
      */
     public function flatten($xs, $shallow)
     {
-        $inner = new FlattenIterator(Iterators::create($xs));
+        $inner = new FlattenIterator(Iterators::create($xs), $shallow);
         return new \RecursiveIteratorIterator($inner);
     }
 
@@ -150,7 +153,11 @@ class IteratorProvider implements CollectionProvider
      */
     public function intersection($xs, $others)
     {
-        return new IntersectIterator(Iterators::create($xs), $others);
+        return new IntersectIterator(
+            Iterators::create($xs),
+            $others,
+            EqualityComparer::getInstance()
+        );
     }
 
     /**
@@ -158,7 +165,11 @@ class IteratorProvider implements CollectionProvider
      */
     public function uniq($xs, callable $selector)
     {
-        return new UniqueIterator(Iterators::create($xs), $selector);
+        return new UniqueIterator(
+            Iterators::create($xs),
+            $selector,
+            EqualityComparer::getInstance()
+        );
     }
 
     /**
@@ -191,15 +202,15 @@ class IteratorProvider implements CollectionProvider
     public function cycle($xs, $n)
     {
         $inner = Iterators::create($xs);
-        if ($n >= 0) {
+        if ($n === null) {
+            return new \InfiniteIterator($inner);
+        } else {
             // TODO: Implement CycleIterator
             $it = new \AppendIterator();
             while ($n-- > 0) {
                 $it->append($inner);
             }
             return $it;
-        } else {
-            return new \InfiniteIterator($inner);
         }
     }
 
@@ -216,7 +227,11 @@ class IteratorProvider implements CollectionProvider
      */
     public function repeat($value, $n)
     {
-        return new RepeatIterator($value, $n);
+        if ($n === null) {
+            return new \InfiniteIterator(new \ArrayIterator([$value]), $n);
+        } else {
+            return new RepeatIterator($value, $n);
+        }
     }
 
     /**

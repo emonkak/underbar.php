@@ -2,7 +2,9 @@
 
 namespace Underbar\Provider;
 
+use Underbar\Comparer\EqualityComparer;
 use Underbar\Util\Iterators;
+use Underbar\Util\Set;
 use Underbar\Util\Singleton;
 
 class GeneratorProvider implements CollectionProvider
@@ -189,19 +191,19 @@ class GeneratorProvider implements CollectionProvider
     public function flatten($xs, $shallow)
     {
         return Iterators::createLazy(function() use ($xs, $shallow) {
-            foreach ($xss as $i => $xs) {
-                if (Iterators::isTraversable($xs)) {
+            foreach ($xs as $i => $child) {
+                if (Iterators::isTraversable($child)) {
                     if ($shallow) {
-                        foreach ($xs as $j => $x) {
+                        foreach ($child as $j => $x) {
                             yield $j => $x;
                         }
                     } else {
-                        foreach ($this->flatten($xs, $shallow) as $j => $x) {
+                        foreach ($this->flatten($child, $shallow) as $j => $x) {
                             yield $j => $x;
                         }
                     }
                 } else {
-                    yield $i => $xs;
+                    yield $i => $child;
                 }
             }
         });
@@ -213,7 +215,8 @@ class GeneratorProvider implements CollectionProvider
     public function intersection($xs, $others)
     {
         return Iterators::createLazy(function() use ($xs, $others) {
-            $set = new Set();
+            $set = new Set(EqualityComparer::getInstance());
+
             foreach ($others as $other) {
                 $set->addAll($other);
             }
@@ -232,7 +235,7 @@ class GeneratorProvider implements CollectionProvider
     public function uniq($xs, callable $selector)
     {
         return Iterators::createLazy(function() use ($xs, $selector) {
-            $set = new Set();
+            $set = new Set(EqualityComparer::getInstance());
 
             foreach ($xs as $k => $x) {
                 if ($set->add(call_user_func($selector, $x, $k, $xs))) {
@@ -248,24 +251,24 @@ class GeneratorProvider implements CollectionProvider
     public function zip($xss)
     {
         return Iterators::createLazy(function() use ($xss) {
-            $yss = $zss = array();
+            $iters = $zipped = [];
             $loop = true;
 
             foreach ($xss as $xs) {
-                $yss[] = $ys = self::wrapIterator($xs);
-                $ys->rewind();
-                $loop = $loop && $ys->valid();
-                $zss[] = $ys->current();
+                $iters[] = $it = Iterators::create($xs);
+                $it->rewind();
+                $loop = $loop && $it->valid();
+                $zipped[] = $it->current();
             }
 
-            if (!empty($zss)) while ($loop) {
-                yield $zss;
-                $zss = array();
+            if (!empty($zipped)) while ($loop) {
+                yield $zipped;
+                $zipped = [];
                 $loop = true;
-                foreach ($yss as $ys) {
-                    $ys->next();
-                    $zss[] = $ys->current();
-                    $loop = $loop && $ys->valid();
+                foreach ($iters as $it) {
+                    $it->next();
+                    $zipped[] = $it->current();
+                    $loop = $loop && $it->valid();
                 }
             }
         });
@@ -291,9 +294,17 @@ class GeneratorProvider implements CollectionProvider
     public function cycle($xs, $n)
     {
         return Iterators::createLazy(function() use ($xs, $n) {
-            while ($n--) {
-                foreach ($xs as $k => $x) {
-                    yield $k => $x;
+            if ($n === null) {
+                while (true) {
+                    foreach ($xs as $k => $x) {
+                        yield $k => $x;
+                    }
+                }
+            } else {
+                while ($n-- > 0) {
+                    foreach ($xs as $k => $x) {
+                        yield $k => $x;
+                    }
                 }
             }
         });
@@ -320,8 +331,14 @@ class GeneratorProvider implements CollectionProvider
     public function repeat($value, $n)
     {
         return Iterators::createLazy(function() use ($value, $n) {
-            while ($n--) {
-                yield $value;
+            if ($n === null) {
+                while (true) {
+                    yield $value;
+                }
+            } else {
+                while ($n-- > 0) {
+                    yield $value;
+                }
             }
         });
     }

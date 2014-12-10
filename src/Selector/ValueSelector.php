@@ -18,13 +18,13 @@ class ValueSelector
     /**
      * Returns the given value as it is.
      *
-     * @param mixed $value
-     * @param mixed $key
-     * @param mixed $source
+     * @param mixed $v
+     * @param mixed $k
+     * @param mixed $src
      * @return mixed
      */
-    public function __invoke($value, $key, $source)
+    public function __invoke($v, $k, $src)
     {
-        return $value;
+        return $v;
     }
 }
