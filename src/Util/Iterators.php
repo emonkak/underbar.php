@@ -123,4 +123,29 @@ class Iterators
     {
         return is_array($value) || $value instanceof \Traversable;
     }
+
+    public static function isEmpty($source)
+    {
+        if (is_array($source)) {
+            return empty($source);
+        }
+        while ($source instanceof \IteratorAggregate) {
+            $source = $source->getIterator();
+        }
+        if ($source instanceof \Countable) {
+            return count($source) === 0;
+        }
+        if ($source instanceof \Iterator) {
+            $source->rewind();
+            return !$source->valid();
+        }
+        if ($source instanceof \Traversable) {
+            foreach ($source as $value) {
+                return true;
+            }
+            return false;
+        }
+        $type = gettype($source);
+        throw new \InvalidArgumentException("'$type' is not countable.");
+    }
 }

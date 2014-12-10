@@ -750,27 +750,7 @@ trait Enumerable
     public function isEmpty()
     {
         $xs = $this->getSource();
-        if (is_array($xs)) {
-            return empty($xs);
-        }
-        while ($xs instanceof \IteratorAggregate) {
-            $xs = $xs->getIterator();
-        }
-        if ($xs instanceof \Countable) {
-            return count($xs) === 0;
-        }
-        if ($xs instanceof \Iterator) {
-            $xs->rewind();
-            return !$xs->valid();
-        }
-        if ($xs instanceof \Traversable) {
-            foreach ($xs as $x) {
-                return true;
-            }
-            return false;
-        }
-        $type = gettype($xs);
-        throw new \InvalidArgumentException("'$type' is not countable.");
+        return Iterators::isEmpty($xs);
     }
 
     protected function getComparerResolver()
