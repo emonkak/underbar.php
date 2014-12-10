@@ -52,9 +52,7 @@ class IteratorProvider implements ICollectionProvider
      */
     public function filter($xs, callable $predicate)
     {
-        return class_exists('CallbackFilterIterator')
-            ? new \CallbackFilterIterator(Iterators::create($xs), $predicate)
-            : new FilterIterator(Iterators::create($xs), $predicate);
+        return new \CallbackFilterIterator(Iterators::create($xs), $predicate);
     }
 
     /**
