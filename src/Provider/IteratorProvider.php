@@ -6,7 +6,6 @@ use Underbar\Comparer\EqualityComparer;
 use Underbar\Iterator\ConcatMapIterator;
 use Underbar\Iterator\DropWhileIterator;
 use Underbar\Iterator\FlattenIterator;
-use Underbar\Iterator\IndexByIterator;
 use Underbar\Iterator\InitialIterator;
 use Underbar\Iterator\IntersectIterator;
 use Underbar\Iterator\IterateIterator;
