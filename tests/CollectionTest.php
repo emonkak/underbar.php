@@ -1173,10 +1173,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function provideLazyCollectionFactory()
     {
-        return [
-            [function($source) { return new Collection($source, IteratorProvider::getInstance()); }],
-            [function($source) { return new Collection($source, GeneratorProvider::getInstance()); }],
-        ];
+        $providers = [];
+        $providers[] = [function($source) {
+            return new Collection($source, IteratorProvider::getInstance());
+        }];
+        if (class_exists('Generator')) {
+            $providers[] = [function($source) {
+                return new Collection($source, GeneratorProvider::getInstance());
+            }];
+        }
+        return $providers;
     }
 
     public function provideArrayCollectionFactory()
