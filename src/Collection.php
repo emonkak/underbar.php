@@ -5,7 +5,7 @@ namespace Underbar;
 use Underbar\Provider\CollectionProvider;
 use Underbar\Provider\GeneratorProvider;
 use Underbar\Provider\IteratorProvider;
-use Underbar\Utils\Iterators;
+use Underbar\Util\Iterators;
 
 class Collection implements \IteratorAggregate
 {
@@ -20,6 +20,10 @@ class Collection implements \IteratorAggregate
 
     public static function from($source)
     {
+        if (!Iterators::isTraversable($source)) {
+            throw new \InvalidArgumentException('This source can not be traversable.');
+        }
+
         return new Collection($source, self::$defaultProvider);
     }
 
