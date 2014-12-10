@@ -103,7 +103,20 @@ class Iterators
 
     public static function count($source)
     {
-        return $source instanceof \Traversable ? iterator_count($source) : count($source);
+        if (is_array($source)) {
+            return count($source);
+        }
+        while ($source instanceof \IteratorAggregate) {
+            $source = $source->getIterator();
+        }
+        if ($source instanceof \Countable) {
+            return count($source);
+        }
+        if ($source instanceof \Traversable) {
+            return iterator_count($source);
+        }
+        $type = gettype($source);
+        throw new \InvalidArgumentException("'$type' is not countable.");
     }
 
     public static function isTraversable($value)
