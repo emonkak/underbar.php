@@ -22,7 +22,7 @@ use Underbar\Iterator\ZipIterator;
 use Underbar\Util\Iterators;
 use Underbar\Util\Singleton;
 
-class IteratorProvider implements CollectionProvider
+class IteratorProvider implements ICollectionProvider
 {
     use Singleton;
 

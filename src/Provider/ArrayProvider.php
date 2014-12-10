@@ -7,7 +7,7 @@ use Underbar\Util\Iterators;
 use Underbar\Util\Set;
 use Underbar\Util\Singleton;
 
-class ArrayProvider implements CollectionProvider
+class ArrayProvider implements ICollectionProvider
 {
     use Singleton;
 

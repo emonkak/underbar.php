@@ -2,7 +2,7 @@
 
 namespace Underbar\Provider;
 
-interface CollectionProvider
+interface ICollectionProvider
 {
     /**
      * @param array|\Traversable $xs

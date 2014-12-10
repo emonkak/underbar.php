@@ -2,8 +2,8 @@
 
 namespace Underbar;
 
-use Underbar\Provider\CollectionProvider;
 use Underbar\Provider\GeneratorProvider;
+use Underbar\Provider\ICollectionProvider;
 use Underbar\Provider\IteratorProvider;
 use Underbar\Util\Iterators;
 
@@ -55,7 +55,7 @@ class Collection implements \IteratorAggregate
         );
     }
 
-    public static function setDefaultProvider(CollectionProvider $provider)
+    public static function setDefaultProvider(ICollectionProvider $provider)
     {
         self::$defaultProvider = $provider;
     }
@@ -65,7 +65,7 @@ class Collection implements \IteratorAggregate
         return self::$defaultProvider;
     }
 
-    public function __construct($source, CollectionProvider $provider)
+    public function __construct($source, ICollectionProvider $provider)
     {
         $this->source = $source;
         $this->provider = $provider;
