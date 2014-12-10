@@ -1,9 +1,8 @@
 {
     "name": "emonkak/underbar.php",
-    "description": "A collection processing library for PHP, like Underscore.js",
-    "version": "0.3.0",
+    "description": "A collection processing library for PHP, inspired Underscore.js",
     "type": "library",
-    "keywords": ["array", "collection", "generator", "iterator"],
+    "keywords": ["array", "collection", "generator", "iterator", "enumerable"],
     "homepage": "http://emonkak.github.io/underbar.php/",
     "license": "MIT",
     "authors": [
@@ -16,14 +15,17 @@
         "php": ">=5.4.0"
     },
     "require-dev": {
-      "phpunit/phpunit": "3.7.*"
+      "phpunit/phpunit": "~4.4.0"
     },
     "autoload": {
-        "psr-0": {
-            "Underbar\\": "src/"
+        "psr-4": {
+            "Underbar\\": "src/",
+            "Underbar\\Tests\\": "tests/"
         }
     },
-    "scripts": {
-      "post-install-cmd": "make"
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "1.0-dev"
+        }
     }
 }
