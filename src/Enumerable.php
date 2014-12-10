@@ -805,21 +805,21 @@ trait Enumerable
 
     private function resolveComparer($comparer)
     {
-        return $this->getComparerResolver()->resolve($comparer);
+        return $this->getComparerResolver()->resolveComparer($comparer);
     }
 
     private function resolveSelector($selector)
     {
-        return $this->getSelectorResolver()->resolve($selector);
+        return $this->getSelectorResolver()->resolveSelector($selector);
     }
 
     private function resolveKeySelector($selector)
     {
-        return $this->getKeySelectorResolver()->resolve($selector);
+        return $this->getKeySelectorResolver()->resolveKeySelector($selector);
     }
 
     private function resolvePredicate($predicate)
     {
-        return $this->getPredicateResolver()->resolve($predicate);
+        return $this->getPredicateResolver()->resolvePredicate($predicate);
     }
 }

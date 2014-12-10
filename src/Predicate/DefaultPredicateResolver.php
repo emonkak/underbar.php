@@ -13,7 +13,7 @@ class DefaultPredicateResolver implements PredicateResolver
     {
     }
 
-    public function resolve($source)
+    public function resolvePredicate($source)
     {
         if ($source === null) {
             return ValueSelector::getInstance();

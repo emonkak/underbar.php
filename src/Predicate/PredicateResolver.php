@@ -4,5 +4,5 @@ namespace Underbar\Predicate;
 
 interface PredicateResolver
 {
-    public function resolve($source);
+    public function resolvePredicate($source);
 }

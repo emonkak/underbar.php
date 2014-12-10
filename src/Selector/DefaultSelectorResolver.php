@@ -4,7 +4,7 @@ namespace Underbar\Selector;
 
 use Underbar\Util\Singleton;
 
-class DefaultSelectorResolver implements KeySelectorResolver
+class DefaultSelectorResolver implements SelectorResolver
 {
     use Singleton;
 
@@ -12,7 +12,7 @@ class DefaultSelectorResolver implements KeySelectorResolver
     {
     }
 
-    public function resolve($source)
+    public function resolveSelector($source)
     {
         if ($source === null) {
             return ValueSelector::getInstance();

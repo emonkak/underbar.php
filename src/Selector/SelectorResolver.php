@@ -4,5 +4,5 @@ namespace Underbar\Selector;
 
 interface SelectorResolver
 {
-    public function resolve($source);
+    public function resolveSelector($source);
 }

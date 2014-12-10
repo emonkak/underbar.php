@@ -12,7 +12,7 @@ class DefaultKeySelectorResolver implements KeySelectorResolver
     {
     }
 
-    public function resolve($source)
+    public function resolveKeySelector($source)
     {
         if ($source === null) {
             return KeySelector::getInstance();

@@ -4,5 +4,5 @@ namespace Underbar\Selector;
 
 interface KeySelectorResolver
 {
-    public function resolve($source);
+    public function resolveKeySelector($source);
 }

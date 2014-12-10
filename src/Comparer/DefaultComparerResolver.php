@@ -12,7 +12,7 @@ class DefaultComparerResolver implements ComparerResolver
     {
     }
 
-    public function resolve($value)
+    public function resolveComparer($value)
     {
         if ($value === null) {
             return function($x, $y) {

@@ -4,5 +4,5 @@ namespace Underbar\Comparer;
 
 interface ComparerResolver
 {
-    public function resolve($value);
+    public function resolveComparer($value);
 }
