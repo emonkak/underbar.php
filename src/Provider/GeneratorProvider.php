@@ -33,8 +33,8 @@ class GeneratorProvider implements CollectionProvider
     {
         return Iterators::createLazy(function() use ($xs, $selector) {
             foreach ($xs as $k1 => $x1) {
-                foreach (call_user_func($selector, $x1, $k1, $xs) as $k2 => $x2) {
-                    yield $k2 => $x2;
+                foreach (call_user_func($selector, $x1, $k1, $xs) as $x2) {
+                    yield $k1 => $x2;
                 }
             }
         });

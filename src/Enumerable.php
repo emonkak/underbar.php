@@ -55,7 +55,7 @@ trait Enumerable
         $xs = $this->getSource();
         $valueSelector = $this->resolveSelector($valueSelector);
         $keySelector = $this->resolveKeySelector($keySelector);
-        return $this->newCollection($this->getProvider()->map($xs, $valueSelector, $keySelector));
+        return $this->newCollection($this->getProvider()->concatMap($xs, $valueSelector, $keySelector));
     }
 
     static function parMap(callable $f, $workers = 4, $timeout = null)

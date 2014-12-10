@@ -9,23 +9,24 @@
 
 namespace Underbar\Iterator;
 
-use Underbar\Core\Iterators;
+use Underbar\Util\Iterators;
 
-class ConcatMapIterator extends \IteratorIterator implements \RecursiveIterator
+class ConcatMapIterator implements \RecursiveIterator
 {
-    private $valueSelector;
+    private $it;
 
-    private $keySelector;
+    private $selector;
 
     private $key;
 
+    private $current;
+
     private $children;
 
-    public function __construct(\Iterator $it, callable $valueSelector, callbale $keySelector)
+    public function __construct(\Iterator $it, callable $selector)
     {
-        parent::__construct($it);
-        $this->valueSelector = $valueSelector;
-        $this->keySelector = $keySelector;
+        $this->it = $it;
+        $this->selector = $selector;
     }
 
     public function getChildren()
@@ -41,7 +42,7 @@ class ConcatMapIterator extends \IteratorIterator implements \RecursiveIterator
 
     public function current()
     {
-        return $this->it->current();
+        return $this->current;
     }
 
     public function key()
@@ -69,18 +70,12 @@ class ConcatMapIterator extends \IteratorIterator implements \RecursiveIterator
     private function fetch()
     {
         if ($this->it->valid()) {
-            $current = $this->it->current();
-            $key = $this->it->key();
-            $this->key = call_user_func(
-                $this->keySelector,
-                $current,
-                $key,
-                $this->it
-            );
+            $this->key = $this->it->key();
+            $this->current = $this->it->current();
             $this->children = call_user_func(
-                $this->valueSelector,
-                $current,
-                $key,
+                $this->selector,
+                $this->current,
+                $this->key,
                 $this->it
             );
         }

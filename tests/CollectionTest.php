@@ -51,6 +51,19 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideCollectionFactory
      */
+    public function testConcatMap($factory)
+    {
+        $list = [1, 2, 3];
+        $result = $factory($list)->concatMap(function($n) {
+            return range(1, $n);
+        })->toList();
+        $shouldBe = [1, 1, 2, 1, 2, 3];
+        $this->assertEquals($shouldBe, $result);
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
     public function testReduce($factory)
     {
         $sum = function($acc, $n) {
