@@ -226,7 +226,7 @@ class IteratorProvider implements ICollectionProvider
     public function repeat($value, $n)
     {
         if ($n === null) {
-            return new \InfiniteIterator(new \ArrayIterator([$value]), $n);
+            return new \InfiniteIterator(new \ArrayIterator([$value]));
         } else {
             return new RepeatIterator($value, $n);
         }
