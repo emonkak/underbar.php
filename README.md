@@ -1,4 +1,7 @@
-# Underbar.php [![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/emonkak/underbar.php)
+# Underbar.php
+
+[![Build Status](https://travis-ci.org/emonkak/underbar.php.png)](https://travis-ci.org/emonkak/underbar.php)
+[![Coverage Status](https://coveralls.io/repos/emonkak/underbar.php/badge.png)](https://coveralls.io/r/emonkak/underbar.php)
 
 Underbar.php is a collection processing library for PHP, like underscore.js.
 
