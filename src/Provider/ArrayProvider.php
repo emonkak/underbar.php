@@ -66,9 +66,6 @@ class ArrayProvider implements ICollectionProvider
 
         while ($n-- > 0 && !empty($array)) {
             $key = array_rand($array);
-            if ($key === null) {
-                break;
-            }
             $result[] = $array[$key];
             unset($array[$key]);
         }

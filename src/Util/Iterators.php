@@ -55,7 +55,7 @@ class Iterators
     public static function toArrayRec($src, $depth)
     {
         if ($depth === 1) {
-            return self::toArray($it);
+            return self::toArray($src);
         } else {
             $acc = [];
             foreach ($src as $k => $v) {

@@ -7,8 +7,20 @@ use Underbar\Provider\ArrayProvider;
 use Underbar\Provider\IteratorProvider;
 use Underbar\Provider\GeneratorProvider;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractCollectionTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->defaultProvider = Collection::getDefaultProvider();
+
+        Collection::setDefaultProvider($this->getCollectionProvider());
+    }
+
+    public function tearDown()
+    {
+        Collection::setDefaultProvider($this->defaultProvider);
+    }
+
     public function testRange()
     {
         $result = Collection::range(0)->toList();
@@ -52,34 +64,6 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $result = Collection::repeat('foo', 0)->toList();
         $this->assertEmpty($result);
-
-        $result = Collection::repeat('foo')->take(4)->toList();
-        $this->assertSame(['foo', 'foo', 'foo', 'foo'], $result);
-    }
-
-    public function testIterate()
-    {
-        $result = Collection::iterate(2, function($x) { return $x * $x; })->take(4)->toList();
-        $shouldBe = array(2, 4, 16, 256);
-        $this->assertSame($shouldBe, $result);
-
-        $result = Collection::iterate([], function($xs) { return range(1, count($xs) + 1); })
-            ->map(function($xs) { return Collection::from($xs)->product(); })
-            ->take(10)
-            ->toList();
-        $shouldBe = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
-        $this->assertSame($shouldBe, $result);
-
-        $result = Collection::iterate([0, 1], function($xs) {
-                return [$xs[1], $xs[0] + $xs[1]];
-            })
-            ->map(function($pair) {
-                return $pair[0];
-            })
-            ->take(10)
-            ->toList();
-        $shouldBe = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34];
-        $this->assertSame($shouldBe, $result);
     }
 
     /**
@@ -127,11 +111,45 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     public function testConcatMap($factory)
     {
         $list = [1, 2, 3];
+        $shouldBe = [1, 1, 2, 1, 2, 3];
+
         $result = $factory($list)->concatMap(function($n) {
             return range(1, $n);
         })->toList();
-        $shouldBe = [1, 1, 2, 1, 2, 3];
         $this->assertEquals($shouldBe, $result);
+
+        $result = $factory($list)->flatMap(function($n) {
+            return range(1, $n);
+        })->toList();
+        $this->assertEquals($shouldBe, $result);
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     * @requires function pcntl_fork
+     */
+    public function testParMap($factory)
+    {
+        $time = microtime(true);
+        $sum = $factory(range(0, 9))
+            ->parMap(function($x) {
+                usleep(100000);
+                return $x * 100;
+            }, 10)
+            ->sum();
+        $this->assertEquals(4500, $sum, 'sum numbers');
+
+        $time = microtime(true) - $time;
+        $this->assertLessThan(1.0, $time, 'work to parallel');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParMapWhenWorkersAreZeroThrowException($factory)
+    {
+        $factory([])->parMap(function($x) { }, 0);
     }
 
     /**
@@ -633,6 +651,30 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideCollectionFactory
      */
+    public function testToArrayRec($factory)
+    {
+        $array = function($xs) {
+            return new \ArrayIterator($xs);
+        };
+
+        $xs = $array([1, 2, 3]);
+        $this->assertSame([1, 2, 3], $factory($xs)->toArrayRec());
+
+        $xs = $array([$array([1]), $array([2]), $array([3, $array([4])])]);
+        $this->assertSame([[1], [2], [3, [4]]], $factory($xs)->toArrayRec());
+        $this->assertEquals([[1], [2], [3, new \ArrayIterator([4])]], $factory($xs)->toArrayRec(2));
+
+        $xs = $array(['one' => 1, 'two' => 2, 'three' => 3]);
+        $this->assertSame(['one' => 1, 'two' => 2, 'three' => 3], $factory($xs)->toArrayRec());
+
+        $xs = $array(['one' => $array([1]), 'two' => $array([2]), 'three' => $array([3, $array([4])])]);
+        $this->assertSame(['one' => [1], 'two' => [2], 'three' => [3, [4]]], $factory($xs)->toArrayRec());
+        $this->assertEquals(['one' => [1], 'two' => [2], 'three' => [3, new \ArrayIterator([4])]], $factory($xs)->toArrayRec(2));
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
     public function testToList($factory)
     {
         $array = [1, 2, 3];
@@ -640,6 +682,30 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $numbers = ['one' => 1, 'two' => 2, 'three' => 3];
         $this->assertSame($array, $factory($numbers)->toList(), 'object flattened into array');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testToListRec($factory)
+    {
+        $array = function($xs) {
+            return new \ArrayIterator($xs);
+        };
+
+        $xs = $array([1, 2, 3]);
+        $this->assertSame([1, 2, 3], $factory($xs)->toListRec());
+
+        $xs = $array([$array([1]), $array([2]), $array([3, $array([4])])]);
+        $this->assertSame([[1], [2], [3, [4]]], $factory($xs)->toListRec());
+        $this->assertEquals([[1], [2], [3, new \ArrayIterator([4])]], $factory($xs)->toListRec(2));
+
+        $xs = $array(['one' => 1, 'two' => 2, 'three' => 3]);
+        $this->assertSame([1, 2, 3], $factory($xs)->toListRec());
+
+        $xs = $array(['one' => $array([1]), 'two' => $array([2]), 'three' => $array([3, $array([4])])]);
+        $this->assertSame([[1], [2], [3, [4]]], $factory($xs)->toListRec());
+        $this->assertEquals([[1], [2], [3, new \ArrayIterator([4])]], $factory($xs)->toListRec(2));
     }
 
     /**
@@ -1095,24 +1161,6 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideLazyCollectionFactory
-     */
-    public function testCycleOfInfiniteStream($factory)
-    {
-        $result = $factory([1, 2])->cycle()->take(5)->toList();
-        $this->assertSame([1, 2, 1, 2, 1], $result);
-    }
-
-    /**
-     * @dataProvider provideArrayCollectionFactory
-     * @expectedException \OverflowException
-     */
-    public function testCycleOfInfiniteStreamThrowsException($factory)
-    {
-        $factory([1, 2])->cycle();
-    }
-
-    /**
      * @dataProvider provideCollectionFactory
      */
     public function testReverse($factory)
@@ -1134,6 +1182,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $result = $factory([2, 3, 1])->sort()->toList();
         $this->assertSame([1, 2, 3], $result);
+
+        $result = $factory(['foo', 'bar', 'baz'])->sort()->toList();
+        $this->assertSame(['bar', 'baz', 'foo'], $result);
 
         $result = $factory([2, 3, 1])->sort(function($x, $y) {
             if ($x === $y) return 0;
@@ -1163,32 +1214,186 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('WindRainFire', $factory($xs)->join(''));
     }
 
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testKeys($factory)
+    {
+        $xs = ['one' => 1, 'two' => 2];
+
+        $result = $factory($xs)->keys()->toList();
+        $this->assertSame(['one', 'two'], $result, 'can extract the keys from an object');
+
+        $result = $factory(new \ArrayIterator($xs))->keys()->toList();
+        $this->assertSame(['one', 'two'], $result, 'works well Iterator');
+
+        $result = $factory([1 => 0])->keys()->toList();
+        $this->assertSame([1], $result, 'is not fooled by sparse arrays');
+
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testValues($factory)
+    {
+        $xs = ['one' => 1, 'two' => 2];
+
+        $result = $factory($xs)->values()->toArray();
+        $this->assertSame([1, 2], $result, 'can extract the values from an object');
+
+        $result = $factory(new \ArrayIterator($xs))->values()->toArray();
+        $this->assertSame([1, 2], $result, 'works well Iterator');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testInvert($factory)
+    {
+        $obj = ['first' => 'Moe', 'second' => 'Larry', 'third' => 'Curly'];
+
+        $result = $factory($obj)->invert()->toArray();
+        $this->assertSame(['Moe' => 'first', 'Larry' => 'second', 'Curly' => 'third'], $result, 'can invert an object');
+
+        $result = $factory($obj)->invert()->invert()->toArray();
+        $this->assertSame($obj, $result, 'two inverts gets you back where you started');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testExtend($factory)
+    {
+        $result = $factory([])->extend(['a' => 'b'])->toArray();
+        $this->assertSame(['a' => 'b'], $result, 'can extend an array');
+
+        $result = $factory(['a' => 'x'])->extend(['a' => 'b'])->toArray();
+        $this->assertSame(['a' => 'b'], $result, 'properties in source override destination');
+
+        $result = $factory(['x' => 'x'])->extend(['a' => 'b'])->toArray();
+        $this->assertSame(['x' => 'x', 'a' => 'b'], $result, 'properties not in source dont get overriden');
+
+        $result = $factory(['x' => 'x'])->extend(['a' => 'a'], ['b' => 'b'])->toArray();
+        $this->assertSame(['x' => 'x', 'a' => 'a', 'b' => 'b'], $result, 'can extend from multiple source objects');
+
+        $result = $factory(['x' => 'x'])->extend(['a' => 'a', 'x' => 2], ['a' => 'b'])->toArray();
+        $this->assertSame($result, ['x' => 2, 'a' => 'b'], 'extending from multiple source objects last property trumps');
+
+        $result = $factory([])->extend(['a' => null, 'b' => null])->toArray();
+        $this->assertSame(['a' => null, 'b' => null], $result, 'extend does not copy undefined values');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testPick($factory)
+    {
+        $obj = ['a' => 1, 'b' => 2, 'c' => 3];
+
+        $result = $factory($obj)->pick('a', 'c')->toArray();
+        $this->assertSame(['a' => 1, 'c' => 3], $result, 'can restrict properties to those named');
+
+        $result = $factory($obj)->pick(['b', 'c'])->toArray();
+        $this->assertSame(['b' => 2, 'c' => 3], $result, 'can restrict properties to those named in an array');
+
+        $result = $factory($obj)->pick(['a'], 'b')->toArray();
+        $this->assertSame(['a' => 1, 'b' => 2], $result, 'can restrict properties to those named in mixed args');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testOmit($factory)
+    {
+        $obj = ['a' => 1, 'b' => 2, 'c' => 3];
+
+        $result = $factory($obj)->omit('b')->toArray();
+        $this->assertSame(['a' => 1, 'c' => 3], $result, 'can omit a single named property');
+
+        $result = $factory($obj)->omit('a', 'c')->toArray();
+        $this->assertSame(['b' => 2], $result, 'can omit several named properties');
+
+        $result = $factory($obj)->omit(['b', 'c'])->toArray();
+        $this->assertSame(['a' => 1], $result, 'can omit properties named in an array');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testDefaults($factory)
+    {
+        $options = [
+            'zero' => 0,
+            'one' => 1,
+            'empty' => '',
+            'string' => 'string'
+        ];
+
+        $result = $factory($options)->defaults(['zero' => 1, 'one' => 10, 'twenty' => 20])->toArray();
+        $this->assertSame(0, $result['zero'], 'value exists');
+        $this->assertSame(1, $result['one'], 'value exists');
+        $this->assertSame(20, $result['twenty'], 'default applied');
+
+        $result = $factory($options)->defaults(
+            $options,
+            array('empty' => "full"),
+            array('nan' => "nan"),
+            array('word' => "word"),
+            array('word' => "dog")
+        )->toArray();
+        $this->assertSame('', $result['empty'], 'value exists');
+        $this->assertSame('word', $result['word'], 'new value is added, first one wins');
+
+        $result = $factory(new \IteratorIterator(new \ArrayIterator($options)))->defaults(['zero' => 1, 'one' => 10, 'twenty' => 20])->toArray();
+        $this->assertSame(0, $result['zero'], 'value exists');
+        $this->assertSame(1, $result['one'], 'value exists');
+        $this->assertSame(20, $result['twenty'], 'value exists');
+    }
+
+    /**
+     * @dataProvider provideCollectionFactory
+     */
+    public function testIsEmptry($factory)
+    {
+        $this->assertTrue($factory([])->isEmpty(), 'for array');
+        $this->assertTrue($factory(new \EmptyIterator())->isEmpty(), 'for Iterator object');
+        $this->assertTrue($factory(new \InfiniteIterator(new \EmptyIterator()))->isEmpty(), 'for infinite Iterator object');
+
+        $countable = $this->getMock('Countable');
+        $countable
+            ->expects($this->at(0))
+            ->method('count')
+            ->will($this->returnValue(0));
+        $countable
+            ->expects($this->at(1))
+            ->method('count')
+            ->will($this->returnValue(1));
+        $this->assertTrue($factory($countable)->isEmpty(), 'for Countable object');
+        $this->assertFalse($factory($countable)->isEmpty(), 'for Countable object');
+
+        $it = $this->getMock('IteratorAggregate');
+        $it
+            ->expects($this->at(0))
+            ->method('getIterator')
+            ->will($this->returnValue(new \EmptyIterator()));
+        $it
+            ->expects($this->at(1))
+            ->method('getIterator')
+            ->will($this->returnValue(new \ArrayIterator([1])));
+        $this->assertTrue($factory($it)->isEmpty(), 'for IteratorAggregate object');
+        $this->assertFalse($factory($it)->isEmpty(), 'for IteratorAggregate object');
+    }
+
+    /**
+     * @return array
+     */
     public function provideCollectionFactory()
     {
-        return array_merge(
-            $this->provideArrayCollectionFactory(),
-            $this->provideLazyCollectionFactory()
-        );
-    }
-
-    public function provideLazyCollectionFactory()
-    {
-        $providers = [];
-        $providers[] = [function($source) {
-            return new Collection($source, IteratorProvider::getInstance());
-        }];
-        if (class_exists('Generator')) {
-            $providers[] = [function($source) {
-                return new Collection($source, GeneratorProvider::getInstance());
-            }];
-        }
-        return $providers;
-    }
-
-    public function provideArrayCollectionFactory()
-    {
         return [
-            [function($source) { return new Collection($source, ArrayProvider::getInstance()); }],
+            [function($source) { return new Collection($source, $this->getCollectionProvider()); }],
         ];
     }
+
+    abstract protected function getCollectionProvider();
 }

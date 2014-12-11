@@ -63,11 +63,8 @@ class GeneratorProvider implements ICollectionProvider
     {
         return Iterators::createLazy(function() use ($xs, $n) {
             $array = Iterators::toArray($xs);
-            while ($n-- > 0) {
+            while ($n-- > 0 && !empty($array)) {
                 $key = array_rand($array);
-                if ($key === null) {
-                    break;
-                }
                 yield $array[$key];
                 unset($array[$key]);
             }

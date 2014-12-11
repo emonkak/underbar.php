@@ -39,3 +39,4 @@ class RenumIterator implements \Iterator
     {
         return $this->it->valid();
     }
+}

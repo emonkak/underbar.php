@@ -60,14 +60,14 @@ trait Enumerable
     public function parMap(callable $f, $workers = 4, $timeout = null)
     {
         if ($workers <= 0) {
-            throw new \RuntimeException('The Worker must be at least one.');
+            throw new \InvalidArgumentException('The Worker must be at least one.');
         }
         $it = new ParallelIterator($f, $timeout);
         for ($i = 0; $i < $workers; $i++) {
             $it->fork();
         }
         $it->pushAll($this->getSource());
-        return $this->newCollection($it);
+        return $this->newCollection(Iterators::memoize($it));
     }
 
     public function reduce(callable $f, $acc)
@@ -359,7 +359,7 @@ trait Enumerable
                 return null;
             }
             $key = array_rand($array);
-            return $key !== null ? $array[$key] : null;
+            return $array[$key];
         } else {
             return $this->newCollection($this->getProvider()->sample($xs, $n));
         }
@@ -668,7 +668,7 @@ trait Enumerable
         });
     }
 
-    public function invert($xs)
+    public function invert()
     {
         return $this->map(
             function($x, $k) { return $k; },
@@ -696,7 +696,7 @@ trait Enumerable
         $whitelist = [];
 
         foreach ($keys as $key) {
-            if (static::isTraversable($key)) {
+            if (Iterators::isTraversable($key)) {
                 foreach ($key as $k) {
                     $whitelist[$k] = 0;
                 }
@@ -712,11 +712,11 @@ trait Enumerable
 
     public function omit()
     {
+        $keys = func_get_args();
         $blacklist = [];
-        $keys = array_slice(func_get_args(), 1);
 
         foreach ($keys as $key) {
-            if (static::isTraversable($key)) {
+            if (Iterators::isTraversable($key)) {
                 foreach ($key as $k) {
                     $blacklist[$k] = 0;
                 }
@@ -744,12 +744,6 @@ trait Enumerable
             }
             return $xs;
         });
-    }
-
-    public function tap(callable $interceptor)
-    {
-        call_user_func($interceptor, $this->getSource());
-        return $this;
     }
 
     public function isEmpty()
