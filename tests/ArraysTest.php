@@ -206,6 +206,10 @@ class ArraysTest extends Underbar_TestCase
         $result = $_::flatten($list, true);
         $shouldBe = array(1, 2, 3, array(array(array(4))));
         $this->assertEquals($shouldBe, $_::toList($result), 'can shallowly flatten nested arrays');
+
+        $result = $_::reverse($_::flatten($list));
+        $shouldBe = array(4, 3, 2, 1);
+        $this->assertEquals($shouldBe, $_::toList($result), 'can shallowly flatten nested arrays');
     }
 
     /**

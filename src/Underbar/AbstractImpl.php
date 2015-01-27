@@ -1143,7 +1143,7 @@ class AbstractImpl
      */
     protected static function extractIterator($xs)
     {
-        return is_array($xs) ? $xs : iterator_to_array($xs);
+        return is_array($xs) ? $xs : iterator_to_array($xs, false);
     }
 
     /**
